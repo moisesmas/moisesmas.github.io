@@ -82,7 +82,7 @@ Todos los módulos (incluido Proyecto Intermodular) se organizan por temas o uni
   - Desde el menú lateral siempre se abre el original. Las versiones `.es` no aparecen en el menú.
   - «Página siguiente/anterior» mantiene el idioma: en una página `.es` enlaza a las versiones `.es` vecinas (o al original si la vecina no tiene traducción).
   - No se guarda la preferencia entre visitas.
-- **Accesibilidad y buscador**: el `<html lang>` sigue siendo `es` (interfaz en castellano, índice de búsqueda único); el contenido se envuelve en un contenedor con su `lang` real. El buscador encuentra ambas versiones.
+- **Accesibilidad y buscador**: el `<html lang>` es `es-ES` (con `es` a secas, el servidor de desarrollo de Astro trata los segmentos `/es/` como prefijo de idioma y da 404) (interfaz en castellano, índice de búsqueda único); el contenido se envuelve en un contenedor con su `lang` real. El buscador encuentra ambas versiones.
 - **Traducciones pendientes**: en cada compilación se genera la lista de páginas y laboratorios sin versión en castellano (en el resumen de GitHub Actions). No bloquea la publicación.
 
 ## 6. Bloques especiales en Markdown
@@ -103,7 +103,7 @@ Si un bloque está mal escrito (falta `src`, el archivo no existe), la compilaci
 - **Alojamiento**: dentro del repositorio, servidos por GitHub Pages bajo `moisesmas.com`. claude.ai solo es el taller; los alumnos no necesitan cuenta de Claude.
 - **Ubicación**: cuelgan del tema al que pertenecen: `src/content/docs/…/<unidad>/laboratorios/<nombre>/index.html`, publicado en `…/<unidad>/laboratorios/<nombre>/`. Los copia a la salida la misma integración que las descargas (sección 8). Cada tema puede tener cualquier número de laboratorios. Las direcciones sirven para enlazar desde Aules, incluidas las pestañas (`…/numeracion/#kib`).
 - **Renombrar o mover un tema** cambia sus direcciones: se añade una redirección de la dirección antigua a la nueva en `astro.config` (una línea por tema) para no romper enlaces de Aules. Claude lo hace al renombrar.
-- **Kit de laboratorio común** (`public/comun/lab.js` + `lab.css`): implementa una sola vez el contrato (idioma, «Volver», tamaño de letra, almacenamiento). Cada laboratorio lo incluye con una línea y declara sus textos en los dos idiomas; así integrar un laboratorio nuevo es mecánico y todos se comportan igual.
+- **Kit de laboratorio común** (`public/comun/lab.js`): implementa una sola vez el contrato (idioma, «Volver», tamaño de letra, almacenamiento). Cada laboratorio lo incluye con una línea. El texto original va en el HTML; la versión en castellano, en un diccionario JSON dentro del propio laboratorio (`<script type="application/json" id="lab-textos">`), referenciado con atributos `data-t`. Los textos generados por JavaScript usan `Lab.t({ en: '…', es: '…' })`. Así integrar un laboratorio nuevo es mecánico y todos se comportan igual.
 - **Ficha del laboratorio** sin catálogo aparte: la tarjeta de lanzamiento toma título, descripción y etiquetas de las propias etiquetas `<title>`, `<meta name="description">` y `<meta name="keywords">` del laboratorio (en el idioma de la página).
 - **Integrar uno nuevo** (procedimiento): comprobar que es autónomo → copiarlo a `laboratorios/<nombre>/` del tema → enlazar el kit común y rutas → versión en los dos idiomas → añadir `::artefacto` en la página del tema → revisar en local.
 - **Recursos compartidos** (fuentes woff2, favicon): una sola copia en `public/comun/`, usada por los laboratorios y por la sección Docencia.
