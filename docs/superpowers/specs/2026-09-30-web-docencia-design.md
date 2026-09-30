@@ -53,7 +53,7 @@ moisesmas.com/docencia/smr/som/ud01-…/laboratorios/numeracion/   Laboratorio d
 
 - Las direcciones van en castellano en toda la web y no incluyen el curso (1º/2º); el curso figura en la tarjeta del módulo.
 - **Menú lateral por módulo**: al estar en un módulo solo se ven sus unidades (complemento `starlight-sidebar-topics`).
-- **Portada de módulo**: presentación, evaluación, temporalización, enlace al curso de Aules y lista de unidades.
+- **Portada de módulo**: presentación, evaluación, temporalización, enlace al curso de Aules, lista de unidades y sección **«Laboratorios del módulo»**: todos los laboratorios del módulo agrupados por tema, generada automáticamente a partir de las carpetas `laboratorios/` (sin mantenimiento manual). En la versión `.es` de la portada, las tarjetas abren los laboratorios en castellano.
 - **Unidad = carpeta.** El menú se genera a partir de las carpetas; el orden, por el prefijo numérico.
 
 ```
@@ -151,7 +151,7 @@ Sin cookies, sin analítica y sin recursos de terceros (salvo YouTube tras pulsa
 ## 13. Verificación
 
 - La compilación local (`npm run build`) termina sin errores ni enlaces rotos.
-- Revisión en navegador (escritorio y móvil, modo claro y oscuro) de: portada, Docencia, portada de módulo, página con conmutador (ida y vuelta, siguiente/anterior en castellano), cada bloque especial y los dos laboratorios en ambos idiomas, incluido el «Volver» y los enlaces con `#pestaña`.
+- Revisión en navegador (escritorio y móvil, modo claro y oscuro) de: portada, Docencia, portada de módulo (incluida «Laboratorios del módulo»), página con conmutador (ida y vuelta, siguiente/anterior en castellano), cada bloque especial y los dos laboratorios en ambos idiomas, incluido el «Volver» y los enlaces con `#pestaña`.
 - Tras el despliegue: `https://moisesmas.com` con candado, `www` redirige, y los laboratorios se abren directamente desde una URL (simulando el enlace desde Aules).
 
 ## 14. Fases
