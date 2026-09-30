@@ -48,7 +48,7 @@ moisesmas.com/docencia/smr/som/                  Portada del módulo
 moisesmas.com/docencia/smr/som/ud01-…/           Unidad (índice)
 moisesmas.com/docencia/smr/som/ud01-…/01-…/      Página de la unidad (original)
 moisesmas.com/docencia/smr/som/ud01-…/01-…/es/   La misma página en castellano
-moisesmas.com/docencia/smr/som/laboratorios/numeracion/   Laboratorio (dirección fija)
+moisesmas.com/docencia/smr/som/ud01-…/laboratorios/numeracion/   Laboratorio del tema
 ```
 
 - Las direcciones van en castellano en toda la web y no incluyen el curso (1º/2º); el curso figura en la tarjeta del módulo.
@@ -66,6 +66,9 @@ src/content/docs/docencia/smr/som/
     practicas.md / practicas.es.md
     recursos.md  / recursos.es.md  descargas, vídeos, enlaces
     imagenes…                     junto al .md que las usa
+    p3-instalacion.pdf            descargas del tema
+    laboratorios/
+      numeracion/index.html       laboratorios del tema (tantos como haga falta)
 ```
 
 Todos los módulos (incluido Proyecto Intermodular) se organizan por temas o unidades con esta misma estructura.
@@ -88,7 +91,7 @@ Se implementan como directivas (`remark-directive`), con la misma sintaxis que l
 
 | Bloque | Sintaxis | Resultado |
 |---|---|---|
-| Laboratorio | `::artefacto[Laboratorio de Bits]{src="numeracion"}` | Tarjeta de lanzamiento (título, descripción, etiquetas, «Abrir laboratorio») que abre el laboratorio a pantalla completa en el idioma de la página. Opción `modo="incrustado"` para widgets pequeños (iframe). |
+| Laboratorio | `::artefacto{src="numeracion"}` (busca en `laboratorios/` del tema) | Tarjeta de lanzamiento (título, descripción, etiquetas, «Abrir laboratorio») que abre el laboratorio a pantalla completa en el idioma de la página. Opción `modo="incrustado"` para widgets pequeños (iframe). |
 | Descarga | `::descarga[Práctica 3]{src="p3-instalacion.pdf"}` | Tarjeta con icono, tipo y tamaño. |
 | Vídeo | `::video{youtube="ID"}` | YouTube `nocookie`: no carga nada de YouTube hasta pulsar «play». |
 | Reservado | `:::aules` … `:::` | Caja 🔒 con enlace al curso de Aules del módulo. |
@@ -98,12 +101,16 @@ Si un bloque está mal escrito (falta `src`, el archivo no existe), la compilaci
 ## 7. Laboratorios (artefactos)
 
 - **Alojamiento**: dentro del repositorio, servidos por GitHub Pages bajo `moisesmas.com`. claude.ai solo es el taller; los alumnos no necesitan cuenta de Claude.
-- **Ubicación**: `public/docencia/<ciclo>/<módulo>/laboratorios/<nombre>/index.html`. Dirección fija, independiente de la unidad, apta para enlazar desde Aules (incluidas las pestañas: `…/numeracion/#kib`).
+- **Ubicación**: cuelgan del tema al que pertenecen: `src/content/docs/…/<unidad>/laboratorios/<nombre>/index.html`, publicado en `…/<unidad>/laboratorios/<nombre>/`. Los copia a la salida la misma integración que las descargas (sección 8). Cada tema puede tener cualquier número de laboratorios. Las direcciones sirven para enlazar desde Aules, incluidas las pestañas (`…/numeracion/#kib`).
+- **Renombrar o mover un tema** cambia sus direcciones: se añade una redirección de la dirección antigua a la nueva en `astro.config` (una línea por tema) para no romper enlaces de Aules. Claude lo hace al renombrar.
+- **Kit de laboratorio común** (`public/comun/lab.js` + `lab.css`): implementa una sola vez el contrato (idioma, «Volver», tamaño de letra, almacenamiento). Cada laboratorio lo incluye con una línea y declara sus textos en los dos idiomas; así integrar un laboratorio nuevo es mecánico y todos se comportan igual.
+- **Ficha del laboratorio** sin catálogo aparte: la tarjeta de lanzamiento toma título, descripción y etiquetas de las propias etiquetas `<title>`, `<meta name="description">` y `<meta name="keywords">` del laboratorio (en el idioma de la página).
+- **Integrar uno nuevo** (procedimiento): comprobar que es autónomo → copiarlo a `laboratorios/<nombre>/` del tema → enlazar el kit común y rutas → versión en los dos idiomas → añadir `::artefacto` en la página del tema → revisar en local.
 - **Recursos compartidos** (fuentes woff2, favicon): una sola copia en `public/comun/`, usada por los laboratorios y por la sección Docencia.
 - **Contrato de cada laboratorio**:
   1. HTML autónomo: sin peticiones a terceros ni funciones exclusivas de claude.ai (antes de integrar uno nuevo se comprueba).
   2. Idioma: original por defecto; `?lang=es` muestra castellano. Conmutador propio dentro del laboratorio (por si se abre directamente desde Aules), que actualiza el parámetro sin perder el `#pestaña`.
-  3. Botón «← Volver»: si se llegó desde la web, vuelve atrás; si no, lleva a la portada del módulo.
+  3. Botón «← Volver»: si se llegó desde la web, vuelve atrás; si no, lleva a la página del tema.
   4. Almacenamiento local solo funcional: `lab:zoom` compartido entre laboratorios; `lab:<nombre>:pestaña` propio de cada uno.
 - **Trabajo sobre los dos existentes**: traducir (Bits → original en inglés; Placa Base → original en valenciano; castellano actual como alternativa), ajustar rutas `../../assets/`, sustituir «← Recursos» y las claves `lab-tab`/`lab-zoom`. El catálogo antiguo (`index.html` de `recursos-aula`) se descarta.
 
