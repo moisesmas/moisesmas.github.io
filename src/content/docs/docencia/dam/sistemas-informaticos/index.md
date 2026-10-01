@@ -7,3 +7,7 @@ Benvinguda al mòdul. Ací trobaràs els apunts, les pràctiques i els laborator
 ## Laboratoris del mòdul
 
 ::laboratorios
+
+:::aules
+Els criteris d'avaluació, les solucions i les qualificacions són al curs d'Aules.
+:::

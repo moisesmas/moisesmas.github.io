@@ -7,3 +7,7 @@ Bienvenida al módulo. Aquí encontrarás los apuntes, las prácticas y los labo
 ## Laboratorios del módulo
 
 ::laboratorios
+
+:::aules
+Los criterios de evaluación, las soluciones y las calificaciones están en el curso de Aules.
+:::
