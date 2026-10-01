@@ -1,0 +1,1164 @@
+<!doctype html>
+<html lang="en" data-lab="numeracion" data-idioma-original="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="/comun/lab.js"></script>
+<title>Bit Lab</title>
+<meta name="description" content="Number systems (binary, octal, decimal and hexadecimal), conversions, units of information and the difference between KB and KiB.">
+<meta name="keywords" content="binary, hexadecimal, octal, conversions, KiB, units">
+<meta name="lab:titulo:es" content="Laboratorio de Bits">
+<meta name="lab:descripcion:es" content="Sistemas de numeración (binario, octal, decimal y hexadecimal), conversiones, unidades de información y la diferencia entre KB y KiB.">
+<meta name="lab:etiquetas:es" content="binario, hexadecimal, octal, conversiones, KiB, unidades">
+<link rel="icon" href="/comun/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/comun/fuentes.css">
+<style>html,body{margin:0}body{padding-top:env(safe-area-inset-top,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+<script type="application/json" id="lab-textos">
+{
+  "es": {
+    "volver-aria": "Volver a la unidad",
+    "volver": "Unidad",
+    "zoom-aria": "Tamaño de letra para proyector",
+    "zoom": "Tamaño",
+    "zoom-menos": "Reducir texto",
+    "zoom-mas": "Aumentar texto",
+    "idioma-aria": "Idioma",
+    "titulo": "Laboratorio de Bits",
+    "secciones-aria": "Secciones",
+    "tab-bit": "El bit",
+    "tab-bases": "Bases",
+    "tab-conv": "Conversiones",
+    "tab-informatica": "En informática",
+    "tab-unidades": "Unidades",
+    "tab-practica": "Practica",
+    "bit-eyebrow": "Práctica 1 · ¿Por qué el ordenador usa ceros y unos?",
+    "bit-titulo": "Un ordenador solo distingue dos estados",
+    "bit-intro": "Dentro del procesador hay miles de millones de transistores. Cada uno funciona como un interruptor: deja pasar corriente o no la deja. A ese estado mínimo, 0 o 1, lo llamamos <b>bit</b> (<i>binary digit</i>).",
+    "bit-dos-estados": "Por qué dos estados y no diez",
+    "bit-senal-aria": "Señal eléctrica con ruido: por encima del umbral se lee 1, por debajo 0",
+    "bit-umbral": "umbral",
+    "bit-ruido": "La señal real tiene ruido, pero da igual: todo lo que queda por encima del umbral es un <b>1</b> y todo lo que queda por debajo es un <b>0</b>. Con dos estados muy separados el ordenador casi nunca se equivoca. Con diez niveles de tensión, un poco de ruido convertiría un 6 en un 7.",
+    "bit-combinaciones-h3": "Con n bits, ¿cuántas combinaciones hay?",
+    "bit-num-bits": "Número de bits:",
+    "bit-combinaciones": "Combinaciones",
+    "bit-combinaciones-nota": "Cada bit que añades <b>duplica</b> las combinaciones. Con 8 bits (un <b>byte</b>) hay 256: números del 0 al 255.",
+    "bit-bombillas": "Enciende bombillas y forma un número <small>pulsa sobre cada bombilla</small>",
+    "binario": "Binario",
+    "btn-apagar": "Apagar todas",
+    "btn-encender": "Encender todas (255)",
+    "btn-aleatorio": "Aleatorio",
+    "btn-desplazar": "Desplazar ← (×2)",
+    "bit-clave": "Cada posición <b>vale el doble</b> que la de su derecha: 1, 2, 4, 8, 16, 32, 64, 128. El número es la suma de las bombillas encendidas. Prueba \"Desplazar ←\": mover todos los bits una posición a la izquierda multiplica por 2, igual que añadir un cero en decimal multiplica por 10.",
+    "bas-eyebrow": "Práctica 2 · Sistemas de numeración posicionales",
+    "bas-titulo": "Una misma cantidad, cuatro formas de escribirla",
+    "bas-intro": "Un sistema de numeración es un conjunto de símbolos y unas reglas para combinarlos. En los sistemas <b>posicionales</b> el valor de cada cifra depende de dónde está. La <b>base</b> dice cuántos símbolos hay y cuánto vale cada salto de posición.",
+    "bas-binario": "Binario · base 2",
+    "bas-binario-p": "El idioma del hardware. Pesos: 1, 2, 4, 8, 16…",
+    "bas-octal-p": "Abrevia binario de 3 en 3 bits. Se usa en permisos de Linux.",
+    "bas-decimal-p": "El nuestro, porque tenemos diez dedos. Pesos: 1, 10, 100…",
+    "bas-hex-p": "Abrevia binario de 4 en 4 bits. Cuando se acaban las cifras, seguimos con letras: A=10 … F=15.",
+    "bas-odometro": "El cuentakilómetros <small>¿qué pasa cuando se acaban los símbolos?</small>",
+    "bas-contar": "▶ Contar",
+    "btn-reiniciar": "Reiniciar",
+    "bas-velocidad": "Velocidad",
+    "vel-lenta": "Lenta",
+    "vel-rapida": "Rápida",
+    "bas-ir-a": "Ir a",
+    "bas-desborda": "Mira el binario: cuando una cifra llega a su valor máximo (1 en binario, 7 en octal, 9 en decimal, F en hexadecimal), vuelve a 0 y <b>se lleva una</b> a la siguiente posición. Es exactamente lo que hacemos al pasar de 9 a 10. Al llegar a 255 los 8 bits se llenan y el siguiente número \"desborda\" y vuelve a 0.",
+    "bas-desmonta": "Desmonta un número por posiciones",
+    "numero": "Número",
+    "bas-opt-binario": "2 · binario",
+    "bas-teorema": "Regla general del <b>teorema fundamental de la numeración</b>: cada cifra se multiplica por la base elevada a su posición (empezando en 0 por la derecha) y se suma todo. Los cuadraditos muestran cuántas veces se repite el peso de cada columna.",
+    "con-eyebrow": "Práctica 3 · Pasar de un sistema a otro",
+    "con-titulo": "Tres métodos que cubren todos los casos",
+    "con-intro": "<b>De cualquier base a decimal:</b> suma de pesos (pestaña 2). <b>De decimal a otra base:</b> divisiones sucesivas. <b>Entre binario, octal y hexadecimal:</b> agrupar bits, sin pasar por decimal.",
+    "con-divisiones": "Decimal → otra base: divisiones sucesivas",
+    "con-num-decimal": "Número decimal",
+    "con-pasar-a-base": "Pasar a base",
+    "con-paso-a-paso": "Ver paso a paso",
+    "con-restos": "Los restos se leen <b>de abajo arriba</b>: el último resto es la cifra de más peso.",
+    "con-agrupar": "Binario ↔ octal y hexadecimal: agrupar",
+    "con-num-binario": "Número binario",
+    "con-octal": "<b class=\"b8\">Octal:</b> grupos de 3 bits (2³ = 8), empezando por la derecha",
+    "con-hex": "<b class=\"b16\">Hexadecimal:</b> grupos de 4 bits (2⁴ = 16), empezando por la derecha",
+    "con-relleno": "Los ceros claros son de relleno: se añaden a la izquierda para completar el último grupo y no cambian el valor. Para ir al revés, sustituye cada cifra octal por sus 3 bits o cada cifra hexadecimal por sus 4 bits.",
+    "con-tabla": "Tabla de referencia 0–15 <small>conviene aprendérsela</small>",
+    "inf-eyebrow": "Práctica 4 · Dónde te vas a encontrar estas bases",
+    "inf-titulo": "Todo acaba siendo bits",
+    "inf-intro": "El ordenador guarda todo en binario: texto, colores, direcciones de red, permisos. Nosotros usamos hexadecimal y octal porque son formas cortas de escribir ese binario.",
+    "inf-colores": "Colores de una pantalla <small>web, diseño, CSS</small>",
+    "color-rojo": "Rojo",
+    "color-verde": "Verde",
+    "color-azul": "Azul",
+    "inf-colores-nota": "Cada canal es <b>1 byte</b> (0–255). Un byte son 8 bits y se escribe exactamente con <b>2 cifras hexadecimales</b>. Por eso los colores web tienen 6 cifras: 3 bytes, 24 bits, 16.777.216 colores.",
+    "inf-texto": "El texto también son números <small>ASCII y UTF-8</small>",
+    "inf-escribe": "Escribe algo",
+    "inf-texto-nota": "Cada carácter tiene un código. Las letras básicas ocupan <b>1 byte</b> (ASCII). Caracteres como <b>ñ</b>, <b>á</b> o un emoji ocupan 2, 3 o 4 bytes en UTF-8: aparecen con borde discontinuo.",
+    "inf-ip": "Direcciones IP <small>redes, módulo de SMR</small>",
+    "inf-ipv4": "Dirección IPv4",
+    "inf-ip-nota": "Una IPv4 son <b>32 bits</b> divididos en 4 octetos de 8 bits. Cada número va de 0 a 255 porque es un byte. Las máscaras de red (255.255.255.0) solo se entienden bien en binario.",
+    "inf-permisos": "Permisos en Linux <small>chmod usa octal</small>",
+    "inf-permisos-nota": "Cada grupo de permisos son <b>3 bits</b> (lectura=4, escritura=2, ejecución=1), justo lo que cabe en una cifra octal. <code>chmod 755</code> significa 111 101 101.",
+    "inf-otros": "Otros sitios donde verás hexadecimal",
+    "donde": "Dónde",
+    "ejemplo": "Ejemplo",
+    "que-es": "Qué es",
+    "inf-mac": "Dirección MAC",
+    "inf-mac-desc": "6 bytes que identifican una tarjeta de red",
+    "inf-ipv6-desc": "128 bits escritos en bloques de 4 cifras hex",
+    "inf-memoria": "Direcciones de memoria",
+    "inf-memoria-desc": "El prefijo <code>0x</code> indica hexadecimal",
+    "inf-pantallazo": "Pantallazo azul de Windows",
+    "inf-pantallazo-desc": "Código de error del sistema",
+    "inf-editores": "Editores hexadecimales",
+    "inf-editores-desc": "Primeros bytes de cualquier archivo PNG",
+    "uni-eyebrow": "Práctica 5 · Medir la información",
+    "uni-titulo": "Del bit al terabyte",
+    "uni-intro": "El <b>bit</b> (b minúscula) es la unidad mínima. El <b>byte</b> (B mayúscula) son 8 bits y es la unidad con la que se mide el almacenamiento. A partir de ahí usamos prefijos: kilo, mega, giga, tera…",
+    "uni-escalera": "La escalera de unidades",
+    "uni-bit": "un 0 o un 1. Una bombilla.",
+    "uni-nibble": "<b>4 bits</b>. Una cifra hexadecimal.",
+    "uni-byte": "<b>8 bits</b>. Un carácter de texto, un canal de color.",
+    "uni-kb": "<b>1.000 bytes</b>. Un párrafo de texto.",
+    "uni-mb": "<b>1.000 KB</b>. Un libro entero en texto plano.",
+    "uni-gb": "<b>1.000 MB</b>. Una película corta en calidad normal.",
+    "uni-tb": "<b>1.000 GB</b>. Un disco duro doméstico.",
+    "uni-pb": "<b>1.000 TB</b>. Centros de datos.",
+    "uni-si": "Aquí usamos el sistema internacional (SI): cada salto es ×1000. En la pestaña 6 veremos por qué a veces se usa ×1024.",
+    "uni-bit-byte": "bit o Byte: cuidado con la mayúscula",
+    "uni-red": "Las velocidades de red se miden en <b>bits por segundo</b> (Mbps, Mb/s). Los archivos se miden en <b>bytes</b> (MB). Por eso una fibra de \"600 megas\" no descarga a 600 MB por segundo.",
+    "uni-velocidad": "Velocidad contratada (Mbps)",
+    "uni-archivo": "Archivo (GB)",
+    "uni-vel-real": "Velocidad real máxima",
+    "uni-tiempo": "Tiempo de descarga",
+    "uni-ocupa": "¿Cuánto ocupa cada cosa? <small>escala logarítmica: cada marca es ×1000</small>",
+    "uni-grafico-aria": "Tamaños típicos de archivos en escala logarítmica",
+    "uni-escala": "Si dibujásemos esto en escala normal, la letra sería invisible al lado del disco duro: un disco de 1 TB es un billón de veces más grande que una letra. Por eso cada línea vertical multiplica por 1000.",
+    "uni-conversor": "Conversor de unidades",
+    "uni-cantidad": "Cantidad",
+    "uni-unidad": "Unidad",
+    "kib-eyebrow": "Práctica 6 · El lío de las dos unidades",
+    "kib-titulo": "¿Por qué mi disco de 1 TB solo tiene 931 GB?",
+    "kib-intro": "Porque \"kilo\" se ha usado con dos significados distintos. En el sistema internacional kilo = 1000. Pero los ordenadores trabajan con potencias de 2, y 2¹⁰ = 1024 está muy cerca de 1000, así que durante décadas se llamó \"kilobyte\" a 1024 bytes.",
+    "kib-simulador": "Simulador: compra un disco",
+    "kib-capacidad": "Capacidad en la caja",
+    "kib-pendrive": "128 GB (pendrive)",
+    "kib-fabricante": "Fabricante · SI ×1000",
+    "kib-windows": "Windows · ×1024 (lo llama \"GB\")",
+    "kib-desaparecen": "\"Desaparecen\"",
+    "kib-no-falta": "No falta ni un solo byte. Los dos números describen <b>los mismos bytes</b>: el fabricante divide entre 1000 y Windows divide entre 1024. Lo correcto sería que Windows mostrase \"931 GiB\".",
+    "kib-error-crece": "El error crece con cada prefijo",
+    "kib-grafico-aria": "Diferencia porcentual entre prefijos binarios y decimales",
+    "kib-diferencia": "Con kilo la diferencia es solo del 2,4 %, y nadie se preocupaba. Con discos de terabytes ya es casi un 10 %, suficiente para provocar quejas y hasta demandas a fabricantes.",
+    "kib-familias": "Las dos familias de prefijos",
+    "valor": "Valor",
+    "kib-binario-iec": "Binario (IEC)",
+    "diferencia": "Diferencia",
+    "kb-dec": "10³ = 1.000",
+    "kb-bin": "2¹⁰ = 1.024",
+    "kb-dif": "2,4 %",
+    "mb-dec": "10⁶ = 1.000.000",
+    "mb-bin": "2²⁰ = 1.048.576",
+    "mb-dif": "4,9 %",
+    "gb-bin": "2³⁰ = 1.073.741.824",
+    "gb-dif": "7,4 %",
+    "tb-dif": "10,0 %",
+    "pb-dif": "12,6 %",
+    "kib-bi": "El \"bi\" de kibi, mebi, gibi viene de <b>binario</b>: kilo-binario, mega-binario, giga-binario. Se escribe con una <b>i</b> en medio: KiB, MiB, GiB.",
+    "kib-lio": "Cómo se llegó a este lío",
+    "kib-anios-60": "Años 60–70",
+    "kib-60": "Las memorias se fabrican en potencias de 2. Como 1024 ≈ 1000, los informáticos dicen \"kilo\" por comodidad.",
+    "kib-anios-80": "Años 80–90",
+    "kib-80": "Con megas y gigas la aproximación empeora. Unos fabricantes usan ×1000 y otros ×1024. Un disquete de \"1,44 MB\" mezclaba las dos: 1,44 × 1000 × 1024 bytes.",
+    "kib-1998": "La IEC (Comisión Electrotécnica Internacional) crea los prefijos binarios: kibi, mebi, gibi. Kilo vuelve a significar solo 1000.",
+    "kib-2008": "La norma ISO/IEC 80000-13 los incorpora. Es la forma normalizada y correcta.",
+    "kib-hoy": "Hoy",
+    "kib-hoy-p": "Conviven las dos costumbres. Hay que saber cuál usa cada programa.",
+    "kib-quien": "¿Quién usa qué?",
+    "kib-divide": "Divide entre",
+    "kib-etiqueta": "Etiqueta",
+    "kib-q-fabricantes": "Fabricantes de discos, SSD y pendrives",
+    "kib-q-fab-etq": "GB, TB (correcto)",
+    "kib-q-windows": "Windows (Explorador)",
+    "kib-q-win-etq": "GB (debería ser GiB)",
+    "kib-q-macos": "macOS desde 2009",
+    "kib-q-mac-etq": "GB (correcto)",
+    "kib-q-linux": "Linux (según la herramienta)",
+    "kib-q-linux-etq": "GiB, o G a secas",
+    "kib-q-ram": "Memoria RAM",
+    "kib-q-ram-etq": "\"16 GB\" que son 16 GiB",
+    "kib-q-red": "Velocidades de red",
+    "kib-truco": "Truco para recordarlo: si lleva <b>i</b>, es potencia de 2. Si no lleva <b>i</b>, en teoría es potencia de 10, aunque Windows no lo respete.",
+    "pra-eyebrow": "Práctica 7 · Ahora te toca a ti",
+    "pra-titulo": "Ejercicios aleatorios",
+    "pra-intro": "Elige un tipo de ejercicio, resuélvelo en papel y comprueba. Si fallas, puedes ver la solución paso a paso.",
+    "pra-tipo": "Tipo de ejercicio",
+    "pra-mezcla": "Mezcla de todo",
+    "pra-d2b": "Decimal → binario",
+    "pra-b2d": "Binario → decimal",
+    "pra-b2h": "Binario → hexadecimal",
+    "pra-b2o": "Binario → octal",
+    "pra-unidades": "Unidades (GB ↔ GiB, bits ↔ bytes)",
+    "pra-dificultad": "Dificultad",
+    "pra-facil": "Fácil (hasta 31)",
+    "pra-normal": "Normal (hasta 255)",
+    "pra-dificil": "Difícil (hasta 4095)",
+    "pra-respuesta-aria": "Tu respuesta",
+    "pra-comprobar": "Comprobar",
+    "pra-ver-solucion": "Ver solución",
+    "pra-siguiente": "Siguiente →"
+  }
+}
+</script>
+</head>
+<body>
+<style>
+/* Layout: banco de laboratorio — cabecera fija con pestañas, cada pestaña es una "práctica" con paneles de demostración. Colores fijos por base: binario=verde azulado, octal=violeta, decimal=azul, hexadecimal=ámbar */
+:root{
+  --bg:#f2f4ef; --surface:#ffffff; --surface2:#e9ede6; --ink:#16201b; --muted:#56655d; --line:#d3dbd4;
+  --bin:#0a8a74; --oct:#7446c4; --dec:#2764c9; --hex:#b86e00; --accent:#b86e00;
+  --on:#f5b400; --off:#c9d1cb; --good:#1f8a3b; --bad:#c4372c;
+  --bin-soft:#dcf2ed; --oct-soft:#ece4f8; --dec-soft:#e2ebfa; --hex-soft:#fbeed8;
+  --f-display:"Chakra Petch","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1411; --surface:#161f1b; --surface2:#1d2823; --ink:#e4ebe6; --muted:#95a69d; --line:#2b3832;
+  --bin:#3fd2b5; --oct:#b596f3; --dec:#82b1ff; --hex:#f3aa3c; --accent:#f3aa3c;
+  --on:#ffc83d; --off:#34423b; --good:#5bd07a; --bad:#ff7b6e;
+  --bin-soft:#133029; --oct-soft:#261e38; --dec-soft:#18243b; --hex-soft:#33260f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1411; --surface:#161f1b; --surface2:#1d2823; --ink:#e4ebe6; --muted:#95a69d; --line:#2b3832;
+  --bin:#3fd2b5; --oct:#b596f3; --dec:#82b1ff; --hex:#f3aa3c; --accent:#f3aa3c;
+  --on:#ffc83d; --off:#34423b; --good:#5bd07a; --bad:#ff7b6e;
+  --bin-soft:#133029; --oct-soft:#261e38; --dec-soft:#18243b; --hex-soft:#33260f; color-scheme:dark}
+
+html{font-size:16px}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1rem;line-height:1.55}
+*{box-sizing:border-box}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+h2{font-size:1.75rem;font-weight:700}
+h3{font-size:1.15rem;font-weight:600}
+p{margin:0;max-width:68ch}
+code,.mono{font-family:var(--f-mono)}
+.b2{color:var(--bin)} .b8{color:var(--oct)} .b10{color:var(--dec)} .b16{color:var(--hex)}
+
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+.top-inner{max-width:1180px;margin:0 auto;padding:.8rem 16px .5rem;display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand h1{font-size:1.3rem;letter-spacing:.02em}
+.brand .leds{display:flex;gap:3px}
+.brand .leds i{width:9px;height:9px;border-radius:50%;background:var(--off)}
+.brand .leds i.on{background:var(--on);box-shadow:0 0 6px var(--on)}
+.zoom{display:flex;gap:.3rem;align-items:center;font-size:.8rem;color:var(--muted)}
+.zoom button{font:600 .85rem var(--f-mono);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:.2rem .55rem;cursor:pointer}
+nav.tabs{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:.25rem;overflow-x:auto;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;font:600 .95rem var(--f-display);letter-spacing:.02em;background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);padding:.55rem .75rem;cursor:pointer;white-space:nowrap}
+nav.tabs button .n{font-family:var(--f-mono);font-size:.75rem;opacity:.7;margin-right:.35rem}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs button:hover{color:var(--ink)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+main{max-width:1180px;margin:0 auto;padding-block:1.6rem 4rem;padding-inline:16px}
+section.tab{display:grid;gap:1.4rem}
+.intro{display:grid;gap:.6rem}
+.eyebrow{font:600 .75rem var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.lead{font-size:1.1rem;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:1.2rem}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1rem}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.2rem;display:grid;gap:.9rem;align-content:start;min-width:0}
+.panel h3 small{font-family:var(--f-body);font-weight:400;color:var(--muted);font-size:.85rem;margin-left:.3rem}
+.note{background:var(--surface2);border-radius:8px;padding:.8rem 1rem;font-size:.95rem}
+.note b{font-family:var(--f-display)}
+.key{border-left:4px solid var(--accent);background:var(--hex-soft);border-radius:0 8px 8px 0;padding:.8rem 1rem}
+.row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+label.fld{display:grid;gap:.25rem;font-size:.85rem;color:var(--muted)}
+input[type=text],input[type=number],select{font:600 1.05rem var(--f-mono);background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:.45rem .6rem;min-width:0}
+input[type=text].big{font-size:1.4rem;width:100%}
+.btn{font:600 .92rem var(--f-display);letter-spacing:.02em;border:1px solid var(--line);background:var(--surface2);color:var(--ink);border-radius:7px;padding:.45rem .9rem;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#1b1200}
+.btn:hover{filter:brightness(1.05)}
+.scroll{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;font-variant-numeric:tabular-nums}
+table.t{width:100%;font-size:.95rem}
+table.t th,table.t td{padding:.45rem .6rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:600 .75rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+table.t td.num,table.t th.num{text-align:right;font-family:var(--f-mono)}
+.err{color:var(--bad);font-size:.9rem;min-height:1.2em}
+
+/* ===== Bits: bombillas ===== */
+.bulbs{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:.4rem}
+.bulb{display:grid;justify-items:center;gap:.3rem;background:none;border:0;cursor:pointer;color:var(--ink);padding:0}
+.bulb .glass{width:100%;max-width:62px;aspect-ratio:1;border-radius:50%;background:var(--off);border:2px solid var(--line);display:grid;place-items:center;font:700 1.5rem var(--f-mono);color:var(--muted);transition:background .15s,box-shadow .15s}
+.bulb.on .glass{background:var(--on);border-color:var(--on);color:#3a2900;box-shadow:0 0 18px color-mix(in srgb,var(--on) 70%,transparent)}
+.bulb .w{font:600 .85rem var(--f-mono);color:var(--muted)}
+.bulb .p{font:.7rem var(--f-mono);color:var(--muted)}
+.bulb.on .w{color:var(--ink)}
+.readout{display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;align-items:baseline}
+.readout .v{font:700 2.2rem var(--f-mono)}
+.readout .lab{font:.75rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block}
+.sum{font:1rem var(--f-mono);color:var(--muted);word-break:break-word}
+.sum b{color:var(--ink)}
+.combos{display:flex;flex-wrap:wrap;gap:3px}
+.combos span{font:.72rem var(--f-mono);background:var(--bin-soft);color:var(--bin);border-radius:3px;padding:.1rem .25rem}
+.combos span.dot{width:12px;height:12px;padding:0}
+.bignum{font:700 2rem var(--f-mono)}
+
+/* ===== Cuentakilómetros ===== */
+.odo{display:grid;gap:.55rem}
+.odo-row{display:grid;grid-template-columns:7.5rem 1fr;gap:.6rem;align-items:center}
+.odo-row .nm{font:600 .9rem var(--f-display)}
+.odo-row .nm small{display:block;font:400 .72rem var(--f-mono);color:var(--muted)}
+.digits{display:flex;gap:3px;flex-wrap:wrap}
+.digits span{font:700 1.45rem var(--f-mono);min-width:1.55em;text-align:center;padding:.15rem 0;border-radius:5px;background:var(--surface2);border:1px solid var(--line)}
+.digits span.chg{animation:roll .45s ease}
+.odo-row.r2 .digits span{color:var(--bin)} .odo-row.r8 .digits span{color:var(--oct)} .odo-row.r10 .digits span{color:var(--dec)} .odo-row.r16 .digits span{color:var(--hex)}
+@keyframes roll{0%{transform:translateY(-40%);opacity:.2;background:var(--hex-soft)}100%{transform:none;opacity:1}}
+.overflow{font:600 .9rem var(--f-display);color:var(--bad);min-height:1.3em}
+
+/* ===== Valor posicional ===== */
+.pos{display:flex;gap:.5rem;flex-wrap:wrap}
+.pos .col{background:var(--surface2);border-radius:8px;padding:.6rem .7rem;display:grid;gap:.3rem;justify-items:center;min-width:5.2rem}
+.pos .dg{font:700 2rem var(--f-mono)}
+.pos .wt{font:.85rem var(--f-mono);color:var(--muted)}
+.pos .pr{font:600 .95rem var(--f-mono)}
+.pos .blocks{display:flex;flex-wrap:wrap;gap:2px;max-width:5rem;justify-content:center;min-height:10px}
+.pos .blocks i{width:9px;height:9px;border-radius:2px;background:currentColor;opacity:.85}
+.digits-avail{display:flex;flex-wrap:wrap;gap:4px}
+.digits-avail span{font:700 1rem var(--f-mono);width:2rem;text-align:center;padding:.2rem 0;border-radius:5px;border:1px solid var(--line)}
+
+/* ===== Divisiones ===== */
+.divs{display:grid;gap:.3rem;font-family:var(--f-mono)}
+.divs .st{display:grid;grid-template-columns:auto auto auto auto;gap:.2rem .8rem;align-items:center;justify-content:start;opacity:1;transition:opacity .3s}
+.divs .st.hide{opacity:.12}
+.divs .rem{font-weight:700;border-radius:5px;padding:.05rem .45rem;background:var(--hex-soft)}
+.result-chips{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.result-chips span{font:700 1.4rem var(--f-mono);padding:.1rem .45rem;border-radius:5px;background:var(--hex-soft)}
+.arrow-up{font:.85rem var(--f-body);color:var(--muted)}
+
+/* ===== Agrupación ===== */
+.groups{display:flex;flex-wrap:wrap;gap:.45rem}
+.grp{display:grid;justify-items:center;gap:.2rem;border-radius:7px;padding:.35rem .5rem}
+.grp .bits{font:600 1.15rem var(--f-mono);letter-spacing:.08em}
+.grp .to{font:700 1.4rem var(--f-mono)}
+.grp.o{background:var(--oct-soft)} .grp.o .to{color:var(--oct)}
+.grp.h{background:var(--hex-soft)} .grp.h .to{color:var(--hex)}
+.grp .pad{opacity:.35}
+
+/* ===== Mundo real ===== */
+.swatch{height:120px;border-radius:10px;border:1px solid var(--line)}
+.sl{display:grid;grid-template-columns:1.4rem 1fr 3rem;gap:.5rem;align-items:center;font-family:var(--f-mono)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.hexcode{font:700 2rem var(--f-mono);letter-spacing:.05em}
+.bytes{display:flex;flex-wrap:wrap;gap:.5rem}
+.byte{background:var(--surface2);border-radius:7px;padding:.4rem .55rem;display:grid;gap:.15rem;justify-items:center}
+.byte .c{font:700 1.3rem var(--f-mono)}
+.byte .bb{font:600 .95rem var(--f-mono);color:var(--bin);letter-spacing:.05em}
+.byte .hh{font:.8rem var(--f-mono);color:var(--hex)}
+.byte .dd{font:.8rem var(--f-mono);color:var(--dec)}
+.byte.multi{outline:2px dashed var(--oct);outline-offset:1px}
+.ipbits{display:flex;flex-wrap:wrap;gap:.5rem}
+.oct8{display:grid;gap:.2rem;justify-items:center;background:var(--surface2);border-radius:7px;padding:.4rem .6rem}
+.oct8 .bb{font:600 1rem var(--f-mono);color:var(--bin);letter-spacing:.06em}
+.oct8 .dd{font:700 1.15rem var(--f-mono);color:var(--dec)}
+.perm{display:grid;grid-template-columns:auto repeat(3,1fr) auto;gap:.4rem .6rem;align-items:center;font-family:var(--f-mono)}
+.perm .h{font-size:.75rem;color:var(--muted);text-align:center}
+.perm input{width:1.3rem;height:1.3rem;accent-color:var(--bin);justify-self:center}
+.perm .o{font:700 1.4rem var(--f-mono);color:var(--oct);text-align:center}
+.chmod{font:700 2rem var(--f-mono)}
+
+/* ===== Unidades ===== */
+.ladder{display:grid;gap:.35rem}
+.rung{display:grid;grid-template-columns:5.5rem 1fr;gap:.6rem;align-items:center}
+.rung .u{font:700 1rem var(--f-mono)}
+.rung .d{font-size:.92rem;color:var(--muted)}
+.rung .d b{color:var(--ink);font-family:var(--f-mono);font-weight:600}
+svg text{font-family:var(--f-mono)}
+.chart-wrap{overflow-x:auto}
+.chart-wrap svg{width:100%;min-width:520px;height:auto;display:block}
+.pill{display:inline-block;font:600 .75rem var(--f-mono);padding:.1rem .45rem;border-radius:99px;background:var(--surface2);color:var(--muted)}
+.pill.si{background:var(--dec-soft);color:var(--dec)} .pill.iec{background:var(--bin-soft);color:var(--bin)}
+
+/* ===== KB vs KiB ===== */
+.disk{display:grid;gap:.6rem}
+.dbar{height:34px;border-radius:6px;display:flex;align-items:center;padding:0 .6rem;font:600 .9rem var(--f-mono);color:#fff;white-space:nowrap;overflow:hidden;min-width:0}
+.dbar.a{background:var(--dec)} .dbar.b{background:var(--bin)}
+.dtrack{background:var(--surface2);border-radius:6px}
+.missing{font:700 1.6rem var(--f-mono);color:var(--bad)}
+.timeline{display:grid;gap:.7rem;border-left:2px solid var(--line);padding-left:1rem;margin-left:.3rem}
+.timeline .ev{position:relative}
+.timeline .ev::before{content:"";position:absolute;left:calc(-1rem - 6px);top:.4rem;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.timeline .yr{font:700 .95rem var(--f-mono);color:var(--accent)}
+
+/* ===== Práctica ===== */
+.quiz{display:grid;gap:1rem}
+.q-prompt{font:600 1.5rem var(--f-display)}
+.q-prompt .mono{font-size:1.7rem}
+.fb{font:600 1rem var(--f-display);min-height:1.4em}
+.fb.ok{color:var(--good)} .fb.ko{color:var(--bad)}
+.score{display:flex;gap:1.2rem;font:600 1rem var(--f-mono)}
+.sol{font-family:var(--f-mono);font-size:.95rem;background:var(--surface2);border-radius:8px;padding:.7rem .9rem;white-space:pre-wrap;word-break:break-word}
+
+@media (max-width:560px){
+  h2{font-size:1.4rem}
+  .bulb .glass{font-size:1.05rem}
+  .readout .v{font-size:1.6rem}
+  .odo-row{grid-template-columns:1fr}
+  .digits span{font-size:1.15rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.brand a.home{font:600 .8rem var(--f-mono);color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:.2rem .5rem;margin-right:.3rem}
+.brand a.home:hover{color:var(--ink)}
+.zoom .idiomas{display:inline-flex;margin-left:.5rem;border:1px solid var(--line);border-radius:99px;overflow:hidden}
+.zoom .idiomas button{border:0;border-radius:0;background:transparent;color:var(--muted);font:600 .75rem var(--f-mono);padding:.25rem .6rem;cursor:pointer}
+.zoom .idiomas button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+</style>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><a class="home" href="../../" data-lab-volver data-t-attr="aria-label:volver-aria" aria-label="Back to the unit">← <span data-t="volver">Unit</span></a>
+      <div class="leds" id="brandLeds" aria-hidden="true"></div>
+      <h1 data-t="titulo">Bit Lab</h1>
+    </div>
+    <div class="zoom" data-t-attr="aria-label:zoom-aria" aria-label="Text size for the projector"><span data-t="zoom">Size</span>
+      <button type="button" data-lab-zoom="-" data-t-attr="aria-label:zoom-menos" aria-label="Smaller text">A−</button>
+      <button type="button" data-lab-zoom="+" data-t-attr="aria-label:zoom-mas" aria-label="Larger text">A+</button>
+      <span class="idiomas" role="group" data-t-attr="aria-label:idioma-aria" aria-label="Language">
+        <button type="button" data-lab-idioma="en"></button><button type="button" data-lab-idioma="es"></button>
+      </span>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist" data-t-attr="aria-label:secciones-aria" aria-label="Sections">
+    <button role="tab" data-tab="bits"><span class="n">1</span><span data-t="tab-bit">The bit</span></button>
+    <button role="tab" data-tab="bases"><span class="n">2</span><span data-t="tab-bases">Number bases</span></button>
+    <button role="tab" data-tab="conv"><span class="n">3</span><span data-t="tab-conv">Conversions</span></button>
+    <button role="tab" data-tab="real"><span class="n">4</span><span data-t="tab-informatica">In computing</span></button>
+    <button role="tab" data-tab="unid"><span class="n">5</span><span data-t="tab-unidades">Units</span></button>
+    <button role="tab" data-tab="kib"><span class="n">6</span>KB vs KiB</button>
+    <button role="tab" data-tab="prac"><span class="n">7</span><span data-t="tab-practica">Practice</span></button>
+  </nav>
+</header>
+
+<main>
+<!-- ============ 1. EL BIT ============ -->
+<section class="tab" id="bits" role="tabpanel">
+  <div class="intro">
+    <span class="eyebrow" data-t="bit-eyebrow">Lab 1 · Why do computers use zeros and ones?</span>
+    <h2 data-t="bit-titulo">A computer can only distinguish two states</h2>
+    <p class="lead" data-t-html="bit-intro">Inside the processor there are billions of transistors. Each one works like a switch: it lets current through or it does not. We call that smallest state, 0 or 1, a <b>bit</b> (<i>binary digit</i>).</p>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t="bit-dos-estados">Why two states and not ten</h3>
+      <svg viewBox="0 0 520 190" role="img" data-t-attr="aria-label:bit-senal-aria" aria-label="Electrical signal with noise: above the threshold it is read as 1, below it as 0">
+        <line x1="40" y1="30" x2="500" y2="30" stroke="var(--line)" stroke-dasharray="4 4"/>
+        <line x1="40" y1="95" x2="500" y2="95" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="6 4"/>
+        <line x1="40" y1="160" x2="500" y2="160" stroke="var(--line)" stroke-dasharray="4 4"/>
+        <text x="4" y="34" font-size="11" fill="var(--muted)">5 V</text>
+        <text x="106" y="89" font-size="11" fill="var(--accent)" data-t="bit-umbral">threshold</text>
+        <text x="4" y="164" font-size="11" fill="var(--muted)">0 V</text>
+        <polyline fill="none" stroke="var(--bin)" stroke-width="3" stroke-linejoin="round"
+          points="40,152 60,158 80,150 95,156 100,40 120,34 140,42 160,28 180,38 195,32 200,150 220,158 240,154 255,160 260,36 280,30 300,42 320,34 340,28 355,38 360,154 380,160 400,148 420,156 440,152 455,158 460,34 480,40 500,30"/>
+        <g font-size="16" font-weight="700" fill="var(--ink)" text-anchor="middle">
+          <text x="70" y="130">0</text><text x="150" y="70">1</text><text x="230" y="130">0</text>
+          <text x="310" y="70">1</text><text x="410" y="130">0</text><text x="480" y="70">1</text>
+        </g>
+      </svg>
+      <p data-t-html="bit-ruido">A real signal has noise, but that does not matter: everything above the threshold is a <b>1</b> and everything below it is a <b>0</b>. With two states that are far apart, the computer almost never makes a mistake. With ten voltage levels, a little noise could turn a 6 into a 7.</p>
+    </div>
+
+    <div class="panel">
+      <h3 data-t="bit-combinaciones-h3">With n bits, how many combinations are there?</h3>
+      <div class="row">
+        <label class="fld" for="nbits"><span data-t="bit-num-bits">Number of bits:</span> <b id="nbitsV" class="mono">3</b></label>
+        <input type="range" id="nbits" min="1" max="8" value="3" style="flex:1">
+      </div>
+      <div class="readout"><span><span class="lab" data-t="bit-combinaciones">Combinations</span><span class="bignum" id="combN">8</span></span><span class="sum" id="combF">2³ = 8</span></div>
+      <div class="combos" id="combos"></div>
+      <p class="note" data-t-html="bit-combinaciones-nota">Every bit you add <b>doubles</b> the number of combinations. With 8 bits (one <b>byte</b>) there are 256: numbers from 0 to 255.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3 data-t-html="bit-bombillas">Switch on bulbs and make a number <small>click on each bulb</small></h3>
+    <div class="bulbs" id="bulbs"></div>
+    <div class="readout">
+      <span><span class="lab" data-t="binario">Binary</span><span class="v b2" id="bRead">00000000</span></span>
+      <span><span class="lab">Decimal</span><span class="v b10" id="dRead">0</span></span>
+      <span><span class="lab">Hexadecimal</span><span class="v b16" id="hRead">00</span></span>
+      <span><span class="lab">Octal</span><span class="v b8" id="oRead">0</span></span>
+    </div>
+    <div class="sum" id="bSum">All off = 0</div>
+    <div class="row">
+      <button class="btn" id="bClear" type="button" data-t="btn-apagar">Switch all off</button>
+      <button class="btn" id="bAll" type="button" data-t="btn-encender">Switch all on (255)</button>
+      <button class="btn" id="bInc" type="button">+1</button>
+      <button class="btn" id="bRand" type="button" data-t="btn-aleatorio">Random</button>
+      <button class="btn" id="bShl" type="button" data-t="btn-desplazar">Shift left ← (×2)</button>
+    </div>
+    <div class="key" data-t-html="bit-clave">Each position is <b>worth double</b> the one on its right: 1, 2, 4, 8, 16, 32, 64, 128. The number is the sum of the bulbs that are on. Try "Shift left ←": moving all the bits one position to the left multiplies by 2, just as adding a zero in decimal multiplies by 10.</div>
+  </div>
+</section>
+
+<!-- ============ 2. BASES ============ -->
+<section class="tab" id="bases" role="tabpanel" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="bas-eyebrow">Lab 2 · Positional number systems</span>
+    <h2 data-t="bas-titulo">One quantity, four ways to write it</h2>
+    <p class="lead" data-t-html="bas-intro">A number system is a set of symbols and some rules for combining them. In <b>positional</b> systems, the value of each digit depends on where it is. The <b>base</b> tells you how many symbols there are and how much each step in position is worth.</p>
+  </div>
+
+  <div class="grid3">
+    <div class="panel"><h3 class="b2" data-t="bas-binario">Binary · base 2</h3><div class="digits-avail" id="av2"></div><p data-t="bas-binario-p">The language of hardware. Weights: 1, 2, 4, 8, 16…</p></div>
+    <div class="panel"><h3 class="b8">Octal · base 8</h3><div class="digits-avail" id="av8"></div><p data-t="bas-octal-p">A shorthand for binary, 3 bits at a time. It is used in Linux permissions.</p></div>
+    <div class="panel"><h3 class="b10">Decimal · base 10</h3><div class="digits-avail" id="av10"></div><p data-t="bas-decimal-p">The one we use, because we have ten fingers. Weights: 1, 10, 100…</p></div>
+    <div class="panel"><h3 class="b16">Hexadecimal · base 16</h3><div class="digits-avail" id="av16"></div><p data-t="bas-hex-p">A shorthand for binary, 4 bits at a time. When we run out of digits, we continue with letters: A=10 … F=15.</p></div>
+  </div>
+
+  <div class="panel">
+    <h3 data-t-html="bas-odometro">The odometer <small>what happens when we run out of symbols?</small></h3>
+    <div class="odo" id="odo"></div>
+    <div class="overflow" id="odoMsg"></div>
+    <div class="row">
+      <button class="btn primary" id="oPlay" type="button" data-t="bas-contar">▶ Count</button>
+      <button class="btn" id="oStep" type="button">+1</button>
+      <button class="btn" id="oBack" type="button">−1</button>
+      <button class="btn" id="oReset" type="button" data-t="btn-reiniciar">Reset</button>
+      <label class="fld" style="flex-direction:row;display:flex;gap:.4rem;align-items:center"><span data-t="bas-velocidad">Speed</span>
+        <select id="oSpeed"><option value="900" data-t="vel-lenta">Slow</option><option value="400" selected>Normal</option><option value="120" data-t="vel-rapida">Fast</option></select></label>
+      <label class="fld" style="flex-direction:row;display:flex;gap:.4rem;align-items:center"><span data-t="bas-ir-a">Go to</span>
+        <input type="number" id="oGo" min="0" max="255" value="0" style="width:5.5rem"></label>
+    </div>
+    <div class="key" data-t-html="bas-desborda">Look at the binary: when a digit reaches its maximum value (1 in binary, 7 in octal, 9 in decimal, F in hexadecimal), it goes back to 0 and <b>carries one</b> to the next position. This is exactly what we do when we go from 9 to 10. When we reach 255, the 8 bits are full, and the next number "overflows" and goes back to 0.</div>
+  </div>
+
+  <div class="panel">
+    <h3 data-t="bas-desmonta">Break a number down by position</h3>
+    <div class="row">
+      <label class="fld" for="pNum"><span data-t="numero">Number</span><input type="text" id="pNum" value="1011" style="width:10rem" autocomplete="off" spellcheck="false"></label>
+      <label class="fld" for="pBase">Base
+        <select id="pBase"><option value="2" selected data-t="bas-opt-binario">2 · binary</option><option value="8">8 · octal</option><option value="10">10 · decimal</option><option value="16">16 · hexadecimal</option></select></label>
+    </div>
+    <div class="err" id="pErr"></div>
+    <div class="pos" id="pCols"></div>
+    <div class="sum" id="pSum"></div>
+    <p class="note" data-t-html="bas-teorema">General rule, the <b>fundamental theorem of numeration</b>: each digit is multiplied by the base raised to its position (starting at 0 on the right), and everything is added up. The little squares show how many times the weight of each column is repeated.</p>
+  </div>
+</section>
+
+<!-- ============ 3. CONVERSIONES ============ -->
+<section class="tab" id="conv" role="tabpanel" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="con-eyebrow">Lab 3 · Converting from one system to another</span>
+    <h2 data-t="con-titulo">Three methods that cover every case</h2>
+    <p class="lead" data-t-html="con-intro"><b>From any base to decimal:</b> add up the weights (tab 2). <b>From decimal to another base:</b> repeated division. <b>Between binary, octal and hexadecimal:</b> group the bits, without going through decimal.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t="con-divisiones">Decimal → another base: repeated division</h3>
+      <div class="row">
+        <label class="fld" for="dNum"><span data-t="con-num-decimal">Decimal number</span><input type="number" id="dNum" value="45" min="0" max="4294967295" style="width:9rem"></label>
+        <label class="fld" for="dBase"><span data-t="con-pasar-a-base">Convert to base</span>
+          <select id="dBase"><option value="2" selected>2</option><option value="8">8</option><option value="16">16</option></select></label>
+        <button class="btn" id="dAnim" type="button" data-t="con-paso-a-paso">Step by step</button>
+      </div>
+      <div class="divs" id="divs"></div>
+      <div class="arrow-up" data-t-html="con-restos">Read the remainders <b>from bottom to top</b>: the last remainder is the most significant digit.</div>
+      <div class="result-chips" id="dRes"></div>
+    </div>
+
+    <div class="panel">
+      <h3 data-t="con-agrupar">Binary ↔ octal and hexadecimal: grouping</h3>
+      <label class="fld" for="gNum"><span data-t="con-num-binario">Binary number</span><input type="text" id="gNum" class="big" value="11010110" autocomplete="off" spellcheck="false"></label>
+      <div class="err" id="gErr"></div>
+      <div data-t-html="con-octal"><b class="b8">Octal:</b> groups of 3 bits (2³ = 8), starting from the right</div>
+      <div class="groups" id="gOct"></div>
+      <div data-t-html="con-hex"><b class="b16">Hexadecimal:</b> groups of 4 bits (2⁴ = 16), starting from the right</div>
+      <div class="groups" id="gHex"></div>
+      <p class="note" data-t="con-relleno">The pale zeros are padding: they are added on the left to complete the last group and do not change the value. To go the other way, replace each octal digit with its 3 bits or each hexadecimal digit with its 4 bits.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3 data-t-html="con-tabla">Reference table 0–15 <small>worth learning by heart</small></h3>
+    <div class="scroll"><table class="t" id="refT"></table></div>
+  </div>
+</section>
+
+<!-- ============ 4. EN INFORMÁTICA ============ -->
+<section class="tab" id="real" role="tabpanel" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="inf-eyebrow">Lab 4 · Where you will come across these bases</span>
+    <h2 data-t="inf-titulo">Everything ends up as bits</h2>
+    <p class="lead" data-t="inf-intro">The computer stores everything in binary: text, colours, network addresses, permissions. We use hexadecimal and octal because they are short ways of writing that binary.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t-html="inf-colores">Screen colours <small>web, design, CSS</small></h3>
+      <div class="swatch" id="sw"></div>
+      <div class="sl"><span style="color:#e0443a">R</span><input type="range" id="cR" min="0" max="255" value="255" data-t-attr="aria-label:color-rojo" aria-label="Red"><span id="cRv">255</span></div>
+      <div class="sl"><span style="color:#2fa84f">G</span><input type="range" id="cG" min="0" max="255" value="140" data-t-attr="aria-label:color-verde" aria-label="Green"><span id="cGv">140</span></div>
+      <div class="sl"><span style="color:#3d7be0">B</span><input type="range" id="cB" min="0" max="255" value="0" data-t-attr="aria-label:color-azul" aria-label="Blue"><span id="cBv">0</span></div>
+      <div class="hexcode b16" id="cHex">#FF8C00</div>
+      <div class="sum" id="cBin"></div>
+      <p class="note" data-t-html="inf-colores-nota">Each channel is <b>1 byte</b> (0–255). A byte is 8 bits and is written with exactly <b>2 hexadecimal digits</b>. That is why web colours have 6 digits: 3 bytes, 24 bits, 16,777,216 colours.</p>
+    </div>
+
+    <div class="panel">
+      <h3 data-t-html="inf-texto">Text is numbers too <small>ASCII and UTF-8</small></h3>
+      <label class="fld" for="tIn"><span data-t="inf-escribe">Type something</span><input type="text" id="tIn" class="big" value="SMR ñ" autocomplete="off"></label>
+      <div class="bytes" id="tOut"></div>
+      <div class="sum" id="tInfo"></div>
+      <p class="note" data-t-html="inf-texto-nota">Every character has a code. Basic letters take up <b>1 byte</b> (ASCII). Characters such as <b>ñ</b>, <b>á</b> or an emoji take up 2, 3 or 4 bytes in UTF-8: they appear with a dashed border.</p>
+    </div>
+
+    <div class="panel">
+      <h3 data-t-html="inf-ip">IP addresses <small>networks, an SMR module</small></h3>
+      <label class="fld" for="ipIn"><span data-t="inf-ipv4">IPv4 address</span><input type="text" id="ipIn" class="big" value="192.168.1.10" autocomplete="off" spellcheck="false"></label>
+      <div class="err" id="ipErr"></div>
+      <div class="ipbits" id="ipOut"></div>
+      <div class="sum" id="ipInfo"></div>
+      <p class="note" data-t-html="inf-ip-nota">An IPv4 address is <b>32 bits</b> divided into 4 octets of 8 bits. Each number goes from 0 to 255 because it is one byte. Subnet masks (255.255.255.0) can only be understood properly in binary.</p>
+    </div>
+
+    <div class="panel">
+      <h3 data-t-html="inf-permisos">Linux permissions <small>chmod uses octal</small></h3>
+      <div class="perm" id="perm"></div>
+      <div class="row"><span class="chmod b8" id="pOct">chmod 754</span><span class="sum" id="pStr">rwxr-xr--</span></div>
+      <p class="note" data-t-html="inf-permisos-nota">Each group of permissions is <b>3 bits</b> (read=4, write=2, execute=1), which is exactly what fits in one octal digit. <code>chmod 755</code> means 111 101 101.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3 data-t="inf-otros">Other places where you will see hexadecimal</h3>
+    <div class="scroll"><table class="t">
+      <tr><th data-t="donde">Where</th><th data-t="ejemplo">Example</th><th data-t="que-es">What it is</th></tr>
+      <tr><td data-t="inf-mac">MAC address</td><td class="mono b16">3C:52:82:1A:F0:9B</td><td data-t="inf-mac-desc">6 bytes that identify a network card</td></tr>
+      <tr><td>IPv6</td><td class="mono b16">2001:0db8:85a3::8a2e:0370:7334</td><td data-t="inf-ipv6-desc">128 bits written in blocks of 4 hex digits</td></tr>
+      <tr><td data-t="inf-memoria">Memory addresses</td><td class="mono b16">0x7FFE4A10</td><td data-t-html="inf-memoria-desc">The prefix <code>0x</code> means hexadecimal</td></tr>
+      <tr><td data-t="inf-pantallazo">Windows blue screen</td><td class="mono b16">0x0000007B</td><td data-t="inf-pantallazo-desc">System error code</td></tr>
+      <tr><td data-t="inf-editores">Hex editors</td><td class="mono b16">89 50 4E 47</td><td data-t="inf-editores-desc">First bytes of any PNG file</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============ 5. UNIDADES ============ -->
+<section class="tab" id="unid" role="tabpanel" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="uni-eyebrow">Lab 5 · Measuring information</span>
+    <h2 data-t="uni-titulo">From the bit to the terabyte</h2>
+    <p class="lead" data-t-html="uni-intro">The <b>bit</b> (lowercase b) is the smallest unit. The <b>byte</b> (uppercase B) is 8 bits and is the unit used to measure storage. From there we use prefixes: kilo, mega, giga, tera…</p>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t="uni-escalera">The ladder of units</h3>
+      <div class="ladder">
+        <div class="rung"><span class="u b2">1 bit</span><span class="d" data-t="uni-bit">a 0 or a 1. One bulb.</span></div>
+        <div class="rung"><span class="u b2">1 nibble</span><span class="d" data-t-html="uni-nibble"><b>4 bits</b>. One hexadecimal digit.</span></div>
+        <div class="rung"><span class="u b16">1 byte</span><span class="d" data-t-html="uni-byte"><b>8 bits</b>. One text character, one colour channel.</span></div>
+        <div class="rung"><span class="u">1 KB</span><span class="d" data-t-html="uni-kb"><b>1,000 bytes</b>. A paragraph of text.</span></div>
+        <div class="rung"><span class="u">1 MB</span><span class="d" data-t-html="uni-mb"><b>1,000 KB</b>. A whole book in plain text.</span></div>
+        <div class="rung"><span class="u">1 GB</span><span class="d" data-t-html="uni-gb"><b>1,000 MB</b>. A short film in normal quality.</span></div>
+        <div class="rung"><span class="u">1 TB</span><span class="d" data-t-html="uni-tb"><b>1,000 GB</b>. A typical home hard drive.</span></div>
+        <div class="rung"><span class="u">1 PB</span><span class="d" data-t-html="uni-pb"><b>1,000 TB</b>. Data centres.</span></div>
+      </div>
+      <p class="note" data-t="uni-si">Here we use the International System of Units (SI): each step is ×1000. In tab 6 we will see why ×1024 is sometimes used.</p>
+    </div>
+
+    <div class="panel">
+      <h3 data-t="uni-bit-byte">bit or Byte: watch the capital letter</h3>
+      <p data-t-html="uni-red">Network speeds are measured in <b>bits per second</b> (Mbps, Mb/s). Files are measured in <b>bytes</b> (MB). That is why a "600 Mbps" fibre connection does not download at 600 MB per second.</p>
+      <div class="row">
+        <label class="fld" for="netIn"><span data-t="uni-velocidad">Speed in your contract (Mbps)</span><input type="number" id="netIn" value="600" min="1" style="width:8rem"></label>
+        <label class="fld" for="fileIn"><span data-t="uni-archivo">File (GB)</span><input type="number" id="fileIn" value="4" min="0.1" step="0.1" style="width:7rem"></label>
+      </div>
+      <div class="readout">
+        <span><span class="lab" data-t="uni-vel-real">Maximum real speed</span><span class="v b16" id="netOut">75 MB/s</span></span>
+        <span><span class="lab" data-t="uni-tiempo">Download time</span><span class="v" id="netT">53 s</span></span>
+      </div>
+      <div class="sum" id="netF">600 Mb/s ÷ 8 = 75 MB/s</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3 data-t-html="uni-ocupa">How much space does each thing take? <small>logarithmic scale: each mark is ×1000</small></h3>
+    <div class="chart-wrap"><svg id="sizeChart" viewBox="0 0 680 330" role="img" data-t-attr="aria-label:uni-grafico-aria" aria-label="Typical file sizes on a logarithmic scale"></svg></div>
+    <p class="note" data-t="uni-escala">If we drew this on a normal scale, the letter would be invisible next to the hard drive: a 1 TB drive is a trillion times bigger than one letter. That is why each vertical line multiplies by 1000.</p>
+  </div>
+
+  <div class="panel">
+    <h3 data-t="uni-conversor">Unit converter</h3>
+    <div class="row">
+      <label class="fld" for="uVal"><span data-t="uni-cantidad">Amount</span><input type="number" id="uVal" value="1" min="0" step="any" style="width:9rem"></label>
+      <label class="fld" for="uFrom"><span data-t="uni-unidad">Unit</span><select id="uFrom"></select></label>
+    </div>
+    <div class="scroll"><table class="t" id="uTable"></table></div>
+  </div>
+</section>
+
+<!-- ============ 6. KB vs KiB ============ -->
+<section class="tab" id="kib" role="tabpanel" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="kib-eyebrow">Lab 6 · The confusion between two units</span>
+    <h2 data-t="kib-titulo">Why does my 1 TB drive only have 931 GB?</h2>
+    <p class="lead" data-t="kib-intro">Because "kilo" has been used with two different meanings. In the International System, kilo = 1000. But computers work with powers of 2, and 2¹⁰ = 1024 is very close to 1000, so for decades 1024 bytes were called a "kilobyte".</p>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t="kib-simulador">Simulator: buy a drive</h3>
+      <div class="row">
+        <label class="fld" for="kCap"><span data-t="kib-capacidad">Capacity on the box</span>
+          <select id="kCap">
+            <option value="128e9" data-t="kib-pendrive">128 GB (USB stick)</option>
+            <option value="500e9">500 GB</option>
+            <option value="1e12" selected>1 TB</option>
+            <option value="2e12">2 TB</option>
+            <option value="4e12">4 TB</option>
+            <option value="20e12">20 TB</option>
+          </select></label>
+      </div>
+      <div class="disk">
+        <div><span class="pill si" data-t="kib-fabricante">Manufacturer · SI ×1000</span></div>
+        <div class="dtrack"><div class="dbar a" id="kBarA" style="width:100%">1 TB</div></div>
+        <div><span class="pill iec" data-t="kib-windows">Windows · ×1024 (calls it "GB")</span></div>
+        <div class="dtrack"><div class="dbar b" id="kBarB" style="width:90.9%">931 GB</div></div>
+      </div>
+      <div class="sum" id="kCalc"></div>
+      <div class="readout"><span><span class="lab" data-t="kib-desaparecen">"Missing"</span><span class="missing" id="kMiss">69 GB</span></span></div>
+      <div class="key" data-t-html="kib-no-falta">Not a single byte is missing. Both numbers describe <b>the same bytes</b>: the manufacturer divides by 1000 and Windows divides by 1024. The correct thing would be for Windows to show "931 GiB".</div>
+    </div>
+
+    <div class="panel">
+      <h3 data-t="kib-error-crece">The error grows with every prefix</h3>
+      <div class="chart-wrap"><svg id="diffChart" viewBox="0 0 520 260" role="img" data-t-attr="aria-label:kib-grafico-aria" aria-label="Percentage difference between binary and decimal prefixes"></svg></div>
+      <p data-t="kib-diferencia">With kilo the difference is only 2.4%, and nobody worried. With terabyte drives it is already almost 10%, enough to cause complaints and even lawsuits against manufacturers.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3 data-t="kib-familias">The two families of prefixes</h3>
+    <div class="scroll"><table class="t">
+      <tr><th>Decimal (SI)</th><th class="num" data-t="valor">Value</th><th data-t="kib-binario-iec">Binary (IEC)</th><th class="num" data-t="valor">Value</th><th class="num" data-t="diferencia">Difference</th></tr>
+      <tr><td class="mono"><b>kB</b> kilobyte</td><td class="num" data-t="kb-dec">10³ = 1,000</td><td class="mono b2"><b>KiB</b> kibibyte</td><td class="num" data-t="kb-bin">2¹⁰ = 1,024</td><td class="num" data-t="kb-dif">2.4%</td></tr>
+      <tr><td class="mono"><b>MB</b> megabyte</td><td class="num" data-t="mb-dec">10⁶ = 1,000,000</td><td class="mono b2"><b>MiB</b> mebibyte</td><td class="num" data-t="mb-bin">2²⁰ = 1,048,576</td><td class="num" data-t="mb-dif">4.9%</td></tr>
+      <tr><td class="mono"><b>GB</b> gigabyte</td><td class="num">10⁹</td><td class="mono b2"><b>GiB</b> gibibyte</td><td class="num" data-t="gb-bin">2³⁰ = 1,073,741,824</td><td class="num" data-t="gb-dif">7.4%</td></tr>
+      <tr><td class="mono"><b>TB</b> terabyte</td><td class="num">10¹²</td><td class="mono b2"><b>TiB</b> tebibyte</td><td class="num">2⁴⁰</td><td class="num" data-t="tb-dif">10.0%</td></tr>
+      <tr><td class="mono"><b>PB</b> petabyte</td><td class="num">10¹⁵</td><td class="mono b2"><b>PiB</b> pebibyte</td><td class="num">2⁵⁰</td><td class="num" data-t="pb-dif">12.6%</td></tr>
+    </table></div>
+    <p class="note" data-t-html="kib-bi">The "bi" in kibi, mebi, gibi comes from <b>binary</b>: kilo-binary, mega-binary, giga-binary. It is written with an <b>i</b> in the middle: KiB, MiB, GiB.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t="kib-lio">How this mix-up came about</h3>
+      <div class="timeline">
+        <div class="ev"><div class="yr" data-t="kib-anios-60">1960s–70s</div><p data-t="kib-60">Memory chips are built in powers of 2. As 1024 ≈ 1000, computer people say "kilo" for convenience.</p></div>
+        <div class="ev"><div class="yr" data-t="kib-anios-80">1980s–90s</div><p data-t="kib-80">With megas and gigas the approximation gets worse. Some manufacturers use ×1000 and others ×1024. A "1.44 MB" floppy disk mixed both: 1.44 × 1000 × 1024 bytes.</p></div>
+        <div class="ev"><div class="yr">1998</div><p data-t="kib-1998">The IEC (International Electrotechnical Commission) creates the binary prefixes: kibi, mebi, gibi. Kilo goes back to meaning only 1000.</p></div>
+        <div class="ev"><div class="yr">2008</div><p data-t="kib-2008">The ISO/IEC 80000-13 standard includes them. It is the standardised, correct form.</p></div>
+        <div class="ev"><div class="yr" data-t="kib-hoy">Today</div><p data-t="kib-hoy-p">Both habits exist side by side. You need to know which one each program uses.</p></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3 data-t="kib-quien">Who uses what?</h3>
+      <div class="scroll"><table class="t">
+        <tr><th data-t="donde">Where</th><th data-t="kib-divide">Divides by</th><th data-t="kib-etiqueta">Label</th></tr>
+        <tr><td data-t="kib-q-fabricantes">Manufacturers of hard drives, SSDs and USB sticks</td><td><span class="pill si">1000</span></td><td data-t="kib-q-fab-etq">GB, TB (correct)</td></tr>
+        <tr><td data-t="kib-q-windows">Windows (File Explorer)</td><td><span class="pill iec">1024</span></td><td data-t="kib-q-win-etq">GB (should be GiB)</td></tr>
+        <tr><td data-t="kib-q-macos">macOS since 2009</td><td><span class="pill si">1000</span></td><td data-t="kib-q-mac-etq">GB (correct)</td></tr>
+        <tr><td data-t="kib-q-linux">Linux (depends on the tool)</td><td><span class="pill iec">1024</span></td><td data-t="kib-q-linux-etq">GiB, or just G</td></tr>
+        <tr><td data-t="kib-q-ram">RAM</td><td><span class="pill iec">1024</span></td><td data-t="kib-q-ram-etq">"16 GB" that are really 16 GiB</td></tr>
+        <tr><td data-t="kib-q-red">Network speeds</td><td><span class="pill si">1000</span></td><td>Mbps (bits)</td></tr>
+      </table></div>
+      <p class="note" data-t-html="kib-truco">A trick to remember it: if it has an <b>i</b>, it is a power of 2. If it has no <b>i</b>, in theory it is a power of 10, even though Windows does not follow this.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. PRÁCTICA ============ -->
+<section class="tab" id="prac" role="tabpanel" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="pra-eyebrow">Lab 7 · Now it's your turn</span>
+    <h2 data-t="pra-titulo">Random exercises</h2>
+    <p class="lead" data-t="pra-intro">Choose a type of exercise, solve it on paper and check your answer. If you get it wrong, you can see the solution step by step.</p>
+  </div>
+  <div class="panel quiz">
+    <div class="row">
+      <label class="fld" for="qType"><span data-t="pra-tipo">Type of exercise</span>
+        <select id="qType">
+          <option value="mix" data-t="pra-mezcla">A mix of everything</option>
+          <option value="d2b" data-t="pra-d2b">Decimal → binary</option>
+          <option value="b2d" data-t="pra-b2d">Binary → decimal</option>
+          <option value="d2h">Decimal → hexadecimal</option>
+          <option value="h2d">Hexadecimal → decimal</option>
+          <option value="b2h" data-t="pra-b2h">Binary → hexadecimal</option>
+          <option value="b2o" data-t="pra-b2o">Binary → octal</option>
+          <option value="unit" data-t="pra-unidades">Units (GB ↔ GiB, bits ↔ bytes)</option>
+        </select></label>
+      <label class="fld" for="qDiff"><span data-t="pra-dificultad">Difficulty</span>
+        <select id="qDiff"><option value="1" data-t="pra-facil">Easy (up to 31)</option><option value="2" selected data-t="pra-normal">Medium (up to 255)</option><option value="3" data-t="pra-dificil">Hard (up to 4095)</option></select></label>
+      <div class="score"><span>✓ <span id="sOk">0</span></span><span>✗ <span id="sKo">0</span></span></div>
+    </div>
+    <div class="q-prompt" id="qP"></div>
+    <div class="row">
+      <input type="text" id="qA" class="big" style="max-width:20rem" autocomplete="off" spellcheck="false" data-t-attr="aria-label:pra-respuesta-aria" aria-label="Your answer">
+      <button class="btn primary" id="qCheck" type="button" data-t="pra-comprobar">Check</button>
+      <button class="btn" id="qSol" type="button" data-t="pra-ver-solucion">Show solution</button>
+      <button class="btn" id="qNext" type="button" data-t="pra-siguiente">Next →</button>
+    </div>
+    <div class="fb" id="qF"></div>
+    <div class="sol" id="qS" hidden></div>
+  </div>
+</section>
+</main>
+
+<script>
+const $=s=>document.querySelector(s);
+const HEXD="0123456789ABCDEF";
+const toB=(n,b)=>n.toString(b).toUpperCase();
+const pad=(s,n)=>s.padStart(n,"0");
+const ES=Lab.idioma==="es",LOC=ES?"es-ES":"en-GB";
+const fmt=n=>n.toLocaleString(LOC);
+const dec=s=>ES?String(s).replace(".",","):String(s);
+const SUP={"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+const sup=n=>String(n).split("").map(c=>SUP[c]).join("");
+const baseCls={2:"b2",8:"b8",10:"b10",16:"b16"};
+
+/* ---------- Tabs ---------- */
+const tabs=[...document.querySelectorAll("nav.tabs button")];
+function showTab(id){
+  if(!document.getElementById(id)) id="bits";
+  tabs.forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===id?"true":"false"));
+  document.querySelectorAll("section.tab").forEach(s=>s.hidden=s.id!==id);
+  try{history.replaceState(null,"","#"+id)}catch(e){}
+  Lab.guardar("pestana",id);
+  window.scrollTo({top:0});
+}
+tabs.forEach(t=>t.addEventListener("click",()=>showTab(t.dataset.tab)));
+let startTab=location.hash.slice(1);
+if(!startTab){startTab=Lab.leer("pestana")}
+showTab(startTab||"bits");
+
+/* ---------- Brand LEDs ---------- */
+const bl=$("#brandLeds");"10110".split("").forEach(c=>{const i=document.createElement("i");if(c==="1")i.className="on";bl.appendChild(i)});
+
+/* ================= 1. BITS ================= */
+let bval=0;
+const bulbsEl=$("#bulbs");
+for(let i=7;i>=0;i--){
+  const b=document.createElement("button");b.type="button";b.className="bulb";b.dataset.i=i;
+  b.innerHTML=`<span class="glass">0</span><span class="w">${1<<i}</span><span class="p">2${sup(i)}</span>`;
+  b.setAttribute("aria-label",Lab.t({en:`Bit with weight ${1<<i}`,es:`Bit de peso ${1<<i}`}));
+  b.onclick=()=>{bval^=(1<<i);renderBits()};
+  bulbsEl.appendChild(b);
+}
+function renderBits(){
+  [...bulbsEl.children].forEach(b=>{const on=(bval>>b.dataset.i)&1;b.classList.toggle("on",!!on);b.querySelector(".glass").textContent=on;b.setAttribute("aria-pressed",on?"true":"false")});
+  $("#bRead").textContent=pad(toB(bval,2),8);
+  $("#dRead").textContent=bval;
+  $("#hRead").textContent=pad(toB(bval,16),2);
+  $("#oRead").textContent=toB(bval,8);
+  const parts=[];for(let i=7;i>=0;i--)if((bval>>i)&1)parts.push(1<<i);
+  $("#bSum").innerHTML=parts.length?parts.join(" + ")+" = <b>"+bval+"</b>":Lab.t({en:"All off = <b>0</b>",es:"Todas apagadas = <b>0</b>"});
+}
+$("#bClear").onclick=()=>{bval=0;renderBits()};
+$("#bAll").onclick=()=>{bval=255;renderBits()};
+$("#bInc").onclick=()=>{bval=(bval+1)&255;renderBits()};
+$("#bRand").onclick=()=>{bval=Math.floor(Math.random()*256);renderBits()};
+$("#bShl").onclick=()=>{bval=(bval<<1)&255;renderBits()};
+bval=0b00101101;renderBits();
+
+function renderCombos(){
+  const n=+$("#nbits").value,N=2**n;
+  $("#nbitsV").textContent=n;$("#combN").textContent=N;
+  $("#combF").textContent=`2${sup(n)} = ${N}  `+Lab.t({en:`(from 0 to ${N-1})`,es:`(del 0 al ${N-1})`});
+  const c=$("#combos");c.innerHTML="";
+  for(let k=0;k<N;k++){const s=document.createElement("span");if(n<=5)s.textContent=pad(toB(k,2),n);else{s.className="dot";s.title=pad(toB(k,2),n)}c.appendChild(s)}
+}
+$("#nbits").oninput=renderCombos;renderCombos();
+
+/* ================= 2. BASES ================= */
+[[2,"av2"],[8,"av8"],[10,"av10"],[16,"av16"]].forEach(([b,id])=>{
+  const el=document.getElementById(id);
+  for(let i=0;i<b;i++){const s=document.createElement("span");s.textContent=HEXD[i];s.className=baseCls[b];if(i>9)s.title=`${HEXD[i]} = ${i}`;el.appendChild(s)}
+});
+
+const odoCfg=[[2,8,Lab.t({en:"Binary",es:"Binario"}),"base 2"],[8,3,"Octal","base 8"],[10,3,"Decimal","base 10"],[16,2,"Hexadecimal","base 16"]];
+const odo=$("#odo");
+odoCfg.forEach(([b,w,nm,sub])=>{
+  const r=document.createElement("div");r.className="odo-row r"+b;
+  r.innerHTML=`<div class="nm">${nm}<small>${sub}</small></div><div class="digits" id="od${b}">${"<span>0</span>".repeat(w)}</div>`;
+  odo.appendChild(r);
+});
+let ov=0,oTimer=null;
+function renderOdo(prev){
+  odoCfg.forEach(([b,w])=>{
+    const s=pad(toB(ov,b),w),p=prev==null?s:pad(toB(prev,b),w);
+    const spans=document.getElementById("od"+b).children;
+    for(let i=0;i<w;i++){spans[i].textContent=s[i];if(s[i]!==p[i]){spans[i].classList.remove("chg");void spans[i].offsetWidth;spans[i].classList.add("chg")}}
+  });
+  $("#oGo").value=ov;
+}
+function stepOdo(d){
+  const prev=ov;ov=ov+d;let msg="";
+  if(ov>255){ov=0;msg=Lab.t({en:"Overflow! 255 + 1 does not fit in 8 bits: the counter goes back to 0.",es:"¡Desbordamiento! 255 + 1 no cabe en 8 bits: el contador vuelve a 0."})}
+  if(ov<0){ov=255;msg=Lab.t({en:"Below 0 the counter wraps around to 255.",es:"Por debajo de 0 el contador da la vuelta a 255."})}
+  if(!msg&&d===1){const pb=toB(prev,2),nb=toB(ov,2);if(nb.length>pb.length)msg=Lab.t({en:`New position in binary: ${ov} needs ${nb.length} bits.`,es:`Nueva posición en binario: ${ov} necesita ${nb.length} bits.`})}
+  $("#odoMsg").textContent=msg;renderOdo(prev);
+}
+$("#oStep").onclick=()=>stepOdo(1);
+$("#oBack").onclick=()=>stepOdo(-1);
+$("#oReset").onclick=()=>{const p=ov;ov=0;$("#odoMsg").textContent="";renderOdo(p)};
+$("#oGo").onchange=()=>{const v=Math.max(0,Math.min(255,parseInt($("#oGo").value)||0));const p=ov;ov=v;$("#odoMsg").textContent="";renderOdo(p)};
+function play(){clearInterval(oTimer);oTimer=setInterval(()=>stepOdo(1),+$("#oSpeed").value)}
+$("#oPlay").onclick=()=>{if(oTimer){clearInterval(oTimer);oTimer=null;$("#oPlay").textContent=Lab.t({en:"▶ Count",es:"▶ Contar"})}else{play();$("#oPlay").textContent=Lab.t({en:"⏸ Pause",es:"⏸ Pausa"})}};
+$("#oSpeed").onchange=()=>{if(oTimer)play()};
+ov=7;renderOdo();
+
+function renderPos(){
+  const base=+$("#pBase").value,raw=$("#pNum").value.trim().toUpperCase(),cols=$("#pCols"),err=$("#pErr");
+  cols.innerHTML="";$("#pSum").innerHTML="";
+  if(!raw){err.textContent=Lab.t({en:"Enter a number.",es:"Escribe un número."});return}
+  if(raw.length>12){err.textContent=Lab.t({en:"Maximum 12 digits so that it fits on the screen.",es:"Máximo 12 cifras para que quepa en pantalla."});return}
+  for(const ch of raw){const v=HEXD.indexOf(ch);if(v<0||v>=base){const lst=HEXD.slice(0,base).split("").join(", ");err.textContent=Lab.t({en:`"${ch}" is not a valid digit in base ${base}. Only these digits are allowed: ${lst}.`,es:`"${ch}" no es una cifra válida en base ${base}. Solo se permiten: ${lst}.`});return}}
+  err.textContent="";
+  const n=raw.length;let total=0;const terms=[];
+  raw.split("").forEach((ch,idx)=>{
+    const p=n-1-idx,d=HEXD.indexOf(ch),w=base**p,pr=d*w;total+=pr;
+    const col=document.createElement("div");col.className="col "+baseCls[base];
+    const blocks=d>0?`<div class="blocks">${"<i></i>".repeat(d)}</div>`:`<div class="blocks"></div>`;
+    col.innerHTML=`<span class="wt">${base}${sup(p)} = ${fmt(w)}</span><span class="dg">${ch}</span>${blocks}<span class="pr">${d} × ${fmt(w)}</span><span class="wt">= ${fmt(pr)}</span>`;
+    cols.appendChild(col);
+    terms.push(`${d}·${base}${sup(p)}`);
+  });
+  $("#pSum").innerHTML=`${raw}<sub>${base}</sub> = ${terms.join(" + ")} = <b class="b10">${fmt(total)}</b><sub>10</sub>`;
+}
+$("#pNum").oninput=renderPos;$("#pBase").onchange=renderPos;renderPos();
+
+/* ================= 3. CONVERSIONES ================= */
+let divTimer=null;
+function renderDivs(animate){
+  clearInterval(divTimer);
+  let n=Math.floor(Math.abs(+$("#dNum").value||0));if(n>4294967295)n=4294967295;
+  const b=+$("#dBase").value,box=$("#divs"),res=$("#dRes");box.innerHTML="";res.innerHTML="";
+  const steps=[];let q=n;
+  if(q===0)steps.push([0,0,0]);
+  while(q>0){steps.push([q,Math.floor(q/b),q%b]);q=Math.floor(q/b)}
+  steps.forEach(([a,qq,r])=>{
+    const st=document.createElement("div");st.className="st"+(animate?" hide":"");
+    st.innerHTML=`<span>${fmt(a)} ÷ ${b}</span><span>= ${fmt(qq)}</span><span>${Lab.t({en:"remainder",es:"resto"})}</span><span class="rem ${baseCls[b]}">${r}${b===16&&r>9?" → "+HEXD[r]:""}</span>`;
+    box.appendChild(st);
+  });
+  const digits=steps.map(s=>HEXD[s[2]]).reverse();
+  const showRes=()=>{res.innerHTML=`<b>${fmt(n)}</b><sub>10</sub>&nbsp;=&nbsp;`+digits.map(d=>`<span class="${baseCls[b]}">${d}</span>`).join("")+`<sub>&nbsp;${b}</sub>`};
+  if(!animate){showRes();return}
+  let i=0;const rows=[...box.children];
+  divTimer=setInterval(()=>{if(i<rows.length){rows[i].classList.remove("hide");i++}else{clearInterval(divTimer);showRes()}},700);
+}
+$("#dNum").oninput=()=>renderDivs(false);$("#dBase").onchange=()=>renderDivs(false);$("#dAnim").onclick=()=>renderDivs(true);
+renderDivs(false);
+
+function renderGroups(){
+  const raw=$("#gNum").value.replace(/\s/g,""),err=$("#gErr");
+  $("#gOct").innerHTML="";$("#gHex").innerHTML="";
+  if(!raw){err.textContent=Lab.t({en:"Enter a binary number.",es:"Escribe un número binario."});return}
+  if(!/^[01]+$/.test(raw)){err.textContent=Lab.t({en:"In binary there are only 0 and 1.",es:"En binario solo existen el 0 y el 1."});return}
+  if(raw.length>32){err.textContent=Lab.t({en:"Maximum 32 bits.",es:"Máximo 32 bits."});return}
+  err.textContent="";
+  const mk=(size,cls,el)=>{
+    const L=Math.ceil(raw.length/size)*size,padN=L-raw.length,s=pad(raw,L);
+    for(let i=0;i<L;i+=size){
+      const g=s.slice(i,i+size);let bits="";
+      for(let k=0;k<size;k++){const idx=i+k;bits+=idx<padN?`<span class="pad">${g[k]}</span>`:g[k]}
+      const d=document.createElement("div");d.className="grp "+cls;
+      d.innerHTML=`<span class="bits">${bits}</span><span class="to">${HEXD[parseInt(g,2)]}</span>`;el.appendChild(d);
+    }
+  };
+  mk(3,"o",$("#gOct"));mk(4,"h",$("#gHex"));
+}
+$("#gNum").oninput=renderGroups;renderGroups();
+
+(function(){
+  let h=`<tr><th class="num b10">Decimal</th><th class="num b2">${Lab.t({en:"Binary",es:"Binario"})}</th><th class="num b8">Octal</th><th class="num b16">Hex</th></tr>`;
+  for(let i=0;i<16;i++)h+=`<tr><td class="num b10">${i}</td><td class="num b2">${pad(toB(i,2),4)}</td><td class="num b8">${toB(i,8)}</td><td class="num b16">${HEXD[i]}</td></tr>`;
+  $("#refT").innerHTML=h;
+})();
+
+/* ================= 4. EN INFORMÁTICA ================= */
+function renderColor(){
+  const r=+$("#cR").value,g=+$("#cG").value,b=+$("#cB").value;
+  $("#cRv").textContent=r;$("#cGv").textContent=g;$("#cBv").textContent=b;
+  const hx=[r,g,b].map(v=>pad(toB(v,16),2));
+  $("#sw").style.background=`rgb(${r},${g},${b})`;
+  $("#cHex").textContent="#"+hx.join("");
+  $("#cBin").innerHTML=[["R",r,hx[0]],["G",g,hx[1]],["B",b,hx[2]]].map(([n,v,h])=>`${n}: <b class="b10">${v}</b> = <b class="b16">${h}</b> = <b class="b2">${pad(toB(v,2),8)}</b>`).join("<br>");
+}
+["#cR","#cG","#cB"].forEach(s=>$(s).oninput=renderColor);renderColor();
+
+const enc=new TextEncoder();
+function renderText(){
+  const t=$("#tIn").value.slice(0,24),out=$("#tOut");out.innerHTML="";let total=0;
+  for(const ch of t){
+    const bytes=[...enc.encode(ch)];total+=bytes.length;
+    bytes.forEach((by,k)=>{
+      const d=document.createElement("div");d.className="byte"+(bytes.length>1?" multi":"");
+      d.innerHTML=`<span class="c">${k===0?(ch===" "?"␣":ch):"·"}</span><span class="bb">${pad(toB(by,2),8)}</span><span class="hh">${pad(toB(by,16),2)}</span><span class="dd">${by}</span>`;
+      out.appendChild(d);
+    });
+  }
+  const chars=[...t].length;
+  $("#tInfo").innerHTML=chars?Lab.t({en:`${chars} characters → <b>${total} bytes</b> = <b>${total*8} bits</b>`,es:`${chars} caracteres → <b>${total} bytes</b> = <b>${total*8} bits</b>`}):"";
+}
+$("#tIn").oninput=renderText;renderText();
+
+function renderIP(){
+  const raw=$("#ipIn").value.trim(),out=$("#ipOut"),err=$("#ipErr");out.innerHTML="";$("#ipInfo").innerHTML="";
+  const parts=raw.split(".");
+  if(parts.length!==4||parts.some(p=>!/^\d{1,3}$/.test(p)||+p>255)){err.textContent=Lab.t({en:"An IPv4 address is 4 numbers from 0 to 255 separated by dots. Example: 192.168.1.10",es:"Una IPv4 son 4 números del 0 al 255 separados por puntos. Ejemplo: 192.168.1.10"});return}
+  err.textContent="";
+  parts.forEach(p=>{const d=document.createElement("div");d.className="oct8";d.innerHTML=`<span class="bb">${pad(toB(+p,2),8)}</span><span class="dd">${p}</span>`;out.appendChild(d)});
+  const all=parts.map(p=>pad(toB(+p,2),8)).join("");
+  $("#ipInfo").innerHTML=`32 bits: <b class="b2">${all}</b><br>${Lab.t({en:"As a single decimal number:",es:"Como un solo número decimal:"})} <b class="b10">${fmt(parseInt(all,2))}</b>`;
+}
+$("#ipIn").oninput=renderIP;renderIP();
+
+(function(){
+  const pm=$("#perm");const who=[Lab.t({en:"Owner",es:"Propietario"}),Lab.t({en:"Group",es:"Grupo"}),Lab.t({en:"Others",es:"Otros"})];const init=[[1,1,1],[1,0,1],[1,0,0]];
+  pm.innerHTML=`<span></span><span class="h">r (4)</span><span class="h">w (2)</span><span class="h">x (1)</span><span class="h">Octal</span>`;
+  who.forEach((w,i)=>{
+    pm.insertAdjacentHTML("beforeend",`<span>${w}</span>`+[4,2,1].map((v,j)=>`<input type="checkbox" id="pm${i}${j}" data-v="${v}" data-g="${i}" ${init[i][j]?"checked":""} aria-label="${w} ${"rwx"[j]}">`).join("")+`<span class="o" id="po${i}">0</span>`);
+  });
+  const calc=()=>{
+    let oct="",str="";
+    for(let i=0;i<3;i++){let s=0;[0,1,2].forEach(j=>{const c=document.getElementById(`pm${i}${j}`);if(c.checked){s+=+c.dataset.v;str+="rwx"[j]}else str+="-"});document.getElementById("po"+i).textContent=s;oct+=s}
+    $("#pOct").textContent="chmod "+oct;
+    $("#pStr").innerHTML=`${str} &nbsp;=&nbsp; <b class="b2">${oct.split("").map(c=>pad(toB(+c,2),3)).join(" ")}</b>`;
+  };
+  pm.addEventListener("change",calc);calc();
+})();
+
+/* ================= 5. UNIDADES ================= */
+function renderNet(){
+  const m=Math.max(0,+$("#netIn").value||0),g=Math.max(0,+$("#fileIn").value||0);
+  const mbs=m/8,mbsT=(Math.round(mbs*10)/10).toLocaleString(LOC);$("#netOut").textContent=mbsT+" MB/s";
+  const secs=mbs?g*1000/mbs:0;
+  $("#netT").textContent=secs<60?Math.round(secs)+" s":secs<3600?Math.floor(secs/60)+" min "+Math.round(secs%60)+" s":dec((secs/3600).toFixed(1))+" h";
+  $("#netF").innerHTML=Lab.t({en:`${fmt(m)} Mb/s ÷ 8 bits per byte = <b>${mbsT} MB/s</b> · ${g.toLocaleString(LOC)} GB = ${fmt(g*1000)} MB → ${fmt(g*1000)} ÷ ${mbsT} ≈ ${fmt(Math.round(secs))} s (in ideal conditions)`,es:`${fmt(m)} Mb/s ÷ 8 bits por byte = <b>${mbsT} MB/s</b> · ${g.toLocaleString(LOC)} GB = ${fmt(g*1000)} MB → ${fmt(g*1000)} ÷ ${mbsT} ≈ ${fmt(Math.round(secs))} s (en condiciones ideales)`});
+}
+$("#netIn").oninput=renderNet;$("#fileIn").oninput=renderNet;renderNet();
+
+(function(){
+  const items=[[Lab.t({en:"A letter",es:"Una letra"}),1],[Lab.t({en:"An SMS (160 characters)",es:"Un SMS (160 caracteres)"}),140],[Lab.t({en:"A page of text",es:"Página de texto"}),2e3],[Lab.t({en:"Phone photo",es:"Foto de móvil"}),3e6],[Lab.t({en:"MP3 song",es:"Canción MP3"}),4e6],[Lab.t({en:"Audio CD",es:"CD de audio"}),7e8],[Lab.t({en:"HD film",es:"Película HD"}),4e9],[Lab.t({en:"Hard drive",es:"Disco duro"}),1e12]];
+  const svg=$("#sizeChart"),x0=190,x1=660,top=24,rowH=36,maxL=12;
+  const X=v=>x0+(v/maxL)*(x1-x0);
+  let s="";
+  [[0,"1 B"],[3,"1 KB"],[6,"1 MB"],[9,"1 GB"],[12,"1 TB"]].forEach(([l,t])=>{
+    s+=`<line x1="${X(l)}" y1="${top-6}" x2="${X(l)}" y2="${top+rowH*items.length}" stroke="var(--line)"/>`;
+    s+=`<text x="${X(l)}" y="${top+rowH*items.length+18}" font-size="12" text-anchor="middle" fill="var(--muted)">${t}</text>`;
+  });
+  items.forEach(([n,v],i)=>{
+    const y=top+i*rowH,L=Math.log10(v),w=Math.max(4,X(L)-x0);
+    s+=`<text x="${x0-10}" y="${y+18}" font-size="12.5" text-anchor="end" fill="var(--ink)" style="font-family:var(--f-body)">${n}</text>`;
+    s+=`<rect x="${x0}" y="${y+5}" width="${w}" height="20" rx="3" fill="var(--hex)" opacity="${0.45+0.55*(i/(items.length-1))}"/>`;
+    const lbl=v>=1e12?"1 TB":v>=1e9?v/1e9+" GB":v>=1e6?v/1e6+" MB":v>=1e3?v/1e3+" KB":v+" B";
+    const inside=w>70;
+    s+=`<text x="${inside?x0+w-6:x0+w+6}" y="${y+19}" font-size="11.5" font-weight="600" text-anchor="${inside?"end":"start"}" fill="${inside?"#1b1200":"var(--ink)"}">${lbl}</text>`;
+  });
+  svg.innerHTML=s;
+})();
+
+const UNITS=[["bit",1/8,""],["Byte (B)",1,""],["KB",1e3,"si"],["KiB",1024,"iec"],["MB",1e6,"si"],["MiB",1024**2,"iec"],["GB",1e9,"si"],["GiB",1024**3,"iec"],["TB",1e12,"si"],["TiB",1024**4,"iec"]];
+(function(){const sel=$("#uFrom");UNITS.forEach(([n],i)=>sel.insertAdjacentHTML("beforeend",`<option value="${i}" ${n==="GB"?"selected":""}>${n}</option>`))})();
+function nice(v){if(v===0)return"0";if(v>=1e15||v<1e-6)return dec(v.toExponential(4));const d=v>=100?2:v>=1?4:8;return(+v.toFixed(d)).toLocaleString(LOC,{maximumFractionDigits:d})}
+function renderUnits(){
+  const v=Math.max(0,+$("#uVal").value||0),from=UNITS[+$("#uFrom").value],bytes=v*from[1];
+  let h=`<tr><th>${Lab.t({en:"Unit",es:"Unidad"})}</th><th>${Lab.t({en:"Type",es:"Tipo"})}</th><th class="num">${Lab.t({en:"Equivalent",es:"Equivale a"})}</th><th class="num">${Lab.t({en:"Bytes per unit",es:"Bytes por unidad"})}</th></tr>`;
+  UNITS.forEach(([n,f,t])=>{
+    const pill=t==="si"?`<span class="pill si">SI ×1000</span>`:t==="iec"?`<span class="pill iec">IEC ×1024</span>`:`<span class="pill">base</span>`;
+    const hi=n===from[0]?' style="background:var(--surface2)"':"";
+    h+=`<tr${hi}><td class="mono"><b>${n}</b></td><td>${pill}</td><td class="num">${nice(bytes/f)}</td><td class="num">${f<1?"1/8":fmt(f)}</td></tr>`;
+  });
+  $("#uTable").innerHTML=h;
+}
+$("#uVal").oninput=renderUnits;$("#uFrom").onchange=renderUnits;renderUnits();
+
+/* ================= 6. KB vs KiB ================= */
+function renderDisk(){
+  const B=+$("#kCap").value,gib=B/1024**3,gb=B/1e9;
+  const labelA=B>=1e12?(B/1e12).toLocaleString(LOC)+" TB":fmt(gb)+" GB";
+  const show=gib>=1024?dec((gib/1024).toFixed(2))+" TB":fmt(Math.floor(gib))+" GB";
+  $("#kBarA").textContent=labelA+" = "+fmt(B)+" bytes";
+  $("#kBarB").style.width=(gib/gb*100)+"%";
+  $("#kBarB").textContent=show+Lab.t({en:" in Windows",es:" según Windows"});
+  $("#kCalc").innerHTML=`${fmt(B)} bytes ÷ ${fmt(1e9)} = <b class="b10">${fmt(gb)} GB</b><br>${fmt(B)} bytes ÷ ${fmt(1024**3)} = <b class="b2">${dec(gib.toFixed(1))} GiB</b>`;
+  const pct=((1-gib/gb)*100).toFixed(1);
+  $("#kMiss").textContent=fmt(Math.round(gb-gib))+" \"GB\" ("+Lab.t({en:pct+"%",es:dec(pct)+" %"})+")";
+}
+$("#kCap").onchange=renderDisk;renderDisk();
+
+(function(){
+  const pre=["K","M","G","T","P","E"],svg=$("#diffChart"),x0=50,x1=500,y0=220,y1=20,maxV=16;
+  const Y=v=>y0-(v/maxV)*(y0-y1);let s="";
+  [0,4,8,12,16].forEach(t=>{s+=`<line x1="${x0}" y1="${Y(t)}" x2="${x1}" y2="${Y(t)}" stroke="var(--line)"/><text x="${x0-8}" y="${Y(t)+4}" font-size="11" text-anchor="end" fill="var(--muted)">${t}%</text>`});
+  const bw=(x1-x0)/pre.length;
+  pre.forEach((p,i)=>{
+    const v=(1.024**(i+1)-1)*100,x=x0+i*bw+bw*0.2,w=bw*0.6;
+    s+=`<rect x="${x}" y="${Y(v)}" width="${w}" height="${y0-Y(v)}" rx="3" fill="var(--bin)"/>`;
+    s+=`<text x="${x+w/2}" y="${Y(v)-6}" font-size="12" font-weight="700" text-anchor="middle" fill="var(--ink)">${dec(v.toFixed(1))}%</text>`;
+    s+=`<text x="${x+w/2}" y="${y0+18}" font-size="12" text-anchor="middle" fill="var(--ink)">${p}B/${p==="K"?"K":p}iB</text>`;
+  });
+  s+=`<text x="${x0}" y="252" font-size="11" fill="var(--muted)">${Lab.t({en:"difference between binary (×1024) and decimal (×1000) prefixes",es:"diferencia entre prefijo binario (×1024) y decimal (×1000)"})}</text>`;
+  svg.innerHTML=s;
+})();
+
+/* ================= 7. PRÁCTICA ================= */
+let Q=null,ok=0,ko=0,answered=false;
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+function divSteps(n,b){if(n===0)return"0";const l=[],rs=Lab.t({en:"remainder",es:"resto"});let q=n;while(q>0){l.push(`${q} ÷ ${b} = ${Math.floor(q/b)}  ${rs} ${q%b}${b===16&&q%b>9?" ("+HEXD[q%b]+")":""}`);q=Math.floor(q/b)}return l.join("\n")+"\n"+Lab.t({en:"Reading the remainders from bottom to top: ",es:"Leyendo los restos de abajo arriba: "})+toB(n,b)}
+function posSteps(s,b){const n=s.length;return s.split("").map((c,i)=>`${HEXD.indexOf(c)}·${b}${sup(n-1-i)}`).join(" + ")+" = "+parseInt(s,b)}
+function grpSteps(s,size){const L=Math.ceil(s.length/size)*size,p=pad(s,L),g=[];for(let i=0;i<L;i+=size)g.push(p.slice(i,i+size));return g.join(" | ")+"\n"+g.map(x=>HEXD[parseInt(x,2)].padStart(size," ")).join(" | ")}
+function newQ(){
+  const types=["d2b","b2d","d2h","h2d","b2h","b2o","unit"];
+  let t=$("#qType").value;if(t==="mix")t=types[rnd(0,types.length-1)];
+  const lim=[0,31,255,4095][+$("#qDiff").value],n=rnd(t==="d2h"||t==="h2d"?10:2,lim);
+  let p,a,sol;
+  if(t==="d2b"){p=Lab.t({en:`Convert <span class="mono b10">${n}</span><sub>10</sub> to binary`,es:`Pasa <span class="mono b10">${n}</span><sub>10</sub> a binario`});a=toB(n,2);sol=divSteps(n,2)}
+  if(t==="b2d"){const s=toB(n,2);p=Lab.t({en:`Convert <span class="mono b2">${s}</span><sub>2</sub> to decimal`,es:`Pasa <span class="mono b2">${s}</span><sub>2</sub> a decimal`});a=String(n);sol=posSteps(s,2)}
+  if(t==="d2h"){p=Lab.t({en:`Convert <span class="mono b10">${n}</span><sub>10</sub> to hexadecimal`,es:`Pasa <span class="mono b10">${n}</span><sub>10</sub> a hexadecimal`});a=toB(n,16);sol=divSteps(n,16)}
+  if(t==="h2d"){const s=toB(n,16);p=Lab.t({en:`Convert <span class="mono b16">${s}</span><sub>16</sub> to decimal`,es:`Pasa <span class="mono b16">${s}</span><sub>16</sub> a decimal`});a=String(n);sol=posSteps(s,16)}
+  if(t==="b2h"){const s=toB(n,2);p=Lab.t({en:`Convert <span class="mono b2">${s}</span><sub>2</sub> to hexadecimal`,es:`Pasa <span class="mono b2">${s}</span><sub>2</sub> a hexadecimal`});a=toB(n,16);sol=Lab.t({en:"Groups of 4 bits from the right:",es:"Grupos de 4 bits desde la derecha:"})+"\n"+grpSteps(s,4)+"\n"+Lab.t({en:"Result: ",es:"Resultado: "})+a}
+  if(t==="b2o"){const s=toB(n,2);p=Lab.t({en:`Convert <span class="mono b2">${s}</span><sub>2</sub> to octal`,es:`Pasa <span class="mono b2">${s}</span><sub>2</sub> a octal`});a=toB(n,8);sol=Lab.t({en:"Groups of 3 bits from the right:",es:"Grupos de 3 bits desde la derecha:"})+"\n"+grpSteps(s,3)+"\n"+Lab.t({en:"Result: ",es:"Resultado: "})+a}
+  if(t==="unit"){
+    const k=rnd(0,3);
+    if(k===0){const g=[256,500,512,1000,2000][rnd(0,4)];const r=g*1e9/1024**3;p=Lab.t({en:`A <span class="mono">${g} GB</span> drive. How many GiB does it have? (round to a whole number)`,es:`Un disco de <span class="mono">${g} GB</span>. ¿Cuántos GiB tiene? (redondea a entero)`});a=String(Math.round(r));sol=`${g} GB = ${fmt(g*1e9)} bytes\n${fmt(g*1e9)} ÷ ${fmt(1024**3)} = ${r.toFixed(2)} GiB → ${a}`}
+    if(k===1){const m=[100,300,600,1000][rnd(0,3)];p=Lab.t({en:`A <span class="mono">${m} Mbps</span> connection. What is the maximum speed in MB/s?`,es:`Una conexión de <span class="mono">${m} Mbps</span>. ¿Cuántos MB/s como máximo?`});a=dec(m/8);sol=Lab.t({en:`${m} megabits ÷ 8 bits per byte = ${a} MB/s`,es:`${m} megabits ÷ 8 bits por byte = ${a} MB/s`})}
+    if(k===2){const x=[2,4,8,16][rnd(0,3)];p=Lab.t({en:`How many KiB are <span class="mono">${x} MiB</span>?`,es:`¿Cuántos KiB son <span class="mono">${x} MiB</span>?`});a=String(x*1024);sol=`1 MiB = 1024 KiB\n${x} × 1024 = ${a} KiB`}
+    if(k===3){const x=[1,2,3,4][rnd(0,3)];p=Lab.t({en:`How many bits are there in <span class="mono">${x} KiB</span>?`,es:`¿Cuántos bits hay en <span class="mono">${x} KiB</span>?`});a=String(x*1024*8);sol=`${x} KiB = ${x} × 1024 = ${x*1024} bytes\n${x*1024} × 8 = ${a} bits`}
+  }
+  Q={a,sol};answered=false;
+  $("#qP").innerHTML=p;$("#qA").value="";$("#qF").textContent="";$("#qF").className="fb";$("#qS").hidden=true;$("#qS").textContent=sol;
+}
+const norm=s=>s.trim().toUpperCase().replace(/\s|^0X/g,"").replace(ES?/\./g:/,/g,"").replace(/^0+(?=.)/,"");
+function check(){
+  if(!Q)return;const u=norm($("#qA").value);if(!u){$("#qF").textContent=Lab.t({en:"Enter an answer.",es:"Escribe una respuesta."});return}
+  const good=u===norm(Q.a);
+  if(!answered){good?ok++:ko++;answered=true;$("#sOk").textContent=ok;$("#sKo").textContent=ko}
+  $("#qF").className="fb "+(good?"ok":"ko");
+  $("#qF").textContent=good?Lab.t({en:"Correct!",es:"¡Correcto!"}):Lab.t({en:"That is not correct. Check the procedure or look at the solution.",es:"No es correcto. Revisa el procedimiento o mira la solución."});
+  if(good)$("#qS").hidden=false;
+}
+$("#qCheck").onclick=check;
+$("#qA").addEventListener("keydown",e=>{if(e.key==="Enter")check()});
+$("#qSol").onclick=()=>{$("#qS").hidden=false};
+$("#qNext").onclick=newQ;$("#qType").onchange=newQ;$("#qDiff").onchange=newQ;
+newQ();
+</script>
+
+</body>
+</html>

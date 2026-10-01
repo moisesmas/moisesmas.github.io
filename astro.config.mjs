@@ -7,7 +7,7 @@ import starlightLinksValidator from 'starlight-links-validator';
 import { satteri } from '@astrojs/markdown-satteri';
 import archivosContenido from './src/lib/archivos-contenido';
 import { temasMenu } from './src/config/modulos';
-import { traduccionExiste } from './src/lib/enlaces';
+import { carpetaConIndiceExiste, traduccionExiste } from './src/lib/enlaces';
 import { directivas } from './src/lib/directivas';
 
 const DOCS = fileURLToPath(new URL('./src/content/docs', import.meta.url));
@@ -30,7 +30,7 @@ export default defineConfig({
       },
       head: [{ tag: 'script', attrs: { src: '/comun/video.js', defer: true } }],
       plugins: [
-        starlightLinksValidator({ exclude: ({ link }) => traduccionExiste(DOCS, link) }),
+        starlightLinksValidator({ exclude: ({ link }) => traduccionExiste(DOCS, link) || carpetaConIndiceExiste(DOCS, link) }),
         // /docencia/ no pertenece a ningún módulo.
         starlightSidebarTopics(temasMenu(), { exclude: ['/docencia'] }),
       ],
