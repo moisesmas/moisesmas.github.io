@@ -12,6 +12,7 @@ export default defineConfig({
       defaultLocale: 'root',
       // «es-ES» y no «es»: con «es», el servidor de desarrollo trata los segmentos /es/ como prefijo de idioma (404).
       locales: { root: { label: 'Español', lang: 'es-ES' } },
+      routeMiddleware: './src/middleware/idiomas.ts',
       // /docencia/ no pertenece a ningún módulo.
       plugins: [starlightSidebarTopics(temasMenu(), { exclude: ['/docencia'] })],
     }),
