@@ -6,8 +6,8 @@ import { estadoIdioma, idiomaContenido, limpiarMenu, paginacion } from '../lib/i
 // Se ejecuta después del de starlight-sidebar-topics (orden «pre»), que ya ha
 // reducido el menú al del módulo actual.
 export const onRequest = defineRouteMiddleware(async (context) => {
-  const ids = new Set((await getCollection('docs')).map((e) => e.id));
-  const existe = (id: string) => ids.has(id);
+  const titulos = new Map((await getCollection('docs')).map((e) => [e.id, e.data.sidebar?.label ?? e.data.title]));
+  const existe = (id: string) => titulos.has(id);
   const ruta = context.locals.starlightRoute;
   const modulo = moduloDeId(ruta.id);
 
@@ -17,7 +17,7 @@ export const onRequest = defineRouteMiddleware(async (context) => {
 
   if (!ruta.hasSidebar) return;
   ruta.sidebar = limpiarMenu(ruta.sidebar, ruta.id);
-  const { prev, next } = paginacion(ruta.sidebar, ruta.id, existe);
+  const { prev, next } = paginacion(ruta.sidebar, ruta.id, (id) => titulos.get(id));
   ruta.pagination.prev = prev;
   ruta.pagination.next = next;
 });

@@ -21,7 +21,17 @@ const MENU: any[] = [
   ]),
 ];
 const IDS = new Set(['docencia/smr/som', 'docencia/smr/som/es', U, `${U}/es`, `${U}/01-teoria`, `${U}/01-teoria/es`, `${U}/02-practicas`]);
+const TITULOS = new Map([
+  ['docencia/smr/som', 'Single-User Operating Systems'],
+  ['docencia/smr/som/es', 'Sistemas Operativos Monopuesto'],
+  [U, 'Unit 1'],
+  [`${U}/es`, 'Unidad 1'],
+  [`${U}/01-teoria`, 'Theory'],
+  [`${U}/01-teoria/es`, 'Teoría'],
+  [`${U}/02-practicas`, 'Practice'],
+]);
 const existe = (id: string) => IDS.has(id);
+const titulo = (id: string) => TITULOS.get(id);
 const hrefs = (entradas: any[]): string[] => entradas.flatMap((e) => (e.type === 'group' ? hrefs(e.entries) : [e.href]));
 
 describe('limpiarMenu', () => {
@@ -44,17 +54,19 @@ describe('limpiarMenu', () => {
 
 describe('paginacion', () => {
   it('en el original, vecinos originales', () => {
-    const p = paginacion(limpiarMenu(MENU, `${U}/01-teoria`), `${U}/01-teoria`, existe);
+    const p = paginacion(limpiarMenu(MENU, `${U}/01-teoria`), `${U}/01-teoria`, titulo);
     expect(p.prev?.href).toBe(`/${U}/`);
     expect(p.next?.href).toBe(`/${U}/02-practicas/`);
   });
   it('en la traducción, vecinos en castellano si existen y original si no', () => {
-    const p = paginacion(limpiarMenu(MENU, `${U}/01-teoria/es`), `${U}/01-teoria/es`, existe);
+    const p = paginacion(limpiarMenu(MENU, `${U}/01-teoria/es`), `${U}/01-teoria/es`, titulo);
     expect(p.prev?.href).toBe(`/${U}/es/`);
+    expect(p.prev?.label).toBe('Unidad 1');
     expect(p.next?.href).toBe(`/${U}/02-practicas/`);
+    expect(p.next?.label).toBe('Practice');
   });
   it('página que no está en el menú: sin paginación', () => {
-    expect(paginacion(limpiarMenu(MENU, 'docencia'), 'docencia', existe)).toEqual({ prev: undefined, next: undefined });
+    expect(paginacion(limpiarMenu(MENU, 'docencia'), 'docencia', titulo)).toEqual({ prev: undefined, next: undefined });
   });
 });
 

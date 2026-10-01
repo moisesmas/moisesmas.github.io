@@ -89,7 +89,7 @@ function aplanar(entradas: Entrada[]): Enlace[] {
 export function paginacion(
   menu: Entrada[],
   idActual: string,
-  existe: (id: string) => boolean,
+  titulo: (id: string) => string | undefined,
 ): { prev: Enlace | undefined; next: Enlace | undefined } {
   const enlaces = aplanar(menu);
   const i = enlaces.findIndex((e) => e.href === hrefDeId(idOriginal(idActual)));
@@ -97,7 +97,8 @@ export function paginacion(
   const enCastellano = (e: Enlace | undefined): Enlace | undefined => {
     if (!e || !esTraduccion(idActual)) return e;
     const traduccion = idTraduccion(idDeHref(e.href));
-    return existe(traduccion) ? { ...e, href: hrefDeId(traduccion) } : e;
+    const t = titulo(traduccion);
+    return t !== undefined ? { ...e, href: hrefDeId(traduccion), label: t } : e;
   };
   return { prev: enCastellano(enlaces[i - 1]), next: enCastellano(enlaces[i + 1]) };
 }
