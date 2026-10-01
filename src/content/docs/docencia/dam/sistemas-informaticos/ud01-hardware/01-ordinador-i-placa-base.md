@@ -62,7 +62,7 @@ L'institut vol muntar un servidor d'arxius per al departament: 4 discos durs per
 
 ## 3. La placa base
 
-La placa base (*motherboard*) és el circuit imprés principal de l'ordinador: una làmina de fibra de vidre amb diverses capes de pistes de coure gravades (les modernes en solen tindre entre 4 i 8, o més en les de gamma alta) que connecten tots els components. Per les pistes circulen alhora l'energia que alimenta cada peça i les senyals de dades que els permeten comunicar-se.
+La placa base (*motherboard*) és el circuit imprés principal de l'ordinador: una làmina de fibra de vidre amb diverses capes de pistes de coure gravades (les modernes en solen tindre entre 4 i 8, o més en les de gamma alta) que connecten tots els components. Per les pistes circulen alhora l'energia que alimenta cada peça i els senyals de dades que els permeten comunicar-se.
 
 Sense ella, la CPU no podria accedir a la RAM ni la gràfica rebria alimentació: és l'element que convertix un conjunt de peces soltes en un sistema informàtic.
 
@@ -166,7 +166,7 @@ Una placa més xicoteta cap, en general, en un xassís pensat per a una de més 
 
 Conéixer l'arrancada és la base per a diagnosticar un equip que no arranca. Esta és la seqüència:
 
-1. Prems el botó d'encesa: la placa ordena a la font que s'active i, quan les tensions són estables, la font envia la senyal de «tot correcte» (*power good*).
+1. Prems el botó d'encesa: la placa ordena a la font que s'active i, quan les tensions són estables, la font envia el senyal de «tot correcte» (*power good*).
 2. La CPU comença a executar el codi del microprogramari (UEFI o BIOS), guardat en el xip de la placa.
 3. **POST** (*Power-On Self-Test*): el microprogramari comprova els elements essencials (CPU, RAM, gràfica, teclat). Si alguna cosa falla, avisa amb pitos (*beep codes*), amb LED de diagnòstic o amb un visor de dos dígits. Cada fabricant té els seus codis: s'han de buscar en el manual.
 4. El microprogramari inicialitza els dispositius i consulta l'**ordre d'arrancada** (*boot order*) per a buscar un disc amb un carregador.
@@ -218,7 +218,7 @@ Es fa prement una tecla just en encendre l'equip: **Supr**, **F2**, **F10** o **
    <details>
    <summary>Resposta</summary>
 
-   Buscar el codi de pitos en el manual de la placa. Sovint apunta a la RAM o a la gràfica: apaga i desconnecta l'equip, torna a inserir els mòduls de RAM (un cada vegada) i torna a provar.
+   Buscar el codi de pitos en el manual de la placa. Sovint apunta a la RAM o a la gràfica: apaga i desconnecta l'equip, torna a inserir els mòduls de RAM (un cada vegada) i prova de nou.
 
    </details>
 
