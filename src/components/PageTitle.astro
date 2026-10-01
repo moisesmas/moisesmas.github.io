@@ -1,0 +1,9 @@
+---
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+import ConmutadorIdioma from './ConmutadorIdioma.astro';
+
+const { conmutador } = Astro.locals;
+---
+
+<Default><slot /></Default>
+{conmutador && <ConmutadorIdioma estado={conmutador} />}

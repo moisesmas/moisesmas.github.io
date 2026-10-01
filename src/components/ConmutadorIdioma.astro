@@ -1,0 +1,47 @@
+---
+import { ETIQUETA_IDIOMA } from '../config/modulos';
+import type { EstadoIdioma } from '../lib/idiomas';
+
+interface Props {
+  estado: EstadoIdioma;
+}
+
+const { estado } = Astro.props;
+const opciones = [
+  { idioma: estado.original, href: estado.hrefOriginal },
+  { idioma: 'es' as const, href: estado.hrefCastellano },
+];
+---
+
+<nav class="conmutador-idioma" aria-label="Idioma del contenido">
+  {
+    opciones.map((o) => (
+      <a href={o.href} lang={o.idioma} hreflang={o.idioma} aria-current={o.idioma === estado.actual ? 'page' : undefined}>{ETIQUETA_IDIOMA[o.idioma]}</a>
+    ))
+  }
+</nav>
+
+<style>
+  .conmutador-idioma {
+    display: inline-flex;
+    margin-top: 0.75rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 999px;
+    overflow: hidden;
+    font-size: var(--sl-text-sm);
+  }
+  .conmutador-idioma a {
+    padding: 0.3rem 0.95rem;
+    color: var(--sl-color-gray-2);
+    text-decoration: none;
+  }
+  .conmutador-idioma a[aria-current='page'] {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-black);
+    font-weight: 700;
+  }
+  .conmutador-idioma a:not([aria-current]):hover {
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-white);
+  }
+</style>
