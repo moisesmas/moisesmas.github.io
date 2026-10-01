@@ -11,6 +11,9 @@ it('no hay dos laboratorios con el mismo nombre (su memoria local se guarda por 
   const nombres = LABORATORIOS.map((l) => l.nombre);
   expect(nombres.filter((n, i) => nombres.indexOf(n) !== i)).toEqual([]);
 });
+it('la web tiene laboratorios', () => {
+  expect(LABORATORIOS.length).toBeGreaterThan(0);
+});
 
 // Se titula con el nombre y no con la ruta: Vitest recorta a 40 caracteres lo que interpola y todos quedarían iguales.
 describe.each(LABORATORIOS)('contrato de $nombre', ({ archivo, nombre, original }) => {

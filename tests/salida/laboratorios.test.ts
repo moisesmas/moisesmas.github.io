@@ -20,3 +20,15 @@ describe('Laboratorio de Bits publicado', () => {
     expect(existe('comun/fuentes.css')).toBe(true);
   });
 });
+
+describe('Anatomía de la Placa Base publicada', () => {
+  const T = 'docencia/dam/sistemas-informaticos/ud01-hardware/';
+  it('se copia a su tema y se enlaza en los dos idiomas', () => {
+    expect(existe(`${T}laboratorios/placa-base/index.html`)).toBe(true);
+    expect(leer(`${T}index.html`)).toContain(`href="/${T}laboratorios/placa-base/"`);
+    expect(leer(`${T}es/index.html`)).toContain(`href="/${T}laboratorios/placa-base/?lang=es"`);
+  });
+  it('aparece en la portada del módulo', () => {
+    expect(leer('docencia/dam/sistemas-informaticos/index.html')).toContain('Anatomia de la placa base');
+  });
+});
