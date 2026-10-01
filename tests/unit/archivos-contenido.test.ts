@@ -34,6 +34,7 @@ describe('resolverArchivo', () => {
     expect(await resolverArchivo(raiz, '/som/ud01/index.md')).toBeNull();
   });
   it('no sale de la carpeta de contenido', async () => {
+    writeFileSync(path.join(path.dirname(raiz), 'secreto.txt'), 'x');
     expect(await resolverArchivo(raiz, '/../secreto.txt')).toBeNull();
     expect(await resolverArchivo(raiz, '/%2e%2e/secreto.txt')).toBeNull();
   });

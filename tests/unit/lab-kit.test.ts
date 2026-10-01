@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { readFileSync } from 'node:fs';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 // Ruta relativa a la raíz del proyecto: en el entorno happy-dom, `URL` no es la de Node.
 const CODIGO = readFileSync('public/comun/lab.js', 'utf8');
@@ -87,5 +87,16 @@ describe('controles', () => {
     Lab.guardar('pestana', 'kib');
     expect(localStorage.getItem('lab:prueba:pestana')).toBe('kib');
     expect(Lab.leer('pestana')).toBe('kib');
+  });
+  it('volver con idioma original español: no añade es/ al href', () => {
+    cargar(LAB, '<a data-lab-volver href="#">←</a>', 'es');
+    expect(document.querySelector('[data-lab-volver]')!.getAttribute('href')).toBe('http://localhost/docencia/smr/som/ud01/');
+  });
+  it('cambio de idioma usa location.replace para no contaminar el historial', () => {
+    const replaceSpy = vi.spyOn(window.location, 'replace').mockImplementation(() => {});
+    cargar(LAB, '<button data-lab-idioma="es"></button>');
+    (document.querySelector('[data-lab-idioma="es"]') as HTMLButtonElement).click();
+    expect(replaceSpy).toHaveBeenCalledWith(`${LAB}?lang=es`);
+    replaceSpy.mockRestore();
   });
 });

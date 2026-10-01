@@ -113,7 +113,7 @@
       boton.setAttribute('lang', destino);
       boton.setAttribute('aria-pressed', destino === idioma ? 'true' : 'false');
       boton.addEventListener('click', function () {
-        if (destino !== idioma) global.location.href = urlConIdioma(global.location.href, destino, original);
+        if (destino !== idioma) global.location.replace(urlConIdioma(global.location.href, destino, original));
       });
     });
 
@@ -122,7 +122,7 @@
         enlace.hidden = true;
         return;
       }
-      var paginaTema = new URL('../../' + (idioma === 'es' ? 'es/' : ''), global.location.href).toString();
+      var paginaTema = new URL('../../' + (idioma !== original ? 'es/' : ''), global.location.href).toString();
       enlace.setAttribute('href', paginaTema);
       enlace.addEventListener('click', function (evento) {
         if (destinoVolver(doc.referrer, global.location.origin, paginaTema) === 'atras') {
