@@ -396,6 +396,7 @@ Contraste (calculado con la fórmula de WCAG):
 ## 9. Enlazarlo desde la unidad
 
 En la página de la unidad (`index.md` y, en SOM y Sistemas Informáticos, también `index.es.md`), en la misma carpeta que `laboratorios/`:
+- En el contenedor de controles (zoom, idioma, volver), añade `flex-wrap: wrap` al CSS del `.zoom` para que se adapten bien a 375 px.
 
 ```md
 ::artefacto{src="mi-laboratorio"}
