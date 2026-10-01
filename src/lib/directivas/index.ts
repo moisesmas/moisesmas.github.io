@@ -1,11 +1,13 @@
 import type { MdastContent, MdastPluginEntry } from 'satteri';
+import { artefacto } from './artefacto';
 import { aules } from './aules';
 import { archivoMd, type Manejador, type NodoDirectiva } from './comun';
 import { descarga } from './descarga';
+import { laboratorios } from './laboratorios';
 import { modulos } from './modulos';
 import { video } from './video';
 
-const HOJAS: Record<string, Manejador> = { descarga, video, modulos };
+const HOJAS: Record<string, Manejador> = { descarga, video, modulos, artefacto, laboratorios };
 const CONTENEDORES: Record<string, Manejador> = { aules };
 
 /**
