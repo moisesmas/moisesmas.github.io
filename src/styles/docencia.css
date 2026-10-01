@@ -1,0 +1,50 @@
+/* Identidad de Docencia: la misma que los laboratorios (verde placa + ámbar). */
+:root {
+  --fuente-titulos: 'Chakra Petch', 'Segoe UI', system-ui, sans-serif;
+  --sl-font: 'Atkinson Hyperlegible', 'Segoe UI', system-ui, sans-serif;
+  --sl-font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --pcb: #1a463a;
+
+  /* Tema oscuro (el de partida en Starlight) */
+  --sl-color-accent-low: #33260f;
+  --sl-color-accent: #f3aa3c;
+  --sl-color-accent-high: #fbd9a0;
+  --sl-color-white: #e4ebe6;
+  --sl-color-gray-1: #cdd8d1;
+  --sl-color-gray-2: #95a69d;
+  --sl-color-gray-3: #6f8278;
+  --sl-color-gray-4: #3c4c44;
+  --sl-color-gray-5: #2b3832;
+  --sl-color-gray-6: #1d2823;
+  --sl-color-black: #0e1411;
+}
+
+:root[data-theme='light'] {
+  --pcb: #1f5244;
+  --sl-color-accent-low: #fbeed8;
+  --sl-color-accent: #b86e00;
+  --sl-color-accent-high: #5c3700;
+  --sl-color-white: #16201b;
+  --sl-color-gray-1: #243029;
+  --sl-color-gray-2: #3d4d44;
+  --sl-color-gray-3: #56655d;
+  --sl-color-gray-4: #8d9c93;
+  --sl-color-gray-5: #d3dbd4;
+  --sl-color-gray-6: #e9ede6;
+  --sl-color-gray-7: #f2f4ef;
+  --sl-color-black: #ffffff;
+}
+
+.site-title,
+h1#_top,
+.sl-markdown-content :is(h1, h2, h3, h4),
+.laboratorios-modulo h3 {
+  font-family: var(--fuente-titulos);
+  letter-spacing: 0.01em;
+}
+
+.nota-privacidad {
+  margin-top: 2rem;
+  font-size: var(--sl-text-xs);
+  color: var(--sl-color-gray-3);
+}

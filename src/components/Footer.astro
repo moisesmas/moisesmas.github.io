@@ -1,0 +1,7 @@
+---
+import Default from '@astrojs/starlight/components/Footer.astro';
+import { SITIO } from '../config/sitio';
+---
+
+<Default><slot /></Default>
+<p class="nota-privacidad">{SITIO.notaPrivacidad}</p>
