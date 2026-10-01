@@ -6,6 +6,7 @@ import starlightSidebarTopics from 'starlight-sidebar-topics';
 import starlightLinksValidator from 'starlight-links-validator';
 import { satteri } from '@astrojs/markdown-satteri';
 import archivosContenido from './src/lib/archivos-contenido';
+import informePendientes from './src/lib/informe-pendientes';
 import { temasMenu } from './src/config/modulos';
 import { carpetaConIndiceExiste, traduccionExiste } from './src/lib/enlaces';
 import { directivas } from './src/lib/directivas';
@@ -18,6 +19,7 @@ export default defineConfig({
   integrations: [
     // Antes que Starlight: los archivos deben estar copiados cuando valida los enlaces.
     archivosContenido(),
+    informePendientes(),
     starlight({
       title: 'Docencia ciclos formativos',
       defaultLocale: 'root',
