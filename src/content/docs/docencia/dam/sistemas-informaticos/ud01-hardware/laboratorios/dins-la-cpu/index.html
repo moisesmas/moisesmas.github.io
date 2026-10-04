@@ -1,0 +1,1669 @@
+<!doctype html>
+<html lang="ca-valencia" data-lab="dins-la-cpu" data-idioma-original="ca-valencia">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="/comun/lab.js"></script>
+<title>Dins de la CPU</title>
+<meta name="description" content="Com executa la CPU un programa: Von Neumann, registres pas a pas, cicle d'instrucció, jerarquia de memòria i memòria cau, calculadora de RAM i rendiment (nuclis, fils i IPC).">
+<meta name="keywords" content="CPU, Von Neumann, registres, cicle d'instrucció, memòria cau, RAM, latència, nuclis, IPC">
+<meta name="lab:titulo:es" content="Dentro de la CPU">
+<meta name="lab:descripcion:es" content="Cómo ejecuta la CPU un programa: Von Neumann, registros paso a paso, ciclo de instrucción, jerarquía de memoria y memoria caché, calculadora de RAM y rendimiento (núcleos, hilos e IPC).">
+<meta name="lab:etiquetas:es" content="CPU, Von Neumann, registros, ciclo de instrucción, memoria caché, RAM, latencia, núcleos, IPC">
+<link rel="icon" href="/comun/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/comun/fuentes.css">
+<style>
+html,body{margin:0}body{padding-top:env(safe-area-inset-top,0px)}img{max-width:100%}[hidden]{display:none!important}
+:root{
+  --bg:#f2f4ef;--surface:#ffffff;--surface2:#e9ede6;--ink:#16201b;--muted:#56655d;--line:#d3dbd4;
+  --accent:#b86e00;--accent-soft:#fbeed8;--pcb:#1f5244;
+  --cpu:#2764c9;--cpu-soft:#e2ebfa;--mem:#0a8a74;--mem-soft:#dcf2ed;--chip:#7446c4;--chip-soft:#ece4f8;
+  --good:#1f8a3b;--bad:#c4372c;--on:#f5b400;--off:#c9d1cb;
+  --f-display:"Chakra Petch","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1411;--surface:#161f1b;--surface2:#1d2823;--ink:#e4ebe6;--muted:#95a69d;--line:#2b3832;
+  --accent:#f3aa3c;--accent-soft:#33260f;--pcb:#1a463a;
+  --cpu:#82b1ff;--cpu-soft:#18243b;--mem:#3fd2b5;--mem-soft:#133029;--chip:#b596f3;--chip-soft:#261e38;
+  --good:#5bd07a;--bad:#ff7b6e;--on:#ffc83d;--off:#34423b;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1411;--surface:#161f1b;--surface2:#1d2823;--ink:#e4ebe6;--muted:#95a69d;--line:#2b3832;
+  --accent:#f3aa3c;--accent-soft:#33260f;--pcb:#1a463a;
+  --cpu:#82b1ff;--cpu-soft:#18243b;--mem:#3fd2b5;--mem-soft:#133029;--chip:#b596f3;--chip-soft:#261e38;
+  --good:#5bd07a;--bad:#ff7b6e;--on:#ffc83d;--off:#34423b;color-scheme:dark}
+html{font-size:16px}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1rem;line-height:1.55}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:1.3rem;letter-spacing:.02em}
+h2{font-size:1.65rem;font-weight:700}
+h3{font-size:1.1rem;font-weight:600}
+p{margin:0;max-width:70ch}
+code,.mono{font-family:var(--f-mono)}
+button,input,select{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,[role="tabpanel"]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+.top-inner{max-width:1180px;margin:0 auto;padding:.8rem 16px .5rem;display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand a.home{font:600 .8rem var(--f-mono);color:var(--muted);text-decoration:none;border:1px solid var(--muted);border-radius:6px;padding:.2rem .5rem}
+.brand a.home:hover{color:var(--ink)}
+.leds{display:flex;gap:3px}
+.leds i{width:9px;height:9px;border-radius:50%;background:var(--off)}
+.leds i.on{background:var(--on);box-shadow:0 0 6px var(--on)}
+.zoom{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;font-size:.8rem;color:var(--muted)}
+.zoom button{font:600 .85rem var(--f-mono);border:1px solid var(--muted);background:var(--surface);color:var(--ink);border-radius:6px;padding:.2rem .55rem;cursor:pointer}
+.zoom .idiomas{display:inline-flex;margin-left:.5rem;border:1px solid var(--muted);border-radius:99px;overflow:hidden}
+.zoom .idiomas button{border:0;border-radius:0;background:transparent;color:var(--muted);font:600 .75rem var(--f-mono);padding:.25rem .6rem}
+.zoom .idiomas button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+nav.tabs{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:.25rem;overflow-x:auto;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;font:600 .95rem var(--f-display);letter-spacing:.02em;background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);padding:.55rem .75rem;cursor:pointer;white-space:nowrap}
+nav.tabs button .n{font-family:var(--f-mono);font-size:.75rem;opacity:.8;margin-right:.35rem}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs button:hover{color:var(--ink)}
+
+main{max-width:1180px;margin:0 auto;padding-block:1.6rem 4rem;padding-inline:16px}
+section.tab{display:grid;gap:1.3rem}
+.intro{display:grid;gap:.6rem}
+.eyebrow{font:600 .75rem var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.lead{font-size:1.08rem;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:1.2rem}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:1rem}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.1rem;display:grid;gap:.8rem;align-content:start;min-width:0}
+.note{background:var(--surface2);border-radius:8px;padding:.7rem .9rem;font-size:.95rem}
+.key{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;padding:.7rem .9rem}
+.row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+.fld{display:grid;gap:.25rem;font-size:.85rem;color:var(--muted);min-width:0;max-width:100%}
+input[type=text],input[type=number],select{font:600 1rem var(--f-mono);background:var(--bg);color:var(--ink);border:1px solid var(--muted);border-radius:7px;padding:.4rem .55rem;min-width:0;max-width:100%}
+input[type=range]{width:100%;accent-color:var(--accent)}
+input[type=checkbox]{accent-color:var(--accent);width:1.1rem;height:1.1rem}
+.btn{font:600 .92rem var(--f-display);letter-spacing:.02em;border:1px solid var(--muted);background:var(--surface2);color:var(--ink);border-radius:7px;padding:.4rem .85rem;cursor:pointer}
+.btn.primary{background:var(--pcb);border-color:var(--pcb);color:#fff}
+.btn[aria-pressed="true"]{background:var(--accent-soft);border:2px solid var(--accent)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.seg{display:inline-flex;flex-wrap:wrap;gap:.3rem}
+.scroll{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;font-variant-numeric:tabular-nums}
+table.t{width:100%;font-size:.92rem}
+table.t th,table.t td{padding:.35rem .55rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:600 .75rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+table.t td.num,table.t th.num{text-align:right;font-family:var(--f-mono)}
+.fb{font:600 1rem var(--f-display);min-height:1.4em}
+.fb.ok{color:var(--good)}.fb.ko{color:var(--bad)}
+.pill{display:inline-block;font:600 .75rem var(--f-mono);padding:.1rem .5rem;border-radius:99px;background:var(--surface2);color:var(--ink)}
+svg text{font-family:var(--f-mono)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Diagrama de Von Neumann */
+.vnsvg{width:100%;height:auto;max-width:760px}
+.vnsvg .blk{fill:var(--surface2);stroke:var(--muted);stroke-width:2;transition:fill .2s}
+.vnsvg .blk.on{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3}
+.vnsvg g.flow line{stroke:var(--muted);opacity:.5}
+.vnsvg g.flow polygon{fill:var(--muted);opacity:.5}
+.vnsvg g.flow.on line{stroke:var(--accent);opacity:1;stroke-width:4}
+.vnsvg g.flow.on polygon{fill:var(--accent);opacity:1}
+.vnsvg text{fill:var(--ink);font-size:13px}
+.vnsvg .sm{font-size:11px;fill:var(--muted)}
+.vnsvg .hid{opacity:0}
+.stepcap{background:var(--surface2);border-radius:8px;padding:.7rem .9rem;min-height:3.4rem}
+.words{display:grid;grid-template-columns:auto auto auto 1fr;gap:.25rem .8rem;font-family:var(--f-mono);align-items:baseline}
+.words .h{font:600 .72rem var(--f-mono);color:var(--muted);text-transform:uppercase}
+.words .b{letter-spacing:.06em;color:var(--mem)}
+.words .i{font-weight:700}
+.models{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:.8rem}
+.mdl{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;padding:.7rem;border:2px dashed var(--line);border-radius:8px}
+.mdl .cpu{background:var(--cpu-soft);border:2px solid var(--cpu);border-radius:6px;padding:.3rem .6rem;font:600 .85rem var(--f-mono)}
+.mdl .mm{background:var(--mem-soft);border:2px solid var(--mem);border-radius:6px;padding:.3rem .5rem;font:600 .8rem var(--f-mono)}
+.mdl .bus{font:.75rem var(--f-mono);color:var(--muted)}
+
+/* Simulador */
+.mem{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.4rem}
+.cell{background:var(--surface2);border:2px solid transparent;border-radius:7px;padding:.3rem .4rem;font-family:var(--f-mono);min-width:0}
+.cell .ad{font-size:.7rem;color:var(--muted)}
+.cell .wd{font-weight:700;font-size:1rem}
+.cell .mn{font-size:.75rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:1.1em}
+.cell .mn.dt{font-style:italic}
+.cell.cp{border-color:var(--accent)}
+.cell.rd{background:var(--mem-soft);border-color:var(--mem)}
+.cell.wr{background:var(--chip-soft);border-color:var(--chip)}
+.cell input{width:100%;font-size:.95rem;padding:.15rem .3rem}
+.regs{display:grid;grid-template-columns:repeat(auto-fit,minmax(5.2rem,1fr));gap:.5rem}
+.reg{background:var(--cpu-soft);border:2px solid transparent;border-radius:8px;padding:.4rem .5rem;font-family:var(--f-mono);text-align:center}
+.reg .nm{font:700 .9rem var(--f-mono)}
+.reg .fn{font-size:.65rem;color:var(--muted)}
+.reg .vl{font-weight:700;font-size:1.15rem;min-height:1.6em;overflow-wrap:anywhere}
+.reg.chg{border-color:var(--accent);background:var(--accent-soft)}
+.phases{display:flex;flex-wrap:wrap;gap:.4rem}
+.phases span{font:600 .8rem var(--f-mono);padding:.2rem .6rem;border-radius:99px;background:var(--surface2);border:2px solid transparent}
+.phases span.on{border-color:var(--accent);background:var(--accent-soft)}
+.opline{font-family:var(--f-mono);font-size:.95rem;background:var(--surface2);border-radius:8px;padding:.6rem .8rem;min-height:3.2rem;overflow-wrap:anywhere}
+.trace{max-height:18rem;overflow:auto}
+.trace td,.trace th{white-space:nowrap}
+.trace thead th{position:sticky;top:0;background:var(--surface)}
+.out{font:700 1.1rem var(--f-mono);min-height:1.6em}
+.pred{display:grid;grid-template-columns:repeat(auto-fit,minmax(5.2rem,1fr));gap:.5rem}
+.pred label{display:grid;gap:.15rem;font:700 .85rem var(--f-mono)}
+.pred input{width:100%}
+.pred input.okk{border-color:var(--good);border-width:2px}
+.pred input.nok{border-color:var(--bad);border-width:2px}
+
+/* Cicle y pipeline */
+.cyc{display:grid;grid-template-columns:repeat(auto-fit,minmax(7rem,1fr));gap:.5rem}
+.cyc .bx{background:var(--surface2);border:2px solid var(--line);border-radius:8px;padding:.5rem;font-family:var(--f-mono);font-size:.85rem;text-align:center}
+.cyc .bx b{display:block}
+.cyc .bx.on{border-color:var(--accent);background:var(--accent-soft)}
+.pipe{display:grid;gap:3px;font-family:var(--f-mono);font-size:.78rem}
+.pipe .c{padding:.15rem 0;text-align:center;border-radius:3px;min-width:1.5rem}
+.pipe .h{color:var(--muted)}
+.pipe .F{background:var(--cpu-soft)}.pipe .D{background:var(--chip-soft)}.pipe .E{background:var(--accent-soft)}.pipe .W{background:var(--mem-soft)}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.chip{background:var(--surface2);border:2px solid var(--muted);border-radius:8px;padding:.4rem .7rem;cursor:pointer;text-align:left}
+.chip[disabled]{opacity:.45;cursor:default}
+.seq{display:flex;flex-wrap:wrap;gap:.4rem;min-height:2.2rem}
+.seq span{background:var(--accent-soft);border:2px solid var(--accent);border-radius:8px;padding:.25rem .6rem;font-size:.9rem}
+
+/* Jerarquía y caché */
+.bars{display:grid;gap:.35rem}
+.bar{display:flex;flex-wrap:wrap;gap:.2rem .6rem;align-items:center;font-size:.9rem}
+.bar>span:first-child{flex:0 0 7.5rem;min-width:0}
+.bar .tr{flex:1 1 6rem;background:var(--surface2);border-radius:5px;height:1.2rem;overflow:hidden}
+.bar .fl{height:100%;background:var(--accent);min-width:3px}
+.bar .vl{flex:0 1 11rem;margin-left:auto;font:600 .85rem var(--f-mono);text-align:right}
+.seqa{display:flex;flex-wrap:wrap;gap:3px;font:600 .75rem var(--f-mono)}
+.seqa span{padding:.1rem .3rem;border-radius:4px;background:var(--surface2);min-width:1.7rem;text-align:center}
+.seqa span.h{background:var(--mem-soft);outline:2px solid var(--mem)}
+.seqa span.m{background:var(--accent-soft);outline:2px solid var(--bad)}
+.seqa span.cur{text-decoration:underline}
+.lines{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));gap:.4rem}
+.ln{background:var(--surface2);border:2px solid transparent;border-radius:7px;padding:.35rem .5rem;font:.8rem var(--f-mono)}
+.ln.hit{border-color:var(--mem);background:var(--mem-soft)}
+.ln.miss{border-color:var(--bad)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.5rem}
+.stat{background:var(--surface2);border-radius:8px;padding:.5rem .7rem}
+.stat .v{font:700 1.3rem var(--f-mono)}
+.stat .l{font:.72rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.scen{display:grid;gap:.5rem}
+.opts{display:flex;flex-wrap:wrap;gap:.4rem}
+
+/* RAM */
+.cfg{display:grid;gap:.6rem}
+.res{display:grid;grid-template-columns:1fr auto;gap:.2rem .8rem;align-items:baseline;font-family:var(--f-mono)}
+.res .l{font:.8rem var(--f-body);color:var(--muted)}
+.res .v{font-weight:700;text-align:right}
+.verdict{white-space:pre-line;font:600 1rem var(--f-display);border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;padding:.6rem .8rem}
+.notch{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+.notch svg{width:220px;height:auto}
+.notch rect.pcb{fill:var(--mem-soft);stroke:var(--mem);stroke-width:2}
+
+/* CPU */
+.cores{display:flex;flex-wrap:wrap;gap:4px}
+.cores i{width:1.5rem;height:1.5rem;border-radius:4px;background:var(--cpu);display:block}
+.cores i.th{background:var(--chip)}
+.gauge{height:1.4rem;background:var(--surface2);border-radius:6px;overflow:hidden;position:relative}
+.gauge i{display:block;height:100%;background:var(--good)}
+.gauge i.warn{background:var(--accent)}.gauge i.bad{background:var(--bad)}
+.chart-wrap{overflow-x:auto}
+.chart-wrap svg{width:100%;min-width:420px;height:auto;display:block}
+
+/* Práctica */
+.quiz{display:grid;gap:.9rem}
+.q-prompt{font:600 1.1rem var(--f-display);max-width:70ch}
+.q-prompt .mono{font-size:.95rem;font-weight:600;overflow-wrap:anywhere}
+.score{display:flex;gap:1.2rem;font:600 1rem var(--f-mono)}
+.sol{font-family:var(--f-mono);font-size:.92rem;background:var(--surface2);border-radius:8px;padding:.7rem .9rem;white-space:pre-wrap;overflow-wrap:anywhere}
+
+@media (max-width:560px){h2{font-size:1.35rem}.mem{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<script type="application/json" id="lab-textos">
+{
+  "es": {
+    "volver-aria": "Volver a la unidad",
+    "zoom-aria": "Tamaño de letra para proyector",
+    "zoom-menys": "Reduce el texto",
+    "zoom-mes": "Aumenta el texto",
+    "idioma-aria": "Idioma",
+    "seccions-aria": "Secciones del laboratorio",
+    "vn-svg-aria": "Esquema del ordenador: entrada, salida, CPU con unidad de control, ALU y registros, memoria con instrucciones y datos, y disco de almacenamiento",
+    "vn-b-aria": "Interpretación de las palabras",
+    "vn-c-aria": "Modelo de arquitectura",
+    "cy-pick-aria": "Instrucción a seguir",
+    "cy-pipe-aria": "Modo de ejecución",
+    "volver": "Unidad",
+    "titol": "Dentro de la CPU",
+    "zoom": "Tamaño",
+    "tab-vn": "Von Neumann en marcha",
+    "tab-registres": "Registros paso a paso",
+    "tab-cicle": "El ciclo de instrucción",
+    "tab-dada": "¿Dónde está el dato?",
+    "tab-ram": "Calculadora de RAM",
+    "tab-nuclis": "Núcleos, hilos e IPC",
+    "tab-practica": "Práctica",
+    "vn-eyebrow": "Laboratorio 1 · La idea de Von Neumann",
+    "vn-titol": "El programa vive en la misma memoria que los datos",
+    "vn-a-titol": "Un programa en marcha",
+    "vn-ent": "Entrada",
+    "vn-sal": "Salida",
+    "vn-uc": "Unidad de control",
+    "vn-reg": "Registros",
+    "vn-mem": "Memoria",
+    "vn-ins": "instrucciones",
+    "vn-dat": "datos",
+    "vn-bin": "todo junto, en binario",
+    "vn-disc": "Disco (almacenamiento)",
+    "vn-busos": "buses",
+    "btn-anterior": "← Anterior",
+    "btn-seguent": "Siguiente →",
+    "btn-reinicia": "Reinicia",
+    "vn-b-titol": "El mismo número, dos lecturas",
+    "vn-b-text": "Una palabra de memoria es solo un número. Cambia cómo la lee la CPU:",
+    "vn-b-ins": "Como instrucción",
+    "vn-b-dat": "Como dato",
+    "vn-b-nota": "Ninguna de las dos lecturas es «la buena»: la CPU interpreta como instrucción la palabra a la que apunta el contador de programa (CP); el resto son datos.",
+    "vn-c-titol": "¿Un solo camino o dos?",
+    "rg-eyebrow": "Laboratorio 2 · El computador sencillo",
+    "rg-titol": "Qué hace cada registro en cada paso",
+    "rg-intro": "Carga un programa, avanza micro-operación a micro-operación y mira cómo cambian CP, RDM, RIM, RI y AC. Activa el modo de predicción para poner a prueba tu tabla.",
+    "rg-programa": "Programa",
+    "rg-teclat": "Valores del teclado (separados por comas)",
+    "rg-pas": "Paso",
+    "rg-ins": "Instrucción",
+    "rg-run": "Ejecutar todo",
+    "rg-reset": "Reinicia",
+    "rg-pred": "Modo de predicción",
+    "rg-edit": "Edita la memoria",
+    "rg-mem": "Memoria (16 palabras)",
+    "rg-cpu": "Registros de la CPU",
+    "rg-eixida": "Salida del programa",
+    "rg-pred-titol": "Predice el paso siguiente",
+    "rg-pred-text": "Los campos tienen los valores actuales. Cambia los que creas que cambiarán con el paso siguiente y pulsa «Comprueba y avanza».",
+    "rg-comprova": "Comprueba y avanza",
+    "rg-traca": "Traza (un paso por fila)",
+    "rg-th-pas": "Paso",
+    "rg-isa": "Repertorio de instrucciones",
+    "isa-th-paraula": "Palabra",
+    "isa-th-ins": "Instrucción",
+    "isa-th-fa": "Qué hace",
+    "isa-halt": "Para el programa",
+    "isa-load": "AC ← contenido de la dirección xx",
+    "isa-store": "Dirección xx ← AC",
+    "isa-add": "AC ← AC + contenido de la dirección xx",
+    "isa-sub": "AC ← AC − contenido de la dirección xx",
+    "isa-mul": "AC ← AC × contenido de la dirección xx",
+    "isa-jmp": "CP ← xx (salta)",
+    "isa-jz": "Si AC = 0, CP ← xx",
+    "isa-in": "AC ← siguiente valor del teclado",
+    "isa-out": "Muestra el AC por pantalla",
+    "cy-eyebrow": "Laboratorio 3 · Fetch, decode, execute, writeback",
+    "cy-titol": "Cuatro fases para cada instrucción",
+    "cy-intro": "Elige una instrucción y síguela fase a fase. Después verás por qué una CPU real solapa las fases y ordenarás las acciones de memoria.",
+    "cy-a-titol": "El ciclo, fase a fase",
+    "cy-mem": "Memoria",
+    "cy-uc": "Unidad de control",
+    "cy-reg": "Registros",
+    "cy-pipe-titol": "Solapar las fases (pipeline)",
+    "cy-pipe-text": "Mientras una instrucción se ejecuta, la siguiente ya está en decodificación y una tercera, en fetch. Así la CPU termina una instrucción por ciclo aunque cada una necesite cuatro fases. Modelo ideal, sin dependencias entre instrucciones.",
+    "cy-pipe-n": "Número de instrucciones",
+    "cy-pipe-seq": "Sin pipeline",
+    "cy-pipe-pip": "Con pipeline",
+    "cy-ord-titol": "Ordena las acciones",
+    "cy-ord-text": "Toca las acciones en el orden en que ocurren para una instrucción.",
+    "cy-ord-reset": "Vuelve a empezar",
+    "vn-intro": "Entrada, proceso, salida y almacenamiento: lo importante es cómo se hablan la <b>CPU</b> y la <b>memoria</b>. Haz avanzar el programa «2 + 3» y sigue el camino de los datos.",
+    "rg-mem-nota": "Cada palabra tiene 3 dígitos: el primero es la operación y los dos últimos la dirección (<code>110</code> = <code>LOAD 10</code>). En modo edición puedes escribir un número o una instrucción.",
+    "cy-a-ini": "Estado inicial: <code>R1 = 2</code>, <code>R2 = 3</code>, <code>R3 = 0</code>, <code>M[20] = 7</code>, <code>M[21] = 0</code>.",
+    "dd-seq-aria": "Secuencia de accesos: verde es acierto, naranja es fallo",
+    "dd-eyebrow": "Laboratorio 4 · Jerarquía de memoria",
+    "dd-titol": "¿Dónde está el dato que necesita la CPU?",
+    "dd-intro": "Cuanto más cerca de la CPU, más rápido pero más pequeño. La memoria caché guarda copias de lo usado hace poco para que la CPU no tenga que esperar a la RAM.",
+    "dd-escala-titol": "Si 1 nanosegundo durara 1 segundo…",
+    "dd-escala-text": "Tiempos de acceso orientativos de cada nivel, pasados a escala humana. El gráfico es logarítmico: cada marca es diez veces más.",
+    "dd-escala-nota": "Una lectura al disco duro dura, a escala humana, meses: por eso una CPU que espera al disco parece «parada». Las cachés existen para no esperar a la RAM.",
+    "dd-cau-titol": "Simulador de memoria caché",
+    "dd-cau-text": "Caché completamente asociativa con reemplazo LRU (se desaloja la línea menos usada recientemente). Un acierto cuesta 1 ns; un fallo, 1 ns más 80 ns de la RAM.",
+    "dd-linies": "Líneas",
+    "dd-bloc": "Palabras por bloque",
+    "dd-patro": "Patrón de acceso",
+    "dd-custom": "Direcciones propias (0 a 63)",
+    "dd-acces": "Siguiente acceso",
+    "dd-tot": "Ejecutar todo",
+    "dd-scen-titol": "Elige el nivel más probable",
+    "ra-eyebrow": "Laboratorio 5 · Solo cálculos",
+    "ra-titol": "De «DDR5-6000 CL30» a nanosegundos y GB/s",
+    "ra-intro": "Compara dos módulos o kits: latencia real, ancho de banda y capacidad. Las ranuras de la placa las tienes en el laboratorio de la placa base.",
+    "ra-cmp-titol": "Comparación",
+    "ra-comp-titol": "¿Encaja el módulo A en la placa?",
+    "ra-pl-gen": "Generación de la placa",
+    "ra-pl-fmt": "Formato de la ranura",
+    "nu-eyebrow": "Laboratorio 6 · Rendimiento de la CPU",
+    "nu-titol": "El GHz no lo es todo",
+    "nu-intro": "El rendimiento de un hilo es frecuencia × IPC. Repartir el trabajo entre núcleos ayuda, pero no siempre compensa. Y el calor pone el límite.",
+    "pr-eyebrow": "Laboratorio 7 · Ahora te toca a ti",
+    "pr-titol": "Ejercicios aleatorios con corrección",
+    "pr-intro": "Elige un tipo de ejercicio, resuélvelo con papel y calculadora y comprueba la respuesta. Si fallas, verás la solución explicada.",
+    "pr-tipus": "Tipo de ejercicio",
+    "pr-comprova": "Comprueba",
+    "pr-solucio": "Muestra la solución",
+    "pr-seguent": "Otro ejercicio →",
+    "dd-cau-nota": "<b>Localidad temporal:</b> un dato usado ahora se volverá a usar pronto. <b>Localidad espacial:</b> después de una dirección se suele usar la vecina, y por eso la caché trae el bloque entero.",
+    "ra-form": "<b>Latencia (ns)</b> = CL × 2000 ÷ velocidad (MT/s)<br><b>Ancho de banda por canal</b> = velocidad (MT/s) × 8 bytes<br><b>Ancho de banda total</b> = ancho por canal × canales activos"
+  }
+}
+</script>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><a class="home" href="../../" data-lab-volver aria-label="Torna a la unitat" data-t-attr="aria-label:volver-aria">← <span data-t="volver">Unitat</span></a>
+      <div class="leds" id="brandLeds" aria-hidden="true"></div>
+      <h1 data-t="titol">Dins de la CPU</h1>
+    </div>
+    <div class="zoom" role="group" aria-label="Mida de lletra per a projector" data-t-attr="aria-label:zoom-aria"><span data-t="zoom">Mida</span>
+      <button type="button" data-lab-zoom="-" aria-label="Redueix el text" data-t-attr="aria-label:zoom-menys">A−</button>
+      <button type="button" data-lab-zoom="+" aria-label="Augmenta el text" data-t-attr="aria-label:zoom-mes">A+</button>
+      <span class="idiomas" role="group" aria-label="Idioma" data-t-attr="aria-label:idioma-aria">
+        <button type="button" data-lab-idioma="ca-valencia"></button><button type="button" data-lab-idioma="es"></button>
+      </span>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Seccions del laboratori" data-t-attr="aria-label:seccions-aria">
+    <button type="button" role="tab" id="tab-von-neumann" data-tab="von-neumann" aria-controls="panel-von-neumann" aria-selected="true"><span class="n">1</span><span data-t="tab-vn">Von Neumann en marxa</span></button>
+    <button type="button" role="tab" id="tab-registres" data-tab="registres" aria-controls="panel-registres" aria-selected="false" tabindex="-1"><span class="n">2</span><span data-t="tab-registres">Registres pas a pas</span></button>
+    <button type="button" role="tab" id="tab-cicle" data-tab="cicle" aria-controls="panel-cicle" aria-selected="false" tabindex="-1"><span class="n">3</span><span data-t="tab-cicle">El cicle d'instrucció</span></button>
+    <button type="button" role="tab" id="tab-dada" data-tab="dada" aria-controls="panel-dada" aria-selected="false" tabindex="-1"><span class="n">4</span><span data-t="tab-dada">On és la dada?</span></button>
+    <button type="button" role="tab" id="tab-ram" data-tab="ram" aria-controls="panel-ram" aria-selected="false" tabindex="-1"><span class="n">5</span><span data-t="tab-ram">Calculadora de RAM</span></button>
+    <button type="button" role="tab" id="tab-nuclis" data-tab="nuclis" aria-controls="panel-nuclis" aria-selected="false" tabindex="-1"><span class="n">6</span><span data-t="tab-nuclis">Nuclis, fils i IPC</span></button>
+    <button type="button" role="tab" id="tab-practica" data-tab="practica" aria-controls="panel-practica" aria-selected="false" tabindex="-1"><span class="n">7</span><span data-t="tab-practica">Pràctica</span></button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ 1. VON NEUMANN ============ -->
+<section class="tab" role="tabpanel" id="panel-von-neumann" aria-labelledby="tab-von-neumann" tabindex="0">
+  <div class="intro">
+    <span class="eyebrow" data-t="vn-eyebrow">Laboratori 1 · La idea de Von Neumann</span>
+    <h2 data-t="vn-titol">El programa viu en la mateixa memòria que les dades</h2>
+    <p class="lead" data-t-html="vn-intro">Entrada, procés, eixida i emmagatzematge: l'important és com es parlen la <b>CPU</b> i la <b>memòria</b>. Fes avançar el programa «2 + 3» i seguix el camí de les dades.</p>
+  </div>
+
+  <div class="panel">
+    <h3 data-t="vn-a-titol">Un programa en marxa</h3>
+    <svg class="vnsvg" id="vn" viewBox="0 0 760 330" role="img" aria-label="Esquema de l'ordinador: entrada, eixida, CPU amb unitat de control, ALU i registres, memòria amb instruccions i dades, i disc d'emmagatzematge" data-t-attr="aria-label:vn-svg-aria">
+      <rect id="b-ent" class="blk" x="10" y="40" width="130" height="60" rx="8"/>
+      <text x="75" y="75" text-anchor="middle" data-t="vn-ent">Entrada</text>
+      <rect id="b-sal" class="blk" x="10" y="230" width="130" height="60" rx="8"/>
+      <text x="75" y="265" text-anchor="middle" data-t="vn-sal">Eixida</text>
+      <rect id="b-cpu" class="blk" x="190" y="30" width="270" height="270" rx="8"/>
+      <text x="325" y="52" text-anchor="middle">CPU</text>
+      <rect id="b-uc" class="blk" x="210" y="70" width="230" height="60" rx="6"/>
+      <text x="325" y="105" text-anchor="middle" data-t="vn-uc">Unitat de control</text>
+      <rect id="b-alu" class="blk" x="210" y="145" width="230" height="60" rx="6"/>
+      <text x="325" y="180" text-anchor="middle">ALU</text>
+      <rect id="b-reg" class="blk" x="210" y="220" width="230" height="60" rx="6"/>
+      <text x="325" y="255" text-anchor="middle" data-t="vn-reg">Registres</text>
+      <rect id="b-mem" class="blk" x="560" y="30" width="190" height="160" rx="8"/>
+      <text x="655" y="52" text-anchor="middle" data-t="vn-mem">Memòria</text>
+      <text x="655" y="80" text-anchor="middle" class="sm" data-t="vn-ins">instruccions</text>
+      <text id="vn-t1" class="hid" x="655" y="98" text-anchor="middle">LOAD 10 · ADD 11</text>
+      <text x="655" y="130" text-anchor="middle" class="sm" data-t="vn-dat">dades</text>
+      <text id="vn-t2" class="hid" x="655" y="148" text-anchor="middle">M[10]=2 · M[11]=3</text>
+      <text x="655" y="176" text-anchor="middle" class="sm" data-t="vn-bin">tot junt, en binari</text>
+      <rect id="b-dis" class="blk" x="560" y="240" width="190" height="60" rx="8"/>
+      <text x="655" y="275" text-anchor="middle" data-t="vn-disc">Disc (emmagatzematge)</text>
+      <g class="flow" id="f-ec"><line x1="140" y1="70" x2="184" y2="70" stroke-width="3"/><polygon points="182,64 182,76 192,70"/></g>
+      <g class="flow" id="f-cs"><line x1="190" y1="260" x2="146" y2="260" stroke-width="3"/><polygon points="148,254 148,266 138,260"/></g>
+      <g class="flow" id="f-mc"><line x1="466" y1="115" x2="554" y2="115" stroke-width="3"/><polygon points="468,109 468,121 458,115"/><polygon points="552,109 552,121 562,115"/></g>
+      <text x="510" y="105" text-anchor="middle" class="sm" data-t="vn-busos">busos</text>
+      <g class="flow" id="f-dm"><line x1="655" y1="240" x2="655" y2="196" stroke-width="3"/><polygon points="649,198 661,198 655,188"/></g>
+    </svg>
+    <div class="stepcap" id="vn-cap" role="status" aria-live="polite"></div>
+    <div class="row">
+      <button type="button" class="btn" id="vn-prev" data-t="btn-anterior">← Anterior</button>
+      <button type="button" class="btn primary" id="vn-next" data-t="btn-seguent">Següent →</button>
+      <button type="button" class="btn" id="vn-reset" data-t="btn-reinicia">Reinicia</button>
+      <span class="pill" id="vn-n"></span>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t="vn-b-titol">El mateix número, dues lectures</h3>
+      <p data-t="vn-b-text">Una paraula de memòria és només un número. Canvia com la llig la CPU:</p>
+      <div class="seg" role="group" aria-label="Interpretació de les paraules" data-t-attr="aria-label:vn-b-aria">
+        <button type="button" class="btn" id="vn-as-i" aria-pressed="true" data-t="vn-b-ins">Com a instrucció</button>
+        <button type="button" class="btn" id="vn-as-d" aria-pressed="false" data-t="vn-b-dat">Com a dada</button>
+      </div>
+      <div class="scroll"><div class="words" id="vn-words"></div></div>
+      <p class="note" data-t="vn-b-nota">Cap de les dues lectures és «la bona»: la CPU interpreta com a instrucció la paraula a la qual apunta el comptador de programa (CP); la resta són dades.</p>
+    </div>
+    <div class="panel">
+      <h3 data-t="vn-c-titol">Un sol camí o dos?</h3>
+      <div class="seg" role="group" aria-label="Model d'arquitectura" data-t-attr="aria-label:vn-c-aria">
+        <button type="button" class="btn" data-mdl="vn" aria-pressed="true">Von Neumann</button>
+        <button type="button" class="btn" data-mdl="h" aria-pressed="false">Harvard</button>
+        <button type="button" class="btn" data-mdl="hm" aria-pressed="false">Harvard mod.</button>
+      </div>
+      <div class="models" id="mdl"></div>
+      <p id="mdl-txt"></p>
+      <p class="fb" id="mdl-sim" role="status"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. REGISTRES ============ -->
+<section class="tab" role="tabpanel" id="panel-registres" aria-labelledby="tab-registres" tabindex="0" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="rg-eyebrow">Laboratori 2 · L'ordinador senzill</span>
+    <h2 data-t="rg-titol">Què fa cada registre en cada pas</h2>
+    <p class="lead" data-t="rg-intro">Carrega un programa, avança micro-operació a micro-operació i mira com canvien CP, RDM, RIM, RI i AC. Activa el mode de predicció per a posar a prova la teua taula.</p>
+  </div>
+
+  <div class="panel">
+    <div class="row">
+      <label class="fld" for="sel-prog"><span data-t="rg-programa">Programa</span><select id="sel-prog"></select></label>
+      <label class="fld" for="in-teclat"><span data-t="rg-teclat">Valors del teclat (separats per comes)</span><input type="text" id="in-teclat" autocomplete="off" spellcheck="false" size="12"></label>
+    </div>
+    <div class="row">
+      <button type="button" class="btn primary" id="b-pas" data-t="rg-pas">Pas</button>
+      <button type="button" class="btn" id="b-ins" data-t="rg-ins">Instrucció</button>
+      <button type="button" class="btn" id="b-run" data-t="rg-run">Executa tot</button>
+      <button type="button" class="btn" id="b-reset" data-t="rg-reset">Reinicia</button>
+      <label class="row"><input type="checkbox" id="c-pred"><span data-t="rg-pred">Mode de predicció</span></label>
+      <label class="row"><input type="checkbox" id="c-edit"><span data-t="rg-edit">Edita la memòria</span></label>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t="rg-mem">Memòria (16 paraules)</h3>
+      <div class="mem" id="mem"></div>
+      <p class="note" data-t-html="rg-mem-nota">Cada paraula té 3 dígits: el primer és l'operació i els dos últims l'adreça (<code>110</code> = <code>LOAD 10</code>). En mode d'edició pots escriure un número o una instrucció.</p>
+    </div>
+    <div class="panel">
+      <h3 data-t="rg-cpu">Registres de la CPU</h3>
+      <div class="regs" id="regs"></div>
+      <div class="phases" id="phases">
+        <span id="ph-F">Fetch</span><span id="ph-D">Decode</span><span id="ph-E">Execute</span><span id="ph-W">Writeback</span>
+      </div>
+      <div class="opline" id="opline" role="status" aria-live="polite"></div>
+      <h3 data-t="rg-eixida">Eixida del programa</h3>
+      <div class="out" id="out"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="pred-panel" hidden>
+    <h3 data-t="rg-pred-titol">Prediu el pas següent</h3>
+    <p data-t="rg-pred-text">Els camps tenen els valors actuals. Canvia els que creus que canviaran amb el pas següent i prem «Comprova i avança».</p>
+    <div class="pred" id="pred"></div>
+    <div class="row">
+      <button type="button" class="btn primary" id="b-chk" data-t="rg-comprova">Comprova i avança</button>
+      <span class="fb" id="pred-fb" role="status"></span>
+      <span class="pill" id="pred-sc"></span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3 data-t="rg-traca">Traça (un pas per fila)</h3>
+    <div class="scroll trace"><table class="t" id="trace"><thead><tr><th>#</th><th data-t="rg-th-pas">Pas</th><th class="num">CP</th><th class="num">RDM</th><th class="num">RIM</th><th>RI</th><th class="num">AC</th></tr></thead><tbody></tbody></table></div>
+  </div>
+
+  <details class="panel">
+    <summary data-t="rg-isa">Repertori d'instruccions</summary>
+    <div class="scroll"><table class="t">
+      <thead><tr><th data-t="isa-th-paraula">Paraula</th><th data-t="isa-th-ins">Instrucció</th><th data-t="isa-th-fa">Què fa</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">000</td><td class="mono">HALT</td><td data-t="isa-halt">Para el programa</td></tr>
+        <tr><td class="mono">1xx</td><td class="mono">LOAD xx</td><td data-t="isa-load">AC ← contingut de l'adreça xx</td></tr>
+        <tr><td class="mono">2xx</td><td class="mono">STORE xx</td><td data-t="isa-store">Adreça xx ← AC</td></tr>
+        <tr><td class="mono">3xx</td><td class="mono">ADD xx</td><td data-t="isa-add">AC ← AC + contingut de l'adreça xx</td></tr>
+        <tr><td class="mono">4xx</td><td class="mono">SUB xx</td><td data-t="isa-sub">AC ← AC − contingut de l'adreça xx</td></tr>
+        <tr><td class="mono">5xx</td><td class="mono">MUL xx</td><td data-t="isa-mul">AC ← AC × contingut de l'adreça xx</td></tr>
+        <tr><td class="mono">6xx</td><td class="mono">JMP xx</td><td data-t="isa-jmp">CP ← xx (salta)</td></tr>
+        <tr><td class="mono">7xx</td><td class="mono">JZ xx</td><td data-t="isa-jz">Si AC = 0, CP ← xx</td></tr>
+        <tr><td class="mono">800</td><td class="mono">IN</td><td data-t="isa-in">AC ← següent valor del teclat</td></tr>
+        <tr><td class="mono">900</td><td class="mono">OUT</td><td data-t="isa-out">Mostra l'AC per pantalla</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+</section>
+
+<!-- ============ 3. CICLE ============ -->
+<section class="tab" role="tabpanel" id="panel-cicle" aria-labelledby="tab-cicle" tabindex="0" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="cy-eyebrow">Laboratori 3 · Fetch, decode, execute, writeback</span>
+    <h2 data-t="cy-titol">Quatre fases per a cada instrucció</h2>
+    <p class="lead" data-t="cy-intro">Tria una instrucció i seguix-la fase a fase. Després veuràs per què una CPU real solapa les fases i ordenaràs les accions de memòria.</p>
+  </div>
+
+  <div class="panel">
+    <h3 data-t="cy-a-titol">El cicle, fase a fase</h3>
+    <p class="note" data-t-html="cy-a-ini">Estat inicial: <code>R1 = 2</code>, <code>R2 = 3</code>, <code>R3 = 0</code>, <code>M[20] = 7</code>, <code>M[21] = 0</code>.</p>
+    <div class="seg" id="cy-pick" role="group" aria-label="Instrucció a seguir" data-t-attr="aria-label:cy-pick-aria">
+      <button type="button" class="btn" data-ins="add" aria-pressed="true">ADD R3, R1, R2</button>
+      <button type="button" class="btn" data-ins="load" aria-pressed="false">LOAD R1, [20]</button>
+      <button type="button" class="btn" data-ins="store" aria-pressed="false">STORE R1, [21]</button>
+    </div>
+    <div class="phases" id="cy-phases"><span id="cp-0">Fetch</span><span id="cp-1">Decode</span><span id="cp-2">Execute</span><span id="cp-3">Writeback</span></div>
+    <div class="cyc">
+      <div class="bx" id="cy-mem"><b data-t="cy-mem">Memòria</b><span id="cy-mem-v"></span></div>
+      <div class="bx" id="cy-uc"><b data-t="cy-uc">Unitat de control</b><span id="cy-uc-v"></span></div>
+      <div class="bx" id="cy-alu"><b>ALU</b><span id="cy-alu-v"></span></div>
+      <div class="bx" id="cy-reg"><b data-t="cy-reg">Registres</b><span id="cy-reg-v"></span></div>
+    </div>
+    <div class="stepcap" id="cy-cap" role="status" aria-live="polite"></div>
+    <div class="row">
+      <button type="button" class="btn" id="cy-prev" data-t="btn-anterior">← Anterior</button>
+      <button type="button" class="btn primary" id="cy-next" data-t="btn-seguent">Següent →</button>
+      <button type="button" class="btn" id="cy-reset" data-t="btn-reinicia">Reinicia</button>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t="cy-pipe-titol">Solapar les fases (pipeline)</h3>
+      <p data-t="cy-pipe-text">Mentre una instrucció s'executa, la següent ja està en decodificació i una tercera, en fetch. Així la CPU acaba una instrucció per cicle encara que cada una necessite quatre fases. Model ideal, sense dependències entre instruccions.</p>
+      <div class="row">
+        <label class="fld" for="pp-n"><span data-t="cy-pipe-n">Nombre d'instruccions</span><input type="range" id="pp-n" min="1" max="8" value="4"></label>
+        <div class="seg" role="group" aria-label="Mode d'execució" data-t-attr="aria-label:cy-pipe-aria">
+          <button type="button" class="btn" id="pp-seq" aria-pressed="false" data-t="cy-pipe-seq">Sense pipeline</button>
+          <button type="button" class="btn" id="pp-pip" aria-pressed="true" data-t="cy-pipe-pip">Amb pipeline</button>
+        </div>
+      </div>
+      <div class="scroll"><div class="pipe" id="pp-grid"></div></div>
+      <p class="fb" id="pp-res" role="status"></p>
+    </div>
+    <div class="panel">
+      <h3 data-t="cy-ord-titol">Ordena les accions</h3>
+      <p data-t="cy-ord-text">Toca les accions en l'ordre en què ocorren per a una instrucció.</p>
+      <div class="chips" id="ord-chips"></div>
+      <div class="seq" id="ord-seq" aria-live="polite"></div>
+      <div class="row"><button type="button" class="btn" id="ord-reset" data-t="cy-ord-reset">Torna a començar</button><span class="fb" id="ord-fb" role="status"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. ON ÉS LA DADA ============ -->
+<section class="tab" role="tabpanel" id="panel-dada" aria-labelledby="tab-dada" tabindex="0" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="dd-eyebrow">Laboratori 4 · Jerarquia de memòria</span>
+    <h2 data-t="dd-titol">On és la dada que necessita la CPU?</h2>
+    <p class="lead" data-t="dd-intro">Com més prop de la CPU, més ràpid però més xicotet. La memòria cau guarda còpies del que s'ha usat fa poc perquè la CPU no haja d'esperar la RAM.</p>
+  </div>
+
+  <div class="panel">
+    <h3 data-t="dd-escala-titol">Si 1 nanosegon durara 1 segon…</h3>
+    <p data-t="dd-escala-text">Temps d'accés orientatius de cada nivell, passats a escala humana. El gràfic és logarítmic: cada marca és deu vegades més.</p>
+    <div class="bars" id="lvl-bars"></div>
+    <p class="note" data-t="dd-escala-nota">Una lectura al disc dur dura, a escala humana, mesos: per això una CPU que espera el disc sembla «parada». Les memòries cau existixen per a no esperar la RAM.</p>
+  </div>
+
+  <div class="panel">
+    <h3 data-t="dd-cau-titol">Simulador de memòria cau</h3>
+    <p data-t="dd-cau-text">Cau completament associativa amb reemplaçament LRU (es desallotja la línia menys usada recentment). Un encert costa 1 ns; una fallada, 1 ns més 80 ns de la RAM.</p>
+    <div class="row">
+      <label class="fld" for="ca-n"><span data-t="dd-linies">Línies</span><select id="ca-n"><option>2</option><option selected>4</option><option>8</option></select></label>
+      <label class="fld" for="ca-b"><span data-t="dd-bloc">Paraules per bloc</span><select id="ca-b"><option>1</option><option selected>4</option><option>8</option></select></label>
+      <label class="fld" for="ca-p"><span data-t="dd-patro">Patró d'accés</span><select id="ca-p"></select></label>
+      <label class="fld" for="ca-c"><span data-t="dd-custom">Adreces pròpies (0 a 63)</span><input type="text" id="ca-c" size="22" autocomplete="off" spellcheck="false" value="0, 1, 2, 3, 0, 1, 2, 3"></label>
+    </div>
+    <div class="row">
+      <button type="button" class="btn primary" id="ca-step" data-t="dd-acces">Accés següent</button>
+      <button type="button" class="btn" id="ca-all" data-t="dd-tot">Executa tot</button>
+      <button type="button" class="btn" id="ca-reset" data-t="btn-reinicia">Reinicia</button>
+    </div>
+    <div class="seqa" id="ca-seq" role="img" aria-label="Seqüència d'accessos: verd és encert, taronja és fallada" data-t-attr="aria-label:dd-seq-aria"></div>
+    <div class="lines" id="ca-lines"></div>
+    <div class="stats" id="ca-stats"></div>
+    <p class="fb" id="ca-fb" role="status"></p>
+    <p class="note" data-t-html="dd-cau-nota"><b>Localitat temporal:</b> una dada usada ara es tornarà a usar prompte. <b>Localitat espacial:</b> després d'una adreça se sol usar la veïna, i per això la cau porta el bloc sencer.</p>
+  </div>
+
+  <div class="panel scen">
+    <h3 data-t="dd-scen-titol">Tria el nivell més probable</h3>
+    <p class="q-prompt" id="sc-q"></p>
+    <div class="opts" id="sc-opts"></div>
+    <p class="fb" id="sc-fb" role="status"></p>
+    <div class="row"><button type="button" class="btn" id="sc-next" data-t="btn-seguent">Següent →</button><span class="pill" id="sc-score"></span></div>
+  </div>
+</section>
+
+<!-- ============ 5. CALCULADORA DE RAM ============ -->
+<section class="tab" role="tabpanel" id="panel-ram" aria-labelledby="tab-ram" tabindex="0" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="ra-eyebrow">Laboratori 5 · Només càlculs</span>
+    <h2 data-t="ra-titol">De «DDR5-6000 CL30» a nanosegons i GB/s</h2>
+    <p class="lead" data-t="ra-intro">Compara dos mòduls o kits: latència real, ample de banda i capacitat. Les ranures de la placa les tens en el laboratori de la placa base.</p>
+  </div>
+  <p class="key" data-t-html="ra-form"><b>Latència (ns)</b> = CL × 2000 ÷ velocitat (MT/s)<br><b>Ample de banda per canal</b> = velocitat (MT/s) × 8 bytes<br><b>Ample de banda total</b> = ample per canal × canals actius</p>
+  <div class="grid2" id="ram-cfgs"></div>
+  <div class="panel">
+    <h3 data-t="ra-cmp-titol">Comparació</h3>
+    <div class="bars" id="ram-bars"></div>
+    <p class="verdict" id="ram-verdict" role="status"></p>
+  </div>
+  <div class="panel">
+    <h3 data-t="ra-comp-titol">Encaixa el mòdul A en la placa?</h3>
+    <div class="row">
+      <label class="fld" for="pl-gen"><span data-t="ra-pl-gen">Generació de la placa</span><select id="pl-gen"><option>DDR3</option><option selected>DDR4</option><option>DDR5</option></select></label>
+      <label class="fld" for="pl-fmt"><span data-t="ra-pl-fmt">Format de la ranura</span><select id="pl-fmt"><option>DIMM</option><option>SO-DIMM</option></select></label>
+    </div>
+    <div class="notch" id="ram-notch"></div>
+    <p class="verdict" id="ram-comp" role="status"></p>
+  </div>
+</section>
+
+<!-- ============ 6. NUCLIS, FILS I IPC ============ -->
+<section class="tab" role="tabpanel" id="panel-nuclis" aria-labelledby="tab-nuclis" tabindex="0" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="nu-eyebrow">Laboratori 6 · Rendiment de la CPU</span>
+    <h2 data-t="nu-titol">El GHz no ho és tot</h2>
+    <p class="lead" data-t="nu-intro">El rendiment d'un fil és freqüència × IPC. Repartir el treball entre nuclis ajuda, però no sempre ix a compte. I la calor posa el límit.</p>
+  </div>
+  <div class="grid2">
+    <div class="panel" id="nu-ipc"></div>
+    <div class="panel" id="nu-par"></div>
+  </div>
+  <div class="panel" id="nu-tdp"></div>
+</section>
+
+<!-- ============ 7. PRÀCTICA ============ -->
+<section class="tab" role="tabpanel" id="panel-practica" aria-labelledby="tab-practica" tabindex="0" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="pr-eyebrow">Laboratori 7 · Ara et toca a tu</span>
+    <h2 data-t="pr-titol">Exercicis aleatoris amb correcció</h2>
+    <p class="lead" data-t="pr-intro">Tria un tipus d'exercici, resol-lo amb paper i calculadora i comprova la resposta. Si falles, veuràs la solució explicada.</p>
+  </div>
+  <div class="panel quiz">
+    <div class="row">
+      <label class="fld" for="q-type"><span data-t="pr-tipus">Tipus d'exercici</span><select id="q-type"></select></label>
+      <div class="score" role="status"><span>✓ <span id="s-ok">0</span></span><span>✗ <span id="s-ko">0</span></span></div>
+    </div>
+    <div class="q-prompt" id="q-p"></div>
+    <div class="row" id="q-in"></div>
+    <div class="row">
+      <button type="button" class="btn primary" id="q-check" data-t="pr-comprova">Comprova</button>
+      <button type="button" class="btn" id="q-sol" data-t="pr-solucio">Mostra la solució</button>
+      <button type="button" class="btn" id="q-next" data-t="pr-seguent">Un altre exercici →</button>
+    </div>
+    <div class="fb" id="q-f" role="status"></div>
+    <div class="sol" id="q-s" hidden></div>
+  </div>
+</section>
+
+</main>
+<script>
+'use strict';
+/* ====== Utilitats ====== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const T = (ca, es) => Lab.t({ 'ca-valencia': ca, es });
+const ES = Lab.idioma === 'es';
+const LOC = ES ? 'es-ES' : 'ca-ES';
+const fmt = (n, d = 1) => Number(n).toLocaleString(LOC, { minimumFractionDigits: d, maximumFractionDigits: d });
+const fmt0 = (n) => Number(n).toLocaleString(LOC, { maximumFractionDigits: 0 });
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = (arr) => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const rep = (arr, n) => Array.from({ length: n }, () => arr).flat();
+const parseNum = (s) => { const t = String(s).trim().replace(/\s/g, '').replace(',', '.'); return t === '' ? NaN : Number(t); };
+const setP = (btn, on) => btn.setAttribute('aria-pressed', String(on));
+
+/* ====== Pestanyes (patró WAI-ARIA) ====== */
+const pestanas = $$('[role="tab"]');
+function mostrar(id) {
+  const activa = pestanas.find((p) => p.dataset.tab === id) || pestanas[0];
+  for (const p of pestanas) {
+    const es = p === activa;
+    p.setAttribute('aria-selected', String(es));
+    p.tabIndex = es ? 0 : -1;
+    document.getElementById(p.getAttribute('aria-controls')).hidden = !es;
+  }
+  if (activa.scrollIntoView) activa.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  return activa;
+}
+function elegir(id, enfocar) {
+  const activa = mostrar(id);
+  Lab.guardar('pestana', activa.dataset.tab);
+  try { history.replaceState(null, '', '#' + activa.dataset.tab); } catch (e) { /* sense historial */ }
+  if (enfocar) activa.focus();
+}
+pestanas.forEach((p) => p.addEventListener('click', () => elegir(p.dataset.tab)));
+$('[role="tablist"]').addEventListener('keydown', (e) => {
+  const i = pestanas.indexOf(document.activeElement);
+  const destino = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: pestanas.length - 1 }[e.key];
+  if (i < 0 || destino === undefined) return;
+  e.preventDefault();
+  elegir(pestanas[(destino + pestanas.length) % pestanas.length].dataset.tab, true);
+});
+window.addEventListener('hashchange', () => mostrar(location.hash.slice(1)));
+mostrar(location.hash.slice(1) || Lab.leer('pestana') || 'von-neumann');
+'10110'.split('').forEach((c) => { const i = document.createElement('i'); if (c === '1') i.className = 'on'; $('#brandLeds').appendChild(i); });
+
+/*LOGIC-START*/
+/* ====== El computador senzill: repertori i màquina ====== */
+const OPS = ['HALT', 'LOAD', 'STORE', 'ADD', 'SUB', 'MUL', 'JMP', 'JZ', 'IN', 'OUT'];
+const NOARG = new Set(['HALT', 'IN', 'OUT']);
+const MEMN = 16;
+const valid = (w) => Number.isInteger(w) && w >= 0 && w <= 999;
+const decode = (w) => ({ op: Math.floor(w / 100), a: w % 100, name: OPS[Math.floor(w / 100)] });
+const mnem = (w) => { if (!valid(w)) return '—'; const d = decode(w); return NOARG.has(d.name) ? d.name : d.name + ' ' + d.a; };
+const clone = (o) => JSON.parse(JSON.stringify(o));
+function newMachine(mem, input, code) {
+  const isc = {};
+  (code || []).forEach((a) => { isc[a] = true; });
+  return { mem: mem.slice(), cp: 0, rdm: null, rim: null, ri: null, ac: 0, k: 0, ins: null, halted: false, err: null, inq: (input || []).slice(), out: [], steps: 0, nIns: 0, isc };
+}
+/* Fa una micro-operació. Torna {text, expl, phase, ch, rd, wr} o null si la màquina ja ha parat. */
+function microStep(s) {
+  if (s.halted) return null;
+  const r = { text: '', expl: '', phase: 'E', ch: [], rd: null, wr: null };
+  const stop = (text, expl) => { s.halted = true; s.err = text; r.text = text; r.expl = expl; r.phase = 'E'; s.steps++; return r; };
+  const end = () => { s.k = 0; s.nIns++; };
+  const k = s.k;
+  s.steps++;
+  if (k === 0) {
+    s.rdm = s.cp; r.ch = ['rdm']; r.phase = 'F'; s.k = 1;
+    r.text = 'RDM ← CP';
+    r.expl = T(`La unitat de control copia en el RDM l'adreça de la propera instrucció (CP = ${s.cp}).`, `La unidad de control copia en el RDM la dirección de la siguiente instrucción (CP = ${s.cp}).`);
+    return r;
+  }
+  if (k === 1) {
+    if (s.rdm < 0 || s.rdm >= MEMN) { s.steps--; return stop('RDM?', T(`L'adreça ${s.rdm} no existix en esta memòria de ${MEMN} paraules: la CPU s'atura.`, `La dirección ${s.rdm} no existe en esta memoria de ${MEMN} palabras: la CPU se detiene.`)); }
+    s.rim = s.mem[s.rdm]; r.ch = ['rim']; r.rd = s.rdm; r.phase = 'F'; s.k = 2;
+    r.text = `RIM ← M[${s.rdm}]`;
+    r.expl = T(`La memòria posa en el RIM el contingut de l'adreça ${s.rdm}: ${s.rim}.`, `La memoria pone en el RIM el contenido de la dirección ${s.rdm}: ${s.rim}.`);
+    return r;
+  }
+  if (k === 2) {
+    s.ri = s.rim; s.cp += 1; r.ch = ['ri', 'cp']; r.phase = 'FD'; s.isc[s.rdm] = true;
+    if (!valid(s.ri)) { s.steps--; return stop('RI?', T(`El valor ${s.ri} no és una instrucció vàlida (cal un número de 000 a 999): la CPU s'atura.`, `El valor ${s.ri} no es una instrucción válida (hace falta un número de 000 a 999): la CPU se detiene.`)); }
+    s.ins = decode(s.ri); s.k = 3;
+    r.text = 'RI ← RIM · CP ← CP + 1';
+    r.expl = T(`El RIM passa al RI i el CP s'incrementa (CP = ${s.cp}). La unitat de control descodifica: ${mnem(s.ri)}.`, `El RIM pasa al RI y el CP se incrementa (CP = ${s.cp}). La unidad de control decodifica: ${mnem(s.ri)}.`);
+    return r;
+  }
+  const d = s.ins;
+  const memOp = d.name === 'LOAD' || d.name === 'ADD' || d.name === 'SUB' || d.name === 'MUL' || d.name === 'STORE';
+  if (memOp && k === 3) {
+    if (d.a >= MEMN) { s.steps--; return stop('RDM?', T(`L'adreça ${d.a} no existix en esta memòria: la CPU s'atura.`, `La dirección ${d.a} no existe en esta memoria: la CPU se detiene.`)); }
+    s.rdm = d.a; r.ch = ['rdm']; r.phase = 'E'; s.k = 4;
+    r.text = `RDM ← ${d.a}`;
+    r.expl = T(`L'adreça de la dada (${d.a}), que ve en la pròpia instrucció, va al RDM.`, `La dirección del dato (${d.a}), que viene en la propia instrucción, va al RDM.`);
+    return r;
+  }
+  if (memOp && k === 4) {
+    r.phase = 'E'; r.ch = ['rim']; s.k = 5;
+    if (d.name === 'STORE') {
+      s.rim = s.ac; r.text = 'RIM ← AC';
+      r.expl = T(`L'acumulador (${s.ac}) passa al RIM per a escriure'l en la memòria.`, `El acumulador (${s.ac}) pasa al RIM para escribirlo en la memoria.`);
+    } else {
+      s.rim = s.mem[s.rdm]; r.rd = s.rdm; r.text = `RIM ← M[${s.rdm}]`;
+      r.expl = T(`La memòria porta al RIM la dada de l'adreça ${s.rdm}: ${s.rim}.`, `La memoria lleva al RIM el dato de la dirección ${s.rdm}: ${s.rim}.`);
+    }
+    return r;
+  }
+  if (memOp && k === 5) {
+    r.phase = 'W'; end();
+    if (d.name === 'STORE') {
+      s.mem[s.rdm] = s.rim; r.wr = s.rdm; r.text = `M[${s.rdm}] ← RIM`;
+      r.expl = T(`La memòria escriu el RIM en l'adreça ${s.rdm}: M[${s.rdm}] = ${s.rim}.`, `La memoria escribe el RIM en la dirección ${s.rdm}: M[${s.rdm}] = ${s.rim}.`);
+    } else {
+      const sym = { LOAD: '', ADD: '+', SUB: '−', MUL: '×' }[d.name];
+      if (d.name === 'LOAD') s.ac = s.rim; else if (d.name === 'ADD') s.ac += s.rim; else if (d.name === 'SUB') s.ac -= s.rim; else s.ac *= s.rim;
+      r.ch = ['ac']; r.text = d.name === 'LOAD' ? 'AC ← RIM' : `AC ← AC ${sym} RIM`;
+      r.expl = d.name === 'LOAD'
+        ? T(`El RIM passa a l'acumulador: AC = ${s.ac}.`, `El RIM pasa al acumulador: AC = ${s.ac}.`)
+        : T(`L'ALU opera AC ${sym} RIM i deixa el resultat en l'AC: ${s.ac}.`, `La ALU opera AC ${sym} RIM y deja el resultado en el AC: ${s.ac}.`);
+    }
+    return r;
+  }
+  // instruccions d'un sol pas d'execució
+  r.phase = 'E'; end();
+  if (d.name === 'JMP') { s.cp = d.a; r.ch = ['cp']; r.text = `CP ← ${d.a}`; r.expl = T(`Salt: el CP passa a valdre ${d.a}.`, `Salto: el CP pasa a valer ${d.a}.`); return r; }
+  if (d.name === 'JZ') {
+    if (s.ac === 0) { s.cp = d.a; r.ch = ['cp']; r.text = `AC = 0 → CP ← ${d.a}`; r.expl = T(`L'AC val 0, així que salta: CP = ${d.a}.`, `El AC vale 0, así que salta: CP = ${d.a}.`); }
+    else { r.text = 'AC ≠ 0 → no salta'; r.expl = T(`L'AC val ${s.ac} (no és 0): no salta i el CP no canvia.`, `El AC vale ${s.ac} (no es 0): no salta y el CP no cambia.`); }
+    return r;
+  }
+  if (d.name === 'IN') {
+    const v = s.inq.length ? s.inq.shift() : 0; s.ac = v; r.ch = ['ac']; r.text = 'AC ← teclat';
+    r.expl = T(`El valor del teclat (${v}) va a l'acumulador${s.inq.length === 0 && v === 0 ? " (no quedaven valors: s'usa 0)" : ''}.`, `El valor del teclado (${v}) va al acumulador${s.inq.length === 0 && v === 0 ? ' (no quedaban valores: se usa 0)' : ''}.`);
+    return r;
+  }
+  if (d.name === 'OUT') { s.out.push(s.ac); r.text = 'pantalla ← AC'; r.expl = T(`L'acumulador (${s.ac}) es mostra per pantalla.`, `El acumulador (${s.ac}) se muestra por pantalla.`); return r; }
+  s.halted = true; r.text = 'HALT'; r.expl = T("La CPU s'atura.", 'La CPU se detiene.'); return r;
+}
+function runInstructions(s, n, limit = 400) {
+  let guard = 0;
+  while (!s.halted && s.nIns < n && guard++ < limit) microStep(s);
+  return s;
+}
+/*LOGIC-END*/
+
+/* ====== 1. Von Neumann en marxa ====== */
+const VN_STEPS = [
+  { on: ['b-dis'], show: false, cap: T('Al principi, el programa i les dades estan guardats al disc (emmagatzematge). La memòria està buida.', 'Al principio, el programa y los datos están guardados en el disco (almacenamiento). La memoria está vacía.') },
+  { on: ['b-dis', 'b-mem', 'f-dm'], show: true, cap: T('El sistema operatiu carrega el programa en la memòria: instruccions i dades queden juntes, en binari, en la mateixa memòria.', 'El sistema operativo carga el programa en la memoria: instrucciones y datos quedan juntos, en binario, en la misma memoria.') },
+  { on: ['b-mem', 'b-cpu', 'b-uc', 'f-mc'], show: true, cap: T('Fetch: la unitat de control demana a la memòria la primera instrucció (LOAD 10) i la porta a la CPU.', 'Fetch: la unidad de control pide a la memoria la primera instrucción (LOAD 10) y la trae a la CPU.') },
+  { on: ['b-mem', 'b-cpu', 'b-reg', 'f-mc'], show: true, cap: T('LOAD 10 porta la dada de l\'adreça 10 (un 2) al registre acumulador: la CPU també accedix a la memòria per a les dades.', 'LOAD 10 lleva el dato de la dirección 10 (un 2) al registro acumulador: la CPU también accede a la memoria para los datos.') },
+  { on: ['b-mem', 'b-cpu', 'b-uc', 'b-alu', 'f-mc'], show: true, cap: T('ADD 11: la CPU busca la instrucció, llig el 3 de la memòria i l\'ALU calcula 2 + 3 = 5.', 'ADD 11: la CPU busca la instrucción, lee el 3 de la memoria y la ALU calcula 2 + 3 = 5.') },
+  { on: ['b-cpu', 'b-mem', 'b-sal', 'f-mc', 'f-cs'], show: true, cap: T('STORE 12 guarda el 5 en la memòria i OUT l\'envia a l\'eixida: el resultat és a la pantalla.', 'STORE 12 guarda el 5 en la memoria y OUT lo envía a la salida: el resultado está en la pantalla.') },
+  { on: ['b-cpu', 'b-uc'], show: true, cap: T('I així, instrucció a instrucció, fins que arriba HALT. La CPU repetix sempre el mateix cicle: busca, descodifica, executa i escriu.', 'Y así, instrucción a instrucción, hasta que llega HALT. La CPU repite siempre el mismo ciclo: busca, decodifica, ejecuta y escribe.') },
+];
+let vnI = 0;
+function renderVn() {
+  const s = VN_STEPS[vnI];
+  $$('#vn .blk').forEach((n) => n.classList.toggle('on', s.on.includes(n.id)));
+  $$('#vn g.flow').forEach((n) => n.classList.toggle('on', s.on.includes(n.id)));
+  $('#vn-t1').classList.toggle('hid', !s.show);
+  $('#vn-t2').classList.toggle('hid', !s.show);
+  $('#vn-cap').textContent = s.cap;
+  $('#vn-n').textContent = T('Pas ', 'Paso ') + (vnI + 1) + ' / ' + VN_STEPS.length;
+  $('#vn-prev').disabled = vnI === 0;
+  $('#vn-next').disabled = vnI === VN_STEPS.length - 1;
+}
+$('#vn-prev').addEventListener('click', () => { if (vnI > 0) vnI--; renderVn(); });
+$('#vn-next').addEventListener('click', () => { if (vnI < VN_STEPS.length - 1) vnI++; renderVn(); });
+$('#vn-reset').addEventListener('click', () => { vnI = 0; renderVn(); });
+renderVn();
+
+const VN_WORDS = [110, 311, 212, 900, 0, 2, 3, 111];
+let vnAsIns = true;
+function renderWords() {
+  const box = $('#vn-words');
+  box.textContent = '';
+  [T('Adreça', 'Dirección'), T('Paraula', 'Palabra'), T('Binari (10 bits)', 'Binario (10 bits)'), vnAsIns ? T('Com a instrucció', 'Como instrucción') : T('Com a dada', 'Como dato')].forEach((h) => box.append(el('span', 'h', h)));
+  VN_WORDS.forEach((w, i) => {
+    box.append(el('span', '', String(i)), el('span', '', String(w).padStart(3, '0')), el('span', 'b', w.toString(2).padStart(10, '0')), el('span', 'i', vnAsIns ? mnem(w) : String(w)));
+  });
+}
+$('#vn-as-i').addEventListener('click', () => { vnAsIns = true; setP($('#vn-as-i'), true); setP($('#vn-as-d'), false); renderWords(); });
+$('#vn-as-d').addEventListener('click', () => { vnAsIns = false; setP($('#vn-as-i'), false); setP($('#vn-as-d'), true); renderWords(); });
+renderWords();
+
+const MDLS = {
+  vn: {
+    blocks: () => [['cpu', 'CPU'], ['bus', T('1 bus', '1 bus')], ['mm', T('Memòria: instruccions + dades', 'Memoria: instrucciones + datos')]],
+    txt: () => T("Una sola memòria i un sol camí per a instruccions i dades. En cada accés la CPU o busca una instrucció o llig una dada, però no totes dues coses: és el «coll d'ampolla de Von Neumann».", 'Una sola memoria y un solo camino para instrucciones y datos. En cada acceso la CPU o busca una instrucción o lee un dato, pero no las dos cosas: es el «cuello de botella de Von Neumann».'),
+    sim: false,
+  },
+  h: {
+    blocks: () => [['cpu', 'CPU'], ['bus', T('bus I', 'bus I')], ['mm', T('Memòria d\'instruccions', 'Memoria de instrucciones')], ['bus', T('bus D', 'bus D')], ['mm', T('Memòria de dades', 'Memoria de datos')]],
+    txt: () => T('Dues memòries i dos camins independents: es pot buscar la propera instrucció mentre es llig o s\'escriu una dada. És habitual en microcontroladors i processadors de senyal (DSP).', 'Dos memorias y dos caminos independientes: se puede buscar la siguiente instrucción mientras se lee o se escribe un dato. Es habitual en microcontroladores y procesadores de señal (DSP).'),
+    sim: true,
+  },
+  hm: {
+    blocks: () => [['cpu', T('CPU: cau L1 d\'instruccions | cau L1 de dades', 'CPU: caché L1 de instrucciones | caché L1 de datos')], ['bus', T('1 bus', '1 bus')], ['mm', T('Memòria principal única', 'Memoria principal única')]],
+    txt: () => T('La memòria principal és única, com en Von Neumann, però dins de la CPU la cau L1 està separada en instruccions i dades: es poden consultar alhora. És el que fan les CPU actuals.', 'La memoria principal es única, como en Von Neumann, pero dentro de la CPU la caché L1 está separada en instrucciones y datos: se pueden consultar a la vez. Es lo que hacen las CPU actuales.'),
+    sim: true,
+  },
+};
+function renderMdl(k) {
+  const m = MDLS[k];
+  const box = $('#mdl');
+  box.textContent = '';
+  const row = el('div', 'mdl');
+  m.blocks().forEach(([cls, txt]) => row.append(el('span', cls, txt)));
+  box.append(row);
+  $('#mdl-txt').textContent = m.txt();
+  const f = $('#mdl-sim');
+  f.textContent = m.sim ? T('Instrucció i dada alhora? Sí ✓', '¿Instrucción y dato a la vez? Sí ✓') : T('Instrucció i dada alhora? No ✗', '¿Instrucción y dato a la vez? No ✗');
+  f.className = 'fb ' + (m.sim ? 'ok' : 'ko');
+  $$('[data-mdl]').forEach((b) => setP(b, b.dataset.mdl === k));
+}
+$$('[data-mdl]').forEach((b) => b.addEventListener('click', () => renderMdl(b.dataset.mdl)));
+renderMdl('vn');
+
+/* ====== 2. Registres pas a pas ====== */
+const PROGS = [
+  { id: 'suma', code: 5, nom: T('2 + 3 (suma)', '2 + 3 (suma)'), mem: { 0: 110, 1: 311, 2: 212, 3: 900, 4: 0, 10: 2, 11: 3, 12: 0 }, input: '' },
+  { id: 'prod', code: 10, nom: T('C = A × B + 1', 'C = A × B + 1'), mem: { 0: 800, 1: 210, 2: 800, 3: 211, 4: 110, 5: 511, 6: 312, 7: 213, 8: 900, 9: 0, 12: 1 }, input: '3, 4' },
+  { id: 'compte', code: 7, nom: T('Compte enrere (bucle)', 'Cuenta atrás (bucle)'), mem: { 0: 110, 1: 706, 2: 900, 3: 411, 4: 210, 5: 600, 6: 0, 10: 3, 11: 1 }, input: '' },
+  { id: 'perim', code: 8, nom: T("Perímetre d'un rectangle (activitat 2)", 'Perímetro de un rectángulo (actividad 2)'), mem: { 0: 800, 1: 210, 2: 800, 3: 310, 4: 211, 5: 311, 6: 900, 7: 0 }, input: '5, 3' },
+  { id: 'buit', code: 0, nom: T('Programa propi (memòria buida)', 'Programa propio (memoria vacía)'), mem: {}, input: '' },
+];
+const memFrom = (o) => { const m = Array(MEMN).fill(0); Object.keys(o).forEach((k) => { m[+k] = o[k]; }); return m; };
+const REGS = [['cp', 'CP', T('comptador de programa', 'contador de programa')], ['rdm', 'RDM', T('adreça de memòria', 'dirección de memoria')], ['rim', 'RIM', T('intercanvi amb memòria', 'intercambio con memoria')], ['ri', 'RI', T('instrucció', 'instrucción')], ['ac', 'AC', T('acumulador', 'acumulador')]];
+let initMem = memFrom(PROGS[0].mem);
+let initCode = Array.from({ length: PROGS[0].code }, (_, i) => i);
+let S = newMachine(initMem, [], initCode);
+let trace = [];
+let predOK = 0, predN = 0;
+const inputList = () => $('#in-teclat').value.split(/[\s,;]+/).filter(Boolean).map(Number).filter((n) => Number.isFinite(n));
+const regText = (s, k) => (k === 'ri' ? (s.ri == null ? '' : mnem(s.ri)) : s[k] == null ? '' : String(s[k]));
+
+function buildSimStatic() {
+  const sel = $('#sel-prog');
+  PROGS.forEach((p, i) => { const o = document.createElement('option'); o.value = String(i); o.textContent = p.nom; sel.append(o); });
+  const regs = $('#regs');
+  REGS.forEach(([k, nm, fn]) => {
+    const d = el('div', 'reg'); d.id = 'r-' + k;
+    d.append(el('div', 'nm', nm), el('div', 'vl'), el('div', 'fn', fn));
+    regs.append(d);
+  });
+  const pred = $('#pred');
+  REGS.forEach(([k, nm]) => {
+    const l = el('label'); l.append(document.createTextNode(nm));
+    const i = document.createElement('input'); i.type = 'text'; i.id = 'p-' + k; i.autocomplete = 'off'; i.spellcheck = false;
+    l.append(i); pred.append(l);
+  });
+}
+function renderMem(res) {
+  const box = $('#mem');
+  const edit = $('#c-edit').checked;
+  box.textContent = '';
+  for (let i = 0; i < MEMN; i++) {
+    const w = S.mem[i];
+    const c = el('div', 'cell');
+    if (!S.halted && i === S.cp) c.classList.add('cp');
+    if (res && res.rd === i) c.classList.add('rd');
+    if (res && res.wr === i) c.classList.add('wr');
+    c.append(el('div', 'ad', String(i)));
+    if (edit) {
+      const inp = document.createElement('input'); inp.type = 'text'; inp.value = valid(w) ? String(w).padStart(3, '0') : String(w); inp.size = 7; inp.spellcheck = false;
+      inp.setAttribute('aria-label', T('Paraula de memòria ' + i, 'Palabra de memoria ' + i));
+      inp.addEventListener('change', () => {
+        const v = parseCell(inp.value);
+        if (v == null) { inp.value = valid(S.mem[i]) ? String(S.mem[i]).padStart(3, '0') : String(S.mem[i]); return; }
+        S.mem[i] = v; initMem[i] = v;
+        if (/[A-Za-z]/.test(inp.value)) { S.isc[i] = true; if (!initCode.includes(i)) initCode.push(i); }
+        renderMem(null);
+      });
+      c.append(inp, el('div', S.isc[i] ? 'mn' : 'mn dt', S.isc[i] ? mnem(w) : T('dada', 'dato')));
+    } else {
+      c.append(el('div', 'wd', valid(w) ? String(w).padStart(3, '0') : String(w)), el('div', S.isc[i] ? 'mn' : 'mn dt', S.isc[i] ? mnem(w) : T('dada', 'dato')));
+    }
+    box.append(c);
+  }
+}
+function parseCell(txt) {
+  const t = txt.trim().toUpperCase().replace(/\s+/g, ' ');
+  if (/^-?\d+$/.test(t)) return Number(t);
+  const m = t.match(/^([A-Z]+)(?: (\d{1,2}))?$/);
+  if (!m) return null;
+  const op = OPS.indexOf(m[1]);
+  if (op < 0) return null;
+  if (NOARG.has(m[1])) return m[2] ? null : op * 100;
+  return m[2] == null ? null : op * 100 + Number(m[2]);
+}
+function renderRegs(res) {
+  REGS.forEach(([k]) => {
+    const d = $('#r-' + k);
+    const v = k === 'ri' ? (S.ri == null ? '—' : mnem(S.ri)) : S[k] == null ? '—' : String(S[k]);
+    $('.vl', d).textContent = v;
+    d.classList.toggle('chg', !!(res && res.ch.includes(k)));
+  });
+  const ph = res ? res.phase : '';
+  $('#ph-F').classList.toggle('on', ph === 'F' || ph === 'FD');
+  $('#ph-D').classList.toggle('on', ph === 'FD');
+  $('#ph-E').classList.toggle('on', ph === 'E');
+  $('#ph-W').classList.toggle('on', ph === 'W');
+  $('#out').textContent = S.out.length ? S.out.join(' · ') : '—';
+}
+function renderOp(res) {
+  const o = $('#opline');
+  if (S.halted && (!res || !res.text)) { o.textContent = T('El programa ha acabat.', 'El programa ha terminado.'); return; }
+  if (!res) { o.textContent = T('Prem «Pas» per a executar la primera micro-operació.', 'Pulsa «Paso» para ejecutar la primera micro-operación.'); return; }
+  o.textContent = res.text + ' — ' + res.expl + (S.halted && S.err == null ? ' ' + T('(fi del programa)', '(fin del programa)') : '');
+}
+function addTrace(res) {
+  trace.push(res);
+  const tb = $('#trace tbody');
+  const tr = document.createElement('tr');
+  const cells = [String(S.steps), res.text, S.cp, S.rdm == null ? '' : S.rdm, S.rim == null ? '' : S.rim, S.ri == null ? '' : mnem(S.ri), S.ac];
+  cells.forEach((c, i) => { const td = el('td', i >= 2 && i !== 5 ? 'num' : '', String(c)); tr.append(td); });
+  tb.append(tr);
+  const wrap = $('.trace'); wrap.scrollTop = wrap.scrollHeight;
+}
+function doStep() {
+  const res = microStep(S);
+  if (!res) { renderOp(null); return null; }
+  renderMem(res); renderRegs(res); renderOp(res); addTrace(res); refreshPred();
+  return res;
+}
+function resetSim() {
+  S = newMachine(initMem, inputList(), initCode);
+  trace = []; $('#trace tbody').textContent = '';
+  renderMem(null); renderRegs(null); renderOp(null); refreshPred();
+  $('#pred-fb').textContent = '';
+}
+function loadProgram(i) {
+  const p = PROGS[i];
+  initMem = memFrom(p.mem);
+  initCode = Array.from({ length: p.code }, (_, k) => k);
+  $('#in-teclat').value = p.input;
+  resetSim();
+}
+function refreshPred() {
+  REGS.forEach(([k]) => { const i = $('#p-' + k); i.value = regText(S, k); i.className = ''; });
+  $('#b-chk').disabled = S.halted;
+}
+function setPredMode(on) {
+  $('#pred-panel').hidden = !on;
+  ['b-pas', 'b-ins', 'b-run'].forEach((id) => { $('#' + id).disabled = on; });
+  if (on) refreshPred();
+}
+const norm = (s) => String(s).trim().toUpperCase().replace(/\s+/g, ' ');
+function checkPred() {
+  if (S.halted) return;
+  const next = clone(S);
+  const res = microStep(next);
+  if (!res) return;
+  let ok = 0;
+  REGS.forEach(([k]) => {
+    const inp = $('#p-' + k);
+    const exp = regText(next, k);
+    let good = norm(inp.value) === norm(exp);
+    if (!good && k === 'ri' && next.ri != null) good = norm(inp.value) === String(next.ri).padStart(3, '0') || norm(inp.value) === String(next.ri);
+    inp.className = good ? 'okk' : 'nok';
+    if (good) ok++;
+    else inp.title = T('Valor real: ', 'Valor real: ') + (exp === '' ? '—' : exp);
+  });
+  predN++; if (ok === 5) predOK++;
+  const fb = $('#pred-fb');
+  fb.className = 'fb ' + (ok === 5 ? 'ok' : 'ko');
+  fb.textContent = ok === 5 ? T('Correcte ✓ ' + res.text, 'Correcto ✓ ' + res.text) : T(ok + ' de 5 correctes ✗. Els camps marcats no coincidien: ara mostren el valor real.', ok + ' de 5 correctos ✗. Los campos marcados no coincidían: ahora muestran el valor real.');
+  $('#pred-sc').textContent = T('Passos perfectes: ', 'Pasos perfectos: ') + predOK + ' / ' + predN;
+  const classes = REGS.map(([k]) => [k, $('#p-' + k).className, $('#p-' + k).title]);
+  S = next;
+  renderMem(res); renderRegs(res); renderOp(res); addTrace(res);
+  $('#b-chk').disabled = S.halted;
+  REGS.forEach(([k], j) => { const i = $('#p-' + k); i.value = regText(S, k); i.className = classes[j][1]; i.title = classes[j][2]; });
+}
+buildSimStatic();
+$('#sel-prog').addEventListener('change', (e) => loadProgram(+e.target.value));
+$('#in-teclat').addEventListener('change', resetSim);
+$('#b-pas').addEventListener('click', () => { doStep(); });
+$('#b-ins').addEventListener('click', () => { let g = 0; do { if (!doStep()) break; } while (!S.halted && S.k !== 0 && g++ < 10); });
+$('#b-run').addEventListener('click', () => {
+  let g = 0;
+  while (!S.halted && g++ < 1500) { if (!doStep()) break; }
+  if (!S.halted) $('#opline').textContent = T('Massa passos: potser el programa no acaba (bucle infinit). Prem Reinicia.', 'Demasiados pasos: puede que el programa no termine (bucle infinito). Pulsa Reinicia.');
+});
+$('#b-reset').addEventListener('click', resetSim);
+$('#c-pred').addEventListener('change', (e) => setPredMode(e.target.checked));
+$('#c-edit').addEventListener('change', () => renderMem(null));
+$('#b-chk').addEventListener('click', checkPred);
+loadProgram(0);
+
+/* ====== 3. El cicle d'instrucció ====== */
+const CY = {
+  add: [
+    { b: ['mem', 'uc'], mem: 'ADD R3, R1, R2', uc: '→ RI', alu: '', reg: '', cap: T('Fetch: la unitat de control porta de la memòria la instrucció ADD R3, R1, R2 (l\'adreça la té el CP) i la deixa en el registre d\'instrucció.', 'Fetch: la unidad de control trae de la memoria la instrucción ADD R3, R1, R2 (la dirección la tiene el CP) y la deja en el registro de instrucción.') },
+    { b: ['uc'], mem: '', uc: T('suma · R1, R2 → R3', 'suma · R1, R2 → R3'), alu: '', reg: '', cap: T('Decode: la unitat de control interpreta el codi binari: l\'operació és una suma, els operands són R1 (2) i R2 (3) i el destí és R3.', 'Decode: la unidad de control interpreta el código binario: la operación es una suma, los operandos son R1 (2) y R2 (3) y el destino es R3.') },
+    { b: ['alu', 'reg'], mem: '', uc: '', alu: '2 + 3 = 5', reg: 'R1 = 2 · R2 = 3', cap: T('Execute: l\'ALU rep els valors de R1 i R2 i calcula 2 + 3 = 5.', 'Execute: la ALU recibe los valores de R1 y R2 y calcula 2 + 3 = 5.') },
+    { b: ['reg'], mem: '', uc: '', alu: '', reg: 'R3 = 5', cap: T('Writeback: el resultat (5) es guarda en el registre de destí, R3, i queda llest per a la instrucció següent.', 'Writeback: el resultado (5) se guarda en el registro de destino, R3, y queda listo para la siguiente instrucción.') },
+  ],
+  load: [
+    { b: ['mem', 'uc'], mem: 'LOAD R1, [20]', uc: '→ RI', alu: '', reg: '', cap: T('Fetch: la unitat de control porta de la memòria la instrucció LOAD R1, [20] i la deixa en el registre d\'instrucció.', 'Fetch: la unidad de control trae de la memoria la instrucción LOAD R1, [20] y la deja en el registro de instrucción.') },
+    { b: ['uc'], mem: '', uc: T('carregar · adreça 20 → R1', 'cargar · dirección 20 → R1'), alu: '', reg: '', cap: T('Decode: l\'operació és carregar un valor de la memòria; l\'adreça és 20 i el destí és R1.', 'Decode: la operación es cargar un valor de la memoria; la dirección es 20 y el destino es R1.') },
+    { b: ['mem', 'uc'], mem: 'M[20] = 7', uc: '', alu: '', reg: '', cap: T('Execute: es llig la memòria en l\'adreça 20 i s\'obté el 7.', 'Execute: se lee la memoria en la dirección 20 y se obtiene el 7.') },
+    { b: ['reg'], mem: '', uc: '', alu: '', reg: 'R1 = 7', cap: T('Writeback: el 7 es guarda en R1 (abans valia 2).', 'Writeback: el 7 se guarda en R1 (antes valía 2).') },
+  ],
+  store: [
+    { b: ['mem', 'uc'], mem: 'STORE R1, [21]', uc: '→ RI', alu: '', reg: '', cap: T('Fetch: la unitat de control porta de la memòria la instrucció STORE R1, [21] i la deixa en el registre d\'instrucció.', 'Fetch: la unidad de control trae de la memoria la instrucción STORE R1, [21] y la deja en el registro de instrucción.') },
+    { b: ['uc'], mem: '', uc: T('emmagatzemar · R1 → adreça 21', 'almacenar · R1 → dirección 21'), alu: '', reg: '', cap: T('Decode: l\'operació és escriure en la memòria; la dada és R1 i l\'adreça de destí és 21.', 'Decode: la operación es escribir en la memoria; el dato es R1 y la dirección de destino es 21.') },
+    { b: ['reg', 'uc'], mem: '', uc: '', alu: '', reg: 'R1 = 2', cap: T('Execute: es llig R1 (2) i es prepara l\'escriptura en l\'adreça 21.', 'Execute: se lee R1 (2) y se prepara la escritura en la dirección 21.') },
+    { b: ['mem'], mem: 'M[21] = 2', uc: '', alu: '', reg: '', cap: T('Writeback: el resultat torna a la memòria: M[21] = 2. Ací el destí no és un registre, sinó la memòria.', 'Writeback: el resultado vuelve a la memoria: M[21] = 2. Aquí el destino no es un registro, sino la memoria.') },
+  ],
+};
+let cyIns = 'add', cyI = -1;
+function renderCy() {
+  const steps = CY[cyIns];
+  const s = cyI >= 0 ? steps[cyI] : null;
+  ['mem', 'uc', 'alu', 'reg'].forEach((k) => {
+    $('#cy-' + k).classList.toggle('on', !!(s && s.b.includes(k)));
+    $('#cy-' + k + '-v').textContent = s && s[k] ? ' ' + s[k] : '';
+  });
+  [0, 1, 2, 3].forEach((i) => $('#cp-' + i).classList.toggle('on', cyI === i));
+  $('#cy-cap').textContent = s ? s.cap : T('Prem «Següent» per a començar la instrucció.', 'Pulsa «Siguiente» para empezar la instrucción.');
+  $('#cy-prev').disabled = cyI < 0;
+  $('#cy-next').disabled = cyI >= 3;
+}
+$$('#cy-pick [data-ins]').forEach((b) => b.addEventListener('click', () => { cyIns = b.dataset.ins; cyI = -1; $$('#cy-pick [data-ins]').forEach((x) => setP(x, x === b)); renderCy(); }));
+$('#cy-prev').addEventListener('click', () => { if (cyI >= 0) cyI--; renderCy(); });
+$('#cy-next').addEventListener('click', () => { if (cyI < 3) cyI++; renderCy(); });
+$('#cy-reset').addEventListener('click', () => { cyI = -1; renderCy(); });
+renderCy();
+
+let ppPipe = true;
+function renderPipe() {
+  const n = +$('#pp-n').value;
+  const cycles = ppPipe ? n + 3 : 4 * n;
+  const g = $('#pp-grid');
+  g.textContent = '';
+  g.style.gridTemplateColumns = '2.2rem repeat(' + cycles + ', minmax(1.5rem, 1fr))';
+  g.append(el('span', 'c h', ''));
+  for (let c = 1; c <= cycles; c++) g.append(el('span', 'c h', String(c)));
+  for (let i = 0; i < n; i++) {
+    g.append(el('span', 'c h', 'I' + (i + 1)));
+    const start = ppPipe ? i : 4 * i;
+    for (let c = 0; c < cycles; c++) {
+      const ph = c - start;
+      const L = 'FDEW'[ph];
+      g.append(el('span', 'c' + (ph >= 0 && ph < 4 ? ' ' + L : ''), ph >= 0 && ph < 4 ? L : ''));
+    }
+  }
+  const ipc = n / cycles;
+  $('#pp-res').textContent = T(`${n} instruccions en ${cycles} cicles: IPC = ${fmt(ipc, 2)}.`, `${n} instrucciones en ${cycles} ciclos: IPC = ${fmt(ipc, 2)}.`) + (ppPipe && n > 1 ? ' ' + T(`Sense pipeline serien ${4 * n} cicles.`, `Sin pipeline serían ${4 * n} ciclos.`) : '');
+  setP($('#pp-seq'), !ppPipe); setP($('#pp-pip'), ppPipe);
+}
+$('#pp-n').addEventListener('input', renderPipe);
+$('#pp-seq').addEventListener('click', () => { ppPipe = false; renderPipe(); });
+$('#pp-pip').addEventListener('click', () => { ppPipe = true; renderPipe(); });
+renderPipe();
+
+const ORD = [
+  T('La unitat de control porta la instrucció de la memòria', 'La unidad de control trae la instrucción de la memoria'),
+  T('La unitat de control interpreta el codi binari', 'La unidad de control interpreta el código binario'),
+  T("L'ALU fa l'operació", 'La ALU hace la operación'),
+  T('El resultat es guarda en un registre', 'El resultado se guarda en un registro'),
+];
+let ordSeq = [];
+function renderOrd() {
+  const chips = $('#ord-chips'); chips.textContent = '';
+  const order = renderOrd.order || (renderOrd.order = shuffle([0, 1, 2, 3]));
+  order.forEach((i) => {
+    const b = el('button', 'chip', ORD[i]); b.type = 'button'; b.disabled = ordSeq.includes(i);
+    b.addEventListener('click', () => { ordSeq.push(i); renderOrd(); });
+    chips.append(b);
+  });
+  const seq = $('#ord-seq'); seq.textContent = '';
+  ordSeq.forEach((i, n) => seq.append(el('span', '', (n + 1) + '. ' + ORD[i])));
+  const fb = $('#ord-fb');
+  if (ordSeq.length === 4) {
+    const ok = ordSeq.every((v, n) => v === n);
+    fb.className = 'fb ' + (ok ? 'ok' : 'ko');
+    fb.textContent = ok ? T('Correcte: Fetch → Decode → Execute → Writeback.', 'Correcto: Fetch → Decode → Execute → Writeback.') : T('Este no és l\'ordre. El correcte és Fetch → Decode → Execute → Writeback.', 'Este no es el orden. El correcto es Fetch → Decode → Execute → Writeback.');
+  } else { fb.className = 'fb'; fb.textContent = ''; }
+}
+$('#ord-reset').addEventListener('click', () => { ordSeq = []; renderOrd.order = null; renderOrd(); });
+renderOrd();
+
+/*LOGIC2-START*/
+/* ====== Simulació de memòria cau (completament associativa, LRU) ====== */
+function simCache(addrs, N, B) {
+  const slots = Array(N).fill(null);
+  const out = [];
+  let t = 0;
+  for (const a of addrs) {
+    t++;
+    const blk = Math.floor(a / B);
+    let idx = slots.findIndex((s) => s && s.blk === blk);
+    const hit = idx >= 0;
+    let evicted = null;
+    if (hit) slots[idx].last = t;
+    else {
+      idx = slots.findIndex((s) => s === null);
+      if (idx < 0) {
+        let m = 0;
+        for (let k = 1; k < N; k++) if (slots[k].last < slots[m].last) m = k;
+        idx = m; evicted = slots[m].blk;
+      }
+      slots[idx] = { blk, last: t };
+    }
+    out.push({ addr: a, blk, hit, idx, evicted, slots: slots.map((s) => (s ? { blk: s.blk, last: s.last } : null)) });
+  }
+  return out;
+}
+const ramCalc = (c, GEN) => { const lat = (c.cl * 2000) / c.mts; const bwc = (c.mts * 8) / 1000; const ch = Math.min(c.mods, c.chan); return { lat, bwc, ch, bw: bwc * ch, cap: c.mods * c.gb, v: GEN[c.gen].v }; };
+const speedup = (p, n) => 1 / (1 - p + p / n);
+/*LOGIC2-END*/
+
+/* ====== 4. On és la dada? ====== */
+const LEVELS = [
+  { nom: T('Registre', 'Registro'), ns: 0.3 },
+  { nom: T('Cau L1', 'Caché L1'), ns: 1 },
+  { nom: T('Cau L2', 'Caché L2'), ns: 4 },
+  { nom: T('Cau L3', 'Caché L3'), ns: 12 },
+  { nom: 'RAM', ns: 80 },
+  { nom: 'SSD NVMe', ns: 80000 },
+  { nom: 'HDD', ns: 10000000 },
+];
+function human(sec) {
+  if (sec < 10) return fmt(sec, 1) + ' s';
+  if (sec < 60) return fmt0(sec) + ' s';
+  if (sec < 3600) return fmt(sec / 60, sec < 600 ? 1 : 0) + ' min';
+  if (sec < 86400) return fmt(sec / 3600, 1) + ' h';
+  if (sec < 86400 * 365) return fmt0(sec / 86400) + T(' dies', ' días');
+  return fmt(sec / 86400 / 365, 1) + T(' anys', ' años');
+}
+const realTime = (ns) => (ns < 1000 ? fmt(ns, ns < 10 ? 1 : 0) + ' ns' : ns < 1e6 ? fmt0(ns / 1000) + ' µs' : fmt0(ns / 1e6) + ' ms');
+function renderLevels() {
+  const box = $('#lvl-bars');
+  box.textContent = '';
+  LEVELS.forEach((l) => {
+    const row = el('div', 'bar');
+    const tr = el('div', 'tr'); const fl = el('div', 'fl');
+    fl.style.width = Math.max(2, ((Math.log10(l.ns) + 1) / 8) * 100) + '%';
+    tr.append(fl);
+    row.append(el('span', '', l.nom), tr, el('span', 'vl', human(l.ns) + ' (' + realTime(l.ns) + ')'));
+    box.append(row);
+  });
+}
+renderLevels();
+
+const PATS = [
+  { id: 'p1', nom: T('P1 · seqüencial 0…31', 'P1 · secuencial 0…31'), seq: () => Array.from({ length: 32 }, (_, i) => i) },
+  { id: 'p2', nom: T('P2 · bucle 0, 4, 8 (×8)', 'P2 · bucle 0, 4, 8 (×8)'), seq: () => rep([0, 4, 8], 8) },
+  { id: 'p3', nom: T('P3 · salts 0, 16, 32, 48 (×6)', 'P3 · saltos 0, 16, 32, 48 (×6)'), seq: () => rep([0, 16, 32, 48], 6) },
+  { id: 'pc', nom: T('Adreces pròpies', 'Direcciones propias'), seq: () => $('#ca-c').value.split(/[\s,;]+/).filter(Boolean).map(Number).filter((n) => Number.isInteger(n) && n >= 0 && n <= 63).slice(0, 100) },
+];
+let ca = { seq: [], i: 0 };
+function renderCa() {
+  const N = +$('#ca-n').value, B = +$('#ca-b').value;
+  const res = simCache(ca.seq.slice(0, ca.i), N, B);
+  const sq = $('#ca-seq'); sq.textContent = '';
+  ca.seq.forEach((a, k) => {
+    const sp = el('span', k < ca.i ? (res[k].hit ? 'h' : 'm') : '', String(a) + (k < ca.i ? (res[k].hit ? '✓' : '✗') : ''));
+    if (k === ca.i) sp.classList.add('cur');
+    sq.append(sp);
+  });
+  const last = res[res.length - 1];
+  const ln = $('#ca-lines'); ln.textContent = '';
+  for (let k = 0; k < N; k++) {
+    const s = last ? last.slots[k] : null;
+    const d = el('div', 'ln');
+    if (s) d.textContent = T('Línia ', 'Línea ') + k + ': ' + T('bloc ', 'bloque ') + s.blk + ' (' + s.blk * B + '–' + (s.blk * B + B - 1) + ')';
+    else d.textContent = T('Línia ', 'Línea ') + k + ': ' + T('buida', 'vacía');
+    if (last && last.idx === k) d.classList.add(last.hit ? 'hit' : 'miss');
+    ln.append(d);
+  }
+  const n = res.length, hits = res.filter((x) => x.hit).length, miss = n - hits;
+  const withC = hits * 1 + miss * 81, without = n * 80;
+  const stats = [
+    [T('Accessos', 'Accesos'), n + ' / ' + ca.seq.length],
+    [T('Encerts', 'Aciertos'), hits], [T('Fallades', 'Fallos'), miss],
+    [T("Taxa d'encert", 'Tasa de acierto'), n ? fmt((hits / n) * 100, 1) + ' %' : '—'],
+    [T('Temps amb cau', 'Tiempo con caché'), fmt0(withC) + ' ns'],
+    [T('Temps sense cau', 'Tiempo sin caché'), fmt0(without) + ' ns'],
+    [T('Temps mitjà per accés', 'Tiempo medio por acceso'), n ? fmt(withC / n, 1) + ' ns' : '—'],
+  ];
+  const st = $('#ca-stats'); st.textContent = '';
+  stats.forEach(([l, v]) => { const b = el('div', 'stat'); b.append(el('div', 'v', String(v)), el('div', 'l', l)); st.append(b); });
+  const fb = $('#ca-fb');
+  if (last) {
+    fb.className = 'fb ' + (last.hit ? 'ok' : 'ko');
+    fb.textContent = T(`Adreça ${last.addr} → bloc ${last.blk}: ${last.hit ? 'ENCERT ✓' : 'FALLADA ✗'}`, `Dirección ${last.addr} → bloque ${last.blk}: ${last.hit ? 'ACIERTO ✓' : 'FALLO ✗'}`) + (last.evicted != null ? T(` (desallotja el bloc ${last.evicted})`, ` (desaloja el bloque ${last.evicted})`) : '');
+  } else { fb.className = 'fb'; fb.textContent = ''; }
+  $('#ca-step').disabled = ca.i >= ca.seq.length;
+}
+function caSetup() {
+  const p = PATS.find((x) => x.id === $('#ca-p').value);
+  ca.seq = p.seq(); ca.i = 0;
+  $('#ca-c').disabled = p.id !== 'pc';
+  renderCa();
+}
+PATS.forEach((p) => { const o = document.createElement('option'); o.value = p.id; o.textContent = p.nom; $('#ca-p').append(o); });
+['ca-n', 'ca-b', 'ca-p'].forEach((id) => $('#' + id).addEventListener('change', caSetup));
+$('#ca-c').addEventListener('change', caSetup);
+$('#ca-step').addEventListener('click', () => { if (ca.i < ca.seq.length) ca.i++; renderCa(); });
+$('#ca-all').addEventListener('click', () => { ca.i = ca.seq.length; renderCa(); });
+$('#ca-reset').addEventListener('click', () => { ca.i = 0; renderCa(); });
+caSetup();
+
+const NIV = () => [['reg', T('Registre', 'Registro')], ['cau', T('Memòria cau', 'Memoria caché')], ['ram', 'RAM'], ['emm', T('Emmagatzematge (SSD o HDD)', 'Almacenamiento (SSD o HDD)')], ['fw', T('Xip de microprogramari', 'Chip de firmware')]];
+const SCEN = [
+  { q: T("El valor de la variable i d'un bucle que es repetix milions de vegades, mentre s'executa.", 'El valor de la variable i de un bucle que se repite millones de veces, mientras se ejecuta.'), a: 'reg', why: T("És la dada que la CPU fa servir en este instant: viu en un registre (com a molt, en la cau L1).", 'Es el dato que la CPU usa en este instante: vive en un registro (como mucho, en la caché L1).') },
+  { q: T("El document d'Excel que tens obert ara mateix.", 'El documento de Excel que tienes abierto ahora mismo.'), a: 'ram', why: T('Els programes i les dades en ús viuen en la RAM mentre els uses.', 'Los programas y los datos en uso viven en la RAM mientras los usas.') },
+  { q: T('La fotografia que vas guardar ahir.', 'La fotografía que guardaste ayer.'), a: 'emm', why: T("Les dades permanents viuen en l'emmagatzematge: sobreviuen a l'apagat.", 'Los datos permanentes viven en el almacenamiento: sobreviven al apagado.') },
+  { q: T("Les últimes instruccions d'un bucle que la CPU acaba d'executar i tornarà a executar.", 'Las últimas instrucciones de un bucle que la CPU acaba de ejecutar y volverá a ejecutar.'), a: 'cau', why: T('Per localitat temporal, la cau en guarda còpies perquè la CPU no espere la RAM.', 'Por localidad temporal, la caché guarda copias para que la CPU no espere a la RAM.') },
+  { q: T("El microprogramari UEFI que arranca l'equip.", 'El firmware UEFI que arranca el equipo.'), a: 'fw', why: T("Es guarda en un xip de memòria flash de la placa, no volàtil: està disponible abans que cap disc.", 'Se guarda en un chip de memoria flash de la placa, no volátil: está disponible antes que ningún disco.') },
+  { q: T('Una dada que el sistema ha llegit del disc fa un moment i conserva per si la torna a necessitar.', 'Un dato que el sistema ha leído del disco hace un momento y conserva por si lo vuelve a necesitar.'), a: 'ram', why: T('El sistema operatiu manté en la RAM còpia del que ha llegit del disc (cau de disc).', 'El sistema operativo mantiene en la RAM copia de lo que ha leído del disco (caché de disco).') },
+];
+let scOrder = shuffle(SCEN.map((_, i) => i)), scI = 0, scOk = 0, scN = 0, scDone = false;
+function renderScen() {
+  const s = SCEN[scOrder[scI]];
+  $('#sc-q').textContent = s.q;
+  const box = $('#sc-opts'); box.textContent = '';
+  NIV().forEach(([id, nom]) => {
+    const b = el('button', 'btn', nom); b.type = 'button'; b.disabled = scDone;
+    b.addEventListener('click', () => {
+      if (scDone) return;
+      scDone = true; scN++;
+      const good = id === s.a;
+      if (good) scOk++;
+      const fb = $('#sc-fb'); fb.className = 'fb ' + (good ? 'ok' : 'ko');
+      fb.textContent = (good ? T('Correcte ✓ ', 'Correcto ✓ ') : T('No exactament ✗ ', 'No exactamente ✗ ')) + s.why;
+      $$('button', box).forEach((x) => { x.disabled = true; });
+      $('#sc-score').textContent = T('Encerts: ', 'Aciertos: ') + scOk + ' / ' + scN;
+    });
+    box.append(b);
+  });
+  $('#sc-fb').className = 'fb'; $('#sc-fb').textContent = '';
+}
+$('#sc-next').addEventListener('click', () => { scI = (scI + 1) % SCEN.length; scDone = false; renderScen(); });
+renderScen();
+
+/* ====== 5. Calculadora de RAM ====== */
+const GEN = { DDR3: { v: 1.5, sp: [1333, 1600, 1866, 2133] }, DDR4: { v: 1.2, sp: [2133, 2400, 2666, 3200, 3600, 4000] }, DDR5: { v: 1.1, sp: [4800, 5200, 5600, 6000, 6400, 7200, 8000] } };
+const PRE = [['DDR4-3200 CL16', 'DDR4', 3200, 16], ['DDR4-3600 CL18', 'DDR4', 3600, 18], ['DDR5-4800 CL40', 'DDR5', 4800, 40], ['DDR5-6000 CL30', 'DDR5', 6000, 30], ['DDR3-1600 CL11', 'DDR3', 1600, 11]];
+const RC = [
+  { gen: 'DDR4', mts: 3200, cl: 16, mods: 2, gb: 8, chan: 2, fmt: 'DIMM' },
+  { gen: 'DDR5', mts: 6000, cl: 30, mods: 2, gb: 16, chan: 2, fmt: 'DIMM' },
+];
+const NAMES = ['A', 'B'];
+function selectField(label, id, opts, val, onChange) {
+  const w = el('label', 'fld'); w.setAttribute('for', id);
+  w.append(el('span', '', label));
+  const s = document.createElement('select'); s.id = id;
+  opts.forEach(([v, t]) => { const o = document.createElement('option'); o.value = String(v); o.textContent = t; if (String(v) === String(val)) o.selected = true; s.append(o); });
+  s.addEventListener('change', () => onChange(s.value));
+  w.append(s); return w;
+}
+function numField(label, id, val, min, max, onChange) {
+  const w = el('label', 'fld'); w.setAttribute('for', id);
+  w.append(el('span', '', label));
+  const i = document.createElement('input'); i.type = 'number'; i.id = id; i.min = min; i.max = max; i.step = 1; i.value = val; i.inputMode = 'numeric';
+  i.addEventListener('input', () => { const v = +i.value; if (Number.isFinite(v) && v >= min && v <= max) onChange(v); });
+  w.append(i); return w;
+}
+function buildRam() {
+  const box = $('#ram-cfgs');
+  RC.forEach((c, k) => {
+    const p = el('div', 'panel cfg'); p.id = 'cfg-' + k;
+    p.append(el('h3', '', T('Mòdul o kit ', 'Módulo o kit ') + NAMES[k]));
+    const g = el('div', 'row');
+    g.append(selectField(T('Model de partida', 'Modelo de partida'), 'pre-' + k, [['', '—'], ...PRE.map((x, i) => [i, x[0]])], '', (v) => {
+      if (v === '') return;
+      const x = PRE[+v]; c.gen = x[1]; c.mts = x[2]; c.cl = x[3];
+      $('#gen-' + k).value = c.gen; $('#mts-' + k).value = c.mts; $('#cl-' + k).value = c.cl; renderRam();
+    }));
+    g.append(selectField(T('Generació', 'Generación'), 'gen-' + k, Object.keys(GEN).map((x) => [x, x]), c.gen, (v) => { c.gen = v; renderRam(); }));
+    p.append(g);
+    const g2 = el('div', 'row');
+    g2.append(numField(T('Velocitat (MT/s)', 'Velocidad (MT/s)'), 'mts-' + k, c.mts, 400, 12000, (v) => { c.mts = v; renderRam(); }));
+    g2.append(numField('CL', 'cl-' + k, c.cl, 2, 80, (v) => { c.cl = v; renderRam(); }));
+    p.append(g2);
+    const g3 = el('div', 'row');
+    g3.append(selectField(T('Mòduls', 'Módulos'), 'mods-' + k, [[1, '1'], [2, '2'], [4, '4']], c.mods, (v) => { c.mods = +v; renderRam(); }));
+    g3.append(selectField(T('GB per mòdul', 'GB por módulo'), 'gb-' + k, [4, 8, 16, 32].map((x) => [x, String(x)]), c.gb, (v) => { c.gb = +v; renderRam(); }));
+    g3.append(selectField(T('Canals de la placa', 'Canales de la placa'), 'chan-' + k, [[1, '1'], [2, '2 (dual)'], [4, '4 (quad)']], c.chan, (v) => { c.chan = +v; renderRam(); }));
+    g3.append(selectField(T('Format', 'Formato'), 'fmt-' + k, [['DIMM', 'DIMM'], ['SO-DIMM', 'SO-DIMM']], c.fmt, (v) => { c.fmt = v; renderRam(); }));
+    p.append(g3);
+    const r = el('div', 'res'); r.id = 'res-' + k; p.append(r);
+    box.append(p);
+  });
+}
+function notchSvg(gen, fm, label) {
+  const pos = { DDR3: 0.36, DDR4: 0.46, DDR5: 0.62 }[gen];
+  const w = fm === 'DIMM' ? 200 : 140;
+  const x = 10 + w * pos;
+  return `<svg viewBox="0 0 220 80" role="img" aria-label="${label}"><rect class="pcb" x="10" y="14" width="${w}" height="36" rx="3"/><rect x="${x}" y="14" width="8" height="13" fill="var(--bg)" stroke="var(--mem)" stroke-width="2"/><text x="10" y="70" font-size="12" fill="currentColor">${label}</text></svg>`;
+}
+function renderRam() {
+  const R = RC.map((c) => ramCalc(c, GEN));
+  RC.forEach((c, k) => {
+    const r = R[k], box = $('#res-' + k); box.textContent = '';
+    [[T('Latència real', 'Latencia real'), fmt(r.lat, 2) + ' ns'], [T('Ample de banda per canal', 'Ancho de banda por canal'), fmt(r.bwc, 1) + ' GB/s'], [T('Canals actius', 'Canales activos'), String(r.ch)], [T('Ample de banda total', 'Ancho de banda total'), fmt(r.bw, 1) + ' GB/s'], [T('Capacitat', 'Capacidad'), r.cap + ' GB'], [T('Voltatge típic', 'Voltaje típico'), fmt(r.v, 1) + ' V']].forEach(([l, v]) => box.append(el('span', 'l', l), el('span', 'v', v)));
+  });
+  const bars = $('#ram-bars'); bars.textContent = '';
+  const metrics = [[T('Latència (ns, menys és millor)', 'Latencia (ns, menos es mejor)'), 'lat', 2, 'ns'], [T('Ample de banda total (GB/s)', 'Ancho de banda total (GB/s)'), 'bw', 1, 'GB/s'], [T('Capacitat (GB)', 'Capacidad (GB)'), 'cap', 0, 'GB']];
+  metrics.forEach(([nm, key, d]) => {
+    const mx = Math.max(R[0][key], R[1][key]) || 1;
+    bars.append(el('strong', '', nm));
+    R.forEach((r, k) => {
+      const row = el('div', 'bar'); const tr = el('div', 'tr'); const fl = el('div', 'fl'); fl.style.width = Math.max(3, (r[key] / mx) * 100) + '%'; tr.append(fl);
+      row.append(el('span', '', NAMES[k]), tr, el('span', 'vl', fmt(r[key], d)));
+      bars.append(row);
+    });
+  });
+  const better = (key, low) => { const a = R[0][key], b = R[1][key]; if (Math.abs(a - b) < 0.005) return T('empat', 'empate'); return (low ? a < b : a > b) ? NAMES[0] : NAMES[1]; };
+  const f2 = (k, d) => fmt(R[0][k], d) + ' / ' + fmt(R[1][k], d);
+  $('#ram-verdict').textContent = T(
+    `Menys latència: ${better('lat', true)} (${f2('lat', 2)} ns)\nMés ample de banda: ${better('bw', false)} (${f2('bw', 1)} GB/s)\nMés capacitat: ${better('cap', false)} (${f2('cap', 0)} GB)\nNo sempre guanya el mateix mòdul en tot.`,
+    `Menos latencia: ${better('lat', true)} (${f2('lat', 2)} ns)\nMás ancho de banda: ${better('bw', false)} (${f2('bw', 1)} GB/s)\nMás capacidad: ${better('cap', false)} (${f2('cap', 0)} GB)\nNo siempre gana el mismo módulo en todo.`);
+  const bg = $('#pl-gen').value, bf = $('#pl-fmt').value, a = RC[0];
+  const n = $('#ram-notch');
+  n.innerHTML = notchSvg(a.gen, a.fmt, T('Mòdul A: ', 'Módulo A: ') + a.gen + ' ' + a.fmt) + notchSvg(bg, bf, T('Ranura: ', 'Ranura: ') + bg + ' ' + bf);
+  const v = $('#ram-comp');
+  if (a.gen !== bg) v.textContent = T(`✗ No encaixa: el mòdul A és ${a.gen} i la placa és ${bg}. L'osca està en una altra posició per a impedir-ho, i els senyals elèctrics també són diferents.`, `✗ No encaja: el módulo A es ${a.gen} y la placa es ${bg}. La muesca está en otra posición para impedirlo, y las señales eléctricas también son distintas.`);
+  else if (a.fmt !== bf) v.textContent = T(`✗ No encaixa: el mòdul és ${a.fmt} i la ranura és ${bf}. Tenen mida diferent (els SO-DIMM són de portàtil i miniPC).`, `✗ No encaja: el módulo es ${a.fmt} y la ranura es ${bf}. Tienen tamaño distinto (los SO-DIMM son de portátil y miniPC).`);
+  else v.textContent = T('✓ Encaixa: mateixa generació i mateix format.', '✓ Encaja: misma generación y mismo formato.');
+}
+buildRam();
+$('#pl-gen').addEventListener('change', renderRam);
+$('#pl-fmt').addEventListener('change', renderRam);
+renderRam();
+
+/* ====== 6. Nuclis, fils i IPC ====== */
+function rangeField(label, min, max, step, value, show, onInput) {
+  const w = el('label', 'fld'); const span = el('span', '');
+  const i = document.createElement('input'); i.type = 'range'; i.min = min; i.max = max; i.step = step; i.value = value;
+  const upd = () => { span.textContent = label + ': ' + show(+i.value); };
+  i.addEventListener('input', () => { upd(); onInput(); });
+  upd(); w.append(span, i); return { w, i };
+}
+function buildIpc() {
+  const box = $('#nu-ipc');
+  box.append(el('h3', '', T('Freqüència × IPC', 'Frecuencia × IPC')));
+  box.append(el('p', '', T("Rendiment d'un fil ≈ freqüència × IPC. L'IPC és un valor relatiu d'exemple: depén de l'arquitectura i del programa.", 'Rendimiento de un hilo ≈ frecuencia × IPC. El IPC es un valor relativo de ejemplo: depende de la arquitectura y del programa.')));
+  const out = el('div', 'bars'); const fb = el('p', 'verdict'); fb.setAttribute('role', 'status');
+  const defs = [['A', 4.0, 1.0], ['B', 3.5, 1.3]];
+  const ctl = defs.map(([n, f, ipc]) => ({
+    f: rangeField(T('CPU ', 'CPU ') + n + ' · ' + T('freqüència', 'frecuencia'), 1, 6, 0.1, f, (v) => fmt(v, 1) + ' GHz', upd),
+    i: rangeField(T('CPU ', 'CPU ') + n + ' · IPC', 0.5, 3, 0.1, ipc, (v) => fmt(v, 1), upd),
+  }));
+  function upd() {
+    const p = ctl.map((c) => +c.f.i.value * +c.i.i.value);
+    out.textContent = '';
+    const mx = Math.max(...p);
+    p.forEach((v, k) => { const row = el('div', 'bar'); const tr = el('div', 'tr'); const fl = el('div', 'fl'); fl.style.width = Math.max(3, (v / mx) * 100) + '%'; tr.append(fl); row.append(el('span', '', 'CPU ' + defs[k][0]), tr, el('span', 'vl', fmt(v, 2))); out.append(row); });
+    const d = (p[1] / p[0] - 1) * 100;
+    fb.textContent = Math.abs(d) < 0.05 ? T('Les dues CPU tenen el mateix rendiment per fil.', 'Las dos CPU tienen el mismo rendimiento por hilo.')
+      : (d > 0 ? T(`La CPU B és un ${fmt(d, 1)} % més ràpida per fil.`, `La CPU B es un ${fmt(d, 1)} % más rápida por hilo.`) : T(`La CPU A és un ${fmt(-d / (1 + d / 100) , 1)} % més ràpida per fil.`, `La CPU A es un ${fmt(-d / (1 + d / 100), 1)} % más rápida por hilo.`));
+  }
+  ctl.forEach((c) => box.append(c.f.w, c.i.w));
+  box.append(out, fb); upd();
+}
+function buildPar() {
+  const box = $('#nu-par');
+  box.append(el('h3', '', T('Nuclis, fils i paral·lelisme', 'Núcleos, hilos y paralelismo')));
+  const n = rangeField(T('Nuclis', 'Núcleos'), 1, 16, 1, 4, (v) => String(v), upd);
+  const p = rangeField(T('Part paral·lelitzable del programa', 'Parte paralelizable del programa'), 0, 100, 5, 80, (v) => v + ' %', upd);
+  const smtRow = el('label', 'row'); const smt = document.createElement('input'); smt.type = 'checkbox'; smt.addEventListener('change', upd);
+  smtRow.append(smt, el('span', '', T('SMT / Hyper-Threading (2 fils per nucli)', 'SMT / Hyper-Threading (2 hilos por núcleo)')));
+  const g = rangeField(T("Guany de l'SMT (valor d'exemple)", 'Ganancia del SMT (valor de ejemplo)'), 0, 40, 5, 20, (v) => v + ' %', upd);
+  const cores = el('div', 'cores'); cores.setAttribute('aria-hidden', 'true');
+  const st = el('div', 'stats'); const chart = el('div', 'chart-wrap');
+  const info = el('p', 'note');
+  box.append(n.w, p.w, smtRow, g.w, cores, st, chart, info);
+  function upd() {
+    const nn = +n.i.value, pp = +p.i.value / 100, useS = smt.checked, gg = useS ? +g.i.value / 100 : 0;
+    g.w.hidden = !useS;
+    cores.textContent = '';
+    for (let k = 0; k < nn; k++) { cores.append(el('i')); if (useS) cores.append(el('i', 'th')); }
+    const sp = speedup(pp, nn * (1 + gg));
+    const max = pp >= 1 ? '∞' : fmt(1 / (1 - pp), 1) + '×';
+    st.textContent = '';
+    [[T('Acceleració', 'Aceleración'), fmt(sp, 2) + '×'], [T('Un treball de 100 s en 1 nucli tarda', 'Un trabajo de 100 s en 1 núcleo tarda'), fmt(100 / sp, 1) + ' s'], [T('Fils', 'Hilos'), String(nn * (useS ? 2 : 1))], [T('Límit amb infinits nuclis', 'Límite con infinitos núcleos'), max]].forEach(([l, v]) => { const b = el('div', 'stat'); b.append(el('div', 'v', v), el('div', 'l', l)); st.append(b); });
+    const W = 460, H = 220, l0 = 40, b0 = 26;
+    const yMax = Math.ceil((16 * (1 + gg)) / 4) * 4;
+    const X = (k) => l0 + ((k - 1) / 15) * (W - l0 - 12), Y = (v) => H - b0 - (v / yMax) * (H - b0 - 12);
+    let pa = '', pi = '';
+    for (let k = 1; k <= 16; k++) { pa += X(k) + ',' + Y(speedup(pp, k * (1 + gg))) + ' '; pi += X(k) + ',' + Y(k) + ' '; }
+    chart.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${T('Acceleració segons el nombre de nuclis', 'Aceleración según el número de núcleos')}"><line x1="${l0}" y1="${H - b0}" x2="${W - 8}" y2="${H - b0}" stroke="var(--muted)"/><line x1="${l0}" y1="10" x2="${l0}" y2="${H - b0}" stroke="var(--muted)"/><polyline points="${pi}" fill="none" stroke="var(--muted)" stroke-dasharray="5 4" stroke-width="2"/><polyline points="${pa}" fill="none" stroke="var(--accent)" stroke-width="3"/><circle cx="${X(nn)}" cy="${Y(speedup(pp, nn * (1 + gg)))}" r="6" fill="var(--accent)"/><text x="${l0}" y="${H - 6}" font-size="11" fill="var(--muted)">1</text><text x="${W - 22}" y="${H - 6}" font-size="11" fill="var(--muted)">16 ${T('nuclis', 'núcleos')}</text><text x="4" y="22" font-size="11" fill="var(--muted)">${yMax}×</text><text x="${l0 + 8}" y="22" font-size="11" fill="var(--muted)">${T('discontínua: ideal · contínua: real', 'discontinua: ideal · continua: real')}</text></svg>`;
+    info.textContent = T('Llei d\'Amdahl: acceleració = 1 ÷ ((1 − p) + p ÷ n). La part seqüencial del programa limita el guany encara que afegisques nuclis.', 'Ley de Amdahl: aceleración = 1 ÷ ((1 − p) + p ÷ n). La parte secuencial del programa limita la ganancia aunque añadas núcleos.');
+  }
+  upd();
+}
+function buildTdp() {
+  const box = $('#nu-tdp');
+  box.append(el('h3', '', T('Consum i refrigeració (TDP)', 'Consumo y refrigeración (TDP)')));
+  const COOL = [[65, T("Dissipador d'aire bàsic", 'Disipador de aire básico')], [150, T("Torre d'aire gran", 'Torre de aire grande')], [220, T('Líquida de 240-280 mm', 'Líquida de 240-280 mm')], [300, T('Líquida de 360 mm', 'Líquida de 360 mm')]];
+  const w = rangeField(T('Consum de la CPU en càrrega', 'Consumo de la CPU en carga'), 35, 250, 5, 125, (v) => v + ' W', upd);
+  const sel = selectField(T('Refrigeració', 'Refrigeración'), 'cool', COOL.map((c, i) => [i, c[1] + ' (≈ ' + c[0] + ' W)']), 1, upd);
+  const row = el('div', 'row'); row.append(w.w, sel);
+  const g = el('div', 'gauge'); const gi = document.createElement('i'); g.append(gi);
+  const v = el('p', 'verdict'); v.setAttribute('role', 'status');
+  const note = el('p', 'note', T("Valors orientatius. Mira l'especificació del dissipador i el consum màxim de la CPU (en mode turbo pot superar el TDP). Si la calor no s'evacua, la CPU baixa la freqüència: thermal throttling.", 'Valores orientativos. Mira la especificación del disipador y el consumo máximo de la CPU (en modo turbo puede superar el TDP). Si el calor no se evacúa, la CPU baja la frecuencia: thermal throttling.'));
+  box.append(row, g, v, note);
+  function upd() {
+    const p = +w.i.value, cap = COOL[+$('#cool').value][0], ratio = p / cap;
+    gi.style.width = Math.min(100, ratio * 100) + '%';
+    gi.className = ratio <= 0.8 ? '' : ratio <= 1 ? 'warn' : 'bad';
+    g.setAttribute('role', 'img');
+    g.setAttribute('aria-label', fmt(Math.min(100, ratio * 100), 0) + ' %');
+    v.textContent = ratio <= 0.8 ? T('✓ Còmode: el dissipador evacua la calor amb marge.', '✓ Cómodo: el disipador evacúa el calor con margen.')
+      : ratio <= 1 ? T('! Just: funcionarà, però sense marge (més soroll i temperatures altes).', '! Justo: funcionará, pero sin margen (más ruido y temperaturas altas).')
+        : T('✗ Insuficient: la CPU baixarà la freqüència (thermal throttling) per a no sobreescalfar-se.', '✗ Insuficiente: la CPU bajará la frecuencia (thermal throttling) para no sobrecalentarse.');
+  }
+  upd();
+}
+buildIpc(); buildPar(); buildTdp();
+
+/* ====== 7. Pràctica ====== */
+const QTYPES = [
+  ['mix', T('Una mescla de tot', 'Una mezcla de todo')], ['ramlat', T('Latència de la RAM', 'Latencia de la RAM')], ['rambw', T('Ample de banda de la RAM', 'Ancho de banda de la RAM')],
+  ['trace', T('Traça de registres', 'Traza de registros')], ['fase', T('Fases del cicle', 'Fases del ciclo')], ['nivell', T('Jerarquia de memòria', 'Jerarquía de memoria')],
+  ['cau', T('Encerts de la cau', 'Aciertos de la caché')], ['perf', T('Rendiment de la CPU', 'Rendimiento de la CPU')], ['amdahl', T('Nuclis i paral·lelisme', 'Núcleos y paralelismo')],
+];
+const mono = (t) => `<span class="mono">${t}</span>`;
+const GENQ = {
+  ramlat() {
+    const g = pick(['DDR4', 'DDR5']);
+    const mts = g === 'DDR4' ? pick([2400, 2666, 3200, 3600]) : pick([4800, 5200, 5600, 6000, 6400]);
+    const cl = g === 'DDR4' ? pick([14, 15, 16, 17, 18, 19]) : pick([28, 30, 32, 36, 38, 40]);
+    const lat = (cl * 2000) / mts;
+    return { kind: 'num', ans: lat, tol: 0.06, prompt: T(`Un mòdul ${mono(`${g}-${mts} CL${cl}`)}. Quina és la seua latència real, en ns? (1 decimal)`, `Un módulo ${mono(`${g}-${mts} CL${cl}`)}. ¿Cuál es su latencia real, en ns? (1 decimal)`), sol: `${cl} × 2000 ÷ ${mts} = ${fmt(lat, 2)} ns` };
+  },
+  rambw() {
+    const g = pick(['DDR4', 'DDR5']);
+    const mts = g === 'DDR4' ? pick([2400, 2666, 3200, 3600]) : pick([4800, 5600, 6000, 6400]);
+    const ch = pick([1, 2, 2, 4]);
+    const bw = (mts * 8 * ch) / 1000;
+    const mods = ch === 1 ? T('1 mòdul', '1 módulo') : ch === 2 ? T('2 mòduls en dual channel', '2 módulos en dual channel') : T('4 mòduls en quad channel', '4 módulos en quad channel');
+    return { kind: 'num', ans: bw, tol: 0.1, prompt: T(`Ample de banda màxim teòric, en GB/s, de ${mods} ${mono(`${g}-${mts}`)}? (1 decimal)`, `¿Ancho de banda máximo teórico, en GB/s, de ${mods} ${mono(`${g}-${mts}`)}? (1 decimal)`), sol: `${mts} × 8 B = ${fmt0(mts * 8)} MB/s ${T('per canal', 'por canal')} · × ${ch} ${T('canals', 'canales')} = ${fmt0(mts * 8 * ch)} MB/s = ${fmt(bw, 1)} GB/s` };
+  },
+  trace() {
+    const a = rnd(2, 9), b = rnd(2, 9), c = rnd(1, 5), tpl = rnd(0, 2);
+    const mem = Array(MEMN).fill(0);
+    let prog, data;
+    if (tpl === 0) { prog = ['LOAD 10', 'ADD 11', 'STORE 12', 'OUT']; mem[10] = a; mem[11] = b; data = { 10: a, 11: b, 12: 0 }; }
+    else if (tpl === 1) { prog = ['LOAD 10', 'MUL 11', 'ADD 12', 'STORE 13', 'OUT']; mem[10] = a; mem[11] = b; mem[12] = c; data = { 10: a, 11: b, 12: c, 13: 0 }; }
+    else { prog = ['LOAD 10', 'SUB 11', 'STORE 12', 'ADD 10', 'OUT']; mem[10] = a + b; mem[11] = b; data = { 10: a + b, 11: b, 12: 0 }; }
+    prog.forEach((t, i) => { mem[i] = parseCell(t); });
+    const K = rnd(1, prog.length - 1);
+    const kth = decode(mem[K - 1]);
+    const memOp = ['LOAD', 'ADD', 'SUB', 'MUL', 'STORE'].includes(kth.name);
+    const reg = pick(memOp ? ['AC', 'CP', 'RIM', 'RDM'] : ['AC', 'CP']);
+    const s = newMachine(mem, []); runInstructions(s, K);
+    const ans = s[reg.toLowerCase()];
+    const s2 = newMachine(mem, []); const lines = [];
+    while (!s2.halted && s2.nIns < K) { const r = microStep(s2); lines.push(`${r.text.padEnd(26)} CP=${s2.cp} RDM=${s2.rdm == null ? '—' : s2.rdm} RIM=${s2.rim == null ? '—' : s2.rim} RI=${s2.ri == null ? '—' : mnem(s2.ri)} AC=${s2.ac}`); }
+    const progTxt = prog.map((t, i) => `${i}: ${t}`).join(' · ') + ` · ${prog.length}: HALT`;
+    const dataTxt = Object.keys(data).map((k) => `${k}: ${data[k]}`).join(' · ');
+    return { kind: 'num', ans, tol: 0, prompt: T(`Ordinador senzill. ${mono(progTxt)}. Dades inicials: ${mono(dataTxt)}. Comença amb CP = 0 i AC = 0. Quin valor té el ${mono(reg)} en acabar la instrucció número ${K}?`, `Computador sencillo. ${mono(progTxt)}. Datos iniciales: ${mono(dataTxt)}. Empieza con CP = 0 y AC = 0. ¿Qué valor tiene el ${mono(reg)} al terminar la instrucción número ${K}?`), sol: lines.join('\n') };
+  },
+  fase() {
+    const bank = [
+      [T('La unitat de control porta la instrucció de la memòria a un registre de la CPU.', 'La unidad de control trae la instrucción de la memoria a un registro de la CPU.'), 0],
+      [T('La unitat de control interpreta el codi binari de la instrucció.', 'La unidad de control interpreta el código binario de la instrucción.'), 1],
+      [T("L'ALU suma dos valors.", 'La ALU suma dos valores.'), 2],
+      [T('El resultat es guarda en un registre.', 'El resultado se guarda en un registro.'), 3],
+      [T("S'escriu en la memòria el resultat d'una instrucció STORE.", 'Se escribe en la memoria el resultado de una instrucción STORE.'), 3],
+      [T('La unitat de control esbrina quina operació és i quins operands usa.', 'La unidad de control averigua qué operación es y qué operandos usa.'), 1],
+      [T('El CP s\'incrementa perquè apunte a la instrucció següent.', 'El CP se incrementa para que apunte a la siguiente instrucción.'), 0],
+    ];
+    const [txt, c] = pick(bank);
+    const names = ['Fetch', 'Decode', 'Execute', 'Writeback'];
+    return { kind: 'mc', options: names, correct: c, fixed: true, prompt: T(`En quina fase del cicle passa això? «${txt}»`, `¿En qué fase del ciclo ocurre esto? «${txt}»`), sol: T(`Fases: Fetch (busca la instrucció i incrementa el CP), Decode (la interpreta), Execute (l'ALU opera o s'accedix a la dada) i Writeback (es guarda el resultat). Ací: ${names[c]}.`, `Fases: Fetch (busca la instrucción e incrementa el CP), Decode (la interpreta), Execute (la ALU opera o se accede al dato) y Writeback (se guarda el resultado). Aquí: ${names[c]}.`) };
+  },
+  nivell() {
+    const bank = [
+      [T("Quina d'estes memòries NO és volàtil?", '¿Cuál de estas memorias NO es volátil?'), [T('SSD NVMe', 'SSD NVMe'), T('Registres', 'Registros'), T('Cau L1', 'Caché L1'), 'RAM'], 0, T('Registres, cau i RAM perden el contingut sense corrent; l\'SSD el conserva.', 'Registros, caché y RAM pierden el contenido sin corriente; el SSD lo conserva.')],
+      [T('Quin nivell és el més ràpid?', '¿Qué nivel es el más rápido?'), [T('Registres', 'Registros'), T('Cau L3', 'Caché L3'), 'RAM', 'SSD'], 0, T('Els registres són dins de la CPU i es lligen en menys d\'un cicle.', 'Los registros están dentro de la CPU y se leen en menos de un ciclo.')],
+      [T('Quin nivell té més capacitat i és més barat per byte?', '¿Qué nivel tiene más capacidad y es más barato por byte?'), [T('Disc dur (HDD)', 'Disco duro (HDD)'), 'RAM', T('Cau L3', 'Caché L3'), T('Registres', 'Registros')], 0, T('Com més lluny de la CPU, més gran i més barat per byte, però més lent.', 'Cuanto más lejos de la CPU, más grande y más barato por byte, pero más lento.')],
+      [T('Quin és l\'ordre correcte, de més ràpid a més lent?', '¿Cuál es el orden correcto, de más rápido a más lento?'), [T('Registres, L1, RAM, SSD', 'Registros, L1, RAM, SSD'), T('L1, registres, RAM, SSD', 'L1, registros, RAM, SSD'), T('Registres, RAM, L1, SSD', 'Registros, RAM, L1, SSD'), T('RAM, L1, registres, SSD', 'RAM, L1, registros, SSD')], 0, T('Registres → cau (L1, L2, L3) → RAM → SSD → HDD.', 'Registros → caché (L1, L2, L3) → RAM → SSD → HDD.')],
+      [T('Quan la RAM s\'omple, el sistema pot usar part del disc com a…', 'Cuando la RAM se llena, el sistema puede usar parte del disco como…'), [T('memòria virtual (swap)', 'memoria virtual (swap)'), T('cau L3', 'caché L3'), T('registres addicionals', 'registros adicionales'), T('memòria de la gràfica', 'memoria de la gráfica')], 0, T('Funciona, però molt més lent, perquè el disc és molt més lent que la RAM.', 'Funciona, pero mucho más lento, porque el disco es mucho más lento que la RAM.')],
+      [T('Si 1 ns durara 1 s, un accés a la RAM (≈ 80 ns) duraria aproximadament…', 'Si 1 ns durara 1 s, un acceso a la RAM (≈ 80 ns) duraría aproximadamente…'), [T('1 minut i 20 segons', '1 minuto y 20 segundos'), T('80 hores', '80 horas'), T('1 dia', '1 día'), T('1 any', '1 año')], 0, T('80 ns → 80 s = 1 min 20 s. Un accés a un HDD (≈ 10 ms) seria de mesos.', '80 ns → 80 s = 1 min 20 s. Un acceso a un HDD (≈ 10 ms) sería de meses.')],
+    ];
+    const [q, opts, c, why] = pick(bank);
+    return { kind: 'mc', options: opts, correct: c, prompt: q, sol: why };
+  },
+  cau() {
+    const N = pick([2, 3]), len = rnd(9, 12);
+    const seq = Array.from({ length: len }, () => rnd(0, 4));
+    const r = simCache(seq, N, 1);
+    const hits = r.filter((x) => x.hit).length;
+    const H = T('E', 'A'), M = 'F';
+    return { kind: 'num', ans: hits, tol: 0, prompt: T(`Cau de ${N} línies (LRU, blocs d'una paraula), buida al principi. Accessos: ${mono(seq.join(', '))}. Quants encerts hi ha?`, `Caché de ${N} líneas (LRU, bloques de una palabra), vacía al principio. Accesos: ${mono(seq.join(', '))}. ¿Cuántos aciertos hay?`), sol: r.map((x) => `${x.addr}:${x.hit ? H : M}`).join('  ') + '\n' + T(`${hits} encerts (${H} = encert, ${M} = fallada). Quan la cau és plena es desallotja la línia menys usada recentment.`, `${hits} aciertos (${H} = acierto, ${M} = fallo). Cuando la caché está llena se desaloja la línea menos usada recientemente.`) };
+  },
+  perf() {
+    const f1 = rnd(30, 55) / 10, f2 = rnd(30, 55) / 10, i1 = rnd(10, 24) / 10, i2 = rnd(10, 24) / 10;
+    if (Math.random() < 0.5) {
+      const p = f1 * i1;
+      return { kind: 'num', ans: p, tol: 0.011, prompt: T(`Una CPU a ${fmt(f1, 1)} GHz amb IPC ${fmt(i1, 1)}. Quin és el seu rendiment relatiu per fil (freqüència × IPC)? (2 decimals)`, `Una CPU a ${fmt(f1, 1)} GHz con IPC ${fmt(i1, 1)}. ¿Cuál es su rendimiento relativo por hilo (frecuencia × IPC)? (2 decimales)`), sol: `${fmt(f1, 1)} × ${fmt(i1, 1)} = ${fmt(p, 2)}` };
+    }
+    const pa = f1 * i1, pb = f2 * i2;
+    const c = Math.abs(pa - pb) < 0.005 ? 2 : pa > pb ? 0 : 1;
+    return { kind: 'mc', options: [T('La CPU A', 'La CPU A'), T('La CPU B', 'La CPU B'), T('Van igual', 'Van igual')], correct: c, fixed: true, prompt: T(`Per a un programa d'un sol fil, quina és més ràpida? A: ${fmt(f1, 1)} GHz, IPC ${fmt(i1, 1)}. B: ${fmt(f2, 1)} GHz, IPC ${fmt(i2, 1)}.`, `Para un programa de un solo hilo, ¿cuál es más rápida? A: ${fmt(f1, 1)} GHz, IPC ${fmt(i1, 1)}. B: ${fmt(f2, 1)} GHz, IPC ${fmt(i2, 1)}.`), sol: `A: ${fmt(f1, 1)} × ${fmt(i1, 1)} = ${fmt(pa, 2)} · B: ${fmt(f2, 1)} × ${fmt(i2, 1)} = ${fmt(pb, 2)}` };
+  },
+  amdahl() {
+    const p = pick([50, 75, 80, 90, 95]), n = pick([2, 4, 8, 16]);
+    const sp = speedup(p / 100, n);
+    return { kind: 'num', ans: sp, tol: 0.02, prompt: T(`Un programa té un ${p} % paral·lelitzable. Quina acceleració s'aconsegueix amb ${n} nuclis? (2 decimals)`, `Un programa es paralelizable en un ${p} %. ¿Qué aceleración se consigue con ${n} núcleos? (2 decimales)`), sol: `1 ÷ ((1 − ${fmt(p / 100, 2)}) + ${fmt(p / 100, 2)} ÷ ${n}) = 1 ÷ (${fmt(1 - p / 100, 2)} + ${fmt(p / 100 / n, 3)}) = ${fmt(sp, 2)}×` };
+  },
+};
+let Q = null, okN = Number(Lab.leer('ok')) || 0, koN = Number(Lab.leer('ko')) || 0, answered = false;
+function scoreUpd() { $('#s-ok').textContent = String(okN); $('#s-ko').textContent = String(koN); Lab.guardar('ok', okN); Lab.guardar('ko', koN); }
+function settle(good) { if (!answered) { answered = true; if (good) okN++; else koN++; scoreUpd(); } }
+function showSol(show) { const s = $('#q-s'); s.hidden = !show; }
+function newQ() {
+  let t = $('#q-type').value;
+  if (t === 'mix') t = pick(['ramlat', 'rambw', 'trace', 'fase', 'nivell', 'cau', 'perf', 'amdahl']);
+  Q = GENQ[t]();
+  answered = false;
+  $('#q-p').innerHTML = Q.prompt;
+  const inp = $('#q-in'); inp.textContent = '';
+  $('#q-f').textContent = ''; $('#q-f').className = 'fb';
+  $('#q-s').textContent = Q.sol; showSol(false);
+  if (Q.kind === 'num') {
+    const i = document.createElement('input'); i.type = 'text'; i.id = 'q-a'; i.inputMode = 'decimal'; i.autocomplete = 'off'; i.spellcheck = false; i.size = 12;
+    i.setAttribute('aria-label', T('La teua resposta', 'Tu respuesta'));
+    i.addEventListener('keydown', (e) => { if (e.key === 'Enter') checkNum(); });
+    inp.append(i);
+    $('#q-check').hidden = false;
+  } else {
+    $('#q-check').hidden = true;
+    const order = Q.fixed ? Q.options.map((_, k) => k) : shuffle(Q.options.map((_, k) => k));
+    order.forEach((k) => {
+      const b = el('button', 'btn', Q.options[k]); b.type = 'button';
+      b.addEventListener('click', () => {
+        if ($$('button', inp).some((x) => x.disabled)) return;
+        const good = k === Q.correct;
+        settle(good);
+        $$('button', inp).forEach((x) => { x.disabled = true; });
+        $('#q-f').className = 'fb ' + (good ? 'ok' : 'ko');
+        $('#q-f').textContent = good ? T('Correcte! ✓', '¡Correcto! ✓') : T('No és correcte ✗. La resposta bona és: ', 'No es correcto ✗. La respuesta buena es: ') + Q.options[Q.correct];
+        showSol(true);
+      });
+      inp.append(b);
+    });
+  }
+}
+function checkNum() {
+  const i = $('#q-a'); if (!i) return;
+  const v = parseNum(i.value);
+  const f = $('#q-f');
+  if (Number.isNaN(v)) { f.className = 'fb'; f.textContent = T('Escriu un número.', 'Escribe un número.'); return; }
+  const good = Math.abs(v - Q.ans) <= Q.tol + 1e-9;
+  settle(good);
+  f.className = 'fb ' + (good ? 'ok' : 'ko');
+  f.textContent = good ? T('Correcte! ✓', '¡Correcto! ✓') : T('No és correcte ✗. Mira la solució explicada.', 'No es correcto ✗. Mira la solución explicada.');
+  showSol(true);
+}
+QTYPES.forEach(([v, t]) => { const o = document.createElement('option'); o.value = v; o.textContent = t; $('#q-type').append(o); });
+$('#q-type').addEventListener('change', newQ);
+$('#q-check').addEventListener('click', checkNum);
+$('#q-sol').addEventListener('click', () => { answered = true; showSol(true); });
+$('#q-next').addEventListener('click', newQ);
+scoreUpd();
+newQ();
+</script>
+</body>
+</html>
