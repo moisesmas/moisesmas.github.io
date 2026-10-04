@@ -23,8 +23,8 @@ Diseño: `docs/superpowers/specs/2026-09-30-web-docencia-design.md`. Guía del t
 - El validador de enlaces no entiende `…/es`; lo resuelve `src/lib/enlaces.ts`.
 - `archivosContenido()` debe ir antes que Starlight en `integrations`.
 - Al renombrar un tema ya publicado, añadir `redirects` en `astro.config.mjs` para no romper enlaces de Aules.
-- Starlight links validator only accepts links to files; links to a lab folder are excluded by `carpetaConIndiceExiste` in `src/lib/enlaces.ts` only when the folder has an `index.html`.
-- Happy-dom never fires `DOMContentLoaded` after `document.write`, and the comment header of `public/comun/lab.js` contains a literal `</script>` — both are handled inside `tests/unit/laboratorios-humo.test.ts`.
+- El validador de enlaces de Starlight solo acepta enlaces a archivos; los enlaces a la carpeta de un laboratorio los excluye `carpetaConIndiceExiste` (`src/lib/enlaces.ts`) solo cuando la carpeta tiene un `index.html`.
+- Happy-dom nunca dispara `DOMContentLoaded` tras `document.write`, y el comentario de cabecera de `public/comun/lab.js` contiene un `</script>` literal: `tests/unit/laboratorios-humo.test.ts` resuelve ambos casos.
 
 ## Integrar un laboratorio nuevo
 
