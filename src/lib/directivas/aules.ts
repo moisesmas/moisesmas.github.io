@@ -9,9 +9,9 @@ export const aules: Manejador = (nodo, archivo) => {
     type: 'paragraph',
     data: { hName: 'aside', hProperties: { class: 'bloque-aules', 'aria-label': 'Material en Aules' } },
     children: [
-      html('<p class="bloque-aules__titulo"><span aria-hidden="true">🔒</span> Material en Aules</p>'),
+      html('<p class="bloque-aules__titulo" lang="es"><span aria-hidden="true">🔒</span> Material en Aules</p>'),
       { type: 'paragraph', data: { hName: 'div', hProperties: { class: 'bloque-aules__contenido' } }, children: [...nodo.children] },
-      html(`<p class="bloque-aules__enlace"><a href="${escapar(modulo.aules)}">Abrir el curso en Aules</a></p>`),
+      html(`<p class="bloque-aules__enlace" lang="es"><a href="${escapar(modulo.aules)}">Abrir el curso en Aules</a></p>`),
     ],
   } as MdastContent;
 };

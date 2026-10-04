@@ -34,6 +34,16 @@ describe('idioma del contenido', () => {
   it('la interfaz sigue en castellano', () => {
     expect(leer('docencia/smr/som/index.html')).toMatch(/<html lang="es-ES"/);
   });
+  it('el título de la página (h1) también va dentro del contenedor con el idioma del contenido', () => {
+    expect(leer('docencia/smr/som/ud01-introduccion/index.html')).toMatch(/<div lang="en"[^>]*>\s*<h1/);
+    expect(leer('docencia/smr/som/ud01-introduccion/es/index.html')).toMatch(/<div lang="es"[^>]*>\s*<h1/);
+    expect(leer('docencia/dam/sistemas-informaticos/index.html')).toMatch(/<div lang="ca-valencia"[^>]*>\s*<h1/);
+  });
+  it('el conmutador de idioma queda fuera de ese contenedor', () => {
+    expect(leer('docencia/smr/som/ud01-introduccion/index.html')).toMatch(
+      /<div lang="en"[^>]*>\s*<h1[^>]*>[^<]*<\/h1>\s*<\/div>\s*<nav class="conmutador-idioma/,
+    );
+  });
 });
 
 /** Enlace «anterior» o «siguiente» de la paginación, con su texto. */

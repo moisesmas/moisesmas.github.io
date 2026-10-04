@@ -75,6 +75,21 @@ describe('::artefacto', () => {
   it('laboratorio inexistente: error', () => {
     expect(() => convertir(docs, `${M}/ud01-introduccion/index.md`, '::artefacto{src="nada"}')).toThrow(/\[::artefacto\] No existe/);
   });
+  it('la marca y «Abrir laboratorio →» son interfaz (lang="es"); título, descripción y etiquetas son contenido', () => {
+    const html = convertir(docs, `${M}/ud01-introduccion/index.md`, '::artefacto{src="bits"}');
+    expect(html).toContain('<span class="bloque-laboratorio__marca" lang="es">Laboratorio</span>');
+    expect(html).toContain('<span class="bloque-laboratorio__abrir" lang="es">Abrir laboratorio →</span>');
+    expect(html).toContain('bloque-laboratorio__descripcion');
+    expect(html).toContain('bloque-laboratorio__etiquetas');
+    expect(html).not.toMatch(/<a class="bloque-laboratorio"[^>]*lang=/);
+    expect(html).not.toMatch(/bloque-laboratorio__(titulo|descripcion|etiquetas)"[^>]*lang=/);
+  });
+  it('modo incrustado: solo «· Abrir a pantalla completa ↗» es interfaz; el título del enlace es contenido', () => {
+    const html = convertir(docs, `${M}/ud01-introduccion/index.md`, '::artefacto{src="bits" modo="incrustado"}');
+    expect(html).toContain('>Bit Lab<span lang="es"> · Abrir a pantalla completa ↗</span></a>');
+    expect(html).not.toMatch(/<figure[^>]*lang=/);
+    expect(html).not.toMatch(/<iframe[^>]*lang=/);
+  });
 });
 
 describe('::laboratorios', () => {
@@ -88,6 +103,18 @@ describe('::laboratorios', () => {
     const html = convertir(docs, `${M}/index.es.md`, '::laboratorios');
     expect(html).toContain('<h3>Unidad 1 · Intro</h3>');
     expect(html).toContain('?lang=es');
+  });
+  it('las tarjetas de la portada también marcan su interfaz en castellano; el título de la unidad no', () => {
+    const html = convertir(docs, `${M}/index.md`, '::laboratorios');
+    expect(html).toContain('<span class="bloque-laboratorio__marca" lang="es">Laboratorio</span>');
+    expect(html).toContain('<span class="bloque-laboratorio__abrir" lang="es">Abrir laboratorio →</span>');
+    expect(html).not.toMatch(/<h3[^>]*lang=/);
+  });
+  it('módulo sin laboratorios: el aviso es interfaz (lang="es")', () => {
+    const sinLabs = crearDocs({ [`${M}/index.md`]: '---\ntitle: Single-User OS\n---\n' });
+    expect(convertir(sinLabs, `${M}/index.md`, '::laboratorios')).toContain(
+      '<p class="laboratorios-modulo__vacio" lang="es">Todavía no hay laboratorios en este módulo.</p>',
+    );
   });
   it('fuera de un módulo: error', () => {
     expect(() => convertir(docs, 'docencia/index.md', '::laboratorios')).toThrow(/\[::laboratorios\]/);

@@ -11,7 +11,7 @@ export const laboratorios: Manejador = (_nodo, archivo) => {
   const dirModulo = path.join(archivo.docs, modulo.ruta);
   const labs = listarLaboratorios(dirModulo);
   if (labs.length === 0) {
-    return html('<p class="laboratorios-modulo__vacio">Todavía no hay laboratorios en este módulo.</p>');
+    return html('<p class="laboratorios-modulo__vacio" lang="es">Todavía no hay laboratorios en este módulo.</p>');
   }
   const unidades = [...new Set(labs.map((l) => l.unidad))];
   const secciones = unidades.map((unidad) => {

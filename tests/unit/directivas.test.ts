@@ -55,6 +55,12 @@ describe('::video', () => {
   it('identificador no válido: error', () => {
     expect(() => convertir(docs, `${U}/index.md`, '::video{youtube="corto"}')).toThrow(/\[::video\]/);
   });
+  it('el aviso es texto de la interfaz (lang="es"); el botón lleva el título del vídeo, sin idioma propio', () => {
+    const html = convertir(docs, `${U}/index.md`, '::video[Installing Ubuntu]{youtube="dQw4w9WgXcQ"}');
+    expect(html).toContain('<p class="bloque-video__aviso" lang="es">Al reproducirlo, el vídeo se cargará desde YouTube.</p>');
+    expect(html).not.toMatch(/<button[^>]*lang=/);
+    expect(html).not.toMatch(/<div class="bloque-video[^>]*lang=/);
+  });
 });
 
 describe(':::aules', () => {
@@ -66,6 +72,13 @@ describe(':::aules', () => {
   });
   it('fuera de un módulo: error', () => {
     expect(() => convertir(docs, 'docencia/index.md', ':::aules\nx\n:::')).toThrow(/\[::aules\]/);
+  });
+  it('el título y el enlace son texto de la interfaz (lang="es"); el contenido de la caja conserva el idioma de la página', () => {
+    const html = convertir(docs, `${U}/index.md`, ':::aules\nThe **solution** is in Aules.\n:::');
+    expect(html).toContain('<p class="bloque-aules__titulo" lang="es">');
+    expect(html).toContain('<p class="bloque-aules__enlace" lang="es">');
+    expect(html).not.toMatch(/<aside[^>]*lang=/);
+    expect(html).not.toMatch(/class="bloque-aules__contenido"[^>]*lang=/);
   });
 });
 
