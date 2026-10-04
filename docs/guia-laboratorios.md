@@ -342,7 +342,7 @@ API del kit disponible en el código del laboratorio:
 
 ## 6. Pestañas, memoria y práctica
 
-- **Pestañas (patrón WAI-ARIA).** Un contenedor `role="tablist"` con `aria-label`; cada pestaña es un `<button role="tab">` con `id`, `data-tab`, `aria-controls`, `aria-selected` y `tabindex="-1"` (salvo la activa); cada panel es un `role="tabpanel"` con `id`, `aria-labelledby` y `hidden` (salvo el activo). El código del esqueleto resuelve clic, flechas, Inicio y Fin, y mantiene visible la pestaña activa en pantallas estrechas.
+- **Pestañas (patrón WAI-ARIA).** Un contenedor `role="tablist"` con `aria-label`; cada pestaña es un `<button role="tab">` con `id`, `data-tab`, `aria-controls`, `aria-selected` y `tabindex="-1"` (salvo la activa); cada panel es un `role="tabpanel"` con `id`, `aria-labelledby` y `hidden` (salvo el activo). El código del esqueleto resuelve clic, flechas, Inicio y Fin, y mantiene visible la pestaña activa en pantallas estrechas. Para este comportamiento accesible (flechas, `aria-controls`, `tabindex` itinerante) el patrón es el esqueleto del apartado 3, no el laboratorio de referencia `numeracion`: ninguno de los dos laboratorios existentes lo implementa por completo.
 - **`data-tab`** es el identificador de la pestaña: minúsculas y guiones, igual en todos los idiomas. Es lo que va detrás de `#` en la URL (`…/<nombre>/#byte`), de modo que Aules puede enlazar a una pestaña y el cambio de idioma la conserva.
 - **Memoria.** `Lab.guardar('pestana', id)` al cambiar de pestaña y `Lab.leer('pestana')` al abrir (el hash de la URL manda sobre la memoria). Usa también `Lab.guardar` para el marcador de la práctica. El tamaño de letra lo recuerda el kit.
 - **Contenido.** Entre cinco y ocho pestañas de concepto (una por concepto clave), con simuladores en lugar de texto largo, y al final la pestaña de práctica (`data-tab="practica"`).
@@ -357,7 +357,7 @@ API del kit disponible en el código del laboratorio:
 5. **Medidas en `rem` o `em`.** El zoom (A− y A+) cambia el `font-size` de `<html>` entre 12 y 24 px (16 px de partida): no lo fijes en tu CSS y todo lo demás escalará.
 6. **Textos:** `data-t` solo en elementos sin hijos, `data-t-html` si el texto lleva marcado y `Lab.t` para lo generado con JavaScript (apartado 5).
 7. **Accesible:** manejable con teclado, foco visible, `aria-label` en los botones que solo llevan un símbolo, texto además de color y respeto de `prefers-reduced-motion`.
-8. **Claro, oscuro, móvil y proyector.** Variables CSS con `prefers-color-scheme`, diseño que funcione a 375 px de ancho y con el zoom al máximo.
+8. **Claro, oscuro, móvil y proyector.** Variables CSS con `prefers-color-scheme`, diseño que funcione a 375 px de ancho y con el zoom al máximo. La fila de controles (volver, zoom e idioma) debe poder partirse en móvil: `flex-wrap:wrap` en su contenedor, como en `.cabecera` del esqueleto.
 9. **Consola limpia.** Sin mensajes de depuración: la prueba de humo falla si aparece la palabra `Error`.
 10. **Pantalla completa o incrustado.** La unidad puede mostrarlo en un `<iframe>` (`modo="incrustado"`); en ese caso el kit oculta el enlace `data-lab-volver`. No supongas que ocupa toda la pantalla.
 
@@ -396,7 +396,6 @@ Contraste (calculado con la fórmula de WCAG):
 ## 9. Enlazarlo desde la unidad
 
 En la página de la unidad (`index.md` y, en SOM y Sistemas Informáticos, también `index.es.md`), en la misma carpeta que `laboratorios/`:
-- En el contenedor de controles (zoom, idioma, volver), añade `flex-wrap: wrap` al CSS del `.zoom` para que se adapten bien a 375 px.
 
 ```md
 ::artefacto{src="mi-laboratorio"}
