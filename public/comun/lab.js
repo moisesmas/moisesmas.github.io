@@ -31,9 +31,18 @@
     return url.toString();
   }
 
-  function destinoVolver(referrer, origen, paginaTema) {
+  /*
+   * «atras» solo si se llegó desde OTRA página de esta web y hay adónde volver.
+   * Tras cambiar de idioma (location.replace) el referrer es el propio laboratorio,
+   * y en una pestaña nueva abierta desde Aules el historial tiene una sola página:
+   * en ambos casos history.back() no lleva a la unidad, así que se usa su página.
+   */
+  function destinoVolver(referrer, origen, ruta, historial, paginaTema) {
     try {
-      if (referrer && new URL(referrer).origin === origen) return 'atras';
+      if (referrer) {
+        var anterior = new URL(referrer);
+        if (anterior.origin === origen && anterior.pathname !== ruta && historial > 1) return 'atras';
+      }
     } catch (e) {
       /* referrer no válido: se usa la página del tema */
     }
@@ -125,7 +134,7 @@
       var paginaTema = new URL('../../' + (idioma !== original ? 'es/' : ''), global.location.href).toString();
       enlace.setAttribute('href', paginaTema);
       enlace.addEventListener('click', function (evento) {
-        if (destinoVolver(doc.referrer, global.location.origin, paginaTema) === 'atras') {
+        if (destinoVolver(doc.referrer, global.location.origin, global.location.pathname, global.history.length, paginaTema) === 'atras') {
           evento.preventDefault();
           global.history.back();
         }
