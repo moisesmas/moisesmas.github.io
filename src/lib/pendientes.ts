@@ -1,6 +1,5 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
-import { slug } from 'github-slugger';
 import type { Modulo } from '../config/modulos';
 
 export interface Pendientes {
@@ -18,10 +17,14 @@ function* recorrer(dir: string, base = dir): Generator<string> {
   }
 }
 
-/** Minúsculas, sin acentos ni espacios: así la dirección publicada coincide con la carpeta. */
+/**
+ * Solo minúsculas sin acentos, números y guiones (sin espacios ni guiones bajos):
+ * así la dirección publicada coincide con la carpeta. github-slugger no sirve aquí,
+ * porque conserva acentos y guiones bajos.
+ */
 function nombreValido(segmento: string): boolean {
   const base = segmento.replace(/(\.es)?\.[^.]+$/, '');
-  return base === slug(base);
+  return /^[a-z0-9]+(-[a-z0-9]+)*$/.test(base);
 }
 
 export function buscarPendientes(docs: string, modulos: Modulo[]): Pendientes {

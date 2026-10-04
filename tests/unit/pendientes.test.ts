@@ -41,6 +41,44 @@ describe('buscarPendientes', () => {
   });
 });
 
+describe('buscarPendientes: nombres de archivo', () => {
+  const P = 'docencia/smr/proyecto-intermodular';
+  const docs = crear({
+    [`${P}/práctica.pdf`]: '',
+    [`${P}/mi_archivo.pdf`]: '',
+    [`${P}/ud02-instalación/notas.pdf`]: '',
+    [`${P}/doble--guion.pdf`]: '',
+    [`${P}/-inicio.pdf`]: '',
+    [`${P}/ud02-instalacion/p3-instalacion.pdf`]: '',
+    [`${P}/ud02-instalacion/01-teoria.es.md`]: '',
+    [`${P}/ud02-instalacion/index.md`]: '',
+  });
+  // macOS puede devolver los nombres descompuestos (NFD): se compara en NFC.
+  const nombres = buscarPendientes(docs, MODULOS).nombres.map((n) => n.normalize('NFC')).sort();
+
+  it('marca nombres con acentos o guiones bajos, que github-slugger deja pasar', () => {
+    expect(nombres).toContain(`${P}/práctica.pdf`);
+    expect(nombres).toContain(`${P}/mi_archivo.pdf`);
+  });
+  it('marca una carpeta con acentos aunque el archivo de dentro esté bien', () => {
+    expect(nombres).toContain(`${P}/ud02-instalación/notas.pdf`);
+  });
+  it('marca guiones dobles o al principio', () => {
+    expect(nombres).toContain(`${P}/doble--guion.pdf`);
+    expect(nombres).toContain(`${P}/-inicio.pdf`);
+  });
+  it('no marca minúsculas, números y guiones, con o sin .es antes de la extensión', () => {
+    const mal = [
+      `${P}/-inicio.pdf`,
+      `${P}/doble--guion.pdf`,
+      `${P}/mi_archivo.pdf`,
+      `${P}/ud02-instalación/notas.pdf`,
+      `${P}/práctica.pdf`,
+    ];
+    expect(nombres).toEqual(mal.sort());
+  });
+});
+
 describe('informe', () => {
   it('sin pendientes', () => {
     expect(informe({ traducciones: [], laboratorios: [], nombres: [] })).toContain('Nada pendiente');
