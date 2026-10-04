@@ -43,7 +43,7 @@ Les dates límit exactes de cada lliurament i l'horari i l'aula de la presencial
 
 ## Com estudiar esta unitat
 
-Estudiar pel teu compte requereix un ritme. Este és l'itinerari que et recomanem, amb temps **orientatius** (si en tens menys, mira l'avís del final):
+Estudiar pel teu compte requerix un ritme. Este és l'itinerari que et recomanem, amb temps **orientatius** (si en tens menys, mira l'avís del final):
 
 | Setmana | Passos | Temps orientatiu |
 |---|---|---|

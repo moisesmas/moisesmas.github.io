@@ -8,10 +8,9 @@ Todo lo que harás en este módulo (instalar sistemas operativos, programar scri
 :::tip[Cómo trabajar esta página]
 **Tiempo orientativo:** unos 60 minutos de lectura y 30 de práctica.
 
-1. Lee las secciones 1 y 2 para tener la visión general (15 minutos).
-2. Dedica el grueso del tiempo a las secciones 4 y 6, las que más usarás en la presencial.
-3. Practica con el laboratorio «Anatomía de la placa base» (en la presentación de la unidad) y haz la [actividad 1](/docencia/dam/sistemas-informaticos/ud01-hardware/actividades/es/).
-4. Cierra con «Comprueba lo aprendido». Las dudas, en el foro de Aules.
+1. Lee las secciones 1 y 2 (visión general, 15 minutos) y dedica el grueso del tiempo a las 4 y 6, las que más usarás en la presencial.
+2. Practica con el laboratorio «Anatomía de la placa base» (en la presentación de la unidad) y haz la [actividad 1](/docencia/dam/sistemas-informaticos/ud01-hardware/actividades/es/).
+3. Cierra con «Comprueba lo aprendido»; las dudas, en el foro de Aules.
 :::
 
 ## 1. Qué es un ordenador
@@ -36,7 +35,7 @@ Desde el punto de vista de la CPU, un programa no es más que datos (bytes) que 
 
 ### Ordenadores «ocultos»
 
-No limites la idea de ordenador a la torre o al portátil: un cajero automático, la centralita de un coche, un router o una lavadora digital también lo son. Los llamamos **sistemas embebidos** (*embedded systems*): ejecutan un software muy concreto y no están pensados para que el usuario instale programas nuevos, a diferencia de un PC, que es de uso general.
+No limites la idea de ordenador a la torre o al portátil: un cajero automático, un router o una lavadora digital también lo son. Son **sistemas embebidos** (*embedded systems*): ejecutan un software muy concreto y el usuario no instala programas nuevos, a diferencia de un PC, que es de uso general.
 
 ### Hardware y software
 
@@ -62,19 +61,17 @@ El instituto quiere montar un servidor de archivos para el departamento: 4 disco
 
 ## 3. La placa base
 
-La placa base (*motherboard*) es el circuito impreso principal del ordenador: una lámina de fibra de vidrio con varias capas de pistas de cobre grabadas (las modernas suelen tener entre 4 y 8, o más en las de gama alta) que conectan todos los componentes. Por las pistas circulan a la vez la energía que alimenta cada pieza y las señales de datos que les permiten comunicarse.
+La placa base (*motherboard*) es el circuito impreso principal: una lámina de fibra de vidrio con varias capas de pistas de cobre (entre 4 y 8 en las modernas, o más en gamas altas) que conectan todos los componentes y llevan a la vez la energía y las señales de datos.
 
 Sin ella, la CPU no podría acceder a la RAM ni la gráfica recibiría alimentación: es el elemento que convierte un conjunto de piezas sueltas en un sistema informático.
 
 ## 4. Componentes de la placa base
 
-El laboratorio «Anatomía de la placa base» dibuja una placa ATX a escala y te deja tocar cada componente. Aquí tienes el resumen de cada pieza; allí podrás practicarlo.
-
 ### 4.1 El chipset
 
 El chipset es el conjunto de circuitos que gestiona la comunicación entre la CPU, la memoria y el resto de dispositivos. Determina, en buena parte, qué procesadores admite la placa, cuántos puertos USB y SATA ofrece, si permite el *overclocking* (subir la frecuencia de la CPU o de la RAM por encima de la de fábrica) y cuántas líneas PCIe adicionales hay.
 
-Antiguamente el chipset eran dos chips: el **northbridge** (puente norte), cerca de la CPU, para la RAM y la gráfica (las conexiones rápidas), y el **southbridge** (puente sur), para los periféricos lentos. Hace más de una década que el controlador de memoria y las líneas PCIe principales están dentro de la CPU; el chip que hoy llamamos *chipset* es heredero del puente sur.
+Antiguamente eran dos chips, el **northbridge** (RAM y gráfica) y el **southbridge** (periféricos lentos). Hace más de una década que el controlador de memoria y las líneas PCIe principales están dentro de la CPU, y el *chipset* actual es heredero del puente sur.
 
 Cada fabricante ofrece varias gamas de chipset para una misma generación de procesadores. Se diferencian por las funciones que activan, no por las CPU que admiten:
 
@@ -83,7 +80,7 @@ Cada fabricante ofrece varias gamas de chipset para una misma generación de pro
 | Intel (Core de 12.ª a 14.ª gen.) | Z790: *overclocking* y máxima conectividad | B760: sin *overclocking* de la CPU | H610: funciones básicas |
 | AMD (Ryzen 7000) | X670: *overclocking* y más líneas PCIe | B650: buen equilibrio | A620: funciones básicas |
 
-Los nombres cambian con cada generación (Z890 para Intel LGA1851, X870 para AMD AM5…), pero la escala «alta, media, entrada» se mantiene. No hace falta memorizar nombres, sino saber qué activa cada gama.
+Los nombres cambian con cada generación (Z890 para Intel LGA1851, X870 para AMD AM5…), pero la escala se mantiene: importa qué activa cada gama, no memorizar nombres.
 
 ### 4.2 El zócalo de la CPU
 
@@ -101,11 +98,11 @@ Un procesador solo se puede instalar en una placa con el zócalo para el que se 
 
 ### 4.3 Ranuras de RAM
 
-Las placas domésticas suelen tener entre 2 y 4 ranuras **DIMM**. Si están coloreadas por parejas, no es decoración: indican cuáles hay que usar juntas para activar el modo **dual channel**, en el que la placa lee dos módulos en paralelo y duplica el ancho de banda. El manual de la placa dice qué combinación hay que usar; en la [página 2](/docencia/dam/sistemas-informaticos/ud01-hardware/02-memoria-ram-i-cpu/es/) calcularás qué ganas.
+Las placas domésticas suelen tener entre 2 y 4 ranuras **DIMM**. Si están coloreadas por parejas, no es decoración: indican cuáles hay que usar juntas para activar el modo **dual channel**, en el que la placa lee dos módulos en paralelo y duplica el ancho de banda. El manual indica la combinación; en la [página 2](/docencia/dam/sistemas-informaticos/ud01-hardware/02-memoria-ram-i-cpu/es/) calcularás qué ganas.
 
 ### 4.4 Ranuras PCIe
 
-PCI Express (PCIe) es el bus para tarjetas de expansión: gráficas, de red, de sonido, controladoras de almacenamiento. Una ranura tiene 1, 4, 8 o 16 **líneas** (*lanes*): x1, x4, x8 o x16. Más líneas, más datos a la vez; una x16 (la de la gráfica) multiplica por dieciséis el ancho de banda de una x1 (la de una tarjeta de red o de sonido). La segunda variable es la **generación**: cada una duplica aproximadamente la velocidad de la anterior.
+PCI Express (PCIe) es el bus para tarjetas de expansión: gráficas, de red, de sonido, controladoras de almacenamiento. Una ranura tiene 1, 4, 8 o 16 **líneas** (*lanes*): x1, x4, x8 o x16. Más líneas, más datos a la vez; una x16 (la de la gráfica) multiplica por dieciséis el ancho de banda de una x1. La segunda variable es la **generación**: cada una duplica aproximadamente la velocidad de la anterior.
 
 | Generación | Por línea (x1), en cada sentido | Ranura x16 (gráficas) |
 |---|---|---|
@@ -119,7 +116,7 @@ Las generaciones son compatibles hacia atrás (una tarjeta 4.0 funciona en una r
 
 **SATA** (*Serial ATA*) es la interfaz clásica para discos duros (HDD) y SSD de 2,5". Cada unidad necesita un cable de datos y uno de alimentación (de la fuente). Una placa doméstica suele ofrecer entre 4 y 6 puertos.
 
-**M.2** es una ranura mucho más reciente donde el módulo de almacenamiento (una pequeña placa alargada, sin cables) se inserta directamente sobre la placa base; el formato más habitual es el 2280 (22 mm de ancho por 80 mm de largo). Aquí conviene una precisión que confunde a quien empieza: **no todos los M.2 son iguales**.
+**M.2** es una ranura mucho más reciente donde el módulo de almacenamiento (una pequeña placa alargada, sin cables) se inserta directamente sobre la placa base; el formato más habitual es el 2280 (22 mm de ancho por 80 mm de largo). Ojo: **no todos los M.2 son iguales**.
 
 | | SATA 2,5" | M.2 SATA | M.2 NVMe |
 |---|---|---|---|
@@ -144,8 +141,6 @@ Un pequeño chip de memoria no volátil (mantiene el contenido sin electricidad)
 | Disco de arranque | Hasta 2 TB (tabla de particiones MBR) | Sin ese límite (tabla GPT) |
 | Arranque seguro (*Secure Boot*) | No disponible | Sí: comprueba las firmas del cargador y de los controladores |
 
-Muchas placas UEFI incorporan un modo de compatibilidad (CSM o *legacy*) para arrancar sistemas antiguos.
-
 ### 4.8 Puertos del panel trasero
 
 El panel trasero agrupa los conectores accesibles sin abrir el chasis: **USB** (tipo A y, cada vez más, tipo C), salidas de vídeo (**HDMI**, **DisplayPort**, que solo funcionan con la gráfica integrada de la CPU), red **RJ45** (Ethernet), audio (*jack* de 3,5 mm) y, en placas con Wi-Fi, las antenas.
@@ -168,7 +163,7 @@ Conocer el arranque es la base para diagnosticar un equipo que no arranca. Esta 
 
 1. Pulsas el botón de encendido: la placa ordena a la fuente que se active y, cuando las tensiones son estables, la fuente envía la señal de «todo correcto» (*power good*).
 2. La CPU empieza a ejecutar el código del firmware (UEFI o BIOS), guardado en el chip de la placa.
-3. **POST** (*Power-On Self-Test*): el firmware comprueba los elementos esenciales (CPU, RAM, gráfica, teclado). Si algo falla, avisa con pitidos (*beep codes*), con LED de diagnóstico o con un visor de dos dígitos. Cada fabricante tiene sus códigos: hay que buscarlos en el manual.
+3. **POST** (*Power-On Self-Test*): el firmware comprueba los elementos esenciales (CPU, RAM, gráfica, teclado). Si algo falla, avisa con pitidos (*beep codes*), LED de diagnóstico o un visor de dos dígitos; los códigos dependen del fabricante y están en el manual.
 4. El firmware inicializa los dispositivos y consulta el **orden de arranque** (*boot order*) para buscar un disco con un cargador.
 5. Carga el **cargador de arranque** (*bootloader*; por ejemplo, Windows Boot Manager o GRUB), que a su vez carga el núcleo del sistema operativo.
 
@@ -178,7 +173,6 @@ Conocer el arranque es la base para diagnosticar un equipo que no arranca. Esta 
 | Los ventiladores giran, pero no hay imagen | RAM mal insertada, gráfica o cable de vídeo | Volver a insertar la RAM (módulo por módulo), comprobar la entrada del monitor |
 | Pitidos o LED de diagnóstico | El POST ha detectado un fallo | Consultar el manual: el código apunta al componente (a menudo RAM o gráfica) |
 | «No bootable device» | Orden de arranque incorrecto, disco no detectado o sin sistema | Entrar en la UEFI, comprobar que el disco aparece y ajustar el orden |
-| Se enciende y se apaga solo | Temperatura (disipador mal colocado) o fuente insuficiente | Revisar el disipador y las temperaturas en la UEFI |
 
 :::tip[Entrar en la UEFI]
 Se hace pulsando una tecla justo al encender el equipo: **Supr**, **F2**, **F10** o **F12**, según el fabricante. La pantalla inicial suele indicarla.
@@ -218,7 +212,7 @@ Se hace pulsando una tecla justo al encender el equipo: **Supr**, **F2**, **F10*
    <details>
    <summary>Respuesta</summary>
 
-   Buscar el código de pitidos en el manual de la placa. A menudo apunta a la RAM o a la gráfica: apaga y desconecta el equipo, vuelve a insertar los módulos de RAM (uno cada vez) y prueba de nuevo.
+   Buscar el código de pitidos en el manual. A menudo apunta a la RAM o a la gráfica: apaga, desconecta, vuelve a insertar los módulos de RAM (uno cada vez) y prueba de nuevo.
 
    </details>
 
@@ -229,13 +223,10 @@ Se hace pulsando una tecla justo al encender el equipo: **Supr**, **F2**, **F10*
 | maquinari | hardware |
 | programari | software |
 | xassís | chasis |
-| placa base | placa base |
 | sòcol | zócalo (socket) |
 | ranura | ranura (slot) |
 | microprogramari | firmware |
 | arrancada | arranque |
-| eixida | salida |
-| emmagatzematge | almacenamiento |
 | ample de banda | ancho de banda |
 | sistema encastat | sistema embebido |
 | factor de forma | factor de forma |

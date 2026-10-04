@@ -8,10 +8,9 @@ Tot el que faràs en este mòdul (instal·lar sistemes operatius, programar scri
 :::tip[Com treballar esta pàgina]
 **Temps orientatiu:** uns 60 minuts de lectura i 30 de pràctica.
 
-1. Llig les seccions 1 i 2 per a tindre la visió general (15 minuts).
-2. Dedica el gruix del temps a les seccions 4 i 6, les que més faràs servir en la presencial.
-3. Practica amb el laboratori «Anatomia de la placa base» (a la presentació de la unitat) i fes l'[activitat 1](/docencia/dam/sistemas-informaticos/ud01-hardware/actividades/).
-4. Tanca amb «Comprova el que has après». Els dubtes, al fòrum d'Aules.
+1. Llig les seccions 1 i 2 (visió general, 15 minuts) i dedica el gruix del temps a les 4 i 6, les que més faràs servir en la presencial.
+2. Practica amb el laboratori «Anatomia de la placa base» (a la presentació de la unitat) i fes l'[activitat 1](/docencia/dam/sistemas-informaticos/ud01-hardware/actividades/).
+3. Tanca amb «Comprova el que has après»; els dubtes, al fòrum d'Aules.
 :::
 
 ## 1. Què és un ordinador
@@ -36,7 +35,7 @@ Des del punt de vista de la CPU, un programa no és més que dades (bytes) que e
 
 ### Ordinadors «amagats»
 
-No limites la idea d'ordinador a la torre o al portàtil: un caixer automàtic, la centraleta d'un cotxe, un router o una rentadora digital també ho són. Els anomenem **sistemes encastats** (*embedded systems*): executen un programari molt concret i no estan pensats perquè l'usuari hi instal·le programes nous, a diferència d'un PC, que és d'ús general.
+No limites la idea d'ordinador a la torre o al portàtil: un caixer automàtic, un router o una rentadora digital també ho són. Són **sistemes encastats** (*embedded systems*): executen un programari molt concret i l'usuari no hi instal·la programes nous, a diferència d'un PC, que és d'ús general.
 
 ### Maquinari i programari
 
@@ -44,7 +43,7 @@ El **maquinari** (*hardware*) és la part física, tot el que pots tocar. El **p
 
 ## 2. Tipus de xassís
 
-El xassís (o caixa) és l'estructura metàl·lica o de plàstic que allotja i protegeix els components. No és només estètica: determina quina placa base hi cap, condiciona el flux d'aire (i, per tant, la temperatura de treball) i limita quantes unitats d'emmagatzematge, ventiladors i targetes d'expansió pots instal·lar.
+El xassís (o caixa) és l'estructura metàl·lica o de plàstic que allotja i protegix els components. No és només estètica: determina quina placa base hi cap, condiciona el flux d'aire (i, per tant, la temperatura de treball) i limita quantes unitats d'emmagatzematge, ventiladors i targetes d'expansió pots instal·lar.
 
 | Tipus | Grandària aprox. | Ús típic | Avantatge i inconvenient |
 |---|---|---|---|
@@ -57,37 +56,35 @@ El xassís (o caixa) és l'estructura metàl·lica o de plàstic que allotja i p
 | Servidor en *rack* | Horitzontal, mesurat en unitats U (1U ≈ 4,45 cm) | Centres de dades | + Densitat i estandardització · − Necessita un armari *rack* |
 
 :::note[Exemple resolt]
-L'institut vol muntar un servidor d'arxius per al departament: 4 discos durs per a còpies de seguretat, funcionant 24 hores al dia. **Quin xassís triaries?** La clau no és el nom, sinó el que ofereix: com a mínim 4 badies de 3,5" i bon flux d'aire per a treballar sense parar. Una torre completa (o una semitorre amb prou badies) ho complix i et deixa créixer; un SFF no tindria ni espai ni refrigeració.
+L'institut vol muntar un servidor d'arxius per al departament: 4 discos durs per a còpies de seguretat, funcionant 24 hores al dia. **Quin xassís triaries?** La clau no és el nom, sinó el que oferix: com a mínim 4 badies de 3,5" i bon flux d'aire per a treballar sense parar. Una torre completa (o una semitorre amb prou badies) ho complix i et deixa créixer; un SFF no tindria ni espai ni refrigeració.
 :::
 
 ## 3. La placa base
 
-La placa base (*motherboard*) és el circuit imprés principal de l'ordinador: una làmina de fibra de vidre amb diverses capes de pistes de coure gravades (les modernes en solen tindre entre 4 i 8, o més en les de gamma alta) que connecten tots els components. Per les pistes circulen alhora l'energia que alimenta cada peça i els senyals de dades que els permeten comunicar-se.
+La placa base (*motherboard*) és el circuit imprés principal: una làmina de fibra de vidre amb diverses capes de pistes de coure (entre 4 i 8 en les modernes, o més en gammes altes) que connecten tots els components i porten alhora l'energia i els senyals de dades.
 
 Sense ella, la CPU no podria accedir a la RAM ni la gràfica rebria alimentació: és l'element que convertix un conjunt de peces soltes en un sistema informàtic.
 
 ## 4. Components de la placa base
 
-El laboratori «Anatomia de la placa base» dibuixa una placa ATX a escala i et deixa tocar cada component. Ací tens el resum de cada peça; allí podràs practicar-ho.
-
 ### 4.1 El chipset
 
-El chipset és el conjunt de circuits que gestiona la comunicació entre la CPU, la memòria i la resta de dispositius. Determina, en bona part, quins processadors admet la placa, quants ports USB i SATA ofereix, si permet l'*overclocking* (pujar la freqüència de la CPU o de la RAM per damunt de la de fàbrica) i quantes línies PCIe addicionals hi ha.
+El chipset és el conjunt de circuits que gestiona la comunicació entre la CPU, la memòria i la resta de dispositius. Determina, en bona part, quins processadors admet la placa, quants ports USB i SATA oferix, si permet l'*overclocking* (pujar la freqüència de la CPU o de la RAM per damunt de la de fàbrica) i quantes línies PCIe addicionals hi ha.
 
-Antigament el chipset eren dos xips: el **northbridge** (pont nord), prop de la CPU, per a la RAM i la gràfica (les connexions ràpides), i el **southbridge** (pont sud), per als perifèrics lents. Fa més d'una dècada que el controlador de memòria i les línies PCIe principals estan dins de la CPU; el xip que hui anomenem *chipset* és hereu del pont sud.
+Antigament eren dos xips, el **northbridge** (RAM i gràfica) i el **southbridge** (perifèrics lents). Fa més d'una dècada que el controlador de memòria i les línies PCIe principals estan dins de la CPU, i el *chipset* (o *xipset*) actual és hereu del pont sud.
 
-Cada fabricant ofereix diverses gammes de chipset per a una mateixa generació de processadors. Es diferencien per les funcions que activen, no per les CPU que admeten:
+Cada fabricant oferix diverses gammes de chipset per a una mateixa generació de processadors. Es diferencien per les funcions que activen, no per les CPU que admeten:
 
 | Fabricant (generació d'exemple) | Gamma alta | Gamma mitjana | Gamma d'entrada |
 |---|---|---|---|
 | Intel (Core de 12a a 14a gen.) | Z790: *overclocking* i màxima connectivitat | B760: sense *overclocking* de la CPU | H610: funcions bàsiques |
 | AMD (Ryzen 7000) | X670: *overclocking* i més línies PCIe | B650: bon equilibri | A620: funcions bàsiques |
 
-Els noms canvien amb cada generació (Z890 per a Intel LGA1851, X870 per a AMD AM5…), però l'escala «alta, mitjana, entrada» es manté. No cal memoritzar noms, sinó saber què activa cada gamma.
+Els noms canvien amb cada generació (Z890 per a Intel LGA1851, X870 per a AMD AM5…), però l'escala es manté: importa què activa cada gamma, no memoritzar noms.
 
 ### 4.2 El sòcol de la CPU
 
-El sòcol (*socket*) és el connector físic on s'insereix el processador. Cada arquitectura de CPU usa un sòcol específic, amb una disposició de contactes pròpia.
+El sòcol (*socket*) és el connector físic on s'inserix el processador. Cada arquitectura de CPU usa un sòcol específic, amb una disposició de contactes pròpia.
 
 | Fabricant | Sòcol | Contactes | Famílies de CPU |
 |---|---|---|---|
@@ -101,11 +98,11 @@ Un processador només es pot instal·lar en una placa amb el sòcol per al qual 
 
 ### 4.3 Ranures de RAM
 
-Les plaques domèstiques solen tindre entre 2 i 4 ranures **DIMM**. Si estan acolorides per parelles, no és decoració: indiquen quines cal usar juntes per a activar el mode **dual channel**, en què la placa llig dos mòduls en paral·lel i duplica l'ample de banda. El manual de la placa diu quina combinació cal usar; a la [pàgina 2](/docencia/dam/sistemas-informaticos/ud01-hardware/02-memoria-ram-i-cpu/) calcularàs què guanyes.
+Les plaques domèstiques solen tindre entre 2 i 4 ranures **DIMM**. Si estan acolorides per parelles, no és decoració: indiquen quines cal usar juntes per a activar el mode **dual channel**, en què la placa llig dos mòduls en paral·lel i duplica l'ample de banda. El manual indica la combinació; a la [pàgina 2](/docencia/dam/sistemas-informaticos/ud01-hardware/02-memoria-ram-i-cpu/) calcularàs què guanyes.
 
 ### 4.4 Ranures PCIe
 
-PCI Express (PCIe) és el bus per a targetes d'expansió: gràfiques, de xarxa, de so, controladores d'emmagatzematge. Una ranura té 1, 4, 8 o 16 **línies** (*lanes*): x1, x4, x8 o x16. Més línies, més dades alhora; una x16 (la de la gràfica) multiplica per setze l'ample de banda d'una x1 (la d'una targeta de xarxa o de so). La segona variable és la **generació**: cada una duplica aproximadament la velocitat de l'anterior.
+PCI Express (PCIe) és el bus per a targetes d'expansió: gràfiques, de xarxa, de so, controladores d'emmagatzematge. Una ranura té 1, 4, 8 o 16 **línies** (*lanes*): x1, x4, x8 o x16. Més línies, més dades alhora; una x16 (la de la gràfica) multiplica per setze l'ample de banda d'una x1. La segona variable és la **generació**: cada una duplica aproximadament la velocitat de l'anterior.
 
 | Generació | Per línia (x1), en cada sentit | Ranura x16 (gràfiques) |
 |---|---|---|
@@ -119,7 +116,7 @@ Les generacions són compatibles cap enrere (una targeta 4.0 funciona en una ran
 
 **SATA** (*Serial ATA*) és la interfície clàssica per a discos durs (HDD) i SSD de 2,5". Cada unitat necessita un cable de dades i un d'alimentació (de la font). Una placa domèstica sol oferir entre 4 i 6 ports.
 
-**M.2** és una ranura molt més recent on el mòdul d'emmagatzematge (una xicoteta placa allargada, sense cables) s'insereix directament sobre la placa base; el format més habitual és el 2280 (22 mm d'ample per 80 mm de llarg). Ací convé una precisió que confon a qui comença: **no tots els M.2 són iguals**.
+**M.2** és una ranura molt més recent on el mòdul d'emmagatzematge (una xicoteta placa allargada, sense cables) s'inserix directament sobre la placa base; el format més habitual és el 2280 (22 mm d'ample per 80 mm de llarg). Compte: **no tots els M.2 són iguals**.
 
 | | SATA 2,5" | M.2 SATA | M.2 NVMe |
 |---|---|---|---|
@@ -144,8 +141,6 @@ Un xicotet xip de memòria no volàtil (manté el contingut sense electricitat) 
 | Disc d'arrancada | Fins a 2 TB (taula de particions MBR) | Sense eixe límit (taula GPT) |
 | Arrancada segura (*Secure Boot*) | No disponible | Sí: comprova les signatures del carregador i dels controladors |
 
-Moltes plaques UEFI incorporen un mode de compatibilitat (CSM o *legacy*) per a arrancar sistemes antics.
-
 ### 4.8 Ports del panell posterior
 
 El panell posterior agrupa els connectors accessibles sense obrir el xassís: **USB** (tipus A i, cada vegada més, tipus C), eixides de vídeo (**HDMI**, **DisplayPort**, que només funcionen amb la gràfica integrada de la CPU), xarxa **RJ45** (Ethernet), àudio (*jack* de 3,5 mm) i, en plaques amb Wi-Fi, les antenes.
@@ -168,7 +163,7 @@ Conéixer l'arrancada és la base per a diagnosticar un equip que no arranca. Es
 
 1. Prems el botó d'encesa: la placa ordena a la font que s'active i, quan les tensions són estables, la font envia el senyal de «tot correcte» (*power good*).
 2. La CPU comença a executar el codi del microprogramari (UEFI o BIOS), guardat en el xip de la placa.
-3. **POST** (*Power-On Self-Test*): el microprogramari comprova els elements essencials (CPU, RAM, gràfica, teclat). Si alguna cosa falla, avisa amb pitos (*beep codes*), amb LED de diagnòstic o amb un visor de dos dígits. Cada fabricant té els seus codis: s'han de buscar en el manual.
+3. **POST** (*Power-On Self-Test*): el microprogramari comprova els elements essencials (CPU, RAM, gràfica, teclat). Si alguna cosa falla, avisa amb pitos (*beep codes*), LED de diagnòstic o un visor de dos dígits; els codis depenen del fabricant i són al manual.
 4. El microprogramari inicialitza els dispositius i consulta l'**ordre d'arrancada** (*boot order*) per a buscar un disc amb un carregador.
 5. Carrega el **carregador d'arrancada** (*bootloader*; per exemple, Windows Boot Manager o GRUB), que carrega al seu torn el nucli del sistema operatiu.
 
@@ -178,7 +173,6 @@ Conéixer l'arrancada és la base per a diagnosticar un equip que no arranca. Es
 | Els ventiladors giren, però no hi ha imatge | RAM mal inserida, gràfica o cable de vídeo | Tornar a inserir la RAM (mòdul per mòdul), comprovar l'entrada del monitor |
 | Pitos o LED de diagnòstic | El POST ha detectat una fallada | Consultar el manual: el codi apunta al component (sovint RAM o gràfica) |
 | «No bootable device» | Ordre d'arrancada incorrecte, disc no detectat o sense sistema | Entrar a la UEFI, comprovar que el disc apareix i ajustar l'ordre |
-| S'encén i s'apaga sol | Temperatura (dissipador mal col·locat) o font insuficient | Revisar el dissipador i les temperatures a la UEFI |
 
 :::tip[Entrar a la UEFI]
 Es fa prement una tecla just en encendre l'equip: **Supr**, **F2**, **F10** o **F12**, segons el fabricant. La pantalla inicial sol indicar-la.
@@ -218,7 +212,7 @@ Es fa prement una tecla just en encendre l'equip: **Supr**, **F2**, **F10** o **
    <details>
    <summary>Resposta</summary>
 
-   Buscar el codi de pitos en el manual de la placa. Sovint apunta a la RAM o a la gràfica: apaga i desconnecta l'equip, torna a inserir els mòduls de RAM (un cada vegada) i prova de nou.
+   Buscar el codi de pitos en el manual. Sovint apunta a la RAM o a la gràfica: apaga, desconnecta, torna a inserir els mòduls de RAM (un cada vegada) i prova de nou.
 
    </details>
 
@@ -229,13 +223,10 @@ Es fa prement una tecla just en encendre l'equip: **Supr**, **F2**, **F10** o **
 | maquinari | hardware |
 | programari | software |
 | xassís | chasis |
-| placa base | placa base |
 | sòcol | zócalo (socket) |
 | ranura | ranura (slot) |
 | microprogramari | firmware |
 | arrancada | arranque |
-| eixida | salida |
-| emmagatzematge | almacenamiento |
 | ample de banda | ancho de banda |
 | sistema encastat | sistema embebido |
 | factor de forma | factor de forma |

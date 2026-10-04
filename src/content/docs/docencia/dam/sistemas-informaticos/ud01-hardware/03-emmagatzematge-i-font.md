@@ -78,7 +78,7 @@ Tenim 4 discs de 4 TB per a un servidor de còpies de seguretat.
 Per a còpies de seguretat, que han d'estar disponibles però no necessiten gran velocitat, RAID 5 aprofita millor l'espai i RAID 6 és més segur.
 :::
 
-Quan un disc falla, el RAID *reconstruïx* les dades en un disc nou. Amb discs de molts terabytes això pot durar hores o dies, i durant eixe temps una segona fallada seria greu en RAID 5: per això, amb discs grans, es prefereix RAID 6 o RAID 10. El RAID pot gestionar-lo una controladora de maquinari o el propi sistema operatiu (en Linux, per exemple, amb `mdadm`; en Windows, amb els espais d'emmagatzematge).
+Quan un disc falla, el RAID *reconstruïx* les dades en un disc nou. Amb discs de molts terabytes això pot durar hores o dies, i durant eixe temps una segona fallada seria greu en RAID 5: per això, amb discs grans, es preferix RAID 6 o RAID 10. El RAID pot gestionar-lo una controladora de maquinari o el propi sistema operatiu (en Linux, per exemple, amb `mdadm`; en Windows, amb els espais d'emmagatzematge).
 
 :::caution[RAID no és una còpia de seguretat]
 El RAID protegix de l'avaria d'un disc, però no d'un fitxer esborrat per error, d'un virus que xifra les dades, d'una fallada de la controladora, d'un incendi o d'un robatori: tot això afecta a tots els discs alhora. Cal una còpia en un altre lloc.
@@ -111,7 +111,7 @@ Els cables d'una font modular no són intercanviables amb els d'una altra marca 
 
 ### 3.2 Quanta potència necessites
 
-La potència màxima d'una font es mesura en **vats (W)**. Per a triar-la: suma el consum aproximat de cada component i deixa un **marge del 20-30 %**, perquè treballar prop del límit de forma continuada redueix la vida útil de la font i augmenta el risc d'apagades.
+La potència màxima d'una font es mesura en **vats (W)**. Per a triar-la: suma el consum aproximat de cada component i deixa un **marge del 20-30 %**, perquè treballar prop del límit de forma continuada reduïx la vida útil de la font i augmenta el risc d'apagades.
 
 | Component | Consum aproximat |
 |---|---|
@@ -149,7 +149,7 @@ Segons com estiguen fabricats els cables, les fonts són **modulars** (tots es p
 
 ## Comprova el que has après
 
-1. Tens 4 discs de 2 TB. Quina capacitat útil i quina tolerància ofereixen RAID 5 i RAID 10?
+1. Tens 4 discs de 2 TB. Quina capacitat útil i quina tolerància oferixen RAID 5 i RAID 10?
 
    <details>
    <summary>Resposta</summary>

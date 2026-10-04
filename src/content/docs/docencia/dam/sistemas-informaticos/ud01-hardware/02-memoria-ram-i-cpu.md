@@ -87,7 +87,7 @@ La CPU (*Central Processing Unit*) executa les instruccions dels programes: cada
 | L2 | 0,25-2 MB per nucli | Ràpida | Dins de cada nucli |
 | L3 | 8-32 MB | Més lenta que L1 i L2, però molt més ràpida que la RAM | Compartida entre tots els nuclis |
 
-Recorda el model de Von Neumann: la CPU i la memòria comparteixen un únic camí, i això limita la velocitat (el «coll d'ampolla de Von Neumann»). La memòria cau l'alleugerix, i les CPU actuals tenen a més caus L1 separades per a instruccions i per a dades (*arquitectura Harvard modificada*).
+Recorda el model de Von Neumann: la CPU i la memòria compartixen un únic camí, i això limita la velocitat (el «coll d'ampolla de Von Neumann»). La memòria cau l'alleugerix, i les CPU actuals tenen a més caus L1 separades per a instruccions i per a dades (*arquitectura Harvard modificada*).
 
 :::note[Arquitectura i microarquitectura]
 El **repertori d'instruccions** (ISA) és el «contracte» entre el programari i la CPU: x86-64 (Intel i AMD), ARM (mòbils, Apple Silicon) o RISC-V. La **microarquitectura** és com cada fabricant construïx la CPU per dins. Un programa compilat per a x86-64 no s'executa directament en una CPU ARM; cal recompilar-lo o traduir-lo.
@@ -137,13 +137,13 @@ Els passos 1 a 3 són el *fetch* (la instrucció, 110, és tan sols un número g
 
 ## 5. Nuclis, fils i rendiment
 
-Una CPU actual integra diversos **nuclis** (*cores*): cada un és, a la pràctica, una CPU completa que executa el seu propi flux d'instruccions. El sistema operatiu reparteix el treball entre ells. Moltes CPU actuals mesclen nuclis de *rendiment* i d'*eficiència*.
+Una CPU actual integra diversos **nuclis** (*cores*): cada un és, a la pràctica, una CPU completa que executa el seu propi flux d'instruccions. El sistema operatiu repartix el treball entre ells. Moltes CPU actuals mesclen nuclis de *rendiment* i d'*eficiència*.
 
 Amb **Hyper-Threading** (Intel) o **SMT** (AMD), un nucli físic gestiona dos **fils** d'execució a la vegada i aprofita els moments en què un espera una dada. Això **no duplica** el rendiment: el nucli és el mateix, i el guany és moderat i depén de la càrrega.
 
 **El GHz no ho és tot.** El rendiment d'un fil depén de dos factors: la **freqüència** (cicles per segon) i l'**IPC** (*Instructions Per Cycle*, instruccions útils que s'acaben per cicle, segons el disseny de la CPU): **rendiment ≈ freqüència × IPC**. Per això una CPU moderna a 3,5 GHz pot superar una antiga a 4 GHz.
 
-Tampoc més nuclis vol dir proporcionalment més velocitat: la part del programa que no es pot repartir limita el guany. Amb 4 nuclis i un programa que es pot repartir en un 80 %, el temps es redueix a 0,2 + 0,8 ÷ 4 = 0,4 del original: una acceleració de **2,5**, no de 4.
+Tampoc més nuclis vol dir proporcionalment més velocitat: la part del programa que no es pot repartir limita el guany. Amb 4 nuclis i un programa que es pot repartir en un 80 %, el temps es reduïx a 0,2 + 0,8 ÷ 4 = 0,4 del original: una acceleració de **2,5**, no de 4.
 
 **TDP i refrigeració.** El TDP (*Thermal Design Power*) indica, en vats, la calor que el processador es dissenya per a dissipar en càrrega normal, i per tant la refrigeració que necessita; en mode turbo pot consumir molt més. Un dissipador d'aire senzill val per a CPU de 65 W; en gammes altes (125-150 W o més) convé un dissipador gran o refrigeració líquida. Si no s'evacua la calor, la CPU baixa la freqüència per a protegir-se (*thermal throttling*) i el rendiment cau.
 

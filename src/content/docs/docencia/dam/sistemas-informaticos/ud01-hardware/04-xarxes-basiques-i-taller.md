@@ -35,7 +35,7 @@ La **topologia** és la manera com s'organitzen les connexions entre els disposi
 
 | Topologia | Com es connecta | Avantatge | Inconvenient |
 |---|---|---|---|
-| Bus | Tots els equips comparteixen un únic cable | Molt econòmica, poc cablejat | Si falla el cable central, cau tota la xarxa |
+| Bus | Tots els equips compartixen un únic cable | Molt econòmica, poc cablejat | Si falla el cable central, cau tota la xarxa |
 | Estrella | Tots els equips a un dispositiu central (switch) | Una fallada en un cable només afecta eixe equip | Si falla el switch, cau tota la xarxa |
 | Anell | Cada equip amb els dos veïns, en cercle | Repartiment equitatiu del trànsit | Un punt trencat pot interrompre l'anell |
 | Malla | Cada equip amb diversos (o tots) els altres | Màxima redundància | Cara i complexa |
@@ -52,7 +52,7 @@ Quasi totes les xarxes locals actuals (la de l'institut inclosa) són en **estre
 
 - El cable UTP admet com a màxim **100 m** per tram. Les categories (5e, 6, 6A…) indiquen la velocitat que suporta; la 6A arriba als 10 Gb/s en els 100 m.
 - El connector que anomenem RJ45 és tècnicament un 8P8C.
-- La fibra transmet **llum**, no electricitat: arriba més lluny i no pateix interferències elèctriques. La **monomode** serveix per a llargues distàncies i la **multimode** per a distàncies curtes.
+- La fibra transmet **llum**, no electricitat: arriba més lluny i no patix interferències elèctriques. La **monomode** servix per a llargues distàncies i la **multimode** per a distàncies curtes.
 
 ## 5. Dispositius bàsics
 
@@ -64,7 +64,7 @@ Quasi totes les xarxes locals actuals (la de l'institut inclosa) són en **estre
 Documentar una xarxa és imprescindible per a qualsevol administrador, i es fa amb dos mapes complementaris:
 
 - El **mapa físic** mostra la disposició real: en quin armari està cada switch, per quina canaleta passa cada cable, en quina sala està cada presa. És el que necessites per a **localitzar una avaria**.
-- El **mapa lògic** mostra com circula la informació, independentment d'on estiga cada equip: quines adreces IP té, a quines xarxes pertany, quin camí segueix el trànsit. És el que necessites per a **entendre o depurar el funcionament**.
+- El **mapa lògic** mostra com circula la informació, independentment d'on estiga cada equip: quines adreces IP té, a quines xarxes pertany, quin camí seguix el trànsit. És el que necessites per a **entendre o depurar el funcionament**.
 
 ![Mapa físic i mapa lògic d'un xicotet despatx: el físic mostra l'armari amb el switch i el router, les preses de l'aula i del despatx i els cables; el lògic mostra una sola xarxa 192.168.1.0 amb la IP de cada equip.](./mapa-fisic-i-logic.svg)
 
@@ -167,7 +167,7 @@ Es fa per parelles, sobre un equip real o amb el simulador que s'indique en Aule
    <details>
    <summary>Resposta</summary>
 
-   Cau tota la xarxa que depén d'eixe switch. Es redueix amb un switch de recanvi llest o amb enllaços redundants entre switches.
+   Cau tota la xarxa que depén d'eixe switch. Es reduïx amb un switch de recanvi llest o amb enllaços redundants entre switches.
 
    </details>
 
