@@ -13,4 +13,8 @@ describe('identidad de Docencia', () => {
   it('pie con la nota de privacidad', () => {
     expect(html).toContain('no usa cookies');
   });
+  it('la nota de privacidad cuenta todo lo que guarda el navegador: tema, menú y laboratorios', () => {
+    expect(html).toContain('el tema claro u oscuro, el estado del menú');
+    expect(html).toContain('la última pestaña abierta y el tamaño de letra');
+  });
 });
