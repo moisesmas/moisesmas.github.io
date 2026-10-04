@@ -3,7 +3,7 @@ title: "2. La memòria RAM i la CPU"
 description: "Els tipus de memòria d'un ordinador, com triar RAM (DDR, latència, canals) i què hi ha dins d'una CPU: registres, memòria cau, cicle d'instrucció, nuclis, fils i rendiment."
 ---
 
-La RAM i la CPU decidixen com de ràpid «se sent» un equip. Si saps llegir «DDR5-6000 CL30» o «6 nuclis, 12 fils, 65 W», podràs comparar components amb números en compte de fiar-te del màrqueting, i entendràs per què comprar més GHz no sempre és comprar més rendiment.
+La RAM i la CPU decidixen com de ràpid va un equip. Si saps llegir «DDR5-6000 CL30» o «6 nuclis, 12 fils, 65 W», podràs comparar components amb números en compte de fiar-te del màrqueting, i entendràs per què comprar més GHz no sempre és comprar més rendiment.
 
 :::tip[Com treballar esta pàgina]
 **Temps orientatiu:** uns 75 minuts de lectura i 45 de pràctica.
@@ -27,7 +27,7 @@ Un ordinador no té una sola memòria, sinó diversos nivells. Com més prop de 
 
 ![Jerarquia de memòria: de dalt a baix, registres, memòria cau L1, L2 i L3, RAM, SSD NVMe i HDD, cada nivell més gran i més lent que l'anterior.](./jerarquia-memoria.svg)
 
-Una memòria és **volàtil** si perd el contingut quan se li talla el corrent. Quan la RAM s'omple, el sistema operatiu mou dades al disc (la *memòria virtual*, el fitxer de paginació o *swap*): l'equip continua funcionant, però molt més lent, perquè el disc és molt més lent que la RAM.
+Una memòria és **volàtil** si perd el contingut quan es talla el corrent. Quan la RAM s'omple, el sistema operatiu mou dades al disc (la *memòria virtual*, el fitxer de paginació o *swap*): l'equip continua funcionant, però molt més lent, perquè el disc és molt més lent que la RAM.
 
 ## 2. La memòria RAM
 
@@ -52,7 +52,7 @@ Els mòduls **DIMM** (llargs) s'usen en equips de sobretaula i els **SO-DIMM** (
 ### 2.3 Les quatre característiques
 
 - **Capacitat:** quantitat de dades que guarda, en GB. Valors habituals: 8, 16 o 32 GB per mòdul.
-- **Velocitat:** es mesura en **MT/s** (milions de transferències per segon). DDR4-3200 fa 3200 MT/s; en el màrqueting se sol dir «3200 MHz», encara que la freqüència real del rellotge és la meitat.
+- **Velocitat:** es mesura en **MT/s** (milions de transferències per segon). DDR4-3200 fa 3200 MT/s; en el màrqueting es sol dir «3200 MHz», encara que la freqüència real del rellotge és la meitat.
 - **Latència (CL, *CAS latency*):** cicles de rellotge que tarda la memòria a respondre. Un CL més baix és millor, però cal passar-lo a temps real: **latència (ns) = CL × 2000 ÷ velocitat (MT/s)**.
 - **Canals (*dual* o *quad channel*):** si instal·les 2 o 4 mòduls (idealment idèntics) en les ranures corresponents, la placa els llig en paral·lel i multiplica l'**ample de banda** sense canviar la latència. Ample de banda per canal: **velocitat (MT/s) × 8 bytes**.
 
