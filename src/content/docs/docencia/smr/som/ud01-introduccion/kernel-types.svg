@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" width="760" height="400" role="img" aria-labelledby="t">
+<title id="t">Three kernel designs. Monolithic: one big block with all services and drivers inside. Layered: a stack of layers, each one using only the layer below. Modular: a small core with loadable modules around it.</title>
+<rect width="760" height="400" fill="#ffffff"/>
+<style>
+text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;fill:#16201b;font-size:14px}
+.b{font-weight:700}.s{font-size:12px;fill:#56655d}.c{text-anchor:middle}.t{font-size:16px;font-weight:700}
+</style>
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1f5244"/></marker>
+</defs>
+<text x="130" y="26" class="c t">Monolithic</text><text x="130" y="44" class="c s">one big block</text>
+<text x="380" y="26" class="c t">Layered</text><text x="380" y="44" class="c s">strict hierarchy</text>
+<text x="630" y="26" class="c t">Modular</text><text x="630" y="44" class="c s">core plus modules</text>
+<rect x="20" y="58" width="220" height="250" rx="10" fill="#fbeed8" stroke="#1f5244" stroke-width="2"/><text x="130" y="80" class="c b">Kernel (one address space)</text>
+<rect x="34" y="94" width="98" height="54" rx="8" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="83.0" y="126.0" class="c">Scheduler</text>
+<rect x="138" y="94" width="98" height="54" rx="8" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="187.0" y="126.0" class="c">Memory</text>
+<rect x="34" y="162" width="98" height="54" rx="8" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="83.0" y="194.0" class="c">File system</text>
+<rect x="138" y="162" width="98" height="54" rx="8" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="187.0" y="194.0" class="c">Network</text>
+<rect x="34" y="230" width="98" height="54" rx="8" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="83.0" y="262.0" class="c">Driver A</text>
+<rect x="138" y="230" width="98" height="54" rx="8" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="187.0" y="262.0" class="c">Driver B</text>
+<rect x="20" y="324" width="220" height="40" rx="8" fill="#d3dbd4" stroke="#1f5244" stroke-width="2"/><text x="130.0" y="349.0" class="c b">Hardware</text>
+<line x1="130" y1="308" x2="130" y2="324" stroke="#1f5244" stroke-width="2" marker-end="url(#ar)"/>
+<rect x="280" y="58" width="200" height="50" rx="8" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="380.0" y="88.0" class="c b">Layer 3 · services</text>
+<line x1="380" y1="108" x2="380" y2="126" stroke="#1f5244" stroke-width="2" marker-end="url(#ar)"/>
+<rect x="280" y="126" width="200" height="50" rx="8" fill="#fbeed8" stroke="#1f5244" stroke-width="2"/><text x="380.0" y="156.0" class="c b">Layer 2 · I/O system</text>
+<line x1="380" y1="176" x2="380" y2="194" stroke="#1f5244" stroke-width="2" marker-end="url(#ar)"/>
+<rect x="280" y="194" width="200" height="50" rx="8" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/><text x="380.0" y="224.0" class="c b">Layer 1 · drivers</text>
+<line x1="380" y1="244" x2="380" y2="262" stroke="#1f5244" stroke-width="2" marker-end="url(#ar)"/>
+<rect x="280" y="262" width="200" height="50" rx="8" fill="#d3dbd4" stroke="#1f5244" stroke-width="2"/><text x="380.0" y="292.0" class="c b">Layer 0 · hardware</text>
+<text x="380" y="334" class="c s">Each layer uses only the one below</text>
+<rect x="570" y="150" width="120" height="70" rx="8" fill="#fbeed8" stroke="#1f5244" stroke-width="2"/><text x="630.0" y="190.0" class="c b">Core kernel</text>
+<rect x="510" y="60" width="110" height="50" rx="8" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="565.0" y="82.0" class="c">File system</text><text x="565.0" y="99.0" class="c">module</text>
+<rect x="640" y="60" width="110" height="50" rx="8" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="695.0" y="82.0" class="c">Network</text><text x="695.0" y="99.0" class="c">module</text>
+<rect x="510" y="250" width="110" height="50" rx="8" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="565.0" y="272.0" class="c">USB driver</text><text x="565.0" y="289.0" class="c">module</text>
+<rect x="640" y="250" width="110" height="50" rx="8" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="695.0" y="272.0" class="c">Graphics</text><text x="695.0" y="289.0" class="c">driver module</text>
+<line x1="580" y1="110" x2="598" y2="150" stroke="#1f5244" stroke-width="2" stroke-dasharray="5 4"/><line x1="700" y1="110" x2="662" y2="150" stroke="#1f5244" stroke-width="2" stroke-dasharray="5 4"/>
+<line x1="580" y1="250" x2="598" y2="220" stroke="#1f5244" stroke-width="2" stroke-dasharray="5 4"/><line x1="700" y1="250" x2="662" y2="220" stroke="#1f5244" stroke-width="2" stroke-dasharray="5 4"/>
+<rect x="510" y="324" width="240" height="40" rx="8" fill="#d3dbd4" stroke="#1f5244" stroke-width="2"/><text x="630.0" y="349.0" class="c b">Hardware</text>
+<text x="630" y="318" class="c s">Modules are loaded and unloaded at run time</text>
+</svg>
