@@ -1,0 +1,109 @@
+---
+import { SITIO } from '../config/sitio';
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{SITIO.nombre}</title>
+    <meta name="description" content={SITIO.presentacion} />
+    <link rel="icon" href="/comun/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <main>
+      <h1>{SITIO.nombre}</h1>
+      <p class="presentacion">{SITIO.presentacion}</p>
+      <nav aria-label="Secciones">
+        <ul>
+          <li>
+            <a href="/docencia/">
+              <strong>Docencia ciclos formativos</strong>
+              <span>Apuntes, prácticas y laboratorios de mis módulos de FP.</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </main>
+    <footer>{SITIO.notaPrivacidad}</footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --fondo: #fafafa;
+    --texto: #1b1b1b;
+    --suave: #5c5c5c;
+    --linea: #dcdcdc;
+    --acento: #1f5244;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fondo: #121212;
+      --texto: #ececec;
+      --suave: #a3a3a3;
+      --linea: #333;
+      --acento: #7cc4ad;
+    }
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background: var(--fondo);
+    color: var(--texto);
+    font: 1.05rem/1.6 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  main,
+  footer {
+    max-width: 42rem;
+    margin: 0 auto;
+    padding-inline: 16px;
+  }
+  main {
+    padding-block: 5rem 3rem;
+  }
+  h1 {
+    font-size: clamp(2rem, 6vw, 3rem);
+    line-height: 1.1;
+    margin: 0 0 0.75rem;
+  }
+  .presentacion {
+    color: var(--suave);
+    margin: 0 0 2.5rem;
+  }
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  nav a {
+    display: grid;
+    gap: 0.2rem;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--linea);
+    border-radius: 0.6rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  nav a:hover,
+  nav a:focus-visible {
+    border-color: var(--acento);
+    outline: none;
+  }
+  nav strong {
+    color: var(--acento);
+  }
+  nav span {
+    color: var(--suave);
+  }
+  footer {
+    padding-block: 2rem;
+    color: var(--suave);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--linea);
+  }
+</style>

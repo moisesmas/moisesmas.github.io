@@ -1,0 +1,1093 @@
+<!doctype html>
+<html lang="ca-valencia" data-lab="placa-base" data-idioma-original="ca-valencia">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="/comun/lab.js"></script>
+<title>Anatomia de la placa base</title>
+<meta name="description" content="Components, busos i xipset, formats, sòcols, RAM i PCIe, ports i connectors, UEFI i seqüència d'arrancada.">
+<meta name="keywords" content="placa base, sòcol, xipset, RAM, PCIe, M.2, USB, UEFI">
+<meta name="lab:titulo:es" content="Anatomía de la Placa Base">
+<meta name="lab:descripcion:es" content="Componentes, buses y chipset, formatos, sockets, RAM y PCIe, puertos y conectores, UEFI y secuencia de arranque.">
+<meta name="lab:etiquetas:es" content="placa base, socket, chipset, RAM, PCIe, M.2, USB, UEFI">
+<link rel="icon" href="/comun/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/comun/fuentes.css">
+<style>html,body{margin:0}body{padding-top:env(safe-area-inset-top,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+<script type="application/json" id="lab-textos">
+{
+  "es": {
+    "volver-aria": "Volver a la unidad",
+    "volver": "Unidad",
+    "zoom": "Tamaño",
+    "zoom-menos": "Reducir texto",
+    "zoom-mas": "Aumentar texto",
+    "idioma-aria": "Idioma",
+    "titulo": "Anatomía de la Placa Base",
+    "secciones-aria": "Secciones",
+    "tab-arq": "Cómo viajan los datos",
+    "tab-formatos": "Formatos",
+    "tab-sockets": "Sockets y chipsets",
+    "tab-mem": "RAM y expansión",
+    "tab-puertos": "Puertos y conectores",
+    "tab-firm": "UEFI y arranque",
+    "tab-prac": "Práctica",
+    "mapa-eyebrow": "Práctica 1 · La pieza que lo conecta todo",
+    "mapa-titulo": "La placa base es el sistema nervioso del ordenador",
+    "mapa-intro": "Es un circuito impreso con varias capas de pistas de cobre. No calcula nada por sí misma: <b>conecta</b> el procesador, la memoria, el almacenamiento y los periféricos, y les reparte la energía de la fuente.",
+    "mapa-placa": "Placa ATX a escala real <small>305 × 244 mm · pulsa cualquier componente</small>",
+    "mapa-nota-cpu": "<b style='color:var(--cpu)'>Conectado a la CPU:</b> la RAM, la ranura PCIe x16 principal y el primer M.2. Son los caminos más rápidos.",
+    "mapa-nota-chipset": "<b style='color:var(--chip)'>Conectado al chipset:</b> SATA, la mayoría de USB, red, audio, M.2 secundarios y ranuras pequeñas.",
+    "mapa-nota-alim": "<b style='color:var(--accent)'>Alimentación:</b> el conector ATX de 24 pines alimenta la placa y el EPS de 8 pines alimenta la CPU a través del VRM.",
+    "arq-eyebrow": "Práctica 2 · Buses y chipset",
+    "arq-titulo": "¿Por dónde viajan los datos?",
+    "arq-intro": "Los componentes se comunican por <b>buses</b>: caminos de datos con una velocidad máxima. No todos van directos a la CPU. Los dispositivos lentos se agrupan en el <b>chipset</b>, que comparte un único enlace con el procesador.",
+    "arq-antigua": "Placa antigua (hacia 2005)",
+    "arq-simular": "Simular un viaje",
+    "arq-enviar": "▶ Enviar datos",
+    "arq-esquema-aria": "Esquema de buses de la placa base",
+    "arq-puentes-h3": "De dos puentes a uno",
+    "arq-puentes-1": "Antes la placa tenía dos chips: el <b>puente norte</b> (memoria y gráfica, lo rápido) y el <b>puente sur</b> (discos, USB, audio, lo lento). La CPU hablaba con todo a través del <b>FSB</b> (Front Side Bus), que era un cuello de botella.",
+    "arq-puentes-2": "Hoy el puente norte está <b>dentro del procesador</b>: el controlador de memoria y las líneas PCIe principales están en la CPU. Lo que queda en la placa es el antiguo puente sur, que ahora llamamos <b>chipset</b> (o PCH en Intel).",
+    "arq-importa-h3": "¿Por qué importa?",
+    "arq-importa-1": "Todo lo que cuelga del chipset <b>comparte</b> el mismo enlace con la CPU. Si copias a la vez desde dos SSD del chipset a un disco USB, los tres se reparten ese ancho de banda.",
+    "arq-importa-regla": "Regla práctica: la gráfica y el SSD principal van en las ranuras conectadas a la CPU. El manual de la placa indica qué ranura va a dónde.",
+    "for-eyebrow": "Práctica 3 · Factor de forma",
+    "for-titulo": "El tamaño de la placa está estandarizado",
+    "for-intro": "El <b>factor de forma</b> fija las medidas, la posición de los tornillos y el hueco del panel trasero. Gracias a eso, una placa de cualquier fabricante encaja en una caja de cualquier otro.",
+    "for-comparacion": "Comparación a escala <small>todas comparten la esquina del panel trasero</small>",
+    "for-svg-aria": "Comparación a escala de formatos de placa base",
+    "for-cabe-h3": "¿Cabe en la caja?",
+    "for-caja": "Caja",
+    "for-caja-itx": "Caja Mini-ITX",
+    "for-caja-matx": "Caja Micro-ATX (minitorre)",
+    "for-caja-atx": "Caja ATX (semitorre)",
+    "for-caja-eatx": "Caja E-ATX (torre completa)",
+    "for-nota-caja": "Una caja admite su formato y todos los más pequeños, porque los agujeros de los tornillos coinciden. Al revés no funciona.",
+    "for-habituales": "Formatos habituales",
+    "for-th-formato": "Formato",
+    "for-th-medidas": "Medidas (mm)",
+    "for-th-expansion": "Ranuras de expansión (máx.)",
+    "for-th-ram": "Ranuras RAM habituales",
+    "for-th-uso": "Uso típico",
+    "for-uso-eatx": "Estaciones de trabajo, gama entusiasta",
+    "for-uso-atx": "El estándar de sobremesa",
+    "for-uso-matx": "Oficina, equipos económicos, aulas",
+    "for-uso-itx": "PC compactos, salón, HTPC",
+    "for-nota-atx": "ATX lo creó Intel en 1995 y sustituyó al formato AT. Las medidas originales están en pulgadas: 12 × 9,6\".",
+    "soc-eyebrow": "Práctica 4 · Compatibilidad",
+    "soc-titulo": "El socket decide qué procesador puedes montar",
+    "soc-intro": "El <b>socket</b> es el zócalo donde se inserta la CPU. Cada familia de procesadores usa un socket concreto, y el <b>chipset</b> de la placa decide qué funciones extra tienes: más USB, más M.2, overclocking…",
+    "soc-lgapga-h3": "LGA y PGA: ¿dónde están los pines?",
+    "soc-lgapga-aria": "Comparación de sockets LGA y PGA",
+    "soc-pga-titulo": "PGA · pines en la CPU",
+    "soc-pga-pie": "Socket con agujeros · AMD AM4",
+    "soc-lga-titulo": "LGA · pines en la placa",
+    "soc-lga-pie": "Socket con pines · Intel y AMD AM5",
+    "soc-nota-pga": "En <b>PGA</b>, si se dobla un pin se estropea el procesador. En <b>LGA</b>, lo que se estropea es la placa. Por eso los sockets LGA vienen con una tapa protectora: no hay que quitarla hasta montar la CPU.",
+    "soc-comprobador-h3": "Comprobador de compatibilidad",
+    "soc-procesador": "Procesador",
+    "soc-memoria-ram": "Memoria RAM",
+    "soc-sockets-h3": "Sockets de escritorio actuales <small>datos a mediados de 2026</small>",
+    "soc-gamas-h3": "Gamas de chipset <small>la letra indica el nivel</small>",
+    "soc-th-gama": "Gama",
+    "soc-th-aporta": "Qué aporta",
+    "soc-gama-basica": "Básica",
+    "soc-gama-media": "Media",
+    "soc-aporta-basica": "Lo imprescindible. Pocas conexiones y sin overclocking de CPU.",
+    "soc-aporta-media": "La opción más habitual. Buen equilibrio de puertos y M.2. En AMD permite overclocking.",
+    "soc-aporta-alta": "Más líneas PCIe, más USB rápidos y M.2. En Intel, solo la serie Z permite overclocking de los procesadores «K».",
+    "mem-eyebrow": "Práctica 5 · Ranuras DIMM, PCIe y M.2",
+    "mem-titulo": "Dónde se conecta cada cosa, y a qué velocidad",
+    "mem-intro": "Las ranuras no son todas iguales: tienen formas distintas para que no puedas meter una pieza en el sitio equivocado, y generaciones distintas que marcan su velocidad.",
+    "mem-canal": "Doble canal <small>pulsa las ranuras para poner o quitar módulos</small>",
+    "mem-cpu-mini": "CPU<br><small style='font-weight:400'>controlador de memoria</small>",
+    "mem-nota-canal": "El procesador tiene <b>dos canales</b> de memoria (A y B), cada uno de 64 bits. Si pones los módulos en canales distintos, trabajan en paralelo y el ancho de banda se duplica. Con dos módulos, casi todos los fabricantes recomiendan <b>A2 y B2</b>.",
+    "mem-ddr-h3": "Generaciones DDR: no son intercambiables",
+    "mem-ddr-aria": "Módulos DDR3, DDR4 y DDR5 con la muesca en distinta posición",
+    "mem-nota-ddr": "La muesca está en un sitio distinto en cada generación. Un módulo DDR4 <b>no entra</b> en una ranura DDR5. La placa admite un único tipo, así que hay que mirarlo antes de comprar.",
+    "mem-pcie-h3": "Ancho de banda PCIe <small>cada línea (lane) es un carril; más carriles, más datos a la vez</small>",
+    "mem-generacion": "Generación",
+    "mem-lineas": "Líneas",
+    "mem-x16-grafica": "x16 (tarjeta gráfica)",
+    "mem-resultado": "Resultado",
+    "mem-pcie-aria": "Ancho de banda PCIe por generación",
+    "mem-nota-pcie": "Cada generación <b>duplica</b> la velocidad por línea. Las ranuras son compatibles hacia atrás: una gráfica PCIe 4.0 funciona en una ranura 5.0, a la velocidad de la más lenta. Valores aproximados en un sentido.",
+    "mem-m2-h3": "Tamaños M.2 <small>a escala · el nombre son las medidas</small>",
+    "mem-m2-aria": "Tamaños de SSD M.2",
+    "mem-nota-m2": "<b>2280</b> = 22 mm de ancho × 80 mm de largo, el tamaño más común. La placa tiene un tornillo o pestaña en la posición de cada longitud admitida.",
+    "mem-m2vel-h3": "Un mismo hueco M.2, dos velocidades",
+    "mem-m2vel-aria": "Velocidad de SSD SATA frente a NVMe",
+    "mem-nota-m2vel": "Un SSD M.2 puede ir por <b>SATA</b> (limitado a ~550 MB/s) o por <b>PCIe/NVMe</b> (hasta 10 veces más). No todas las ranuras M.2 admiten los dos: consulta el manual.",
+    "pue-eyebrow": "Práctica 6 · Lo que se ve por fuera y lo que va por dentro",
+    "pue-titulo": "Puertos y conectores",
+    "pue-intro": "Los <b>puertos externos</b> están en el panel trasero y sirven para conectar periféricos. Los <b>conectores internos</b> unen la placa con la fuente, la caja y los ventiladores.",
+    "pue-panel": "Panel trasero <small>pulsa cada puerto · 159 × 44,5 mm, tamaño estándar</small>",
+    "pue-svg-aria": "Panel trasero de la placa base interactivo",
+    "pue-usb-h3": "El lío de los nombres USB",
+    "pue-th-oficial": "Nombre oficial",
+    "pue-th-antiguo": "Nombre antiguo / comercial",
+    "pue-th-velocidad": "Velocidad",
+    "pue-usb20": "«USB 20Gbps» (solo USB-C)",
+    "pue-usb40": "«USB 40Gbps» (solo USB-C)",
+    "pue-nota-usb": "El mismo puerto ha cambiado de nombre varias veces. Para no equivocarte, fíjate en la <b>velocidad</b>. Ojo: son Gb (gigabits); 5 Gb/s ≈ 625 MB/s como máximo teórico. USB-C es la <b>forma</b> del conector, no su velocidad.",
+    "pue-internos-h3": "Conectores internos",
+    "pue-th-conector": "Conector",
+    "pue-th-pines": "Pines",
+    "pue-th-paraque": "Para qué",
+    "pue-int-atx": "Alimentación de la placa desde la fuente",
+    "pue-int-eps-pines": "4+4 u 8",
+    "pue-int-eps": "Alimentación del procesador, vía VRM",
+    "pue-int-sata-nombre": "SATA datos",
+    "pue-int-sata": "Discos y SSD de 2,5\"/3,5\". La corriente va aparte, desde la fuente (15 pines)",
+    "pue-int-panel-nombre": "Panel frontal",
+    "pue-int-panel": "Botón de encendido, reset y LED",
+    "pue-int-usb2-nombre": "USB 2.0 interno",
+    "pue-int-usb2": "USB frontales antiguos, lectores de tarjetas",
+    "pue-int-usb3-nombre": "USB 3.x interno",
+    "pue-int-usb3": "USB-A frontales azules",
+    "pue-int-usbc-nombre": "USB-C interno",
+    "pue-int-usbc": "Puerto USB-C del frontal de la caja",
+    "pue-int-audio-nombre": "Audio frontal (HD Audio)",
+    "pue-int-audio": "Jacks de auriculares y micrófono de la caja",
+    "pue-int-vent-nombre": "Ventiladores",
+    "pue-int-vent": "3 pines: regula por voltaje. 4 pines: por PWM (pulsos)",
+    "pue-int-rgb": "Iluminación. No son compatibles entre sí: conectar ARGB de 5 V a 12 V lo quema",
+    "fir-eyebrow": "Práctica 7 · Lo que ocurre antes del sistema operativo",
+    "fir-titulo": "Firmware, POST y arranque",
+    "fir-intro": "Al pulsar el botón, lo primero que se ejecuta no es Windows ni Linux: es el <b>firmware</b> de la placa (BIOS o UEFI), guardado en un chip de memoria flash. Su trabajo es comprobar el hardware y buscar un sistema operativo.",
+    "fir-secuencia-h3": "Secuencia de arranque",
+    "fir-encender": "⏻ Pulsar el botón de encendido",
+    "fir-paso": "Paso a paso",
+    "fir-led-h3": "Simulador de LED de diagnóstico",
+    "fir-led-texto": "Muchas placas tienen 4 LED que se encienden por turnos durante el POST. Si uno se queda fijo, el problema está en esa parte.",
+    "fir-que-ha-pasado": "¿Qué ha pasado?",
+    "fir-opt-ok": "Todo está bien montado",
+    "fir-opt-cpu": "Olvidé conectar el cable EPS de la CPU",
+    "fir-opt-dram": "El módulo de RAM no está bien encajado",
+    "fir-opt-vga": "Procesador sin gráfica integrada y sin tarjeta gráfica",
+    "fir-opt-boot": "El SSD no tiene sistema operativo",
+    "fir-biosuefi-h3": "BIOS frente a UEFI",
+    "fir-th-bios": "BIOS (clásica)",
+    "fir-fila-desde": "Desde",
+    "fir-uefi-desde": "Generalizada desde ~2011",
+    "fir-fila-interfaz": "Interfaz",
+    "fir-bios-interfaz": "Texto, solo teclado",
+    "fir-uefi-interfaz": "Gráfica, admite ratón",
+    "fir-fila-tabla": "Tabla de particiones",
+    "fir-bios-tabla": "MBR: discos de hasta 2 TiB",
+    "fir-uefi-tabla": "GPT: discos enormes (más de 9 ZiB)",
+    "fir-fila-seguro": "Arranque seguro",
+    "fir-uefi-seguro": "Secure Boot (lo exige Windows 11)",
+    "fir-fila-particiones": "Particiones",
+    "fir-bios-particiones": "Máximo 4 primarias",
+    "fir-uefi-particiones": "Hasta 128 en Windows",
+    "fir-nota-bios": "Aunque técnicamente sea UEFI, casi todo el mundo lo sigue llamando «la BIOS». Se entra pulsando <b>Supr</b> o <b>F2</b> al encender (depende del fabricante).",
+    "fir-cmos-h3": "CMOS, pila y actualizaciones",
+    "fir-cmos-1": "La configuración (hora, orden de arranque, ajustes de RAM) se guarda en una memoria que se mantiene gracias a una <b>pila CR2032</b> de 3 V. Si la pila se agota, la placa pierde la hora cada vez que se desenchufa.",
+    "fir-cmos-2": "<b>Borrar la CMOS</b> (con un puente, un botón o quitando la pila) devuelve los ajustes de fábrica. Es lo primero que se prueba tras un overclock fallido.",
+    "fir-cmos-3": "<b>Actualizar la BIOS</b> añade compatibilidad con procesadores nuevos. Si la placa es anterior a la CPU, puede no arrancar hasta actualizarla. Algunas placas lo permiten <b>sin CPU</b>, con un botón «BIOS Flashback» y un pendrive.",
+    "pra-eyebrow": "Práctica 8 · Ahora te toca a ti",
+    "pra-titulo": "Pon a prueba lo aprendido",
+    "pra-donde-h3": "¿Dónde está…?",
+    "pra-pulsa": "Pulsa en la placa:",
+    "pra-placa-aria": "Placa base para localizar componentes",
+    "pra-otro": "Otro componente",
+    "pra-siguiente": "Siguiente caso →"
+  }
+}
+</script>
+</head>
+<body>
+<style>
+/* Layout: mismo banco de laboratorio que "Laboratorio de Bits" — cabecera fija con pestañas; la placa base ATX dibujada a escala real (mm) es la pieza central y se reutiliza en la práctica */
+:root{
+  --bg:#f2f4ef; --surface:#ffffff; --surface2:#e9ede6; --ink:#16201b; --muted:#56655d; --line:#d3dbd4;
+  --accent:#b86e00; --accent-soft:#fbeed8; --cpu:#2764c9; --cpu-soft:#e2ebfa; --chip:#7446c4; --chip-soft:#ece4f8; --good:#1f8a3b; --bad:#c4372c; --warn:#b86e00;
+  --pcb:#1f5244; --pcb-edge:#143a30; --silk:#d9ebe2; --plastic:#23282c; --plastic2:#3b4349; --metal:#a9b4b8; --metal2:#7f8b90; --gold:#c9a24a; --on:#ffc83d;
+  --f-display:"Chakra Petch","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1411; --surface:#161f1b; --surface2:#1d2823; --ink:#e4ebe6; --muted:#95a69d; --line:#2b3832;
+  --accent:#f3aa3c; --accent-soft:#33260f; --cpu:#82b1ff; --cpu-soft:#18243b; --chip:#b596f3; --chip-soft:#261e38; --good:#5bd07a; --bad:#ff7b6e; --warn:#f3aa3c;
+  --pcb:#1a463a; --pcb-edge:#0f2e26; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1411; --surface:#161f1b; --surface2:#1d2823; --ink:#e4ebe6; --muted:#95a69d; --line:#2b3832;
+  --accent:#f3aa3c; --accent-soft:#33260f; --cpu:#82b1ff; --cpu-soft:#18243b; --chip:#b596f3; --chip-soft:#261e38; --good:#5bd07a; --bad:#ff7b6e; --warn:#f3aa3c;
+  --pcb:#1a463a; --pcb-edge:#0f2e26; color-scheme:dark}
+
+html{font-size:16px}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1rem;line-height:1.55}
+*{box-sizing:border-box}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+h2{font-size:1.75rem;font-weight:700}
+h3{font-size:1.15rem;font-weight:600}
+p{margin:0;max-width:70ch}
+code,.mono{font-family:var(--f-mono)}
+
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+.top-inner{max-width:1180px;margin:0 auto;padding:.8rem 16px .5rem;display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand h1{font-size:1.3rem;letter-spacing:.02em}
+.brand svg{width:26px;height:26px}
+.zoom{display:flex;gap:.3rem;align-items:center;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
+.zoom button{font:600 .85rem var(--f-mono);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:.2rem .55rem;cursor:pointer}
+nav.tabs{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:.25rem;overflow-x:auto;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;font:600 .95rem var(--f-display);letter-spacing:.02em;background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);padding:.55rem .75rem;cursor:pointer;white-space:nowrap}
+nav.tabs button .n{font-family:var(--f-mono);font-size:.75rem;opacity:.7;margin-right:.35rem}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs button:hover{color:var(--ink)}
+button:focus-visible,input:focus-visible,select:focus-visible,.hot:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+main{max-width:1180px;margin:0 auto;padding-block:1.6rem 4rem;padding-inline:16px}
+section.tab{display:grid;gap:1.4rem}
+.intro{display:grid;gap:.6rem}
+.eyebrow{font:600 .75rem var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.lead{font-size:1.1rem;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:1.2rem}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:1rem}
+.split{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:1.2rem;align-items:start}
+@media (max-width:900px){.split{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.2rem;display:grid;gap:.9rem;align-content:start;min-width:0}
+.panel h3 small{font-family:var(--f-body);font-weight:400;color:var(--muted);font-size:.85rem;margin-left:.3rem}
+.note{background:var(--surface2);border-radius:8px;padding:.8rem 1rem;font-size:.95rem}
+.key{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;padding:.8rem 1rem}
+.row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+label.fld{display:grid;gap:.25rem;font-size:.85rem;color:var(--muted)}
+select,input[type=number]{font:600 1rem var(--f-mono);background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:.45rem .6rem;min-width:0;max-width:100%}
+.btn{font:600 .92rem var(--f-display);letter-spacing:.02em;border:1px solid var(--line);background:var(--surface2);color:var(--ink);border-radius:7px;padding:.45rem .9rem;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#1b1200}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.scroll{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;font-variant-numeric:tabular-nums}
+table.t{width:100%;font-size:.95rem}
+table.t th,table.t td{padding:.45rem .6rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:600 .75rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+table.t td.num,table.t th.num{text-align:right;font-family:var(--f-mono)}
+.pill{display:inline-block;font:600 .75rem var(--f-mono);padding:.1rem .5rem;border-radius:99px;background:var(--surface2);color:var(--muted)}
+.pill.cpu{background:var(--cpu-soft);color:var(--cpu)} .pill.chip{background:var(--chip-soft);color:var(--chip)} .pill.acc{background:var(--accent-soft);color:var(--accent)}
+
+/* ===== Placa base ===== */
+.board-wrap{overflow-x:auto}
+.board{width:100%;min-width:560px;height:auto;display:block;touch-action:manipulation}
+.board .silk{fill:var(--silk);font:600 3.2px var(--f-mono);opacity:.8;pointer-events:none}
+.board .silk.s{font-size:2.6px}
+.hot{cursor:pointer}
+.hot > *{transition:filter .15s}
+.hot:hover > *{filter:brightness(1.35)}
+.hot.sel > rect,.hot.sel > circle,.hot.sel > path{stroke:var(--on);stroke-width:1.2}
+.hot.flash > rect,.hot.flash > circle{stroke:var(--good);stroke-width:1.6}
+.hot.wrong > rect,.hot.wrong > circle{stroke:var(--bad);stroke-width:1.6}
+.info{display:grid;gap:.6rem}
+.info .tag{font:600 .75rem var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.info h3{font-size:1.4rem}
+.info .fact{font-family:var(--f-mono);font-size:.9rem;background:var(--surface2);border-radius:7px;padding:.5rem .7rem}
+.chips{display:flex;flex-wrap:wrap;gap:.35rem}
+.chips button{font:600 .8rem var(--f-body);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:.2rem .65rem;cursor:pointer}
+.chips button.sel{background:var(--accent);border-color:var(--accent);color:#1b1200}
+
+/* ===== Arquitectura ===== */
+.arch{width:100%;min-width:620px;height:auto;display:block}
+.arch .node rect{fill:var(--surface2);stroke:var(--line);stroke-width:1.5;rx:8}
+.arch .node.cpu rect{fill:var(--cpu-soft);stroke:var(--cpu)}
+.arch .node.chip rect{fill:var(--chip-soft);stroke:var(--chip)}
+.arch .node text{fill:var(--ink);font:600 13px var(--f-display);text-anchor:middle;pointer-events:none}
+.arch .node text.sub{font:400 10px var(--f-body);fill:var(--muted)}
+.arch .node{cursor:pointer}
+.arch .node.hl rect{stroke:var(--accent);stroke-width:3}
+.arch .edge line{stroke:var(--line);stroke-width:4;stroke-linecap:round}
+.arch .edge.hl line{stroke:var(--accent)}
+.arch .edge text{fill:var(--muted);font:500 10px var(--f-mono);text-anchor:middle}
+.arch .edge.hl text{fill:var(--ink)}
+.arch .dot{fill:var(--accent)}
+
+/* ===== Formatos ===== */
+.ff svg{width:100%;height:auto;max-width:520px;display:block}
+.ff-toggles{display:flex;flex-wrap:wrap;gap:.4rem}
+
+/* ===== Sockets ===== */
+.sock{display:grid;gap:.4rem}
+.sock h3{font-size:1.25rem}
+.sock .brandtag{font:600 .75rem var(--f-mono);letter-spacing:.1em;text-transform:uppercase}
+.sock dl{display:grid;grid-template-columns:auto 1fr;gap:.2rem .8rem;margin:0;font-size:.92rem}
+.sock dt{color:var(--muted)} .sock dd{margin:0;font-family:var(--f-mono);font-size:.88rem}
+.verdict{display:grid;gap:.4rem;border-radius:8px;padding:.9rem 1rem;background:var(--surface2)}
+.verdict .big{font:700 1.4rem var(--f-display)}
+.verdict.ok .big{color:var(--good)} .verdict.ko .big{color:var(--bad)}
+.verdict ul{margin:0;padding-left:1.2rem}
+.verdict li.ok{color:var(--good)} .verdict li.ko{color:var(--bad)} .verdict li.warn{color:var(--warn)}
+
+/* ===== Memoria ===== */
+.slots{display:flex;gap:.6rem;align-items:flex-end;flex-wrap:wrap}
+.slotbtn{display:grid;justify-items:center;gap:.3rem;background:none;border:0;cursor:pointer;color:var(--ink);padding:0}
+.slotbtn .s{width:34px;height:150px;border-radius:4px;background:var(--plastic);border:2px solid var(--line);position:relative;overflow:hidden}
+.slotbtn.a .s{background:var(--plastic2)}
+.slotbtn .s i{position:absolute;inset:6px 4px;border-radius:2px;background:linear-gradient(180deg,#2d6f3a 0%,#2d6f3a 85%,var(--gold) 85%);display:none}
+.slotbtn.on .s i{display:block}
+.slotbtn .l{font:700 .9rem var(--f-mono)}
+.cpu-mini{width:90px;height:90px;border-radius:8px;border:2px solid var(--cpu);background:var(--cpu-soft);display:grid;place-items:center;font:700 .9rem var(--f-display);color:var(--cpu);text-align:center}
+.chan{font:700 1.3rem var(--f-display)}
+.chan.ok{color:var(--good)} .chan.ko{color:var(--bad)} .chan.warn{color:var(--warn)}
+.chart svg{width:100%;height:auto;display:block;min-width:460px}
+
+/* ===== Puertos ===== */
+.io svg{width:100%;height:auto;display:block;min-width:600px}
+.io .shield{fill:var(--metal2)}
+.io .port{cursor:pointer}
+.io .port:hover > *{filter:brightness(1.3)}
+.io .port.sel > *{stroke:var(--on);stroke-width:.8}
+.swatch{display:inline-block;width:.9em;height:.9em;border-radius:50%;vertical-align:-.1em;margin-right:.35em;border:1px solid var(--line)}
+
+/* ===== Firmware ===== */
+.post{display:grid;gap:.35rem}
+.post .st{display:grid;grid-template-columns:2rem 1fr;gap:.6rem;align-items:start;padding:.45rem .6rem;border-radius:7px;opacity:.35;transition:opacity .25s,background .25s}
+.post .st.done{opacity:.75}
+.post .st.now{opacity:1;background:var(--accent-soft)}
+.post .st .n{font:700 .9rem var(--f-mono);color:var(--accent)}
+.post .st b{font-family:var(--f-display)}
+.leds{display:flex;gap:1rem;flex-wrap:wrap}
+.led{display:grid;justify-items:center;gap:.3rem;font:700 .8rem var(--f-mono)}
+.led i{width:30px;height:14px;border-radius:3px;background:var(--plastic2);border:1px solid var(--line)}
+.led.on i{background:var(--on);box-shadow:0 0 12px var(--on)}
+.led.on.red i{background:#ff4b3e;box-shadow:0 0 12px #ff4b3e}
+
+/* ===== Práctica ===== */
+.q-prompt{font:600 1.3rem var(--f-display)}
+.opts{display:grid;gap:.5rem}
+.opts button{text-align:left;font:1rem var(--f-body);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:.65rem .9rem;cursor:pointer}
+.opts button:hover{border-color:var(--accent)}
+.opts button.ok{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--surface))}
+.opts button.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--surface))}
+.fb{font:600 1rem var(--f-display);min-height:1.4em}
+.fb.ok{color:var(--good)} .fb.ko{color:var(--bad)}
+.score{display:flex;gap:1.2rem;font:600 1rem var(--f-mono)}
+.target{font:700 1.5rem var(--f-display);color:var(--accent)}
+
+@media (max-width:560px){h2{font-size:1.4rem}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.brand a.home{font:600 .8rem var(--f-mono);color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:.2rem .5rem;margin-right:.3rem}
+.brand a.home:hover{color:var(--ink)}
+.zoom .idiomas{display:inline-flex;margin-left:.5rem;border:1px solid var(--line);border-radius:99px;overflow:hidden}
+.zoom .idiomas button{border:0;border-radius:0;background:transparent;color:var(--muted);font:600 .75rem var(--f-mono);padding:.25rem .6rem;cursor:pointer}
+.zoom .idiomas button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+</style>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><a class="home" href="../../" data-lab-volver data-t-attr="aria-label:volver-aria" aria-label="Tornar a la unitat">← <span data-t="volver">Unitat</span></a>
+      <svg viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="1" width="24" height="24" rx="3" fill="var(--pcb)"/><rect x="7" y="7" width="9" height="9" fill="var(--metal)"/><rect x="18" y="3" width="2" height="17" fill="var(--plastic2)"/><rect x="21" y="3" width="2" height="17" fill="var(--plastic2)"/><rect x="3" y="19" width="13" height="2" fill="var(--plastic)"/></svg>
+      <h1 data-t="titulo">Anatomia de la placa base</h1>
+    </div>
+    <div class="zoom"><span data-t="zoom">Grandària</span>
+      <button type="button" data-lab-zoom="-" data-t-attr="aria-label:zoom-menos" aria-label="Reduir el text">A−</button>
+      <button type="button" data-lab-zoom="+" data-t-attr="aria-label:zoom-mas" aria-label="Augmentar el text">A+</button>
+      <span class="idiomas" role="group" data-t-attr="aria-label:idioma-aria" aria-label="Idioma">
+        <button type="button" data-lab-idioma="ca-valencia"></button><button type="button" data-lab-idioma="es"></button>
+      </span>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist" data-t-attr="aria-label:secciones-aria" aria-label="Seccions">
+    <button role="tab" data-tab="mapa"><span class="n">1</span>Mapa de la placa</button>
+    <button role="tab" data-tab="arq"><span class="n">2</span><span data-t="tab-arq">Com viatgen les dades</span></button>
+    <button role="tab" data-tab="formatos"><span class="n">3</span><span data-t="tab-formatos">Formats</span></button>
+    <button role="tab" data-tab="sockets"><span class="n">4</span><span data-t="tab-sockets">Sòcols i xipsets</span></button>
+    <button role="tab" data-tab="mem"><span class="n">5</span><span data-t="tab-mem">RAM i expansió</span></button>
+    <button role="tab" data-tab="puertos"><span class="n">6</span><span data-t="tab-puertos">Ports i connectors</span></button>
+    <button role="tab" data-tab="firm"><span class="n">7</span><span data-t="tab-firm">UEFI i arrancada</span></button>
+    <button role="tab" data-tab="prac"><span class="n">8</span><span data-t="tab-prac">Pràctica</span></button>
+  </nav>
+</header>
+
+<main>
+<!-- ============ 1. MAPA ============ -->
+<section class="tab" id="mapa" role="tabpanel">
+  <div class="intro">
+    <span class="eyebrow" data-t="mapa-eyebrow">Pràctica 1 · La peça que ho connecta tot</span>
+    <h2 data-t="mapa-titulo">La placa base és el sistema nerviós de l'ordinador</h2>
+    <p class="lead" data-t-html="mapa-intro">És un circuit imprés amb diverses capes de pistes de coure. No calcula res per si mateixa: <b>connecta</b> el processador, la memòria, l'emmagatzematge i els perifèrics, i els repartix l'energia de la font.</p>
+  </div>
+  <div class="split">
+    <div class="panel">
+      <h3 data-t-html="mapa-placa">Placa ATX a escala real <small>305 × 244 mm · prem qualsevol component</small></h3>
+      <div class="board-wrap"><svg class="board" id="board1" viewBox="-4 -4 313 252" role="img" aria-label="Placa base ATX interactiva"></svg></div>
+      <div class="chips" id="chips1"></div>
+    </div>
+    <div class="panel info" id="info1" aria-live="polite"></div>
+  </div>
+  <div class="grid3">
+    <div class="note" data-t-html="mapa-nota-cpu"><b style="color:var(--cpu)">Connectat a la CPU:</b> la RAM, la ranura PCIe x16 principal i el primer M.2. Són els camins més ràpids.</div>
+    <div class="note" data-t-html="mapa-nota-chipset"><b style="color:var(--chip)">Connectat al xipset:</b> SATA, la majoria dels USB, xarxa, àudio, M.2 secundaris i ranures xicotetes.</div>
+    <div class="note" data-t-html="mapa-nota-alim"><b style="color:var(--accent)">Alimentació:</b> el connector ATX de 24 pins alimenta la placa i l'EPS de 8 pins alimenta la CPU a través del VRM.</div>
+  </div>
+</section>
+
+<!-- ============ 2. ARQUITECTURA ============ -->
+<section class="tab" id="arq" role="tabpanel" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="arq-eyebrow">Pràctica 2 · Busos i xipset</span>
+    <h2 data-t="arq-titulo">Per on viatgen les dades?</h2>
+    <p class="lead" data-t-html="arq-intro">Els components es comuniquen per <b>busos</b>: camins de dades amb una velocitat màxima. No tots van directes a la CPU. Els dispositius lents s'agrupen en el <b>xipset</b>, que compartix un únic enllaç amb el processador.</p>
+  </div>
+  <div class="panel">
+    <div class="row">
+      <button class="btn" id="aNow" type="button" aria-pressed="true">Placa actual</button>
+      <button class="btn" id="aOld" type="button" aria-pressed="false" data-t="arq-antigua">Placa antiga (cap al 2005)</button>
+      <span style="flex:1"></span>
+      <label class="fld" style="display:flex;gap:.4rem;align-items:center"><span data-t="arq-simular">Simular un viatge</span>
+        <select id="aRoute"></select></label>
+      <button class="btn primary" id="aGo" type="button" data-t="arq-enviar">▶ Enviar dades</button>
+    </div>
+    <div class="scroll"><svg class="arch" id="arch" viewBox="0 0 720 430" role="img" data-t-attr="aria-label:arq-esquema-aria" aria-label="Esquema de busos de la placa base"></svg></div>
+    <div class="note" id="aInfo">Prem un component per a veure el seu camí fins a la CPU.</div>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t="arq-puentes-h3">De dos ponts a un</h3>
+      <p data-t-html="arq-puentes-1">Abans la placa tenia dos xips: el <b>pont nord</b> (memòria i gràfica, el ràpid) i el <b>pont sud</b> (discos, USB, àudio, el lent). La CPU parlava amb tot a través de l'<b>FSB</b> (Front Side Bus), que era un coll d'ampolla.</p>
+      <p data-t-html="arq-puentes-2">Hui el pont nord està <b>dins del processador</b>: el controlador de memòria i les línies PCIe principals estan en la CPU. El que queda en la placa és l'antic pont sud, que ara anomenem <b>xipset</b> (o PCH en Intel).</p>
+    </div>
+    <div class="panel">
+      <h3 data-t="arq-importa-h3">Per què importa?</h3>
+      <p data-t-html="arq-importa-1">Tot el que penja del xipset <b>compartix</b> el mateix enllaç amb la CPU. Si copies a la vegada des de dos SSD del xipset a un disc USB, els tres es repartixen eixe ample de banda.</p>
+      <p class="key" data-t="arq-importa-regla">Regla pràctica: la gràfica i l'SSD principal van en les ranures connectades a la CPU. El manual de la placa explica a què va connectada cada ranura.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. FORMATOS ============ -->
+<section class="tab" id="formatos" role="tabpanel" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="for-eyebrow">Pràctica 3 · Factor de forma</span>
+    <h2 data-t="for-titulo">La mida de la placa està estandarditzada</h2>
+    <p class="lead" data-t-html="for-intro">El <b>factor de forma</b> fixa les mesures, la posició dels cargols i l'obertura del panell posterior. Gràcies a això, una placa de qualsevol fabricant encaixa en una caixa de qualsevol altre.</p>
+  </div>
+  <div class="split">
+    <div class="panel ff">
+      <h3 data-t-html="for-comparacion">Comparació a escala <small>totes compartixen la cantonada del panell posterior</small></h3>
+      <div class="ff-toggles" id="ffT"></div>
+      <svg id="ffSvg" viewBox="-12 -12 350 370" role="img" data-t-attr="aria-label:for-svg-aria" aria-label="Comparació a escala de formats de placa base"></svg>
+    </div>
+    <div class="panel">
+      <h3 data-t="for-cabe-h3">Hi cap en la caixa?</h3>
+      <label class="fld" for="caseSel"><span data-t="for-caja">Caixa</span>
+        <select id="caseSel"><option value="itx" data-t="for-caja-itx">Caixa Mini-ITX</option><option value="matx" data-t="for-caja-matx">Caixa Micro-ATX (minitorre)</option><option value="atx" selected data-t="for-caja-atx">Caixa ATX (semitorre)</option><option value="eatx" data-t="for-caja-eatx">Caixa E-ATX (torre completa)</option></select></label>
+      <label class="fld" for="boardSel">Placa
+        <select id="boardSel"><option value="itx">Mini-ITX</option><option value="matx" selected>Micro-ATX</option><option value="atx">ATX</option><option value="eatx">E-ATX</option></select></label>
+      <div class="verdict" id="fitOut"></div>
+      <p class="note" data-t="for-nota-caja">Una caixa admet el seu format i tots els més xicotets, perquè els forats dels cargols coincidixen. Al revés no funciona.</p>
+    </div>
+  </div>
+  <div class="panel">
+    <h3 data-t="for-habituales">Formats habituals</h3>
+    <div class="scroll"><table class="t">
+      <tr><th data-t="for-th-formato">Format</th><th class="num" data-t="for-th-medidas">Mesures (mm)</th><th class="num" data-t="for-th-expansion">Ranures d'expansió (màx.)</th><th class="num" data-t="for-th-ram">Ranures RAM habituals</th><th data-t="for-th-uso">Ús típic</th></tr>
+      <tr><td><b>E-ATX</b></td><td class="num">305 × 330</td><td class="num">7</td><td class="num">4–8</td><td data-t="for-uso-eatx">Estacions de treball, gamma entusiasta</td></tr>
+      <tr><td><b>ATX</b></td><td class="num">305 × 244</td><td class="num">7</td><td class="num">4</td><td data-t="for-uso-atx">L'estàndard de sobretaula</td></tr>
+      <tr><td><b>Micro-ATX</b></td><td class="num">244 × 244</td><td class="num">4</td><td class="num">2–4</td><td data-t="for-uso-matx">Oficina, equips econòmics, aules</td></tr>
+      <tr><td><b>Mini-ITX</b></td><td class="num">170 × 170</td><td class="num">1</td><td class="num">2</td><td data-t="for-uso-itx">PC compactes, saló, HTPC</td></tr>
+    </table></div>
+    <p class="note" data-t="for-nota-atx">ATX el va crear Intel en 1995 i va substituir el format AT. Les mesures originals estan en polzades: 12 × 9,6".</p>
+  </div>
+</section>
+
+<!-- ============ 4. SOCKETS ============ -->
+<section class="tab" id="sockets" role="tabpanel" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="soc-eyebrow">Pràctica 4 · Compatibilitat</span>
+    <h2 data-t="soc-titulo">El sòcol decidix quin processador pots muntar</h2>
+    <p class="lead" data-t-html="soc-intro">El <b>sòcol</b> (socket) és la base on s'inserix la CPU. Cada família de processadors usa un sòcol concret, i el <b>xipset</b> de la placa decidix quines funcions extra tens: més USB, més M.2, overclocking…</p>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t="soc-lgapga-h3">LGA i PGA: on estan els pins?</h3>
+      <svg viewBox="0 0 520 210" role="img" data-t-attr="aria-label:soc-lgapga-aria" aria-label="Comparació de sòcols LGA i PGA">
+        <text x="130" y="18" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)" style="font-family:var(--f-display)" data-t="soc-pga-titulo">PGA · pins en la CPU</text>
+        <rect x="40" y="40" width="180" height="34" rx="4" fill="var(--metal)"/><text x="130" y="62" text-anchor="middle" font-size="12" fill="#1a1f22">CPU</text>
+        <g id="pgaPins"></g>
+        <rect x="30" y="118" width="200" height="40" rx="3" fill="var(--plastic2)"/>
+        <g id="pgaHoles"></g>
+        <text x="130" y="185" text-anchor="middle" font-size="12" fill="var(--muted)" data-t="soc-pga-pie">Sòcol amb forats · AMD AM4</text>
+        <text x="390" y="18" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)" style="font-family:var(--f-display)" data-t="soc-lga-titulo">LGA · pins en la placa</text>
+        <rect x="300" y="40" width="180" height="34" rx="4" fill="var(--metal)"/><text x="390" y="62" text-anchor="middle" font-size="12" fill="#1a1f22">CPU</text>
+        <g id="lgaPads"></g>
+        <rect x="290" y="118" width="200" height="40" rx="3" fill="var(--plastic2)"/>
+        <g id="lgaPins"></g>
+        <text x="390" y="185" text-anchor="middle" font-size="12" fill="var(--muted)" data-t="soc-lga-pie">Sòcol amb pins · Intel i AMD AM5</text>
+      </svg>
+      <p class="note" data-t-html="soc-nota-pga">En <b>PGA</b>, si es dobla un pin s'espatlla el processador. En <b>LGA</b>, el que s'espatlla és la placa. Per això els sòcols LGA vénen amb una tapa protectora: no cal llevar-la fins a muntar la CPU.</p>
+    </div>
+    <div class="panel">
+      <h3 data-t="soc-comprobador-h3">Comprovador de compatibilitat</h3>
+      <label class="fld" for="cCpu"><span data-t="soc-procesador">Processador</span><select id="cCpu"></select></label>
+      <label class="fld" for="cMb">Placa base<select id="cMb"></select></label>
+      <label class="fld" for="cRam"><span data-t="soc-memoria-ram">Memòria RAM</span><select id="cRam"><option value="DDR4">DDR4</option><option value="DDR5" selected>DDR5</option></select></label>
+      <div class="verdict" id="cOut"></div>
+    </div>
+  </div>
+  <div class="panel">
+    <h3 data-t-html="soc-sockets-h3">Sòcols d'escriptori actuals <small>dades a mitjans de 2026</small></h3>
+    <div class="grid3" id="sockCards"></div>
+  </div>
+  <div class="panel">
+    <h3 data-t-html="soc-gamas-h3">Gammes de xipset <small>la lletra indica el nivell</small></h3>
+    <div class="scroll"><table class="t">
+      <tr><th data-t="soc-th-gama">Gamma</th><th>AMD (AM5)</th><th>Intel (LGA1700 / LGA1851)</th><th data-t="soc-th-aporta">Què aporta</th></tr>
+      <tr><td><span class="pill" data-t="soc-gama-basica">Bàsica</span></td><td class="mono">A620</td><td class="mono">H610 / H810</td><td data-t="soc-aporta-basica">L'imprescindible. Poques connexions i sense overclocking de CPU.</td></tr>
+      <tr><td><span class="pill acc" data-t="soc-gama-media">Mitjana</span></td><td class="mono">B650 / B850</td><td class="mono">B760 / B860</td><td data-t="soc-aporta-media">L'opció més habitual. Bon equilibri de ports i M.2. En AMD permet overclocking.</td></tr>
+      <tr><td><span class="pill cpu">Alta</span></td><td class="mono">X670 / X870</td><td class="mono">Z790 / Z890</td><td data-t="soc-aporta-alta">Més línies PCIe, més USB ràpids i M.2. En Intel, només la sèrie Z permet l'overclocking dels processadors «K».</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============ 5. MEMORIA Y EXPANSIÓN ============ -->
+<section class="tab" id="mem" role="tabpanel" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="mem-eyebrow">Pràctica 5 · Ranures DIMM, PCIe i M.2</span>
+    <h2 data-t="mem-titulo">On es connecta cada cosa, i a quina velocitat</h2>
+    <p class="lead" data-t="mem-intro">Les ranures no són totes iguals: tenen formes diferents perquè no pugues posar una peça en el lloc equivocat, i generacions diferents que marquen la seua velocitat.</p>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t-html="mem-canal">Doble canal <small>prem les ranures per a posar o llevar mòduls</small></h3>
+      <div class="slots">
+        <div class="cpu-mini" data-t-html="mem-cpu-mini">CPU<br><small style="font-weight:400">controlador de memòria</small></div>
+        <button class="slotbtn a" type="button" data-s="A1"><span class="s"><i></i></span><span class="l">A1</span></button>
+        <button class="slotbtn a" type="button" data-s="A2"><span class="s"><i></i></span><span class="l">A2</span></button>
+        <button class="slotbtn" type="button" data-s="B1"><span class="s"><i></i></span><span class="l">B1</span></button>
+        <button class="slotbtn" type="button" data-s="B2"><span class="s"><i></i></span><span class="l">B2</span></button>
+      </div>
+      <div class="chan" id="chOut"></div>
+      <p id="chTxt"></p>
+      <p class="note" data-t-html="mem-nota-canal">El processador té <b>dos canals</b> de memòria (A i B), cadascun de 64 bits. Si poses els mòduls en canals diferents, treballen en paral·lel i l'ample de banda es duplica. Amb dos mòduls, quasi tots els fabricants recomanen <b>A2 i B2</b>.</p>
+    </div>
+    <div class="panel">
+      <h3 data-t="mem-ddr-h3">Generacions DDR: no són intercanviables</h3>
+      <svg viewBox="0 0 470 250" role="img" data-t-attr="aria-label:mem-ddr-aria" aria-label="Mòduls DDR3, DDR4 i DDR5 amb l'osca en una posició diferent" id="ddrSvg"></svg>
+      <p class="note" data-t-html="mem-nota-ddr">L'osca està en un lloc diferent en cada generació. Un mòdul DDR4 <b>no entra</b> en una ranura DDR5. La placa admet un únic tipus, així que cal mirar-ho abans de comprar.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3 data-t-html="mem-pcie-h3">Ample de banda PCIe <small>cada línia (lane) és un carril; més carrils, més dades alhora</small></h3>
+    <div class="row">
+      <label class="fld" for="pGen"><span data-t="mem-generacion">Generació</span><select id="pGen"><option value="3">PCIe 3.0</option><option value="4">PCIe 4.0</option><option value="5" selected>PCIe 5.0</option><option value="6">PCIe 6.0</option></select></label>
+      <label class="fld" for="pLanes"><span data-t="mem-lineas">Línies</span><select id="pLanes"><option value="1">x1</option><option value="4" selected>x4 (SSD NVMe)</option><option value="8">x8</option><option value="16" data-t="mem-x16-grafica">x16 (targeta gràfica)</option></select></label>
+      <div><span class="pill acc" data-t="mem-resultado">Resultat</span> <b class="mono" style="font-size:1.6rem" id="pOut"></b></div>
+    </div>
+    <div class="chart scroll"><svg id="pcieChart" viewBox="0 0 640 250" role="img" data-t-attr="aria-label:mem-pcie-aria" aria-label="Ample de banda PCIe per generació"></svg></div>
+    <p class="note" data-t-html="mem-nota-pcie">Cada generació <b>duplica</b> la velocitat per línia. Les ranures són retrocompatibles: una gràfica PCIe 4.0 funciona en una ranura 5.0, a la velocitat de la més lenta. Valors aproximats en un sentit.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t-html="mem-m2-h3">Mides M.2 <small>a escala · el nom són les mesures</small></h3>
+      <svg viewBox="0 0 470 200" id="m2Svg" role="img" data-t-attr="aria-label:mem-m2-aria" aria-label="Mides d'SSD M.2"></svg>
+      <p class="note" data-t-html="mem-nota-m2"><b>2280</b> = 22 mm d'ample × 80 mm de llarg, la mida més comuna. La placa té un cargol o una pestanya en la posició de cada longitud admesa.</p>
+    </div>
+    <div class="panel">
+      <h3 data-t="mem-m2vel-h3">Una mateixa ranura M.2, dues velocitats</h3>
+      <div class="chart scroll"><svg id="m2Speed" viewBox="0 0 480 190" role="img" data-t-attr="aria-label:mem-m2vel-aria" aria-label="Velocitat d'SSD SATA enfront d'NVMe"></svg></div>
+      <p class="note" data-t-html="mem-nota-m2vel">Un SSD M.2 pot anar per <b>SATA</b> (limitat a ~550 MB/s) o per <b>PCIe/NVMe</b> (fins a 10 vegades més). No totes les ranures M.2 admeten els dos: consulta el manual.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. PUERTOS ============ -->
+<section class="tab" id="puertos" role="tabpanel" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="pue-eyebrow">Pràctica 6 · El que es veu per fora i el que va per dins</span>
+    <h2 data-t="pue-titulo">Ports i connectors</h2>
+    <p class="lead" data-t-html="pue-intro">Els <b>ports externs</b> estan en el panell posterior i servixen per a connectar perifèrics. Els <b>connectors interns</b> unixen la placa amb la font, la caixa i els ventiladors.</p>
+  </div>
+  <div class="split">
+    <div class="panel io">
+      <h3 data-t-html="pue-panel">Panell posterior <small>prem cada port · 159 × 44,5 mm, mida estàndard</small></h3>
+      <div class="scroll"><svg id="ioSvg" viewBox="-2 -2 164 50" role="img" data-t-attr="aria-label:pue-svg-aria" aria-label="Panell posterior de la placa base interactiu"></svg></div>
+    </div>
+    <div class="panel info" id="ioInfo" aria-live="polite"></div>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t="pue-usb-h3">L'embolic dels noms USB</h3>
+      <div class="scroll"><table class="t">
+        <tr><th data-t="pue-th-oficial">Nom oficial</th><th data-t="pue-th-antiguo">Nom antic / comercial</th><th class="num" data-t="pue-th-velocidad">Velocitat</th></tr>
+        <tr><td class="mono">USB 2.0</td><td>Hi-Speed</td><td class="num">480 Mb/s</td></tr>
+        <tr><td class="mono">USB 3.2 Gen 1</td><td>USB 3.0 · «USB 5Gbps»</td><td class="num">5 Gb/s</td></tr>
+        <tr><td class="mono">USB 3.2 Gen 2</td><td>USB 3.1 · «USB 10Gbps»</td><td class="num">10 Gb/s</td></tr>
+        <tr><td class="mono">USB 3.2 Gen 2x2</td><td data-t="pue-usb20">«USB 20Gbps» (només USB-C)</td><td class="num">20 Gb/s</td></tr>
+        <tr><td class="mono">USB4</td><td data-t="pue-usb40">«USB 40Gbps» (només USB-C)</td><td class="num">40 Gb/s</td></tr>
+      </table></div>
+      <p class="note" data-t-html="pue-nota-usb">El mateix port ha canviat de nom diverses vegades. Per a no equivocar-te, fixa't en la <b>velocitat</b>. Ull: són Gb (gigabits); 5 Gb/s ≈ 625 MB/s com a màxim teòric. USB-C és la <b>forma</b> del connector, no la seua velocitat.</p>
+    </div>
+    <div class="panel">
+      <h3 data-t="pue-internos-h3">Connectors interns</h3>
+      <div class="scroll"><table class="t">
+        <tr><th data-t="pue-th-conector">Connector</th><th class="num" data-t="pue-th-pines">Pins</th><th data-t="pue-th-paraque">Per a què</th></tr>
+        <tr><td>ATX principal</td><td class="num">24</td><td data-t="pue-int-atx">Alimentació de la placa des de la font</td></tr>
+        <tr><td>EPS 12V (CPU)</td><td class="num" data-t="pue-int-eps-pines">4+4 o 8</td><td data-t="pue-int-eps">Alimentació del processador, via VRM</td></tr>
+        <tr><td data-t="pue-int-sata-nombre">SATA dades</td><td class="num">7</td><td data-t="pue-int-sata">Discos i SSD de 2,5"/3,5". El corrent va a part, des de la font (15 pins)</td></tr>
+        <tr><td data-t="pue-int-panel-nombre">Panell frontal</td><td class="num">9–10</td><td data-t="pue-int-panel">Botó d'engegada, reset i LED</td></tr>
+        <tr><td data-t="pue-int-usb2-nombre">USB 2.0 intern</td><td class="num">9</td><td data-t="pue-int-usb2">USB frontals antics, lectors de targetes</td></tr>
+        <tr><td data-t="pue-int-usb3-nombre">USB 3.x intern</td><td class="num">19</td><td data-t="pue-int-usb3">USB-A frontals blaus</td></tr>
+        <tr><td data-t="pue-int-usbc-nombre">USB-C intern</td><td class="num">20</td><td data-t="pue-int-usbc">Port USB-C del frontal de la caixa</td></tr>
+        <tr><td data-t="pue-int-audio-nombre">Àudio frontal (HD Audio)</td><td class="num">9</td><td data-t="pue-int-audio">Jacks d'auriculars i micròfon de la caixa</td></tr>
+        <tr><td data-t="pue-int-vent-nombre">Ventiladors</td><td class="num">3 o 4</td><td data-t="pue-int-vent">3 pins: regula per voltatge. 4 pins: per PWM (polsos)</td></tr>
+        <tr><td>RGB / ARGB</td><td class="num">4 (12 V) o 3 (5 V)</td><td data-t="pue-int-rgb">Il·luminació. No són compatibles entre si: connectar ARGB de 5 V a 12 V el crema</td></tr>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. FIRMWARE ============ -->
+<section class="tab" id="firm" role="tabpanel" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="fir-eyebrow">Pràctica 7 · El que passa abans del sistema operatiu</span>
+    <h2 data-t="fir-titulo">Microprogramari, POST i arrancada</h2>
+    <p class="lead" data-t-html="fir-intro">En prémer el botó, el primer que s'executa no és Windows ni Linux: és el <b>microprogramari</b> (firmware) de la placa (BIOS o UEFI), guardat en un xip de memòria flash. La seua feina és comprovar el maquinari i buscar un sistema operatiu.</p>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t="fir-secuencia-h3">Seqüència d'arrancada</h3>
+      <div class="row"><button class="btn primary" id="postGo" type="button" data-t="fir-encender">⏻ Prémer el botó d'engegada</button><button class="btn" id="postStep" type="button" data-t="fir-paso">Pas a pas</button></div>
+      <div class="post" id="post"></div>
+    </div>
+    <div class="panel">
+      <h3 data-t="fir-led-h3">Simulador de LED de diagnòstic</h3>
+      <p data-t="fir-led-texto">Moltes plaques tenen 4 LED que s'encenen per torns durant el POST. Si un es queda fix, el problema està en eixa part.</p>
+      <label class="fld" for="dbgSel"><span data-t="fir-que-ha-pasado">Què ha passat?</span>
+        <select id="dbgSel">
+          <option value="ok" data-t="fir-opt-ok">Tot està ben muntat</option>
+          <option value="cpu" data-t="fir-opt-cpu">Vaig oblidar connectar el cable EPS de la CPU</option>
+          <option value="dram" data-t="fir-opt-dram">El mòdul de RAM no està ben encaixat</option>
+          <option value="vga" data-t="fir-opt-vga">Processador sense gràfica integrada i sense targeta gràfica</option>
+          <option value="boot" data-t="fir-opt-boot">L'SSD no té sistema operatiu</option>
+        </select></label>
+      <div class="leds" id="dbgLeds"></div>
+      <div class="verdict" id="dbgOut"></div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t="fir-biosuefi-h3">BIOS enfront d'UEFI</h3>
+      <div class="scroll"><table class="t">
+        <tr><th></th><th data-t="fir-th-bios">BIOS (clàssica)</th><th>UEFI (actual)</th></tr>
+        <tr><td data-t="fir-fila-desde">Des de</td><td>1981 (IBM PC)</td><td data-t="fir-uefi-desde">Generalitzada des de ~2011</td></tr>
+        <tr><td data-t="fir-fila-interfaz">Interfície</td><td data-t="fir-bios-interfaz">Text, només teclat</td><td data-t="fir-uefi-interfaz">Gràfica, admet ratolí</td></tr>
+        <tr><td data-t="fir-fila-tabla">Taula de particions</td><td data-t="fir-bios-tabla">MBR: discos de fins a 2 TiB</td><td data-t="fir-uefi-tabla">GPT: discos enormes (més de 9 ZiB)</td></tr>
+        <tr><td data-t="fir-fila-seguro">Arrancada segura</td><td>No</td><td data-t="fir-uefi-seguro">Secure Boot (ho exigix Windows 11)</td></tr>
+        <tr><td data-t="fir-fila-particiones">Particions</td><td data-t="fir-bios-particiones">Màxim 4 primàries</td><td data-t="fir-uefi-particiones">Fins a 128 en Windows</td></tr>
+      </table></div>
+      <p class="note" data-t-html="fir-nota-bios">Encara que tècnicament siga UEFI, quasi tothom continua anomenant-lo «la BIOS». S'hi entra prement <b>Supr</b> o <b>F2</b> en engegar (depén del fabricant).</p>
+    </div>
+    <div class="panel">
+      <h3 data-t="fir-cmos-h3">CMOS, pila i actualitzacions</h3>
+      <p data-t-html="fir-cmos-1">La configuració (hora, ordre d'arrancada, ajustos de RAM) es guarda en una memòria que es manté gràcies a una <b>pila CR2032</b> de 3 V. Si la pila s'esgota, la placa perd l'hora cada vegada que es desendolla.</p>
+      <p data-t-html="fir-cmos-2"><b>Esborrar la CMOS</b> (amb un pont, un botó o llevant la pila) torna els ajustos de fàbrica. És el primer que es prova després d'un overclock fallit.</p>
+      <p class="key" data-t-html="fir-cmos-3"><b>Actualitzar la BIOS</b> afig compatibilitat amb processadors nous. Si la placa és anterior a la CPU, pot no arrancar fins que s'actualitze. Algunes plaques ho permeten <b>sense CPU</b>, amb un botó «BIOS Flashback» i un llapis USB.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. PRÁCTICA ============ -->
+<section class="tab" id="prac" role="tabpanel" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="pra-eyebrow">Pràctica 8 · Ara et toca a tu</span>
+    <h2 data-t="pra-titulo">Posa a prova el que has après</h2>
+  </div>
+  <div class="split">
+    <div class="panel">
+      <h3 data-t="pra-donde-h3">On està…?</h3>
+      <div class="row"><span data-t="pra-pulsa">Prem en la placa:</span> <span class="target" id="wTarget"></span></div>
+      <div class="board-wrap"><svg class="board" id="board2" viewBox="-4 -4 313 252" role="img" data-t-attr="aria-label:pra-placa-aria" aria-label="Placa base per a localitzar components"></svg></div>
+      <div class="row"><div class="fb" id="wFb" style="flex:1"></div><button class="btn" id="wSkip" type="button" data-t="pra-otro">Un altre component</button></div>
+      <div class="score"><span>✓ <span id="wOk">0</span></span><span>✗ <span id="wKo">0</span></span></div>
+    </div>
+    <div class="panel">
+      <h3>Casos de taller</h3>
+      <div class="score"><span>✓ <span id="qOk">0</span></span><span>✗ <span id="qKo">0</span></span><span id="qN"></span></div>
+      <div class="q-prompt" id="qP"></div>
+      <div class="opts" id="qO"></div>
+      <div class="fb" id="qF"></div>
+      <p id="qX" class="note" hidden></p>
+      <button class="btn primary" id="qNext" type="button" data-t="pra-siguiente">Cas següent →</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+const $=s=>document.querySelector(s);
+const NS="http://www.w3.org/2000/svg";
+const LOC=Lab.idioma==="es"?"es-ES":"ca-ES-valencia"; // formato de números del idioma activo
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
+
+/* ---------- Pestañas (el tamaño de letra lo gestiona el kit) ---------- */
+const tabs=[...document.querySelectorAll("nav.tabs button")];
+function showTab(id){
+  if(!document.getElementById(id))id="mapa";
+  tabs.forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===id?"true":"false"));
+  document.querySelectorAll("section.tab").forEach(s=>s.hidden=s.id!==id);
+  try{history.replaceState(null,"","#"+id)}catch(e){}
+  Lab.guardar("pestana",id);
+  window.scrollTo({top:0});
+}
+tabs.forEach(t=>t.addEventListener("click",()=>showTab(t.dataset.tab)));
+let st=location.hash.slice(1);if(!st){st=Lab.leer("pestana")}
+showTab(st||"mapa");
+
+/* ================= PLACA BASE ================= */
+// Coordenadas en milímetros sobre una placa ATX de 305 × 244 mm
+const C=[
+ {id:"cpu",n:Lab.t({"ca-valencia":"Sòcol de la CPU",es:"Socket de la CPU"}),g:Lab.t({"ca-valencia":"Processador",es:"Procesador"}),d:Lab.t({"ca-valencia":"Sòcol on s'inserix el processador. Té una palanca i un marc de retenció que el subjecten sense necessitat de pressionar (sistema ZIF). Només admet processadors del seu mateix sòcol.",es:"Zócalo donde se inserta el procesador. Tiene una palanca y un marco de retención que lo sujetan sin necesidad de presionar (sistema ZIF). Solo admite procesadores de su mismo socket."}),f:Lab.t({"ca-valencia":"AM5: 1718 contactes · LGA1851: 1851 contactes",es:"AM5: 1718 contactos · LGA1851: 1851 contactos"}),s:[["r",46,28,54,54,"metal"],["r",53,35,40,40,"plastic2"],["r",58,40,30,30,"metal2"]],l:[73,26,"CPU"]},
+ {id:"vrm",n:Lab.t({"ca-valencia":"VRM (regulador de voltatge)",es:"VRM (regulador de voltaje)"}),g:Lab.t({"ca-valencia":"Alimentació",es:"Alimentación"}),d:Lab.t({"ca-valencia":"Convertix els 12 V que arriben de la font en el voltatge baix i molt estable que necessita la CPU (uns 1,0–1,4 V). Està format per diverses fases; més fases repartixen millor la calor. Porta dissipador perquè s'escalfa molt.",es:"Convierte los 12 V que llegan de la fuente en el voltaje bajo y muy estable que necesita la CPU (alrededor de 1,0–1,4 V). Está formado por varias fases; más fases reparten mejor el calor. Lleva disipador porque se calienta mucho."}),f:Lab.t({"ca-valencia":"Entrada 12 V → eixida ≈ 1,2 V amb més de 100 A",es:"Entrada 12 V → salida ≈ 1,2 V con más de 100 A"}),s:[["r",24,6,72,14,"plastic2"],["r",24,23,15,62,"plastic2"]]},
+ {id:"eps",n:Lab.t({"ca-valencia":"Connector EPS 12V (CPU)",es:"Conector EPS 12V (CPU)"}),g:Lab.t({"ca-valencia":"Alimentació",es:"Alimentación"}),d:Lab.t({"ca-valencia":"Connector de 8 pins (a vegades 4+4, o dos de 8) que porta corrent exclusivament al processador a través del VRM. Si no es connecta, l'equip encén els ventiladors però no arranca.",es:"Conector de 8 pines (a veces 4+4, o dos de 8) que lleva corriente exclusivamente al procesador a través del VRM. Si no se conecta, el equipo enciende ventiladores pero no arranca."}),f:Lab.t({"ca-valencia":"8 pins · 12 V · etiqueta CPU_PWR o ATX12V",es:"8 pines · 12 V · etiqueta CPU_PWR o ATX12V"}),s:[["r",100,2,18,8,"plastic"]],l:[109,14,"CPU_PWR"]},
+ {id:"cpufan",n:Lab.t({"ca-valencia":"Connector CPU_FAN",es:"Conector CPU_FAN"}),g:Lab.t({"ca-valencia":"Refrigeració",es:"Refrigeración"}),d:Lab.t({"ca-valencia":"Connector de 4 pins per al ventilador del dissipador de la CPU. La placa mesura les seues revolucions i regula la velocitat per PWM. Si no detecta cap ventilador, mostra un avís en arrancar.",es:"Conector de 4 pines para el ventilador del disipador de la CPU. La placa mide sus revoluciones y regula la velocidad por PWM. Si no detecta ventilador, muestra un aviso al arrancar."}),f:Lab.t({"ca-valencia":"4 pins: terra, 12 V, tacòmetre, PWM",es:"4 pines: tierra, 12 V, tacómetro, PWM"}),s:[["r",104,20,10,4,"plastic"]],l:[109,29,"CPU_FAN"]},
+ {id:"dimm",n:Lab.t({"ca-valencia":"Ranures DIMM (RAM)",es:"Ranuras DIMM (RAM)"}),g:Lab.t({"ca-valencia":"Memòria",es:"Memoria"}),d:Lab.t({"ca-valencia":"Ranures per als mòduls de memòria RAM, connectades directament al controlador de memòria de la CPU. Normalment n'hi ha 4: dos per canal. Tenen pestanyes als extrems que es tanquen en encaixar el mòdul.",es:"Ranuras para los módulos de memoria RAM, conectadas directamente al controlador de memoria de la CPU. Lo normal son 4: dos por canal. Tienen pestañas en los extremos que se cierran al encajar el módulo."}),f:Lab.t({"ca-valencia":"DDR5: 288 contactes · ranures A1 A2 B1 B2",es:"DDR5: 288 contactos · ranuras A1 A2 B1 B2"}),s:[["r",124,14,5,134,"plastic2"],["r",132,14,5,134,"plastic"],["r",140,14,5,134,"plastic2"],["r",148,14,5,134,"plastic"]],l:[139,10,"DIMM A1 A2 B1 B2"]},
+ {id:"atx24",n:Lab.t({"ca-valencia":"Connector ATX de 24 pins",es:"Conector ATX de 24 pines"}),g:Lab.t({"ca-valencia":"Alimentació",es:"Alimentación"}),d:Lab.t({"ca-valencia":"Alimentació principal de la placa. Arriba des de la font amb 3,3 V, 5 V i 12 V per al xipset, els USB, les ranures PCIe i la RAM. Té una pestanya que ha de fer «clic».",es:"Alimentación principal de la placa. Llega desde la fuente con 3,3 V, 5 V y 12 V para el chipset, los USB, las ranuras PCIe y la RAM. Tiene una pestaña que debe hacer «clic»."}),f:Lab.t({"ca-valencia":"24 pins (2 × 12) · antigament 20",es:"24 pines (2 × 12) · antiguamente 20"}),s:[["r",288,52,12,60,"plastic"]],l:[284,82,"ATX_PWR",1]},
+ {id:"usb3hdr",n:Lab.t({"ca-valencia":"Capçal USB 3.x intern",es:"Cabezal USB 3.x interno"}),g:Lab.t({"ca-valencia":"Connectors interns",es:"Conectores internos"}),d:Lab.t({"ca-valencia":"Connector de 19 pins, gruixut i amb una pestanya, per als USB-A blaus del frontal de la caixa. Els seus pins són fins: es dobleguen amb facilitat si es força.",es:"Conector de 19 pines, grueso y con una pestaña, para los USB-A azules del frontal de la caja. Sus pines son finos: se doblan con facilidad si se fuerza."}),f:Lab.t({"ca-valencia":"19 pins · USB 3.2 Gen 1 (5 Gb/s)",es:"19 pines · USB 3.2 Gen 1 (5 Gb/s)"}),s:[["r",288,118,12,26,"plastic2"]],l:[284,131,"USB3_F",1]},
+ {id:"sata",n:Lab.t({"ca-valencia":"Ports SATA",es:"Puertos SATA"}),g:Lab.t({"ca-valencia":"Emmagatzematge",es:"Almacenamiento"}),d:Lab.t({"ca-valencia":"Connectors de dades per a discos durs, SSD de 2,5\" i gravadores. Depenen del xipset. Cada dispositiu necessita a més un cable de corrent SATA que ix de la font.",es:"Conectores de datos para discos duros, SSD de 2,5\" y grabadoras. Dependen del chipset. Cada dispositivo necesita además un cable de corriente SATA que sale de la fuente."}),f:Lab.t({"ca-valencia":"SATA III: 6 Gb/s ≈ 600 MB/s · 7 pins",es:"SATA III: 6 Gb/s ≈ 600 MB/s · 7 pines"}),s:[["r",286,162,14,8,"plastic2"],["r",286,172,14,8,"plastic2"],["r",286,184,14,8,"plastic2"],["r",286,194,14,8,"plastic2"]],l:[282,184,"SATA",1]},
+ {id:"chipset",n:Lab.t({"ca-valencia":"Xipset",es:"Chipset"}),g:"Controlador",d:Lab.t({"ca-valencia":"Xip que gestiona els dispositius que no es connecten directament a la CPU: ports SATA, la majoria dels USB, xarxa, àudio, algunes ranures M.2 i PCIe. És l'antic «pont sud». Es comunica amb la CPU per un únic enllaç (DMI en Intel, PCIe en AMD).",es:"Chip que gestiona los dispositivos que no se conectan directamente a la CPU: puertos SATA, la mayoría de USB, red, audio, algunas ranuras M.2 y PCIe. Es el antiguo «puente sur». Se comunica con la CPU por un único enlace (DMI en Intel, PCIe en AMD)."}),f:Lab.t({"ca-valencia":"Exemples: B650, X870 (AMD) · B760, Z890 (Intel)",es:"Ejemplos: B650, X870 (AMD) · B760, Z890 (Intel)"}),s:[["r",204,150,36,36,"metal2"],["r",211,157,22,22,"plastic2"]],l:[222,192,"PCH"]},
+ {id:"pcie16a",n:"Ranura PCIe x16 principal",g:Lab.t({"ca-valencia":"Expansió",es:"Expansión"}),d:Lab.t({"ca-valencia":"La ranura més llarga, connectada directament a les línies PCIe de la CPU. Ací va la targeta gràfica. Sol estar reforçada amb metall pel pes de les gràfiques i té una pestanya de bloqueig al final.",es:"La ranura más larga, conectada directamente a las líneas PCIe de la CPU. Aquí va la tarjeta gráfica. Suele estar reforzada con metal por el peso de las gráficas y tiene una pestaña de bloqueo al final."}),f:"PCIe 5.0 x16 ≈ 63 GB/s",s:[["r",22,106,89,7,"metal"],["r",24,107.5,85,4,"plastic"]],l:[66,118,"PCIEX16_1 (CPU)"]},
+ {id:"pcie1",n:"Ranura PCIe x1",g:Lab.t({"ca-valencia":"Expansió",es:"Expansión"}),d:Lab.t({"ca-valencia":"Ranura curta per a targetes xicotetes: xarxa, Wi-Fi, capturadores, ports USB addicionals. Sol dependre del xipset.",es:"Ranura corta para tarjetas pequeñas: red, Wi-Fi, capturadoras, puertos USB adicionales. Suele depender del chipset."}),f:"PCIe 4.0 x1 ≈ 2 GB/s",s:[["r",22,124,25,6,"plastic2"]],l:[35,135,"PCIEX1"]},
+ {id:"m2a",n:"Ranura M.2 (CPU)",g:Lab.t({"ca-valencia":"Emmagatzematge",es:"Almacenamiento"}),d:Lab.t({"ca-valencia":"Ranura per a SSD NVMe connectada directament a la CPU amb 4 línies PCIe: el camí més ràpid per al disc del sistema. Sol portar un dissipador al damunt.",es:"Ranura para SSD NVMe conectada directamente a la CPU con 4 líneas PCIe: el camino más rápido para el disco del sistema. Suele llevar un disipador encima."}),f:"M.2 2280 · PCIe 5.0 x4 ≈ 16 GB/s",s:[["r",34,90,82,8,"metal2"],["r",36,91.5,4,5,"plastic"]],l:[76,103.5,"M2_1 (CPU)",0,1]},
+ {id:"m2b",n:Lab.t({"ca-valencia":"Ranura M.2 (xipset)",es:"Ranura M.2 (chipset)"}),g:Lab.t({"ca-valencia":"Emmagatzematge",es:"Almacenamiento"}),d:Lab.t({"ca-valencia":"Segona ranura M.2, connectada al xipset. Compartix ample de banda amb la resta de dispositius del xipset i, en algunes plaques, en usar-la es desactiven un o dos ports SATA.",es:"Segunda ranura M.2, conectada al chipset. Comparte ancho de banda con el resto de dispositivos del chipset y, en algunas placas, al usarla se desactivan uno o dos puertos SATA."}),f:"M.2 2280 · PCIe 4.0 x4 ≈ 8 GB/s",s:[["r",34,142,82,8,"metal2"],["r",36,143.5,4,5,"plastic"]],l:[76,155.5,"M2_2 (PCH)",0,1]},
+ {id:"pcie16b",n:"Ranura x16 que funciona a x4",g:Lab.t({"ca-valencia":"Expansió",es:"Expansión"}),d:Lab.t({"ca-valencia":"Té la mida física d'una x16, però només té cablejades 4 línies, connectades al xipset. La mida de la ranura no sempre indica la seua velocitat real: el manual ho aclarix.",es:"Tiene el tamaño físico de una x16, pero solo tiene cableadas 4 líneas, conectadas al chipset. El tamaño de la ranura no siempre indica su velocidad real: el manual lo aclara."}),f:Lab.t({"ca-valencia":"Física x16 · elèctrica x4",es:"Física x16 · eléctrica x4"}),s:[["r",22,162,89,7,"plastic2"]],l:[66,174,"PCIEX16_2 (x4)"]},
+ {id:"audio",n:Lab.t({"ca-valencia":"Còdec d'àudio",es:"Códec de audio"}),g:Lab.t({"ca-valencia":"Integrats",es:"Integrados"}),d:Lab.t({"ca-valencia":"Xip que convertix el so digital en el senyal analògic dels jacks, i al revés amb el micròfon. Està en una zona separada de la placa (a vegades es veu una línia que l'aïlla) per a reduir interferències.",es:"Chip que convierte el sonido digital en la señal analógica de los jacks, y al revés con el micrófono. Está en una zona separada de la placa (a veces se ve una línea que la aísla) para reducir interferencias."}),f:Lab.t({"ca-valencia":"Ex.: Realtek ALC897 / ALC1220",es:"Ej.: Realtek ALC897 / ALC1220"}),s:[["r",4,196,22,22,"plastic2"],["r",9,201,12,12,"plastic"]],l:[15,222,"AUDIO"]},
+ {id:"lan",n:Lab.t({"ca-valencia":"Controlador de xarxa (LAN)",es:"Controlador de red (LAN)"}),g:Lab.t({"ca-valencia":"Integrats",es:"Integrados"}),d:Lab.t({"ca-valencia":"Xip que gestiona la targeta de xarxa Ethernet integrada. Va connectat al port RJ45 del panell posterior i al xipset.",es:"Chip que gestiona la tarjeta de red Ethernet integrada. Va conectado al puerto RJ45 del panel trasero y al chipset."}),f:Lab.t({"ca-valencia":"1 Gb/s o 2,5 Gb/s habitualment",es:"1 Gb/s o 2,5 Gb/s habitualmente"}),s:[["r",4,168,12,12,"plastic"]],l:[10,185,"LAN"]},
+ {id:"cmos",n:"Pila CMOS",g:Lab.t({"ca-valencia":"Microprogramari",es:"Firmware"}),d:Lab.t({"ca-valencia":"Pila de botó que manté la data, l'hora i la configuració del microprogramari quan l'ordinador està desendollat. Dura anys; quan s'esgota, el rellotge s'endarrerix en cada arrancada.",es:"Pila de botón que mantiene la fecha, la hora y la configuración del firmware cuando el ordenador está desenchufado. Dura años; cuando se agota, el reloj se atrasa en cada arranque."}),f:Lab.t({"ca-valencia":"CR2032 · 3 V · 20 mm de diàmetre",es:"CR2032 · 3 V · 20 mm de diámetro"}),c:[170,208,10,"metal"],l:[170,222,"BAT1"]},
+ {id:"bios",n:Lab.t({"ca-valencia":"Xip de la BIOS / UEFI",es:"Chip de la BIOS / UEFI"}),g:Lab.t({"ca-valencia":"Microprogramari",es:"Firmware"}),d:Lab.t({"ca-valencia":"Memòria flash de pocs megabytes que conté el microprogramari: el primer programa que s'executa en engegar. Es pot actualitzar per a afegir compatibilitat amb processadors nous.",es:"Memoria flash de pocos megabytes que contiene el firmware: el primer programa que se ejecuta al encender. Se puede actualizar para añadir compatibilidad con procesadores nuevos."}),f:Lab.t({"ca-valencia":"Flash SPI · 32 MB típics",es:"Flash SPI · 32 MB típicos"}),s:[["r",144,176,12,8,"plastic"]],l:[150,189,"BIOS"]},
+ {id:"fpanel",n:Lab.t({"ca-valencia":"Panell frontal (F_PANEL)",es:"Panel frontal (F_PANEL)"}),g:Lab.t({"ca-valencia":"Connectors interns",es:"Conectores internos"}),d:Lab.t({"ca-valencia":"Pins per als cables del frontal de la caixa: botó d'engegada (PWR_SW), reinici (RESET), LED d'engegada i LED d'activitat del disc. Els LED tenen polaritat: si no s'encenen, es gira el cable.",es:"Pines para los cables del frontal de la caja: botón de encendido (PWR_SW), reinicio (RESET), LED de encendido y LED de actividad del disco. Los LED tienen polaridad: si no se encienden, se da la vuelta al cable."}),f:"PWR_SW · RESET · PWR_LED ± · HDD_LED ±",s:[["r",256,230,20,8,"plastic"]],l:[266,228,"F_PANEL"]},
+ {id:"usb2hdr",n:Lab.t({"ca-valencia":"Capçal USB 2.0 intern",es:"Cabezal USB 2.0 interno"}),g:Lab.t({"ca-valencia":"Connectors interns",es:"Conectores internos"}),d:Lab.t({"ca-valencia":"Connector de 9 pins (una fila de 5 i una altra de 4) per a USB frontals antics, lectors de targetes o controladors d'il·luminació.",es:"Conector de 9 pines (una fila de 5 y otra de 4) para USB frontales antiguos, lectores de tarjetas o controladores de iluminación."}),f:Lab.t({"ca-valencia":"9 pins · 480 Mb/s · 2 ports",es:"9 pines · 480 Mb/s · 2 puertos"}),s:[["r",226,230,16,8,"plastic2"]],l:[234,228,"USB_F"]},
+ {id:"faudio",n:Lab.t({"ca-valencia":"Àudio frontal (HD_AUDIO)",es:"Audio frontal (HD_AUDIO)"}),g:Lab.t({"ca-valencia":"Connectors interns",es:"Conectores internos"}),d:Lab.t({"ca-valencia":"Connecta els jacks d'auriculars i micròfon del frontal de la caixa. Està junt al còdec d'àudio, a la cantonada inferior esquerra.",es:"Conecta los jacks de auriculares y micrófono del frontal de la caja. Está junto al códec de audio, en la esquina inferior izquierda."}),f:Lab.t({"ca-valencia":"9 pins · estàndard HD Audio",es:"9 pines · estándar HD Audio"}),s:[["r",6,230,18,8,"plastic2"]],l:[15,228,"HD_AUDIO"]},
+ {id:"sysfan",n:Lab.t({"ca-valencia":"Connector SYS_FAN",es:"Conector SYS_FAN"}),g:Lab.t({"ca-valencia":"Refrigeració",es:"Refrigeración"}),d:Lab.t({"ca-valencia":"Connectors per als ventiladors de la caixa. Poden ser de 3 pins (la velocitat es regula variant el voltatge) o de 4 pins (PWM, regulació més precisa).",es:"Conectores para los ventiladores de la caja. Pueden ser de 3 pines (la velocidad se regula variando el voltaje) o de 4 pines (PWM, regulación más precisa)."}),f:Lab.t({"ca-valencia":"3 o 4 pins · 12 V",es:"3 o 4 pines · 12 V"}),s:[["r",196,232,10,4,"plastic"]],l:[201,229,"SYS_FAN"]},
+ {id:"debug",n:Lab.t({"ca-valencia":"LED de diagnòstic",es:"LED de diagnóstico"}),g:Lab.t({"ca-valencia":"Microprogramari",es:"Firmware"}),d:Lab.t({"ca-valencia":"Quatre LED (CPU, DRAM, VGA, BOOT) que s'encenen per torns durant l'arrancada. Si un es queda encés, indica quin component falla. Algunes plaques mostren en el seu lloc un codi de dues xifres hexadecimals.",es:"Cuatro LED (CPU, DRAM, VGA, BOOT) que se encienden por turnos durante el arranque. Si uno se queda encendido, indica qué componente falla. Algunas placas muestran en su lugar un código de dos cifras hexadecimales."}),f:"CPU · DRAM · VGA · BOOT",s:[["r",262,18,4,3,"on"],["r",268,18,4,3,"plastic2"],["r",274,18,4,3,"plastic2"],["r",280,18,4,3,"plastic2"]],l:[273,27,"DEBUG"]},
+ {id:"io",n:Lab.t({"ca-valencia":"Panell posterior d'E/S",es:"Panel trasero de E/S"}),g:Lab.t({"ca-valencia":"Ports",es:"Puertos"}),d:Lab.t({"ca-valencia":"Tots els ports que ixen per darrere de l'ordinador: USB, vídeo, xarxa, àudio… Es tapa amb una xapa (I/O shield) que encaixa en l'obertura estàndard de la caixa. Mira la pestanya 6.",es:"Todos los puertos que asoman por detrás del ordenador: USB, vídeo, red, audio… Se tapa con una chapa (I/O shield) que encaja en el hueco estándar de la caja. Mira la pestaña 6."}),f:Lab.t({"ca-valencia":"Obertura estàndard de 159 × 44,5 mm",es:"Hueco estándar de 159 × 44,5 mm"}),s:[["r",0,8,20,150,"metal2"],["r",3,14,14,10,"plastic"],["r",3,28,14,10,"plastic"],["r",3,44,14,14,"plastic2"],["r",3,64,14,10,"plastic"],["r",3,80,14,8,"plastic"],["r",3,96,14,16,"metal"],["r",3,120,14,32,"plastic2"]]},
+];
+const FILL={metal:"var(--metal)",metal2:"var(--metal2)",plastic:"var(--plastic)",plastic2:"var(--plastic2)",on:"var(--on)",gold:"var(--gold)"};
+const byId=Object.fromEntries(C.map(c=>[c.id,c]));
+
+function drawBoard(svg,onPick){
+  el("rect",{x:0,y:0,width:305,height:244,rx:3,fill:"var(--pcb)",stroke:"var(--pcb-edge)","stroke-width":1.5},svg);
+  // pistas decorativas
+  const tr=el("g",{stroke:"var(--silk)","stroke-width":.25,opacity:.18,fill:"none"},svg);
+  [[100,60,120,60,120,20],[100,70,160,70,160,150],[111,110,204,110,204,160],[240,168,286,168],[240,176,286,188],[116,94,200,94,200,150],[26,170,34,170,34,146]].forEach(p=>{el("polyline",{points:p.join(" ")},tr)});
+  // agujeros de montaje ATX
+  [[6.4,10.2],[163,10.2],[288,10.2],[163,165],[288,165],[6.4,165],[163,235],[288,235],[6.4,235]].forEach(([x,y])=>{el("circle",{cx:x+0.5,cy:y,r:2.2,fill:"var(--metal)",stroke:"var(--pcb-edge)","stroke-width":.6},svg)});
+  // separación de audio
+  el("path",{d:"M2 190 H30 V242",stroke:"var(--silk)","stroke-width":.4,"stroke-dasharray":"1.5 1",fill:"none",opacity:.6},svg);
+  el("text",{x:292,y:240,class:"silk s","text-anchor":"end"},svg).textContent="ATX 305×244";
+  const map={};
+  C.forEach(c=>{
+    const g=el("g",{class:"hot",tabindex:0,role:"button","aria-label":c.n,"data-id":c.id},svg);
+    (c.s||[]).forEach(([_,x,y,w,h,f])=>el("rect",{x,y,width:w,height:h,rx:.8,fill:FILL[f],stroke:"transparent"},g));
+    if(c.c){el("circle",{cx:c.c[0],cy:c.c[1],r:c.c[2],fill:FILL[c.c[3]],stroke:"transparent"},g);el("circle",{cx:c.c[0],cy:c.c[1],r:c.c[2]-2.5,fill:"none",stroke:"var(--metal2)","stroke-width":.5},g)}
+    const bb=c.s?c.s.reduce((a,s)=>[Math.min(a[0],s[1]),Math.min(a[1],s[2]),Math.max(a[2],s[1]+s[3]),Math.max(a[3],s[2]+s[4])],[1e9,1e9,-1e9,-1e9]):[c.c[0]-c.c[2],c.c[1]-c.c[2],c.c[0]+c.c[2],c.c[1]+c.c[2]];
+    el("rect",{x:bb[0]-1.5,y:bb[1]-1.5,width:bb[2]-bb[0]+3,height:bb[3]-bb[1]+3,fill:"transparent"},g);
+    g.addEventListener("click",()=>onPick(c.id,g));
+    g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();onPick(c.id,g)}});
+    map[c.id]=g;
+  });
+  C.forEach(c=>{if(c.l){const t=el("text",{x:c.l[0],y:c.l[1],class:"silk","text-anchor":c.l[3]?"end":"middle",style:c.l[3]?"writing-mode:initial":""},svg);t.textContent=c.l[2]}});
+  return map;
+}
+const infoHTML=c=>`<span class="tag">${c.g}</span><h3>${c.n}</h3><p>${c.d}</p><div class="fact">${c.f}</div>`;
+const b1=drawBoard($("#board1"),pick1);
+const chips=$("#chips1");
+C.forEach(c=>{const b=document.createElement("button");b.type="button";b.textContent=c.n;b.dataset.id=c.id;b.onclick=()=>pick1(c.id);chips.appendChild(b)});
+function pick1(id){
+  Object.values(b1).forEach(g=>g.classList.remove("sel"));b1[id].classList.add("sel");
+  chips.querySelectorAll("button").forEach(b=>b.classList.toggle("sel",b.dataset.id===id));
+  $("#info1").innerHTML=infoHTML(byId[id]);
+}
+pick1("cpu");
+
+/* ================= ARQUITECTURA ================= */
+const ARCH={
+ now:{
+  nodes:{cpu:[270,20,180,86,"CPU",Lab.t({"ca-valencia":"controlador de memòria · línies PCIe · gràfica integrada",es:"controlador de memoria · líneas PCIe · gráfica integrada"}),"cpu"],ram:[20,30,150,64,"RAM","DDR5 · doble canal"],gpu:[550,20,150,64,Lab.t({"ca-valencia":"Targeta gràfica",es:"Tarjeta gráfica"}),"ranura PCIe x16"],nvme:[550,120,150,56,"SSD NVMe","M.2 de la CPU"],chip:[285,205,150,64,Lab.t({"ca-valencia":"Xipset",es:"Chipset"}),Lab.t({"ca-valencia":"PCH · antic pont sud",es:"PCH · antiguo puente sur"}),"chip"],sata:[10,345,120,56,"Discos SATA",""],usb:[150,345,120,56,"USB",""],lan:[290,345,120,56,Lab.t({"ca-valencia":"Xarxa",es:"Red"}),"Ethernet · Wi-Fi"],aud:[430,345,120,56,Lab.t({"ca-valencia":"Àudio",es:"Audio"}),""],m2b:[570,345,140,56,"SSD NVMe 2",Lab.t({"ca-valencia":"M.2 del xipset",es:"M.2 del chipset"})]},
+  edges:[["cpu","ram","DDR5 ≈ 96 GB/s"],["cpu","gpu","PCIe 5.0 x16 ≈ 63 GB/s"],["cpu","nvme","PCIe 5.0 x4 ≈ 16 GB/s"],["cpu","chip","DMI / PCIe x4 ≈ 8–16 GB/s"],["chip","sata","0,6 GB/s"],["chip","usb","0,6–2,5 GB/s"],["chip","lan","≈ 0,3 GB/s"],["chip","aud",Lab.t({"ca-valencia":"molt poc",es:"muy poco"})],["chip","m2b","≈ 8 GB/s"]],
+  parent:{ram:"cpu",gpu:"cpu",nvme:"cpu",chip:"cpu",sata:"chip",usb:"chip",lan:"chip",aud:"chip",m2b:"chip"},
+  routes:[[Lab.t({"ca-valencia":"Copiar una foto del disc SATA a un llapis USB",es:"Copiar una foto del disco SATA a un pendrive USB"}),["sata","chip","cpu","ram","cpu","chip","usb"]],[Lab.t({"ca-valencia":"Obrir un joc instal·lat en l'SSD NVMe principal",es:"Abrir un juego instalado en el SSD NVMe principal"}),["nvme","cpu","ram","cpu","gpu"]],[Lab.t({"ca-valencia":"Descarregar un fitxer d'Internet a l'SSD 2",es:"Descargar un archivo de Internet al SSD 2"}),["lan","chip","cpu","ram","cpu","chip","m2b"]]],
+  info:{cpu:Lab.t({"ca-valencia":"El processador inclou el controlador de memòria i les línies PCIe principals: allò que abans feia el pont nord.",es:"El procesador incluye el controlador de memoria y las líneas PCIe principales: lo que antes hacía el puente norte."}),ram:Lab.t({"ca-valencia":"La RAM està connectada directament a la CPU: és el camí més curt i ràpid de tota la placa.",es:"La RAM está conectada directamente a la CPU: es el camino más corto y rápido de toda la placa."}),gpu:Lab.t({"ca-valencia":"La gràfica usa 16 línies PCIe directes a la CPU.",es:"La gráfica usa 16 líneas PCIe directas a la CPU."}),nvme:Lab.t({"ca-valencia":"L'SSD principal va directe a la CPU per 4 línies PCIe, sense passar pel xipset.",es:"El SSD principal va directo a la CPU por 4 líneas PCIe, sin pasar por el chipset."}),chip:Lab.t({"ca-valencia":"El xipset reunix tot el lent i ho compartix a través d'un sol enllaç amb la CPU.",es:"El chipset reúne todo lo lento y lo comparte a través de un solo enlace con la CPU."}),sata:Lab.t({"ca-valencia":"Les dades del disc SATA passen pel xipset i després pugen a la CPU per l'enllaç DMI.",es:"Los datos del disco SATA pasan por el chipset y luego suben a la CPU por el enlace DMI."}),usb:Lab.t({"ca-valencia":"La majoria dels USB penjen del xipset (alguns USB ràpids ixen directament de la CPU).",es:"La mayoría de USB cuelgan del chipset (algunos USB rápidos salen directamente de la CPU)."}),lan:Lab.t({"ca-valencia":"La targeta de xarxa integrada està connectada al xipset.",es:"La tarjeta de red integrada está conectada al chipset."}),aud:Lab.t({"ca-valencia":"L'àudio necessita molt poc ample de banda: sempre va pel xipset.",es:"El audio necesita muy poco ancho de banda: siempre va por el chipset."}),m2b:Lab.t({"ca-valencia":"Este SSD va pel xipset: compartix enllaç amb SATA, USB i xarxa.",es:"Este SSD va por el chipset: comparte enlace con SATA, USB y red."})}},
+ old:{
+  nodes:{cpu:[285,10,150,56,"CPU",Lab.t({"ca-valencia":"només nuclis de càlcul",es:"solo núcleos de cálculo"}),"cpu"],nb:[285,120,150,60,Lab.t({"ca-valencia":"Pont nord",es:"Puente norte"}),"MCH","chip"],ram:[40,120,150,60,"RAM","DDR2"],gpu:[530,120,150,60,Lab.t({"ca-valencia":"Targeta gràfica",es:"Tarjeta gráfica"}),"AGP / PCIe x16"],sb:[285,240,150,60,Lab.t({"ca-valencia":"Pont sud",es:"Puente sur"}),"ICH","chip"],ide:[10,355,130,56,"Discos IDE/SATA",""],usb:[150,355,120,56,"USB 2.0",""],pci:[280,355,120,56,Lab.t({"ca-valencia":"Ranures PCI",es:"Ranuras PCI"}),""],aud:[410,355,120,56,Lab.t({"ca-valencia":"Àudio",es:"Audio"}),""],bios:[540,355,130,56,"BIOS",Lab.t({"ca-valencia":"i xarxa",es:"y red"})]},
+  edges:[["cpu","nb","FSB ≈ 8,5 GB/s"],["nb","ram","DDR2 ≈ 8,5 GB/s"],["nb","gpu","PCIe 1.0 x16 ≈ 4 GB/s"],["nb","sb","DMI ≈ 1 GB/s"],["sb","ide","≈ 0,15 GB/s"],["sb","usb","0,06 GB/s"],["sb","pci","0,13 GB/s"],["sb","aud",""],["sb","bios",""]],
+  parent:{nb:"cpu",ram:"nb",gpu:"nb",sb:"nb",ide:"sb",usb:"sb",pci:"sb",aud:"sb",bios:"sb"},
+  routes:[[Lab.t({"ca-valencia":"Llegir un fitxer del disc dur a la RAM",es:"Leer un archivo del disco duro a la RAM"}),["ide","sb","nb","ram"]],[Lab.t({"ca-valencia":"Enviar una imatge de la RAM a la gràfica",es:"Enviar una imagen de la RAM a la gráfica"}),["ram","nb","gpu"]],[Lab.t({"ca-valencia":"La CPU llig dades de la RAM",es:"La CPU lee datos de la RAM"}),["ram","nb","cpu"]]],
+  info:{cpu:Lab.t({"ca-valencia":"La CPU només calculava. Per a arribar a la memòria havia de passar per l'FSB i el pont nord.",es:"La CPU solo calculaba. Para llegar a la memoria tenía que pasar por el FSB y el puente norte."}),nb:Lab.t({"ca-valencia":"El pont nord controlava la RAM i la gràfica. Hui està integrat en la CPU.",es:"El puente norte controlaba la RAM y la gráfica. Hoy está integrado en la CPU."}),ram:Lab.t({"ca-valencia":"Per a llegir la RAM, la CPU havia de demanar-la al pont nord: més lent que hui.",es:"Para leer la RAM, la CPU tenía que pedírsela al puente norte: más lento que hoy."}),gpu:Lab.t({"ca-valencia":"La gràfica es connectava al pont nord per AGP i, més tard, per PCIe.",es:"La gráfica se conectaba al puente norte por AGP y, más tarde, por PCIe."}),sb:Lab.t({"ca-valencia":"El pont sud gestionava el lent. És l'avantpassat del xipset actual.",es:"El puente sur gestionaba lo lento. Es el antepasado del chipset actual."}),ide:Lab.t({"ca-valencia":"Discos amb cable IDE (pla i ample) i els primers SATA.",es:"Discos con cable IDE (plano y ancho) y los primeros SATA."}),usb:"USB 2.0: 480 Mb/s.",pci:Lab.t({"ca-valencia":"Ranures PCI de 32 bits, compartides per totes les targetes.",es:"Ranuras PCI de 32 bits, compartidas por todas las tarjetas."}),aud:Lab.t({"ca-valencia":"Àudio integrat AC'97 o HD Audio.",es:"Audio integrado AC'97 o HD Audio."}),bios:Lab.t({"ca-valencia":"El xip de la BIOS i la xarxa es connectaven al pont sud.",es:"El chip de la BIOS y la red se conectaban al puente sur."})}}
+};
+let aMode="now",aAnim=null;
+function drawArch(){
+  const A=ARCH[aMode],svg=$("#arch");svg.innerHTML="";
+  const ctr=k=>{const n=A.nodes[k];return[n[0]+n[2]/2,n[1]+n[3]/2]};
+  const eg=el("g",{},svg);
+  A.edges.forEach(([a,b,t])=>{
+    const g=el("g",{class:"edge","data-e":a+"-"+b},eg);const[x1,y1]=ctr(a),[x2,y2]=ctr(b);
+    el("line",{x1,y1,x2,y2},g);
+    if(t){const mx=(x1+x2)/2,my=(y1+y2)/2;const bg=el("rect",{x:mx-t.length*3.1-4,y:my-9,width:t.length*6.2+8,height:15,rx:4,fill:"var(--surface)"},g);el("text",{x:mx,y:my+2},g).textContent=t}
+  });
+  for(const k in A.nodes){
+    const[x,y,w,h,t,s,cl]=A.nodes[k];const g=el("g",{class:"node "+(cl||""),"data-n":k,tabindex:0,role:"button","aria-label":t},svg);
+    el("rect",{x,y,width:w,height:h},g);
+    el("text",{x:x+w/2,y:y+(s?h/2-2:h/2+5)},g).textContent=t;
+    if(s)el("text",{x:x+w/2,y:y+h/2+13,class:"sub"},g).textContent=s;
+    const act=()=>hlPath(k);g.addEventListener("click",act);g.addEventListener("keydown",e=>{if(e.key==="Enter")act()});
+  }
+  el("circle",{class:"dot",r:8,cx:-50,cy:-50,id:"aDot"},svg);
+  const sel=$("#aRoute");sel.innerHTML=A.routes.map((r,i)=>`<option value="${i}">${r[0]}</option>`).join("");
+  $("#aInfo").textContent=Lab.t({"ca-valencia":"Prem un component per a veure el seu camí fins a la CPU.",es:"Pulsa un componente para ver su camino hasta la CPU."});
+}
+function clearHL(){document.querySelectorAll("#arch .hl").forEach(e=>e.classList.remove("hl"))}
+function hlEdge(a,b){const e=document.querySelector(`#arch [data-e="${a}-${b}"]`)||document.querySelector(`#arch [data-e="${b}-${a}"]`);if(e)e.classList.add("hl")}
+function hlPath(k){
+  cancelAnimationFrame(aAnim);clearHL();const A=ARCH[aMode];let cur=k;
+  document.querySelector(`#arch [data-n="${k}"]`).classList.add("hl");
+  while(A.parent[cur]){hlEdge(cur,A.parent[cur]);cur=A.parent[cur];document.querySelector(`#arch [data-n="${cur}"]`).classList.add("hl")}
+  $("#aInfo").textContent=A.info[k]||"";
+}
+function runRoute(){
+  cancelAnimationFrame(aAnim);clearHL();const A=ARCH[aMode];const r=A.routes[+$("#aRoute").value];const path=r[1];
+  const ctr=k=>{const n=A.nodes[k];return[n[0]+n[2]/2,n[1]+n[3]/2]};
+  const pts=path.map(ctr);const dot=$("#aDot");let seg=0,t0=null;const dur=matchMedia("(prefers-reduced-motion: reduce)").matches?1:650;
+  $("#aInfo").innerHTML=`<b>${r[0]}:</b> `+path.map(p=>A.nodes[p][4]).join(" → ");
+  document.querySelector(`#arch [data-n="${path[0]}"]`).classList.add("hl");
+  const step=ts=>{
+    if(!t0)t0=ts;const p=Math.min(1,(ts-t0)/dur);const[a,b]=[pts[seg],pts[seg+1]];
+    dot.setAttribute("cx",a[0]+(b[0]-a[0])*p);dot.setAttribute("cy",a[1]+(b[1]-a[1])*p);
+    if(p>=1){hlEdge(path[seg],path[seg+1]);document.querySelector(`#arch [data-n="${path[seg+1]}"]`).classList.add("hl");seg++;t0=null;if(seg>=pts.length-1){return}}
+    aAnim=requestAnimationFrame(step);
+  };
+  aAnim=requestAnimationFrame(step);
+}
+$("#aNow").onclick=()=>{aMode="now";$("#aNow").setAttribute("aria-pressed","true");$("#aOld").setAttribute("aria-pressed","false");drawArch()};
+$("#aOld").onclick=()=>{aMode="old";$("#aOld").setAttribute("aria-pressed","true");$("#aNow").setAttribute("aria-pressed","false");drawArch()};
+$("#aGo").onclick=runRoute;
+drawArch();
+
+/* ================= FORMATOS ================= */
+const FF=[["eatx","E-ATX",305,330,"var(--muted)"],["atx","ATX",305,244,"var(--cpu)"],["matx","Micro-ATX",244,244,"var(--chip)"],["itx","Mini-ITX",170,170,"var(--accent)"]];
+const ffOn={eatx:true,atx:true,matx:true,itx:true};
+function drawFF(){
+  const svg=$("#ffSvg");svg.innerHTML="";
+  [0,50,100,150,200,250,300].forEach(v=>{el("line",{x1:v,y1:-4,x2:v,y2:334,stroke:"var(--line)","stroke-width":.6},svg);el("text",{x:v,y:348,"font-size":9,"text-anchor":"middle",fill:"var(--muted)"},svg).textContent=v+" mm"});
+  FF.forEach(([k,n,w,h,c])=>{if(!ffOn[k])return;
+    el("rect",{x:0,y:0,width:w,height:h,fill:c,"fill-opacity":.1,stroke:c,"stroke-width":2,rx:2},svg);
+    el("text",{x:w-6,y:h-8,"font-size":13,"font-weight":700,"text-anchor":"end",fill:c,style:"font-family:var(--f-display)"},svg).textContent=`${n} ${w}×${h}`;
+  });
+  el("rect",{x:-2,y:8,width:10,height:159,fill:"var(--metal2)"},svg);
+  el("text",{x:12,y:92,"font-size":9,fill:"var(--muted)",transform:"rotate(-90 12 92)","text-anchor":"middle"},svg).textContent=Lab.t({"ca-valencia":"panell posterior",es:"panel trasero"});
+}
+const ffT=$("#ffT");FF.forEach(([k,n])=>{const b=document.createElement("button");b.type="button";b.className="btn";b.textContent=n;b.setAttribute("aria-pressed","true");b.onclick=()=>{ffOn[k]=!ffOn[k];b.setAttribute("aria-pressed",ffOn[k]?"true":"false");drawFF()};ffT.appendChild(b)});
+drawFF();
+const ORD={itx:0,matx:1,atx:2,eatx:3},NAMES={itx:"Mini-ITX",matx:"Micro-ATX",atx:"ATX",eatx:"E-ATX"};
+function fit(){const c=$("#caseSel").value,b=$("#boardSel").value,ok=ORD[b]<=ORD[c];const o=$("#fitOut");o.className="verdict "+(ok?"ok":"ko");
+  o.innerHTML=ok?`<span class="big">${Lab.t({"ca-valencia":"✓ Hi cap",es:"✓ Cabe"})}</span><span>${Lab.t({"ca-valencia":`Una placa ${NAMES[b]} entra en una caixa ${NAMES[c]}`,es:`Una placa ${NAMES[b]} entra en una caja ${NAMES[c]}`})}${ORD[b]<ORD[c]?Lab.t({"ca-valencia":". Quedaran ranures d'expansió i cargols de la caixa sense utilitzar.",es:". Quedarán ranuras de expansión y tornillos de la caja sin usar."}):"."}</span>`:`<span class="big">${Lab.t({"ca-valencia":"✗ No hi cap",es:"✗ No cabe"})}</span><span>${Lab.t({"ca-valencia":`La placa ${NAMES[b]} és més gran del que admet una caixa ${NAMES[c]}.`,es:`La placa ${NAMES[b]} es más grande que lo que admite una caja ${NAMES[c]}.`})}</span>`}
+$("#caseSel").onchange=fit;$("#boardSel").onchange=fit;fit();
+
+/* ================= SOCKETS ================= */
+(function(){
+  const pp=$("#pgaPins"),ph=$("#pgaHoles"),lp=$("#lgaPads"),ls=$("#lgaPins");
+  for(let i=0;i<9;i++){const x=55+i*19;el("line",{x1:x,y1:74,x2:x,y2:96,stroke:"var(--gold)","stroke-width":3},pp);el("rect",{x:x-3,y:122,width:6,height:10,fill:"var(--plastic)"},ph)}
+  for(let i=0;i<9;i++){const x=315+i*19;el("rect",{x:x-4,y:70,width:8,height:4,fill:"var(--gold)"},lp);el("line",{x1:x-3,y1:118,x2:x+3,y2:106,stroke:"var(--gold)","stroke-width":2},ls)}
+})();
+const SOCKS=[
+ ["AMD","AM4",Lab.t({"ca-valencia":"PGA · 1331 pins en la CPU",es:"PGA · 1331 pines en la CPU"}),"2017","Ryzen 1000 a 5000","DDR4",Lab.t({"ca-valencia":"fins a PCIe 4.0",es:"hasta PCIe 4.0"}),Lab.t({"ca-valencia":"Ja no rep processadors nous, però continua molt estés.",es:"Ya no recibe procesadores nuevos, pero sigue muy extendido."})],
+ ["AMD","AM5",Lab.t({"ca-valencia":"LGA · 1718 contactes",es:"LGA · 1718 contactos"}),"2022",Lab.t({"ca-valencia":"Ryzen 7000, 8000 i 9000",es:"Ryzen 7000, 8000 y 9000"}),Lab.t({"ca-valencia":"Només DDR5",es:"Solo DDR5"}),"PCIe 5.0",Lab.t({"ca-valencia":"AMD ha promés mantindre'l durant diverses generacions.",es:"AMD ha prometido mantenerlo durante varias generaciones."})],
+ ["Intel","LGA1700",Lab.t({"ca-valencia":"LGA · 1700 contactes",es:"LGA · 1700 contactos"}),"2021",Lab.t({"ca-valencia":"Core de 12a, 13a i 14a generació",es:"Core de 12.ª, 13.ª y 14.ª generación"}),Lab.t({"ca-valencia":"DDR4 o DDR5 (segons la placa)",es:"DDR4 o DDR5 (según la placa)"}),Lab.t({"ca-valencia":"PCIe 5.0 (gràfica)",es:"PCIe 5.0 (gráfica)"}),Lab.t({"ca-valencia":"Hi ha plaques DDR4 i plaques DDR5: mai les dues a la vegada.",es:"Hay placas DDR4 y placas DDR5: nunca las dos a la vez."})],
+ ["Intel","LGA1851",Lab.t({"ca-valencia":"LGA · 1851 contactes",es:"LGA · 1851 contactos"}),"2024","Core Ultra 200S",Lab.t({"ca-valencia":"Només DDR5",es:"Solo DDR5"}),"PCIe 5.0",Lab.t({"ca-valencia":"No és compatible amb els processadors de LGA1700.",es:"No es compatible con los procesadores de LGA1700."})],
+];
+$("#sockCards").innerHTML=SOCKS.map(s=>`<div class="note sock"><span class="brandtag" style="color:${s[0]==="AMD"?"var(--bad)":"var(--cpu)"}">${s[0]}</span><h3>${s[1]}</h3><dl><dt>${Lab.t({"ca-valencia":"Tipus",es:"Tipo"})}</dt><dd>${s[2]}</dd><dt>${Lab.t({"ca-valencia":"Des de",es:"Desde"})}</dt><dd>${s[3]}</dd><dt>CPU</dt><dd>${s[4]}</dd><dt>RAM</dt><dd>${s[5]}</dd><dt>PCIe</dt><dd>${s[6]}</dd></dl><p style="font-size:.9rem;color:var(--muted)">${s[7]}</p></div>`).join("");
+const CPUS=[
+ {n:"AMD Ryzen 5 5600",s:"AM4",r:["DDR4"],ig:false,k:false},
+ {n:"AMD Ryzen 5 5600G",s:"AM4",r:["DDR4"],ig:true,k:false},
+ {n:"AMD Ryzen 7 7800X3D",s:"AM5",r:["DDR5"],ig:true,k:false},
+ {n:"AMD Ryzen 5 9600X",s:"AM5",r:["DDR5"],ig:true,k:false,newer:"AM5-9000"},
+ {n:"Intel Core i5-12400F",s:"LGA1700",r:["DDR4","DDR5"],ig:false,k:false},
+ {n:"Intel Core i7-14700K",s:"LGA1700",r:["DDR4","DDR5"],ig:true,k:true,newer:"14gen"},
+ {n:"Intel Core Ultra 7 265K",s:"LGA1851",r:["DDR5"],ig:true,k:true},
+];
+const MBS=[
+ {n:"Placa B550 (AM4, DDR4)",s:"AM4",r:"DDR4",oc:true},
+ {n:"Placa B650 (AM5, DDR5)",s:"AM5",r:"DDR5",oc:true,old:"AM5-9000"},
+ {n:"Placa X870 (AM5, DDR5)",s:"AM5",r:"DDR5",oc:true},
+ {n:"Placa B760 DDR4 (LGA1700)",s:"LGA1700",r:"DDR4",oc:false,old:"14gen"},
+ {n:"Placa Z790 DDR5 (LGA1700)",s:"LGA1700",r:"DDR5",oc:true},
+ {n:"Placa Z890 (LGA1851, DDR5)",s:"LGA1851",r:"DDR5",oc:true},
+];
+$("#cCpu").innerHTML=CPUS.map((c,i)=>`<option value="${i}" ${i===2?"selected":""}>${c.n}</option>`).join("");
+$("#cMb").innerHTML=MBS.map((c,i)=>`<option value="${i}" ${i===1?"selected":""}>${c.n}</option>`).join("");
+function compat(){
+  const c=CPUS[+$("#cCpu").value],m=MBS[+$("#cMb").value],r=$("#cRam").value,L=[];let ok=true;
+  if(c.s===m.s)L.push(["ok",Lab.t({"ca-valencia":`Sòcol correcte: els dos són ${c.s}.`,es:`Socket correcto: los dos son ${c.s}.`})]);else{ok=false;L.push(["ko",Lab.t({"ca-valencia":`Sòcol diferent: el processador és ${c.s} i la placa ${m.s}. No encaixa físicament.`,es:`Socket distinto: el procesador es ${c.s} y la placa ${m.s}. No encaja físicamente.`})])}
+  if(r===m.r)L.push(["ok",Lab.t({"ca-valencia":`La placa admet ${r}.`,es:`La placa admite ${r}.`})]);else{ok=false;L.push(["ko",Lab.t({"ca-valencia":`La placa només admet ${m.r}: un mòdul ${r} no entra en la ranura.`,es:`La placa solo admite ${m.r}: un módulo ${r} no entra en la ranura.`})])}
+  if(c.s===m.s&&!c.r.includes(m.r)){ok=false;L.push(["ko",Lab.t({"ca-valencia":`El processador no té controlador per a ${m.r}.`,es:`El procesador no tiene controlador para ${m.r}.`})])}
+  if(ok&&c.newer&&m.old===c.newer)L.push(["warn",Lab.t({"ca-valencia":"La placa va eixir abans que el processador: pot necessitar una actualització de BIOS per a arrancar.",es:"La placa salió antes que el procesador: puede necesitar una actualización de BIOS para arrancar."})]);
+  if(ok&&!c.ig)L.push(["warn",Lab.t({"ca-valencia":"Este processador no té gràfica integrada: les eixides de vídeo de la placa no funcionaran. Necessites una targeta gràfica.",es:"Este procesador no tiene gráfica integrada: las salidas de vídeo de la placa no funcionarán. Necesitas tarjeta gráfica."})]);
+  if(ok&&c.k&&!m.oc)L.push(["warn",Lab.t({"ca-valencia":"Processador «K» en una placa sense xipset Z: funciona, però no podràs fer overclocking.",es:"Procesador «K» en una placa sin chipset Z: funciona, pero no podrás hacer overclocking."})]);
+  const o=$("#cOut");o.className="verdict "+(ok?"ok":"ko");
+  o.innerHTML=`<span class="big">${ok?"✓ Compatible":"✗ No compatible"}</span><ul>${L.map(([t,x])=>`<li class="${t}">${x}</li>`).join("")}</ul>`;
+}
+["#cCpu","#cMb","#cRam"].forEach(s=>$(s).onchange=compat);compat();
+
+/* ================= MEMORIA ================= */
+const slotsOn=new Set(["A2","B2"]);
+document.querySelectorAll(".slotbtn").forEach(b=>b.onclick=()=>{const s=b.dataset.s;slotsOn.has(s)?slotsOn.delete(s):slotsOn.add(s);renderSlots()});
+function renderSlots(){
+  document.querySelectorAll(".slotbtn").forEach(b=>{const on=slotsOn.has(b.dataset.s);b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false");b.setAttribute("aria-label",Lab.t({"ca-valencia":"Ranura "+b.dataset.s+(on?" amb mòdul":" buida"),es:"Ranura "+b.dataset.s+(on?" con módulo":" vacía")}))});
+  const n=slotsOn.size,A=["A1","A2"].filter(s=>slotsOn.has(s)).length,B=["B1","B2"].filter(s=>slotsOn.has(s)).length;
+  let cls,t,x;
+  if(n===0){cls="ko";t="✗ No arranca";x=Lab.t({"ca-valencia":"Sense memòria RAM l'ordinador no pot arrancar: es quedarà encés el LED DRAM.",es:"Sin memoria RAM el ordenador no puede arrancar: se quedará encendido el LED DRAM."})}
+  else if(n===1){cls="warn";t=Lab.t({"ca-valencia":"Un sol canal · 64 bits",es:"Un solo canal · 64 bits"});x=Lab.t({"ca-valencia":`Funciona, però amb la meitat de l'ample de banda possible. Amb un mòdul, el manual sol indicar la ranura ${slotsOn.has("A2")?"A2 (correcte)":"A2"}.`,es:`Funciona, pero con la mitad del ancho de banda posible. Con un módulo, el manual suele indicar la ranura ${slotsOn.has("A2")?"A2 (correcto)":"A2"}.`})}
+  else if(n===2&&A===1&&B===1){if(slotsOn.has("A2")&&slotsOn.has("B2")){cls="ok";t="✓ Doble canal · 128 bits";x=Lab.t({"ca-valencia":"Configuració ideal: un mòdul en cada canal, en les ranures recomanades.",es:"Configuración ideal: un módulo en cada canal, en las ranuras recomendadas."})}else{cls="ok";t="✓ Doble canal · 128 bits";x=Lab.t({"ca-valencia":"Hi ha doble canal, encara que la majoria de plaques recomanen A2 i B2 perquè així el senyal és més net.",es:"Hay doble canal, aunque la mayoría de placas recomiendan A2 y B2 porque así la señal es más limpia."})}}
+  else if(n===2){cls="ko";t=Lab.t({"ca-valencia":"Un sol canal · 64 bits",es:"Un solo canal · 64 bits"});x=Lab.t({"ca-valencia":"Els dos mòduls estan en el mateix canal: es desaprofita l'altre. Mou-ne un al canal contrari.",es:"Los dos módulos están en el mismo canal: se desaprovecha el otro. Mueve uno al canal contrario."})}
+  else if(n===3){cls="warn";t=Lab.t({"ca-valencia":"Mode mixt",es:"Modo mixto"});x=Lab.t({"ca-valencia":"Funciona, però un canal té més memòria que l'altre i part d'ella treballa en mode d'un sol canal.",es:"Funciona, pero un canal tiene más memoria que el otro y parte de ella trabaja en modo de un solo canal."})}
+  else{cls="ok";t=Lab.t({"ca-valencia":"✓ Doble canal · 2 mòduls per canal",es:"✓ Doble canal · 2 módulos por canal"});x=Lab.t({"ca-valencia":"Màxima capacitat. Amb DDR5 i 4 mòduls, la placa pot baixar un poc la freqüència per a mantindre l'estabilitat.",es:"Máxima capacidad. Con DDR5 y 4 módulos, la placa puede bajar un poco la frecuencia para mantener la estabilidad."})}
+  const o=$("#chOut");o.className="chan "+cls;o.textContent=t;$("#chTxt").textContent=x;
+}
+renderSlots();
+
+(function(){
+  const svg=$("#ddrSvg");const mods=[["DDR3",Lab.t({"ca-valencia":"240 contactes · 1,5 V",es:"240 contactos · 1,5 V"}),0.41],["DDR4",Lab.t({"ca-valencia":"288 contactes · 1,2 V",es:"288 contactos · 1,2 V"}),0.54],["DDR5",Lab.t({"ca-valencia":"288 contactes · 1,1 V",es:"288 contactos · 1,1 V"}),0.46]];
+  mods.forEach(([n,d,p],i)=>{const y=10+i*80,x0=20,w=430;
+    el("rect",{x:x0,y,width:w,height:52,rx:3,fill:"#2d6f3a"},svg);
+    for(let k=0;k<8;k++)el("rect",{x:x0+20+k*50,y:y+10,width:34,height:22,fill:"#1a1f22"},svg);
+    el("rect",{x:x0+4,y:y+42,width:w-8,height:10,fill:"var(--gold)"},svg);
+    const nx=x0+w*p;el("rect",{x:nx-4,y:y+40,width:8,height:13,fill:"var(--surface)"},svg);
+    el("line",{x1:nx,y1:y+56,x2:nx,y2:y+64,stroke:"var(--accent)","stroke-width":2},svg);
+    el("text",{x:x0,y:y+70,"font-size":13,"font-weight":700,fill:"var(--ink)",style:"font-family:var(--f-display)"},svg).textContent=n;
+    el("text",{x:x0+w,y:y+70,"font-size":11,"text-anchor":"end",fill:"var(--muted)"},svg).textContent=d+Lab.t({"ca-valencia":" · osca ▲",es:" · muesca ▲"});
+  });
+})();
+
+const PCIE={3:0.985,4:1.97,5:3.94,6:7.56};
+function renderPCIe(){
+  const g=+$("#pGen").value,l=+$("#pLanes").value,v=PCIE[g]*l;
+  $("#pOut").textContent=`≈ ${v.toLocaleString(LOC,{maximumFractionDigits:1})} GB/s`;
+  const svg=$("#pcieChart");svg.innerHTML="";const x0=60,x1=620,y0=210,max=Math.max(...Object.values(PCIE))*l,ys=v=>y0-(v/max)*180;
+  [0,.25,.5,.75,1].forEach(f=>{const val=max*f;el("line",{x1:x0,y1:ys(val),x2:x1,y2:ys(val),stroke:"var(--line)"},svg);el("text",{x:x0-8,y:ys(val)+4,"font-size":10,"text-anchor":"end",fill:"var(--muted)"},svg).textContent=Math.round(val)});
+  const ks=[3,4,5,6],bw=(x1-x0)/4;
+  ks.forEach((k,i)=>{const val=PCIE[k]*l,x=x0+i*bw+bw*.22,w=bw*.56,sel=k===g;
+    el("rect",{x,y:ys(val),width:w,height:y0-ys(val),rx:3,fill:sel?"var(--accent)":"var(--cpu)","fill-opacity":sel?1:.45},svg);
+    el("text",{x:x+w/2,y:ys(val)-6,"font-size":12,"font-weight":700,"text-anchor":"middle",fill:"var(--ink)"},svg).textContent=val.toLocaleString(LOC,{maximumFractionDigits:1})+" GB/s";
+    el("text",{x:x+w/2,y:y0+18,"font-size":12,"text-anchor":"middle",fill:"var(--ink)"},svg).textContent=`PCIe ${k}.0 x${l}`;
+  });
+}
+$("#pGen").onchange=renderPCIe;$("#pLanes").onchange=renderPCIe;renderPCIe();
+
+(function(){
+  const svg=$("#m2Svg"),sc=3.6;[30,42,60,80,110].forEach((L,i)=>{const y=8+i*38,w=L*sc*1.05;
+    el("rect",{x:60,y,width:w,height:24,rx:2,fill:"#2d6f3a"},svg);el("rect",{x:60,y,width:10,height:24,fill:"var(--gold)"},svg);
+    el("rect",{x:60,y:y+14,width:6,height:4,fill:"var(--surface)"},svg);
+    if(L>=42)el("rect",{x:80,y:y+5,width:Math.min(40,w-40),height:14,fill:"#1a1f22"},svg);
+    el("circle",{cx:60+w,cy:y+12,r:4,fill:"var(--surface)",stroke:"var(--metal2)"},svg);
+    el("text",{x:52,y:y+17,"font-size":13,"font-weight":700,"text-anchor":"end",fill:"var(--ink)"},svg).textContent="22"+L;
+  });
+  const s2=$("#m2Speed");const D=[[Lab.t({"ca-valencia":"HDD mecànic",es:"HDD mecánico"}),"≈ 200 MB/s",200,"var(--muted)"],["SSD SATA (2,5\" o M.2)","≈ 550 MB/s",550,"var(--chip)"],["SSD NVMe PCIe 4.0 x4","≈ 7.000 MB/s",7000,"var(--cpu)"],["SSD NVMe PCIe 5.0 x4","≈ 14.000 MB/s",14000,"var(--accent)"]];
+  D.forEach(([n,t,v,c],i)=>{const y=10+i*44,w=Math.max(4,(v/14000)*300);
+    el("text",{x:0,y:y+12,"font-size":12,fill:"var(--ink)",style:"font-family:var(--f-body)"},s2).textContent=n;
+    el("rect",{x:0,y:y+18,width:w,height:16,rx:3,fill:c},s2);
+    el("text",{x:w+8,y:y+31,"font-size":12,"font-weight":700,fill:"var(--ink)"},s2).textContent=t;
+  });
+})();
+
+/* ================= PUERTOS ================= */
+const IO=[
+ {id:"flash",n:Lab.t({"ca-valencia":"Botó BIOS Flashback",es:"Botón BIOS Flashback"}),d:Lab.t({"ca-valencia":"Permet actualitzar el microprogramari des d'un llapis USB sense processador ni RAM instal·lats. Molt útil si la placa és més antiga que la CPU.",es:"Permite actualizar el firmware desde un pendrive sin procesador ni RAM instalados. Muy útil si la placa es más antigua que la CPU."}),f:Lab.t({"ca-valencia":"S'usa amb un port USB concret, marcat junt al botó",es:"Se usa con un puerto USB concreto, marcado junto al botón"}),s:[["r",3,4,5,5,"metal"]]},
+ {id:"ccmos",n:Lab.t({"ca-valencia":"Botó Clear CMOS",es:"Botón Clear CMOS"}),d:Lab.t({"ca-valencia":"Torna la configuració del microprogramari als valors de fàbrica. S'usa quan un ajust (overclock, RAM) impedix arrancar.",es:"Devuelve la configuración del firmware a los valores de fábrica. Se usa cuando un ajuste (overclock, RAM) impide arrancar."}),f:Lab.t({"ca-valencia":"Equival a llevar la pila o a usar el pont CLR_CMOS",es:"Equivale a quitar la pila o usar el puente CLR_CMOS"}),s:[["r",3,12,5,5,"plastic"]]},
+ {id:"wifi",n:Lab.t({"ca-valencia":"Connectors d'antena Wi-Fi",es:"Conectores de antena Wi-Fi"}),d:Lab.t({"ca-valencia":"Rosques per a les antenes del mòdul Wi-Fi/Bluetooth integrat. Sense antenes el senyal és molt dèbil.",es:"Roscas para las antenas del módulo Wi-Fi/Bluetooth integrado. Sin antenas la señal es muy débil."}),f:Lab.t({"ca-valencia":"Connector RP-SMA o de clic",es:"Conector RP-SMA o de clic"}),c:[[5.5,26,2.4],[5.5,37,2.4]],fill:"gold"},
+ {id:"usb2",n:"USB-A 2.0",d:Lab.t({"ca-valencia":"Ports lents, ideals per a teclat, ratolí o impressora. Solen ser negres o blancs.",es:"Puertos lentos, ideales para teclado, ratón o impresora. Suelen ser negros o blancos."}),f:"480 Mb/s ≈ 60 MB/s",s:[["r",11,5,13,5,"plastic"],["r",11,13,13,5,"plastic"]]},
+ {id:"hdmi",n:"HDMI",d:Lab.t({"ca-valencia":"Eixida de vídeo i àudio de la gràfica integrada del processador. Si la CPU no té gràfica integrada, esta eixida no mostra res.",es:"Salida de vídeo y audio de la gráfica integrada del procesador. Si la CPU no tiene gráfica integrada, esta salida no muestra nada."}),f:Lab.t({"ca-valencia":"Només funciona amb CPU amb iGPU",es:"Solo funciona con CPU con iGPU"}),s:[["r",11,22,14,5,"plastic2"]]},
+ {id:"dp",n:"DisplayPort",d:Lab.t({"ca-valencia":"Eixida de vídeo de la gràfica integrada, habitual en monitors de PC. Té una cantonada retallada que la diferencia d'HDMI.",es:"Salida de vídeo de la gráfica integrada, habitual en monitores de PC. Tiene una esquina recortada que la diferencia de HDMI."}),f:Lab.t({"ca-valencia":"Admet altes freqüències de refresc",es:"Admite altas frecuencias de refresco"}),s:[["r",11,31,14,5,"plastic2"]]},
+ {id:"usb5",n:"USB-A 5 Gb/s",d:Lab.t({"ca-valencia":"USB 3.2 Gen 1 (antic USB 3.0). La llengüeta interior sol ser blava.",es:"USB 3.2 Gen 1 (antiguo USB 3.0). La lengüeta interior suele ser azul."}),f:Lab.t({"ca-valencia":"5 Gb/s ≈ 625 MB/s teòrics",es:"5 Gb/s ≈ 625 MB/s teóricos"}),s:[["r",28,5,13,5,"cpu"],["r",28,13,13,5,"cpu"],["r",28,22,13,5,"cpu"],["r",28,30,13,5,"cpu"]]},
+ {id:"rj45",n:"Ethernet (RJ45)",d:Lab.t({"ca-valencia":"Connexió de xarxa per cable. Té dos LED: un indica enllaç i l'altre, activitat.",es:"Conexión de red por cable. Tiene dos LED: uno indica enlace y el otro, actividad."}),f:"1 Gb/s o 2,5 Gb/s",s:[["r",45,4,16,14,"metal"],["r",48,7,10,9,"plastic"]]},
+ {id:"usb10",n:"USB-A 10 Gb/s",d:Lab.t({"ca-valencia":"USB 3.2 Gen 2. Molts fabricants usen llengüeta roja o turquesa, però el color no és obligatori: mira la serigrafia.",es:"USB 3.2 Gen 2. Muchos fabricantes usan lengüeta roja o turquesa, pero el color no es obligatorio: mira la serigrafía."}),f:Lab.t({"ca-valencia":"10 Gb/s ≈ 1,25 GB/s teòrics",es:"10 Gb/s ≈ 1,25 GB/s teóricos"}),s:[["r",46,22,13,5,"bad"],["r",46,30,13,5,"bad"]]},
+ {id:"usbc",n:"USB-C 20 Gb/s",d:Lab.t({"ca-valencia":"Connector reversible. «USB-C» és la forma, no la velocitat: este és USB 3.2 Gen 2x2. En altres plaques pot ser USB4 de 40 Gb/s.",es:"Conector reversible. «USB-C» es la forma, no la velocidad: este es USB 3.2 Gen 2x2. En otras placas puede ser USB4 de 40 Gb/s."}),f:Lab.t({"ca-valencia":"Forma: USB-C · velocitat: 20 Gb/s",es:"Forma: USB-C · velocidad: 20 Gb/s"}),s:[["r",65,6,10,3.4,"plastic2"]]},
+ {id:"usbcpu",n:Lab.t({"ca-valencia":"USB-A connectats a la CPU",es:"USB-A conectados a la CPU"}),d:Lab.t({"ca-valencia":"Alguns USB ixen directament del processador en lloc del xipset. El manual els marca com els millors per a dispositius ràpids.",es:"Algunos USB salen directamente del procesador en lugar del chipset. El manual los marca como los mejores para dispositivos rápidos."}),f:Lab.t({"ca-valencia":"10 Gb/s · menor latència",es:"10 Gb/s · menor latencia"}),s:[["r",64,14,13,5,"bad"],["r",64,22,13,5,"cpu"]]},
+ {id:"audio",n:Lab.t({"ca-valencia":"Jacks d'àudio",es:"Jacks de audio"}),d:Lab.t({"ca-valencia":"Cada color té una funció: verd, altaveus o auriculars (eixida principal); rosa, micròfon; blau, entrada de línia; taronja, central i subwoofer; negre, posteriors; gris, laterals.",es:"Cada color tiene una función: verde, altavoces o auriculares (salida principal); rosa, micrófono; azul, entrada de línea; naranja, central y subwoofer; negro, traseros; gris, laterales."}),f:Lab.t({"ca-valencia":"Verd = eixida · Rosa = micro · Blau = entrada",es:"Verde = salida · Rosa = micro · Azul = entrada"}),c:[[118,10,3,"#6fb6ff"],[126,10,3,"#66cc44"],[134,10,3,"#ff8fb8"],[118,20,3,"#ff9933"],[126,20,3,"#222222"],[134,20,3,"#9aa0a4"]]},
+ {id:"spdif",n:Lab.t({"ca-valencia":"S/PDIF òptic",es:"S/PDIF óptico"}),d:Lab.t({"ca-valencia":"Eixida d'àudio digital per fibra òptica, amb llum roja. Per a barres de so o amplificadors.",es:"Salida de audio digital por fibra óptica, con luz roja. Para barras de sonido o amplificadores."}),f:Lab.t({"ca-valencia":"Àudio digital · connector TOSLINK",es:"Audio digital · conector TOSLINK"}),s:[["r",140,27,8,6,"plastic"]]},
+];
+function drawIO(){
+  const svg=$("#ioSvg");el("rect",{x:0,y:0,width:159,height:44.5,rx:1,class:"shield"},svg);
+  for(let i=0;i<22;i++)el("circle",{cx:92+(i%11)*2.2,cy:36+Math.floor(i/11)*3,r:.5,fill:"var(--metal)"},svg);
+  const map={};
+  IO.forEach(p=>{const g=el("g",{class:"port",tabindex:0,role:"button","aria-label":p.n},svg);
+    (p.s||[]).forEach(([_,x,y,w,h,f])=>el("rect",{x,y,width:w,height:h,rx:.6,fill:f==="cpu"?"#2a64c9":f==="bad"?"#c4372c":FILL[f]},g));
+    (p.c||[]).forEach(([x,y,r,col])=>{el("circle",{cx:x,cy:y,r,fill:col||FILL[p.fill]},g);el("circle",{cx:x,cy:y,r:r*.4,fill:"#111"},g)});
+    const act=()=>{Object.values(map).forEach(m=>m.classList.remove("sel"));g.classList.add("sel");$("#ioInfo").innerHTML=`<span class="tag">${Lab.t({"ca-valencia":"Port",es:"Puerto"})}</span><h3>${p.n}</h3><p>${p.d}</p><div class="fact">${p.f}</div>`};
+    g.addEventListener("click",act);g.addEventListener("keydown",e=>{if(e.key==="Enter")act()});map[p.id]=g;
+  });
+  map.usb5.dispatchEvent(new Event("click"));
+}
+drawIO();
+
+/* ================= FIRMWARE ================= */
+const POST=[[Lab.t({"ca-valencia":"Botó d'engegada",es:"Botón de encendido"}),Lab.t({"ca-valencia":"La placa avisa la font (senyal PS_ON) i esta comença a donar corrent.",es:"La placa avisa a la fuente (señal PS_ON) y esta empieza a dar corriente."})],["Power Good",Lab.t({"ca-valencia":"La font comprova que els voltatges són estables i ho indica a la placa.",es:"La fuente comprueba que los voltajes son estables y lo indica a la placa."})],[Lab.t({"ca-valencia":"Arranca el microprogramari",es:"Arranca el firmware"}),Lab.t({"ca-valencia":"La CPU ix de reset i executa el codi del xip UEFI/BIOS.",es:"La CPU sale de reset y ejecuta el código del chip UEFI/BIOS."})],[Lab.t({"ca-valencia":"POST: processador",es:"POST: procesador"}),Lab.t({"ca-valencia":"Power-On Self Test: comprova la CPU. LED CPU.",es:"Power-On Self Test: comprueba la CPU. LED CPU."})],[Lab.t({"ca-valencia":"POST: memòria",es:"POST: memoria"}),Lab.t({"ca-valencia":"Detecta i prova la RAM. LED DRAM. Després de canviar la RAM, este pas pot tardar un minut.",es:"Detecta y prueba la RAM. LED DRAM. Tras cambiar la RAM, este paso puede tardar un minuto."})],["POST: vídeo",Lab.t({"ca-valencia":"Busca una gràfica (integrada o targeta). LED VGA.",es:"Busca una gráfica (integrada o tarjeta). LED VGA."})],[Lab.t({"ca-valencia":"Busca un dispositiu d'arrancada",es:"Busca un dispositivo de arranque"}),Lab.t({"ca-valencia":"Recorre l'ordre d'arrancada: SSD, USB, xarxa… LED BOOT.",es:"Recorre el orden de arranque: SSD, USB, red… LED BOOT."})],[Lab.t({"ca-valencia":"Carregador d'arrancada",es:"Cargador de arranque"}),Lab.t({"ca-valencia":"Troba el gestor d'arrancada (Windows Boot Manager, GRUB) i li cedix el control.",es:"Encuentra el gestor de arranque (Windows Boot Manager, GRUB) y le cede el control."})],[Lab.t({"ca-valencia":"Sistema operatiu",es:"Sistema operativo"}),Lab.t({"ca-valencia":"A partir d'ací mana el sistema operatiu. El microprogramari ja ha acabat la seua feina.",es:"A partir de aquí manda el sistema operativo. El firmware ya ha terminado su trabajo."})]];
+const postEl=$("#post");postEl.innerHTML=POST.map((p,i)=>`<div class="st" data-i="${i}"><span class="n">${String(i+1).padStart(2,"0")}</span><span><b>${p[0]}</b><br><span style="color:var(--muted);font-size:.93rem">${p[1]}</span></span></div>`).join("");
+let postI=-1,postT=null;
+function postShow(i){postI=i;postEl.querySelectorAll(".st").forEach((s,k)=>{s.classList.toggle("done",k<i);s.classList.toggle("now",k===i)})}
+$("#postGo").onclick=()=>{clearInterval(postT);postShow(0);postT=setInterval(()=>{if(postI>=POST.length-1){clearInterval(postT);return}postShow(postI+1)},900)};
+$("#postStep").onclick=()=>{clearInterval(postT);postShow(postI>=POST.length-1?0:postI+1)};
+postEl.querySelectorAll(".st").forEach(s=>s.classList.add("done"));
+
+const LEDN=["CPU","DRAM","VGA","BOOT"];
+$("#dbgLeds").innerHTML=LEDN.map(n=>`<div class="led" data-l="${n}"><i></i>${n}</div>`).join("");
+const DBG={ok:[null,"✓ Arranca",Lab.t({"ca-valencia":"Els LED s'encenen un instant cada un i s'apaguen. L'equip arriba al sistema operatiu.",es:"Los LED se encienden un instante cada uno y se apagan. El equipo llega al sistema operativo."}),[]],
+ cpu:["CPU",Lab.t({"ca-valencia":"LED CPU fix",es:"LED CPU fijo"}),Lab.t({"ca-valencia":"El processador no rep corrent o no s'inicia.",es:"El procesador no recibe corriente o no se inicia."}),[Lab.t({"ca-valencia":"Connectar el cable EPS 12V (8 pins) de la font",es:"Conectar el cable EPS 12V (8 pines) de la fuente"}),Lab.t({"ca-valencia":"Comprovar que la CPU està ben assentada i la palanca tancada",es:"Comprobar que la CPU está bien asentada y la palanca cerrada"}),Lab.t({"ca-valencia":"Comprovar que la BIOS és compatible amb el processador",es:"Comprobar que la BIOS es compatible con el procesador"})]],
+ dram:["DRAM",Lab.t({"ca-valencia":"LED DRAM fix",es:"LED DRAM fijo"}),Lab.t({"ca-valencia":"La placa no aconseguix iniciar la memòria.",es:"La placa no consigue iniciar la memoria."}),[Lab.t({"ca-valencia":"Traure el mòdul i tornar a inserir-lo fins a sentir el clic de les pestanyes",es:"Sacar el módulo y volver a insertarlo hasta oír el clic de las pestañas"}),Lab.t({"ca-valencia":"Provar un sol mòdul en la ranura A2",es:"Probar un solo módulo en la ranura A2"}),Lab.t({"ca-valencia":"Comprovar que la RAM és del tipus correcte (DDR4 o DDR5)",es:"Comprobar que la RAM es del tipo correcto (DDR4 o DDR5)"})]],
+ vga:["VGA",Lab.t({"ca-valencia":"LED VGA fix",es:"LED VGA fijo"}),Lab.t({"ca-valencia":"No hi ha cap eixida de vídeo disponible.",es:"No hay ninguna salida de vídeo disponible."}),[Lab.t({"ca-valencia":"Si la CPU no té gràfica integrada (models «F»), instal·lar una targeta gràfica",es:"Si la CPU no tiene gráfica integrada (modelos «F»), instalar una tarjeta gráfica"}),Lab.t({"ca-valencia":"Connectar els cables d'alimentació PCIe de la gràfica",es:"Conectar los cables de alimentación PCIe de la gráfica"}),Lab.t({"ca-valencia":"Connectar el monitor a la gràfica, no a la placa",es:"Conectar el monitor a la gráfica, no a la placa"})]],
+ boot:["BOOT",Lab.t({"ca-valencia":"LED BOOT fix",es:"LED BOOT fijo"}),Lab.t({"ca-valencia":"El maquinari funciona, però no troba des d'on arrancar.",es:"El hardware funciona, pero no encuentra desde dónde arrancar."}),[Lab.t({"ca-valencia":"Instal·lar un sistema operatiu des d'un llapis USB",es:"Instalar un sistema operativo desde un pendrive"}),Lab.t({"ca-valencia":"Revisar l'ordre d'arrancada en la UEFI",es:"Revisar el orden de arranque en la UEFI"}),Lab.t({"ca-valencia":"Comprovar que l'SSD es detecta en la UEFI",es:"Comprobar que el SSD se detecta en la UEFI"})]]};
+function renderDbg(){const k=$("#dbgSel").value,d=DBG[k];
+  document.querySelectorAll("#dbgLeds .led").forEach(l=>{l.classList.toggle("on",l.dataset.l===d[0]);l.classList.toggle("red",l.dataset.l===d[0])});
+  const o=$("#dbgOut");o.className="verdict "+(d[0]?"ko":"ok");
+  o.innerHTML=`<span class="big">${d[1]}</span><span>${d[2]}</span>${d[3].length?Lab.t({"ca-valencia":"<b>Què cal revisar:</b><ul>",es:"<b>Qué revisar:</b><ul>"})+d[3].map(x=>`<li>${x}</li>`).join("")+"</ul>":""}`;
+}
+$("#dbgSel").onchange=renderDbg;renderDbg();
+
+/* ================= PRÁCTICA ================= */
+let wT=null,wOk=0,wKo=0,wDone=false;
+const b2=drawBoard($("#board2"),(id,g)=>{
+  if(wDone)return;
+  if(id===wT){wOk++;wDone=true;g.classList.add("flash");$("#wFb").className="fb ok";$("#wFb").textContent=Lab.t({"ca-valencia":"Correcte! ",es:"¡Correcto! "})+byId[id].n+".";setTimeout(nextW,1100)}
+  else{wKo++;g.classList.add("wrong");setTimeout(()=>g.classList.remove("wrong"),700);$("#wFb").className="fb ko";$("#wFb").textContent=Lab.t({"ca-valencia":"Això és: ",es:"Eso es: "})+byId[id].n+Lab.t({"ca-valencia":". Continua buscant.",es:". Sigue buscando."})}
+  $("#wOk").textContent=wOk;$("#wKo").textContent=wKo;
+});
+function nextW(){Object.values(b2).forEach(g=>g.classList.remove("flash","wrong"));let n;do{n=C[Math.floor(Math.random()*C.length)].id}while(n===wT);wT=n;wDone=false;$("#wTarget").textContent=byId[n].n;$("#wFb").textContent="";}
+$("#wSkip").onclick=nextW;nextW();
+
+const Q=[
+ [Lab.t({"ca-valencia":"Connectes el monitor a l'HDMI de la placa i no es veu res. El processador és un Intel Core i5-12400F. Què passa?",es:"Conectas el monitor al HDMI de la placa y no se ve nada. El procesador es un Intel Core i5-12400F. ¿Qué pasa?"}),[Lab.t({"ca-valencia":"La versió «F» no té gràfica integrada: cal usar una targeta gràfica",es:"La versión «F» no tiene gráfica integrada: hay que usar una tarjeta gráfica"}),Lab.t({"ca-valencia":"El cable HDMI està trencat",es:"El cable HDMI está roto"}),Lab.t({"ca-valencia":"Falta instal·lar els controladors de vídeo",es:"Falta instalar los controladores de vídeo"}),Lab.t({"ca-valencia":"L'HDMI de la placa només funciona amb Linux",es:"El HDMI de la placa solo funciona con Linux"})],0,Lab.t({"ca-valencia":"Les eixides de vídeo de la placa depenen de la gràfica integrada del processador. Els models «F» d'Intel no en tenen.",es:"Las salidas de vídeo de la placa dependen de la gráfica integrada del procesador. Los modelos «F» de Intel no la tienen."})],
+ [Lab.t({"ca-valencia":"Tens 2 mòduls de RAM i una placa amb 4 ranures (A1, A2, B1, B2). On els poses?",es:"Tienes 2 módulos de RAM y una placa con 4 ranuras (A1, A2, B1, B2). ¿Dónde los pones?"}),[Lab.t({"ca-valencia":"A2 i B2",es:"A2 y B2"}),Lab.t({"ca-valencia":"A1 i A2",es:"A1 y A2"}),Lab.t({"ca-valencia":"B1 i B2",es:"B1 y B2"}),Lab.t({"ca-valencia":"Tant fa, la placa ho ajusta per si sola",es:"Da igual, la placa lo ajusta sola"})],0,Lab.t({"ca-valencia":"Un en cada canal per a tindre doble canal. A2 i B2 són les ranures que recomanen quasi tots els fabricants.",es:"Uno en cada canal para tener doble canal. A2 y B2 son las ranuras que recomiendan casi todos los fabricantes."})],
+ [Lab.t({"ca-valencia":"El PC d'un client perd la data i l'hora cada vegada que el desendolla. Què canvies?",es:"El PC de un cliente pierde la fecha y la hora cada vez que lo desenchufa. ¿Qué cambias?"}),["La pila CMOS (CR2032)",Lab.t({"ca-valencia":"La font d'alimentació",es:"La fuente de alimentación"}),Lab.t({"ca-valencia":"El mòdul de RAM",es:"El módulo de RAM"}),Lab.t({"ca-valencia":"El xip de la BIOS",es:"El chip de la BIOS"})],0,Lab.t({"ca-valencia":"La pila de botó manté el rellotge i la configuració quan no hi ha corrent. Quan s'esgota, passa açò.",es:"La pila de botón mantiene el reloj y la configuración cuando no hay corriente. Cuando se agota, pasa esto."})],
+ [Lab.t({"ca-valencia":"Pots muntar un AMD Ryzen 7 7800X3D en una placa B550?",es:"¿Puedes montar un AMD Ryzen 7 7800X3D en una placa B550?"}),[Lab.t({"ca-valencia":"No: el processador és AM5 i la placa AM4",es:"No: el procesador es AM5 y la placa AM4"}),Lab.t({"ca-valencia":"Sí, amb una actualització de BIOS",es:"Sí, con una actualización de BIOS"}),Lab.t({"ca-valencia":"Sí, però només amb memòria DDR4",es:"Sí, pero solo con memoria DDR4"}),Lab.t({"ca-valencia":"Sí, B550 admet tots els Ryzen",es:"Sí, B550 admite todos los Ryzen"})],0,Lab.t({"ca-valencia":"Són sòcols diferents: AM4 (PGA) i AM5 (LGA). No encaixa físicament.",es:"Son sockets distintos: AM4 (PGA) y AM5 (LGA). No encaja físicamente."})],
+ [Lab.t({"ca-valencia":"Intentes posar un mòdul DDR4 en una placa DDR5 i no entra. Per què?",es:"Intentas poner un módulo DDR4 en una placa DDR5 y no entra. ¿Por qué?"}),[Lab.t({"ca-valencia":"L'osca està en una altra posició per a evitar barrejar generacions",es:"La muesca está en otra posición para evitar mezclar generaciones"}),Lab.t({"ca-valencia":"Cal fer més força",es:"Hay que empujar más fuerte"}),Lab.t({"ca-valencia":"Cal actualitzar la BIOS",es:"Hay que actualizar la BIOS"}),Lab.t({"ca-valencia":"La ranura està bruta",es:"La ranura está sucia"})],0,Lab.t({"ca-valencia":"Cada generació DDR té l'osca en un lloc diferent. Mai no s'ha de forçar un mòdul.",es:"Cada generación DDR tiene la muesca en un sitio distinto. Nunca hay que forzar un módulo."})],
+ [Lab.t({"ca-valencia":"Quin d'estos components es comunica amb la CPU directament, sense passar pel xipset?",es:"¿Cuál de estos componentes se comunica con la CPU directamente, sin pasar por el chipset?"}),[Lab.t({"ca-valencia":"La memòria RAM",es:"La memoria RAM"}),Lab.t({"ca-valencia":"Els discos SATA",es:"Los discos SATA"}),Lab.t({"ca-valencia":"El còdec d'àudio",es:"El códec de audio"}),Lab.t({"ca-valencia":"La targeta de xarxa integrada",es:"La tarjeta de red integrada"})],0,Lab.t({"ca-valencia":"El controlador de memòria està dins del processador. SATA, àudio i xarxa penjen del xipset.",es:"El controlador de memoria está dentro del procesador. SATA, audio y red cuelgan del chipset."})],
+ [Lab.t({"ca-valencia":"Hi cap una placa Micro-ATX en una caixa ATX?",es:"¿Cabe una placa Micro-ATX en una caja ATX?"}),[Lab.t({"ca-valencia":"Sí: les caixes admeten el seu format i els més xicotets",es:"Sí: las cajas admiten su formato y los más pequeños"}),Lab.t({"ca-valencia":"No, cada caixa només admet el seu format",es:"No, cada caja solo admite su formato"}),Lab.t({"ca-valencia":"Només amb un adaptador",es:"Solo con un adaptador"}),Lab.t({"ca-valencia":"Només si és E-ATX",es:"Solo si es E-ATX"})],0,Lab.t({"ca-valencia":"Els forats de muntatge són compatibles cap avall: una caixa ATX admet Micro-ATX i Mini-ITX.",es:"Los agujeros de montaje son compatibles hacia abajo: una caja ATX admite Micro-ATX y Mini-ITX."})],
+ [Lab.t({"ca-valencia":"Has muntat un Ryzen 5 9600X en una placa B650 comprada fa dos anys. S'encén, però no dona imatge i el LED CPU es queda fix. Què és el més probable?",es:"Has montado un Ryzen 5 9600X en una placa B650 comprada hace dos años. Enciende, pero no da imagen y el LED CPU se queda fijo. ¿Qué es lo más probable?"}),[Lab.t({"ca-valencia":"La BIOS és anterior al processador i cal actualitzar-la (per exemple, amb BIOS Flashback)",es:"La BIOS es anterior al procesador y hay que actualizarla (por ejemplo, con BIOS Flashback)"}),Lab.t({"ca-valencia":"El sòcol és incompatible",es:"El socket es incompatible"}),Lab.t({"ca-valencia":"La RAM és DDR4",es:"La RAM es DDR4"}),Lab.t({"ca-valencia":"La font és massa potent",es:"La fuente es demasiado potente"})],0,Lab.t({"ca-valencia":"Mateix sòcol (AM5), però la placa necessita un microprogramari que reconega la sèrie 9000.",es:"Mismo socket (AM5), pero la placa necesita un firmware que reconozca la serie 9000."})],
+ [Lab.t({"ca-valencia":"La gràfica rendix menys del normal. Està ficada en la ranura x16 de baix, la que és x4 elèctrica. Què fas?",es:"La gráfica rinde menos de lo normal. Está pinchada en la ranura x16 de abajo, la que es x4 eléctrica. ¿Qué haces?"}),[Lab.t({"ca-valencia":"Moure-la a la ranura x16 principal, connectada a la CPU",es:"Moverla a la ranura x16 principal, conectada a la CPU"}),Lab.t({"ca-valencia":"Canviar la gràfica",es:"Cambiar la gráfica"}),Lab.t({"ca-valencia":"Posar més RAM",es:"Poner más RAM"}),Lab.t({"ca-valencia":"Res: totes les ranures x16 són iguals",es:"Nada: todas las ranuras x16 son iguales"})],0,Lab.t({"ca-valencia":"La mida física no garantix les 16 línies. La ranura principal és la connectada a la CPU.",es:"El tamaño físico no garantiza las 16 líneas. La ranura principal es la conectada a la CPU."})],
+ [Lab.t({"ca-valencia":"Per a què servix el VRM de la placa?",es:"¿Para qué sirve el VRM de la placa?"}),[Lab.t({"ca-valencia":"Convertir els 12 V de la font en el voltatge baix que necessita la CPU",es:"Convertir los 12 V de la fuente en el voltaje bajo que necesita la CPU"}),Lab.t({"ca-valencia":"Guardar la configuració de la BIOS",es:"Guardar la configuración de la BIOS"}),Lab.t({"ca-valencia":"Connectar els ventiladors",es:"Conectar los ventiladores"}),Lab.t({"ca-valencia":"Controlar els ports USB",es:"Controlar los puertos USB"})],0,Lab.t({"ca-valencia":"El VRM (Voltage Regulator Module) alimenta el processador amb un voltatge d'uns 1,2 V, molt estable.",es:"El VRM (Voltage Regulator Module) alimenta el procesador con un voltaje de alrededor de 1,2 V, muy estable."})],
+ [Lab.t({"ca-valencia":"Un port indica «USB 3.2 Gen 2». Quina velocitat màxima té?",es:"Un puerto pone «USB 3.2 Gen 2». ¿Qué velocidad máxima tiene?"}),["10 Gb/s","5 Gb/s","20 Gb/s","480 Mb/s"],0,"Gen 1 = 5 Gb/s, Gen 2 = 10 Gb/s, Gen 2x2 = 20 Gb/s."],
+ [Lab.t({"ca-valencia":"Un client amb un equip antic (BIOS clàssica, disc MBR) instal·la un disc de 4 TB i només pot usar uns 2 TiB. Per què?",es:"Un cliente con un equipo antiguo (BIOS clásica, disco MBR) instala un disco de 4 TB y solo puede usar unos 2 TiB. ¿Por qué?"}),[Lab.t({"ca-valencia":"MBR només adreça fins a 2 TiB: cal GPT i, per a arrancar des d'ell, UEFI",es:"MBR solo direcciona hasta 2 TiB: hace falta GPT, y para arrancar desde él, UEFI"}),Lab.t({"ca-valencia":"El disc és defectuós",es:"El disco es defectuoso"}),Lab.t({"ca-valencia":"Windows limita els discos a 2 TB",es:"Windows limita los discos a 2 TB"}),Lab.t({"ca-valencia":"Cal formatar en FAT32",es:"Hay que formatear en FAT32"})],0,Lab.t({"ca-valencia":"És un límit de la taula de particions MBR. GPT, la que usa UEFI, l'elimina.",es:"Es un límite de la tabla de particiones MBR. GPT, la que usa UEFI, lo elimina."})],
+ [Lab.t({"ca-valencia":"En quin jack connectes els auriculars en el panell posterior?",es:"¿En qué jack conectas los auriculares en el panel trasero?"}),[Lab.t({"ca-valencia":"Verd",es:"Verde"}),"Rosa",Lab.t({"ca-valencia":"Blau",es:"Azul"}),Lab.t({"ca-valencia":"Taronja",es:"Naranja"})],0,Lab.t({"ca-valencia":"El verd és l'eixida principal. El rosa és el micròfon i el blau l'entrada de línia.",es:"Verde es la salida principal. Rosa es el micrófono y azul la entrada de línea."})],
+ [Lab.t({"ca-valencia":"Acabes de muntar un PC. En prémer el botó de la caixa no passa res, però amb el botó de la placa sí que arranca. Què revises?",es:"Terminas de montar un PC. Al pulsar el botón de la caja no pasa nada, pero con el botón de la placa sí arranca. ¿Qué revisas?"}),[Lab.t({"ca-valencia":"Els cables del panell frontal (PWR_SW) en el connector F_PANEL",es:"Los cables del panel frontal (PWR_SW) en el conector F_PANEL"}),Lab.t({"ca-valencia":"El connector EPS de la CPU",es:"El conector EPS de la CPU"}),"La pila CMOS","El cable SATA"],0,Lab.t({"ca-valencia":"El botó de la caixa només tanca un contacte en els pins PWR_SW. Si està mal connectat, no fa res.",es:"El botón de la caja solo cierra un contacto en los pines PWR_SW. Si está mal conectado, no hace nada."})],
+];
+let qOrder=[],qi=0,qOk=0,qKo=0,qDone=false;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function showQ(){
+  if(qi>=qOrder.length){qOrder=shuffle([...Q.keys()]);qi=0}
+  const[p,opts,ans,x]=Q[qOrder[qi]];qDone=false;
+  $("#qP").textContent=p;$("#qF").textContent="";$("#qF").className="fb";$("#qX").hidden=true;$("#qX").textContent=x;
+  $("#qN").textContent=Lab.t({"ca-valencia":`Cas ${qi+1} de ${Q.length}`,es:`Caso ${qi+1} de ${Q.length}`});
+  const O=$("#qO");O.innerHTML="";
+  shuffle(opts.map((o,i)=>[o,i])).forEach(([o,i])=>{const b=document.createElement("button");b.type="button";b.textContent=o;b.onclick=()=>{
+    if(qDone)return;qDone=true;const good=i===ans;good?qOk++:qKo++;$("#qOk").textContent=qOk;$("#qKo").textContent=qKo;
+    b.classList.add(good?"ok":"ko");if(!good)[...O.children].forEach(c=>{if(c.dataset.i==ans)c.classList.add("ok")});
+    $("#qF").className="fb "+(good?"ok":"ko");$("#qF").textContent=good?Lab.t({"ca-valencia":"Correcte!",es:"¡Correcto!"}):Lab.t({"ca-valencia":"No és la resposta correcta.",es:"No es la respuesta correcta."});$("#qX").hidden=false;
+  };b.dataset.i=i;O.appendChild(b)});
+}
+$("#qNext").onclick=()=>{qi++;showQ()};
+qOrder=shuffle([...Q.keys()]);showQ();
+</script>
+
+</body>
+</html>

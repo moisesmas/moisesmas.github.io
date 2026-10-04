@@ -34,3 +34,7 @@ Esta unidad te muestra qué hay dentro de un ordenador y por qué importa cada p
 ## Laboratorios
 
 Dos laboratorios interactivos para practicar: el de la placa base y «Dentro de la CPU», donde verás cómo la CPU ejecuta instrucciones paso a paso y podrás calcular la latencia de la RAM.
+
+::artefacto{src="placa-base"}
+
+::artefacto{src="dins-la-cpu"}

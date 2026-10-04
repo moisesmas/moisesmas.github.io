@@ -7,3 +7,7 @@ Welcome to the module. Here you will find the notes, practical activities and la
 ## Module labs
 
 ::laboratorios
+
+:::aules
+Assessment criteria, solutions and marks are in the Aules course.
+:::

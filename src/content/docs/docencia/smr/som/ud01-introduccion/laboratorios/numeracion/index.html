@@ -30,7 +30,7 @@
     "tab-conv": "Conversiones",
     "tab-informatica": "En informática",
     "tab-unidades": "Unidades",
-    "tab-practica": "Practica",
+    "tab-practica": "Práctica",
     "bit-eyebrow": "Práctica 1 · ¿Por qué el ordenador usa ceros y unos?",
     "bit-titulo": "Un ordenador solo distingue dos estados",
     "bit-intro": "Dentro del procesador hay miles de millones de transistores. Cada uno funciona como un interruptor: deja pasar corriente o no la deja. A ese estado mínimo, 0 o 1, lo llamamos <b>bit</b> (<i>binary digit</i>).",
@@ -251,7 +251,7 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;backgroun
 .brand .leds{display:flex;gap:3px}
 .brand .leds i{width:9px;height:9px;border-radius:50%;background:var(--off)}
 .brand .leds i.on{background:var(--on);box-shadow:0 0 6px var(--on)}
-.zoom{display:flex;gap:.3rem;align-items:center;font-size:.8rem;color:var(--muted)}
+.zoom{display:flex;gap:.3rem;align-items:center;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
 .zoom button{font:600 .85rem var(--f-mono);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:.2rem .55rem;cursor:pointer}
 nav.tabs{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:.25rem;overflow-x:auto;scrollbar-width:thin}
 nav.tabs button{flex:0 0 auto;font:600 .95rem var(--f-display);letter-spacing:.02em;background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);padding:.55rem .75rem;cursor:pointer;white-space:nowrap}
@@ -688,7 +688,7 @@ svg text{font-family:var(--f-mono)}
   <div class="panel">
     <h3 data-t-html="uni-ocupa">How much space does each thing take? <small>logarithmic scale: each mark is ×1000</small></h3>
     <div class="chart-wrap"><svg id="sizeChart" viewBox="0 0 680 330" role="img" data-t-attr="aria-label:uni-grafico-aria" aria-label="Typical file sizes on a logarithmic scale"></svg></div>
-    <p class="note" data-t="uni-escala">If we drew this on a normal scale, the letter would be invisible next to the hard drive: a 1 TB drive is a trillion times bigger than one letter. That is why each vertical line multiplies by 1000.</p>
+    <p class="note" data-t="uni-escala">If we drew this on a normal scale, the letter would be invisible next to the hard drive: a 1 TB drive is 10¹² times (a million million times) bigger than one letter. That is why each vertical line multiplies by 1000.</p>
   </div>
 
   <div class="panel">

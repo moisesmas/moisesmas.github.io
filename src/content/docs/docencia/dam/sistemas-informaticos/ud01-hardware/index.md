@@ -34,3 +34,7 @@ Esta unitat et mostra què hi ha dins d'un ordinador i per què importa cada pe�
 ## Laboratoris
 
 Dos laboratoris interactius per a practicar: el de la placa base i «Dins de la CPU», on veuràs com la CPU executa instruccions pas a pas i podràs calcular la latència de la RAM.
+
+::artefacto{src="placa-base"}
+
+::artefacto{src="dins-la-cpu"}

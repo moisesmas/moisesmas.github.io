@@ -65,6 +65,28 @@ describe('paginacion', () => {
     expect(p.next?.href).toBe(`/${U}/02-practicas/`);
     expect(p.next?.label).toBe('Practice');
   });
+  it('en el original, el vecino que es índice de unidad lleva su título y no «Presentación»', () => {
+    const p = paginacion(limpiarMenu(MENU, `${U}/01-teoria`), `${U}/01-teoria`, titulo);
+    expect(p.prev?.href).toBe(`/${U}/`);
+    expect(p.prev?.label).toBe(TITULOS.get(U));
+    expect(p.prev?.label).toBe('Unit 1');
+    expect(p.next?.label).toBe('Practice');
+  });
+  it('en la traducción, un vecino sin versión en castellano también lleva el título del original', () => {
+    const V = 'docencia/smr/som/ud02-otra';
+    const menu: any[] = [
+      grupo('ud02-otra', [enlace(`/${V}/`, 'Unit 2'), enlace(`/${V}/01-uno/`, 'One'), enlace(`/${V}/01-uno/es/`, 'Uno')]),
+    ];
+    const titulos = new Map([[V, 'Unit 2'], [`${V}/01-uno`, 'One'], [`${V}/01-uno/es`, 'Uno']]);
+    const p = paginacion(limpiarMenu(menu, `${V}/01-uno/es`), `${V}/01-uno/es`, (id) => titulos.get(id));
+    expect(p.prev?.href).toBe(`/${V}/`);
+    expect(p.prev?.label).toBe('Unit 2');
+  });
+  it('sin título conocido para un vecino, conserva la etiqueta del menú', () => {
+    const p = paginacion(limpiarMenu(MENU, `${U}/01-teoria`), `${U}/01-teoria`, () => undefined);
+    expect(p.prev?.label).toBe('Presentación');
+    expect(p.next?.label).toBe('Practice');
+  });
   it('página que no está en el menú: sin paginación', () => {
     expect(paginacion(limpiarMenu(MENU, 'docencia'), 'docencia', titulo)).toEqual({ prev: undefined, next: undefined });
   });

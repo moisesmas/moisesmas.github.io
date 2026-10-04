@@ -85,6 +85,8 @@ function aplanar(entradas: Entrada[]): Enlace[] {
 /**
  * Anterior/siguiente sobre el menú ya limpio. En una traducción, los vecinos
  * apuntan a su versión en castellano si existe (se mantiene el idioma al pasar página).
+ * Todos los vecinos llevan el título de su página: la etiqueta «Presentación» del
+ * menú es solo del menú y no debe aparecer aquí; si no hay título, se usa la del menú.
  */
 export function paginacion(
   menu: Entrada[],
@@ -94,11 +96,15 @@ export function paginacion(
   const enlaces = aplanar(menu);
   const i = enlaces.findIndex((e) => e.href === hrefDeId(idOriginal(idActual)));
   if (i === -1) return { prev: undefined, next: undefined };
-  const enCastellano = (e: Enlace | undefined): Enlace | undefined => {
-    if (!e || !esTraduccion(idActual)) return e;
-    const traduccion = idTraduccion(idDeHref(e.href));
-    const t = titulo(traduccion);
-    return t !== undefined ? { ...e, href: hrefDeId(traduccion), label: t } : e;
+  const vecino = (e: Enlace | undefined): Enlace | undefined => {
+    if (!e) return undefined;
+    const original = idDeHref(e.href);
+    if (esTraduccion(idActual)) {
+      const traduccion = idTraduccion(original);
+      const t = titulo(traduccion);
+      if (t !== undefined) return { ...e, href: hrefDeId(traduccion), label: t };
+    }
+    return { ...e, label: titulo(original) ?? e.label };
   };
-  return { prev: enCastellano(enlaces[i - 1]), next: enCastellano(enlaces[i + 1]) };
+  return { prev: vecino(enlaces[i - 1]), next: vecino(enlaces[i + 1]) };
 }

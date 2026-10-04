@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { readFileSync } from 'node:fs';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 // Ruta relativa a la raíz del proyecto: en el entorno happy-dom, `URL` no es la de Node.
 const CODIGO = readFileSync('public/comun/lab.js', 'utf8');
@@ -53,11 +53,27 @@ describe('utilidades internas', () => {
     expect(urlConIdioma(`${LAB}?lang=es#kib`, 'en', 'en')).toBe(`${LAB}#kib`);
     expect(urlConIdioma(`${LAB}#kib`, 'es', 'en')).toBe(`${LAB}?lang=es#kib`);
   });
-  it('destinoVolver: atrás si se llegó desde la web, si no la página del tema', () => {
-    const { destinoVolver } = cargar(LAB, '')._internos;
-    expect(destinoVolver('http://localhost/docencia/x/', 'http://localhost', '/t/')).toBe('atras');
-    expect(destinoVolver('https://aules.edu.gva.es/', 'http://localhost', '/t/')).toBe('/t/');
-    expect(destinoVolver('', 'http://localhost', '/t/')).toBe('/t/');
+  describe('destinoVolver(referrer, origen, ruta, historial, paginaTema)', () => {
+    const RUTA = '/docencia/smr/som/ud01/laboratorios/prueba/';
+    const volver = (referrer: string, historial = 2) => {
+      const { destinoVolver } = cargar(LAB, '')._internos;
+      return destinoVolver(referrer, 'http://localhost', RUTA, historial, '/t/');
+    };
+    it('atrás si se llegó desde otra página de la web y hay historial, si no la página del tema', () => {
+      expect(volver('http://localhost/docencia/x/')).toBe('atras');
+      expect(volver('https://aules.edu.gva.es/')).toBe('/t/');
+      expect(volver('')).toBe('/t/');
+    });
+    it('referrer propio (tras cambiar de idioma con location.replace): la página del tema', () => {
+      expect(volver(`http://localhost${RUTA}`)).toBe('/t/');
+      expect(volver(`http://localhost${RUTA}?lang=es#kib`)).toBe('/t/');
+    });
+    it('sin historial (pestaña nueva abierta desde Aules): la página del tema', () => {
+      expect(volver('http://localhost/docencia/x/', 1)).toBe('/t/');
+    });
+    it('referrer no válido: la página del tema', () => {
+      expect(volver('esto no es una url')).toBe('/t/');
+    });
   });
 });
 
@@ -98,5 +114,46 @@ describe('controles', () => {
     (document.querySelector('[data-lab-idioma="es"]') as HTMLButtonElement).click();
     expect(replaceSpy).toHaveBeenCalledWith(`${LAB}?lang=es`);
     replaceSpy.mockRestore();
+  });
+});
+
+describe('volver (clic)', () => {
+  /** Pulsa «← Volver» con el referrer y la longitud de historial dados. */
+  function pulsarVolver(referrer: string, historial: number, url = LAB) {
+    Object.defineProperty(document, 'referrer', { configurable: true, get: () => referrer });
+    Object.defineProperty(window.history, 'length', { configurable: true, get: () => historial });
+    const atras = vi.spyOn(window.history, 'back').mockImplementation(() => {});
+    cargar(url, '<a data-lab-volver href="#">←</a>');
+    let evitado = false;
+    // Lo ve después del manejador del kit; evita que happy-dom siga el enlace.
+    const observar = (e: Event) => {
+      evitado = e.defaultPrevented;
+      e.preventDefault();
+    };
+    document.addEventListener('click', observar);
+    document.querySelector('[data-lab-volver]')!.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    document.removeEventListener('click', observar);
+    return { atras, evitado };
+  }
+  afterEach(() => {
+    delete (document as any).referrer;
+    delete (window.history as any).length;
+    vi.restoreAllMocks();
+  });
+
+  it('llegado desde otra página de la web: history.back() y no sigue el enlace', () => {
+    const { atras, evitado } = pulsarVolver('http://localhost/docencia/smr/som/ud01/', 3);
+    expect(atras).toHaveBeenCalledTimes(1);
+    expect(evitado).toBe(true);
+  });
+  it('tras cambiar de idioma el referrer es el propio laboratorio: sigue el enlace a la unidad', () => {
+    const { atras, evitado } = pulsarVolver(LAB, 3, `${LAB}?lang=es`);
+    expect(atras).not.toHaveBeenCalled();
+    expect(evitado).toBe(false);
+  });
+  it('en una pestaña nueva (historial de una página): sigue el enlace a la unidad', () => {
+    const { atras, evitado } = pulsarVolver('http://localhost/docencia/smr/som/ud01/', 1);
+    expect(atras).not.toHaveBeenCalled();
+    expect(evitado).toBe(false);
   });
 });
