@@ -36,6 +36,27 @@ describe('idioma del contenido', () => {
   });
 });
 
+/** Enlace «anterior» o «siguiente» de la paginación, con su texto. */
+function vecino(html: string, rel: 'prev' | 'next'): string {
+  return html.match(new RegExp(`<a href="[^"]*" rel="${rel}".*?</a>`, 's'))?.[0] ?? '';
+}
+
+describe('paginación en el original', () => {
+  it('«siguiente» hacia la portada de una unidad muestra el título de la unidad, no «Presentación»', () => {
+    const som = vecino(leer('docencia/smr/som/index.html'), 'next');
+    expect(som).toContain('Unit 1 · Introduction to computer systems');
+    expect(som).not.toContain('Presentación');
+    const si = vecino(leer('docencia/dam/sistemas-informaticos/index.html'), 'next');
+    expect(si).toContain('Unitat 1 ·');
+    expect(si).not.toContain('Presentación');
+  });
+  it('el menú lateral sigue llamando «Presentación» a la portada de la unidad', () => {
+    expect(leer('docencia/smr/som/index.html')).toMatch(
+      /<a href="\/docencia\/smr\/som\/ud01-introduccion\/"[^>]*><span[^>]*>Presentación<\/span><\/a>/,
+    );
+  });
+});
+
 describe('paginación en castellano', () => {
   it('desde la portada del módulo en castellano, «siguiente» va a la unidad en castellano', () => {
     expect(leer('docencia/smr/som/es/index.html')).toMatch(new RegExp(`<a href="${U}es/" rel="next"`));
