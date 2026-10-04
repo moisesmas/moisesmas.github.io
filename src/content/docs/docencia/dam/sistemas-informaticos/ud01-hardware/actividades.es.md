@@ -99,7 +99,7 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un documento (PD
 
 **Parte B. Memoria caché** (pestaña «¿Dónde está el dato?» del [laboratorio](/docencia/dam/sistemas-informaticos/ud01-hardware/laboratorios/dins-la-cpu/?lang=es#dada))
 
-5. En el simulador de caché, una caché de *N* líneas con bloques de *B* palabras (reemplazo LRU). Un acierto cuesta 1 ns y un fallo, 81 ns (1 de la caché más 80 de la RAM). Ejecuta estos patrones de acceso con las tres configuraciones y completa una tabla con aciertos, fallos, tasa de acierto y tiempo total:
+5. En el simulador de caché, una caché de *N* líneas con bloques de *B* palabras (reemplazo LRU). Un acierto cuesta 1 ns y un fallo, 81 ns (1 de la caché más 80 de la RAM). Ejecuta estos patrones de acceso con las tres configuraciones y completa una tabla con aciertos, fallos, tasa de acierto y tiempo total (sin caché, cada acceso costaría 80 ns):
 
    | Patrón | Direcciones |
    |---|---|

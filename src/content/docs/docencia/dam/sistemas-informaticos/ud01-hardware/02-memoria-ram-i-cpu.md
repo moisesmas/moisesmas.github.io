@@ -110,7 +110,7 @@ Un processador a 3 GHz completa 3.000 milions de cicles de rellotge per segon. U
 **Fetch:** la unitat de control busca en memòria `ADD R1, R2` i la porta a la CPU. **Decode:** interpreta que és una suma i que els operands són els registres R1 (que val 2) i R2 (que val 3). **Execute:** l'ALU calcula 2 + 3 = 5. **Writeback:** el 5 es guarda en el registre de destí.
 :::
 
-### El computador senzill
+### L'ordinador senzill
 
 En el laboratori treballaràs amb un model didàctic que usa cinc registres:
 

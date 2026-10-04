@@ -44,7 +44,7 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 
 **Què has de fer:**
 
-1. Repassa «El computador senzill» de la [pàgina 2](/docencia/dam/sistemas-informaticos/ud01-hardware/02-memoria-ram-i-cpu/). Cada paraula de memòria té tres dígits: el primer és l'operació i els dos últims, l'adreça (`110` és `LOAD 10`). El repertori és este:
+1. Repassa «L'ordinador senzill» de la [pàgina 2](/docencia/dam/sistemas-informaticos/ud01-hardware/02-memoria-ram-i-cpu/). Cada paraula de memòria té tres dígits: el primer és l'operació i els dos últims, l'adreça (`110` és `LOAD 10`). El repertori és este:
 
    | Paraula | Instrucció | Què fa |
    |---|---|---|
@@ -99,7 +99,7 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 
 **Part B. Memòria cau** (pestanya «On és la dada?» del [laboratori](/docencia/dam/sistemas-informaticos/ud01-hardware/laboratorios/dins-la-cpu/#dada))
 
-5. En el simulador de cau, una cau d'*N* línies amb blocs de *B* paraules (reemplaçament LRU). Un encert costa 1 ns i una fallada, 81 ns (1 de la cau més 80 de la RAM). Executa estos patrons d'accés amb les tres configuracions i completa una taula amb encerts, fallades, taxa d'encert i temps total:
+5. En el simulador de cau, una cau d'*N* línies amb blocs de *B* paraules (reemplaçament LRU). Un encert costa 1 ns i una fallada, 81 ns (1 de la cau més 80 de la RAM). Executa estos patrons d'accés amb les tres configuracions i completa una taula amb encerts, fallades, taxa d'encert i temps total (sense cau, cada accés costaria 80 ns):
 
    | Patró | Adreces |
    |---|---|
