@@ -1,0 +1,1210 @@
+<!doctype html>
+<html lang="en" data-lab="explorador-del-sistema" data-idioma-original="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="/comun/lab.js"></script>
+<title>Computer System Explorer</title>
+<meta name="description" content="Explore a computer system: its parts, the inside of a PC, software types, computer types, the layers of an operating system, kernel designs, OS classification and software licences, with a final practice.">
+<meta name="keywords" content="computer system, hardware, software, operating system, kernel, licences, firmware">
+<meta name="lab:titulo:es" content="Explorador del sistema">
+<meta name="lab:descripcion:es" content="Explora un sistema informático: sus partes, el interior de un PC, los tipos de software, los tipos de ordenadores, las capas de un sistema operativo, los diseños de núcleo, la clasificación de SO y las licencias de software, con una práctica final.">
+<meta name="lab:etiquetas:es" content="sistema informático, hardware, software, sistema operativo, núcleo, licencias, firmware">
+<link rel="icon" href="/comun/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/comun/fuentes.css">
+<style>html,body{margin:0}body{padding-top:env(safe-area-inset-top,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+<script type="application/json" id="lab-textos">
+{
+  "es": {
+    "volver-aria": "Volver a la unidad",
+    "volver": "Unidad",
+    "zoom-aria": "Tamaño de letra para proyector",
+    "zoom": "Tamaño",
+    "zoom-menos": "Reducir texto",
+    "zoom-mas": "Aumentar texto",
+    "idioma-aria": "Idioma",
+    "titulo": "Explorador del sistema",
+    "secciones-aria": "Secciones del laboratorio",
+    "tab-parts": "Partes del sistema",
+    "tab-inside": "Dentro de la caja",
+    "tab-software": "Tipos de software",
+    "tab-computers": "El ordenador adecuado",
+    "tab-layers": "Las capas del SO",
+    "tab-kernels": "Arquitecturas del núcleo",
+    "tab-classifier": "Clasificador de SO",
+    "tab-licences": "Detective de licencias",
+    "tab-practice": "Práctica",
+    "parts-intro": "Un sistema informático es más que una caja: combina hardware, software, datos y usuarios para convertir datos en información. Clasifica las partes de tres sistemas cotidianos.",
+    "inside-intro": "Pulsa cada pieza del PC para ver qué hace y qué pasa cuando falla. Después clasifica los periféricos según la dirección de los datos.",
+    "software-intro": "Separa el hardware del software, clasifica programas en los cuatro tipos y descubre por qué el firmware vive dentro de los dispositivos. Después compara un compilador con un intérprete.",
+    "computers-intro": "Relaciona necesidades reales con el tipo de ordenador que mejor encaja y después compara los seis tipos.",
+    "layers-intro": "Sigue una petición desde ti hasta el hardware y de vuelta, capa a capa. Cambia entre la interfaz gráfica y la línea de órdenes.",
+    "kernels-intro": "Rompe una parte del núcleo, o añade hardware nuevo, y compara cómo reaccionan los diseños monolítico, por capas, modular y microkernel.",
+    "classifier-intro": "Elige un sistema operativo y clasifícalo por usuarios, multitarea, licencia, número de CPU y estructura.",
+    "licences-intro": "Descubre qué permite cada tipo de licencia y resuelve acertijos y casos legales sobre licencias.",
+    "practice-intro": "Diez preguntas al azar y una comprobación de hardware con un ejercicio nuevo cada vez. Después de cada respuesta tienes la explicación."
+  }
+}
+</script>
+</head>
+<body>
+<style>
+/* Identidad: verde placa + ámbar (como el Laboratorio de Bits). Cuatro colores de categoría solo como borde o franja; el texto va siempre en --ink. */
+:root{
+  --bg:#f2f4ef; --surface:#ffffff; --surface2:#e9ede6; --ink:#16201b; --muted:#56655d; --line:#d3dbd4;
+  --accent:#b86e00; --accent-soft:#fbeed8; --pcb:#1f5244; --good:#1f7a36; --bad:#b3261e;
+  --c1:#0a8a74; --c2:#7446c4; --c3:#2764c9; --c4:#b86e00;
+  --c1s:#dcf2ed; --c2s:#ece4f8; --c3s:#e2ebfa; --c4s:#fbeed8;
+  --f-display:"Chakra Petch","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1411; --surface:#161f1b; --surface2:#1d2823; --ink:#e4ebe6; --muted:#95a69d; --line:#2b3832;
+  --accent:#f3aa3c; --accent-soft:#33260f; --pcb:#1a463a; --good:#5bd07a; --bad:#ff7b6e;
+  --c1:#3fd2b5; --c2:#b596f3; --c3:#82b1ff; --c4:#f3aa3c;
+  --c1s:#133029; --c2s:#261e38; --c3s:#18243b; --c4s:#33260f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1411; --surface:#161f1b; --surface2:#1d2823; --ink:#e4ebe6; --muted:#95a69d; --line:#2b3832;
+  --accent:#f3aa3c; --accent-soft:#33260f; --pcb:#1a463a; --good:#5bd07a; --bad:#ff7b6e;
+  --c1:#3fd2b5; --c2:#b596f3; --c3:#82b1ff; --c4:#f3aa3c;
+  --c1s:#133029; --c2s:#261e38; --c3s:#18243b; --c4s:#33260f; color-scheme:dark}
+
+html{font-size:16px}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1rem;line-height:1.55}
+*{box-sizing:border-box}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+h2{font-size:1.75rem;font-weight:700}
+h3{font-size:1.15rem;font-weight:600}
+p{margin:0;max-width:68ch}
+code,.mono{font-family:var(--f-mono)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+.top-inner{max-width:1180px;margin:0 auto;padding:.8rem 16px .5rem;display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;justify-content:space-between}
+.brand{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem}
+.brand h1{font-size:1.3rem;letter-spacing:.02em}
+.brand a.home{font:600 .8rem var(--f-mono);color:var(--muted);text-decoration:none;border:1px solid var(--muted);border-radius:6px;padding:.2rem .5rem}
+.brand a.home:hover{color:var(--ink)}
+.zoom{display:flex;gap:.3rem;align-items:center;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
+.zoom button{font:600 .85rem var(--f-mono);border:1px solid var(--muted);background:var(--surface);color:var(--ink);border-radius:6px;padding:.2rem .55rem;cursor:pointer}
+.zoom .idiomas{display:inline-flex;margin-left:.5rem;border:1px solid var(--muted);border-radius:99px;overflow:hidden}
+.zoom .idiomas button{border:0;border-radius:0;background:transparent;color:var(--muted);font:600 .75rem var(--f-mono);padding:.25rem .6rem}
+.zoom .idiomas button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+nav.tabs{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:.25rem;overflow-x:auto;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;font:600 .95rem var(--f-display);letter-spacing:.02em;background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);padding:.55rem .75rem;cursor:pointer;white-space:nowrap}
+nav.tabs button .n{font-family:var(--f-mono);font-size:.75rem;opacity:.8;margin-right:.35rem}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs button:hover{color:var(--ink)}
+
+main{max-width:1180px;margin:0 auto;padding-block:1.6rem 4rem;padding-inline:16px}
+section[role="tabpanel"]{display:grid;gap:1.3rem}
+section[role="tabpanel"][hidden]{display:none}
+.lead{font-size:1.08rem;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.1rem;display:grid;gap:.8rem;align-content:start;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:1.1rem}
+.row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.note{background:var(--surface2);border-radius:8px;padding:.7rem .95rem;font-size:.95rem}
+.btn{font:600 .92rem var(--f-display);letter-spacing:.02em;border:1px solid var(--muted);background:var(--surface2);color:var(--ink);border-radius:7px;padding:.4rem .85rem;cursor:pointer}
+.btn:hover{filter:brightness(1.06)}
+.btn.primary{background:var(--pcb);border-color:var(--pcb);color:#fff}
+.btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.btn[aria-disabled="true"]{opacity:.6;cursor:default}
+.pills{display:flex;flex-wrap:wrap;gap:.4rem}
+table.t{width:100%;border-collapse:collapse;font-size:.93rem}
+table.t th,table.t td{padding:.4rem .55rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:600 .75rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.scroll{overflow-x:auto;max-width:100%}
+
+/* Clasificador (botones, apto para teclado) */
+.sort-head{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;justify-content:space-between}
+.score{font:600 .95rem var(--f-mono);color:var(--muted)}
+.items{list-style:none;margin:0;padding:0;display:grid;gap:.6rem}
+.item{border:1px solid var(--line);border-left:5px solid var(--muted);border-radius:8px;padding:.6rem .8rem;display:grid;gap:.4rem;background:var(--surface)}
+.item.ok{border-left-color:var(--good);background:var(--c1s)}
+.item .q{font-weight:700}
+.opts{display:flex;flex-wrap:wrap;gap:.35rem}
+.opt{font:600 .88rem var(--f-display);border:1px solid var(--muted);background:var(--surface2);border-radius:7px;padding:.3rem .7rem;cursor:pointer}
+.opt.ko{text-decoration:line-through;opacity:.65;border-style:dashed}
+.opt.right{background:var(--c1s);border-color:var(--good);box-shadow:inset 0 0 0 1px var(--good)}
+.opt[aria-disabled="true"]{cursor:default}
+.fb{font-size:.92rem;min-height:1.2em}
+.fb.good{color:var(--good)} .fb.bad{color:var(--bad)}
+.fb b{font-family:var(--f-display)}
+
+/* Cuatro elementos / funciones */
+.four{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:.7rem}
+.four div{border:1px solid var(--line);border-top:5px solid var(--c1);border-radius:8px;padding:.6rem .8rem;background:var(--surface)}
+.four div:nth-child(2){border-top-color:var(--c2)} .four div:nth-child(3){border-top-color:var(--c3)} .four div:nth-child(4){border-top-color:var(--c4)}
+.four b{font-family:var(--f-display)}
+.flow{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;font:600 .9rem var(--f-display)}
+.flow span{background:var(--surface2);border:1px solid var(--line);border-radius:99px;padding:.2rem .7rem}
+.flow i{font-style:normal;color:var(--muted)}
+
+/* Dentro de la caja */
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:.5rem;background:var(--pcb);border:3px solid var(--c4);border-radius:12px;padding:.8rem}
+.board button{background:var(--surface);border:2px solid transparent;border-radius:8px;padding:.6rem .5rem;font:600 .92rem var(--f-display);cursor:pointer;min-height:3.2rem}
+.board button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.detail{display:grid;gap:.5rem;border-left:5px solid var(--accent);background:var(--surface2);border-radius:0 8px 8px 0;padding:.8rem 1rem}
+.detail dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.25rem .8rem}
+.detail dt{font:600 .75rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:.15rem}
+.detail dd{margin:0}
+.vol{display:inline-block;font:600 .8rem var(--f-mono);border:1px solid var(--muted);border-radius:99px;padding:.05rem .6rem}
+
+/* Simuladores con registro */
+.code{font-family:var(--f-mono);background:var(--surface2);border-radius:8px;padding:.6rem .8rem;line-height:1.7;overflow-x:auto}
+.code .ln{color:var(--muted);margin-right:.8rem}
+.code .bad{color:var(--bad);font-weight:700}
+.log{list-style:none;margin:0;padding:0;display:grid;gap:.3rem;font-family:var(--f-mono);font-size:.92rem}
+.log li{border-left:4px solid var(--line);padding:.15rem .6rem}
+.log li.err{border-left-color:var(--bad)} .log li.out{border-left-color:var(--good);font-weight:700}
+
+/* Capas */
+.stack{display:grid;gap:.3rem}
+.layer{display:grid;grid-template-columns:1fr auto;gap:.5rem;align-items:center;border:2px solid var(--line);border-radius:8px;padding:.5rem .8rem;background:var(--surface)}
+.layer small{color:var(--muted);font-size:.8rem}
+.layer.done{background:var(--surface2)}
+.layer.now{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 2px var(--accent)}
+.layer .mode{font:600 .7rem var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.stepbox{border-left:5px solid var(--accent);background:var(--surface2);border-radius:0 8px 8px 0;padding:.8rem 1rem;display:grid;gap:.4rem}
+.tag{display:inline-block;font:600 .78rem var(--f-mono);border:1px solid var(--accent);border-radius:99px;padding:.05rem .6rem;background:var(--accent-soft)}
+
+/* Núcleos */
+.matrix{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:.7rem}
+.arch{border:1px solid var(--line);border-radius:8px;padding:.7rem .85rem;display:grid;gap:.4rem;background:var(--surface);align-content:start}
+.arch h3{font-size:1rem}
+.sev{display:inline-block;font:700 .8rem var(--f-mono);border-radius:6px;padding:.1rem .5rem;border:2px solid var(--muted)}
+.sev.down{border-color:var(--bad)} .sev.part{border-color:var(--accent)} .sev.ok{border-color:var(--good)}
+.mini{display:flex;flex-wrap:wrap;gap:.25rem}
+.mini span{font:.75rem var(--f-mono);border:1px solid var(--muted);border-radius:4px;padding:.05rem .4rem;background:var(--surface2)}
+.mini.core span{background:var(--c4s)}
+
+/* Clasificador de SO */
+fieldset{border:1px solid var(--line);border-radius:8px;margin:0;padding:.5rem .8rem .7rem;min-width:0}
+legend{font:600 .85rem var(--f-display);padding:0 .3rem}
+fieldset label{display:inline-flex;align-items:center;gap:.35rem;margin:.25rem .9rem .1rem 0;cursor:pointer}
+input[type=radio],input[type=checkbox]{accent-color:var(--pcb);width:1.1rem;height:1.1rem}
+
+/* Licencias */
+.lights{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:.5rem}
+.light{border:1px solid var(--line);border-left:6px solid var(--muted);border-radius:8px;padding:.45rem .7rem;background:var(--surface)}
+.light b{display:block;font:600 .8rem var(--f-mono);text-transform:uppercase;letter-spacing:.04em}
+.light.yes{border-left-color:var(--good)} .light.no{border-left-color:var(--bad)} .light.cond{border-left-color:var(--accent)}
+
+/* Práctica */
+.q-prompt{font:600 1.3rem var(--f-display)}
+.choices{display:grid;gap:.45rem}
+.choices .opt{text-align:left;font:500 1rem var(--f-body);padding:.5rem .8rem}
+.pcs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:.7rem}
+.pc{border:1px solid var(--line);border-radius:8px;padding:.6rem .8rem;display:grid;gap:.3rem;background:var(--surface)}
+.pc.ok{border-left:5px solid var(--good)} .pc.ko{border-left:5px solid var(--bad)}
+.pc label{display:flex;gap:.45rem;align-items:center;font-weight:700}
+ul.plain{margin:0;padding-left:1.1rem}
+
+@media (max-width:560px){h2{font-size:1.4rem}.detail dl{grid-template-columns:1fr}.layer{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><a class="home" href="../../" data-lab-volver data-t-attr="aria-label:volver-aria" aria-label="Back to the unit">← <span data-t="volver">Unit</span></a>
+      <h1 data-t="titulo">Computer System Explorer</h1>
+    </div>
+    <div class="zoom" role="group" data-t-attr="aria-label:zoom-aria" aria-label="Text size for the projector"><span data-t="zoom">Size</span>
+      <button type="button" data-lab-zoom="-" data-t-attr="aria-label:zoom-menos" aria-label="Smaller text">A−</button>
+      <button type="button" data-lab-zoom="+" data-t-attr="aria-label:zoom-mas" aria-label="Larger text">A+</button>
+      <span class="idiomas" role="group" data-t-attr="aria-label:idioma-aria" aria-label="Language">
+        <button type="button" data-lab-idioma="en"></button><button type="button" data-lab-idioma="es"></button>
+      </span>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist" data-t-attr="aria-label:secciones-aria" aria-label="Lab sections">
+    <button type="button" role="tab" id="tab-parts" data-tab="parts" aria-controls="panel-parts" aria-selected="true"><span class="n">1</span><span data-t="tab-parts">System parts</span></button>
+    <button type="button" role="tab" id="tab-inside" data-tab="inside" aria-controls="panel-inside" aria-selected="false" tabindex="-1"><span class="n">2</span><span data-t="tab-inside">Inside the box</span></button>
+    <button type="button" role="tab" id="tab-software" data-tab="software" aria-controls="panel-software" aria-selected="false" tabindex="-1"><span class="n">3</span><span data-t="tab-software">Software types</span></button>
+    <button type="button" role="tab" id="tab-computers" data-tab="computers" aria-controls="panel-computers" aria-selected="false" tabindex="-1"><span class="n">4</span><span data-t="tab-computers">Right computer for the job</span></button>
+    <button type="button" role="tab" id="tab-layers" data-tab="layers" aria-controls="panel-layers" aria-selected="false" tabindex="-1"><span class="n">5</span><span data-t="tab-layers">The OS layer cake</span></button>
+    <button type="button" role="tab" id="tab-kernels" data-tab="kernels" aria-controls="panel-kernels" aria-selected="false" tabindex="-1"><span class="n">6</span><span data-t="tab-kernels">Kernel architectures</span></button>
+    <button type="button" role="tab" id="tab-classifier" data-tab="classifier" aria-controls="panel-classifier" aria-selected="false" tabindex="-1"><span class="n">7</span><span data-t="tab-classifier">OS classifier</span></button>
+    <button type="button" role="tab" id="tab-licences" data-tab="licences" aria-controls="panel-licences" aria-selected="false" tabindex="-1"><span class="n">8</span><span data-t="tab-licences">Licence detective</span></button>
+    <button type="button" role="tab" id="tab-practice" data-tab="practice" aria-controls="panel-practice" aria-selected="false" tabindex="-1"><span class="n">9</span><span data-t="tab-practice">Practice</span></button>
+  </nav>
+</header>
+<main>
+<section role="tabpanel" id="panel-parts" aria-labelledby="tab-parts" tabindex="0">
+  <h2 data-t="tab-parts">System parts</h2>
+  <p class="lead" data-t="parts-intro">A computer system is more than a box: it combines hardware, software, data and users to turn data into information. Sort the parts of three everyday systems.</p>
+  <div id="host-parts" class="host"></div>
+</section>
+<section role="tabpanel" id="panel-inside" aria-labelledby="tab-inside" tabindex="0" hidden>
+  <h2 data-t="tab-inside">Inside the box</h2>
+  <p class="lead" data-t="inside-intro">Press each part of the PC to see what it does and what happens when it fails. Then sort the peripherals by the direction of the data.</p>
+  <div id="host-inside" class="host"></div>
+</section>
+<section role="tabpanel" id="panel-software" aria-labelledby="tab-software" tabindex="0" hidden>
+  <h2 data-t="tab-software">Software types</h2>
+  <p class="lead" data-t="software-intro">Separate hardware from software, sort programs into the four types and see why firmware lives inside devices. Then compare a compiler with an interpreter.</p>
+  <div id="host-software" class="host"></div>
+</section>
+<section role="tabpanel" id="panel-computers" aria-labelledby="tab-computers" tabindex="0" hidden>
+  <h2 data-t="tab-computers">Right computer for the job</h2>
+  <p class="lead" data-t="computers-intro">Match real needs with the type of computer that fits best, then compare the six types.</p>
+  <div id="host-computers" class="host"></div>
+</section>
+<section role="tabpanel" id="panel-layers" aria-labelledby="tab-layers" tabindex="0" hidden>
+  <h2 data-t="tab-layers">The OS layer cake</h2>
+  <p class="lead" data-t="layers-intro">Follow a request from you to the hardware and back, one layer at a time. Switch between the graphical interface and the command line.</p>
+  <div id="host-layers" class="host"></div>
+</section>
+<section role="tabpanel" id="panel-kernels" aria-labelledby="tab-kernels" tabindex="0" hidden>
+  <h2 data-t="tab-kernels">Kernel architectures</h2>
+  <p class="lead" data-t="kernels-intro">Break a part of the kernel, or add new hardware, and compare how monolithic, layered, modular and microkernel designs react.</p>
+  <div id="host-kernels" class="host"></div>
+</section>
+<section role="tabpanel" id="panel-classifier" aria-labelledby="tab-classifier" tabindex="0" hidden>
+  <h2 data-t="tab-classifier">OS classifier</h2>
+  <p class="lead" data-t="classifier-intro">Pick an operating system and classify it by users, multitasking, licence, number of CPUs and structure.</p>
+  <div id="host-classifier" class="host"></div>
+</section>
+<section role="tabpanel" id="panel-licences" aria-labelledby="tab-licences" tabindex="0" hidden>
+  <h2 data-t="tab-licences">Licence detective</h2>
+  <p class="lead" data-t="licences-intro">Learn what each licence type allows, then solve licence puzzles and legal cases.</p>
+  <div id="host-licences" class="host"></div>
+</section>
+<section role="tabpanel" id="panel-practice" aria-labelledby="tab-practice" tabindex="0" hidden>
+  <h2 data-t="tab-practice">Practice</h2>
+  <p class="lead" data-t="practice-intro">Ten random questions, and a hardware check with a new exercise each time. You get the explanation after every answer.</p>
+  <div id="host-practice" class="host"></div>
+</section>
+</main>
+
+<script>
+'use strict';
+/* Computer System Explorer. Todo el texto generado pasa por Lab.t; los datos van como pares [inglés, castellano]. */
+const T = (en, es) => Lab.t({ en, es });
+const P = (p) => T(p[0], p[1]);
+const h = (tag, attrs, ...kids) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v === false || v === null || v === undefined) continue;
+    if (k === 'class') e.className = v;
+    else e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat()) if (c !== null && c !== undefined && c !== false) e.append(c.nodeType ? c : document.createTextNode(c));
+  return e;
+};
+const shuffle = (a) => {
+  const b = a.slice();
+  for (let i = b.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [b[i], b[j]] = [b[j], b[i]];
+  }
+  return b;
+};
+const $host = (id) => document.getElementById('host-' + id);
+
+/* ===== Pestañas (patrón WAI-ARIA): clic, flechas, Inicio/Fin, #id y memoria ===== */
+const pestanas = [...document.querySelectorAll('[role="tab"]')];
+function mostrar(id) {
+  const activa = pestanas.find((p) => p.dataset.tab === id) || pestanas[0];
+  for (const p of pestanas) {
+    const es = p === activa;
+    p.setAttribute('aria-selected', String(es));
+    p.tabIndex = es ? 0 : -1;
+    document.getElementById(p.getAttribute('aria-controls')).hidden = !es;
+  }
+  activa.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  return activa;
+}
+function elegir(id, enfocar) {
+  const activa = mostrar(id);
+  Lab.guardar('pestana', activa.dataset.tab);
+  history.replaceState(null, '', '#' + activa.dataset.tab);
+  if (enfocar) activa.focus();
+}
+pestanas.forEach((p) => p.addEventListener('click', () => elegir(p.dataset.tab)));
+document.querySelector('[role="tablist"]').addEventListener('keydown', (e) => {
+  const i = pestanas.indexOf(document.activeElement);
+  const destino = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: pestanas.length - 1 }[e.key];
+  if (i < 0 || destino === undefined) return;
+  e.preventDefault();
+  elegir(pestanas[(destino + pestanas.length) % pestanas.length].dataset.tab, true);
+});
+window.addEventListener('hashchange', () => mostrar(location.hash.slice(1)));
+
+/* ===== Clasificador genérico con botones (sirve con teclado) =====
+   cfg.opts: [{id, l:[en,es]}] · cfg.items: [{q:[en,es], a:id|[ids], why:[en,es]}]
+   Un acierto bloquea el elemento; un fallo tacha la opción y deja volver a intentarlo. */
+function sorter(host, cfg) {
+  const n = cfg.items.length;
+  function render() {
+    host.textContent = '';
+    let solved = 0;
+    let first = 0;
+    const score = h('p', { class: 'score', role: 'status' });
+    const actualizar = () => {
+      score.textContent = T(`Solved ${solved} of ${n} · ${first} at the first try`, `Resueltos ${solved} de ${n} · ${first} a la primera`) +
+        (solved === n ? ' — ' + T('well done!', '¡muy bien!') : '');
+    };
+    const otra = h('button', { type: 'button', class: 'btn' }, T('Start again', 'Empezar de nuevo'));
+    otra.addEventListener('click', render);
+    const lista = h('ol', { class: 'items' });
+    shuffle(cfg.items).forEach((it) => {
+      const q = P(it.q);
+      const fb = h('p', { class: 'fb', role: 'status' });
+      const grupo = h('div', { class: 'opts', role: 'group', 'aria-label': q });
+      const li = h('li', { class: 'item' }, h('p', { class: 'q' }, q), grupo, fb);
+      const validas = [].concat(it.a);
+      let fallos = 0;
+      let hecho = false;
+      cfg.opts.forEach((o) => {
+        const b = h('button', { type: 'button', class: 'opt', 'aria-pressed': 'false' }, P(o.l));
+        b.addEventListener('click', () => {
+          if (hecho || b.getAttribute('aria-disabled') === 'true') return;
+          if (validas.includes(o.id)) {
+            hecho = true;
+            solved++;
+            if (!fallos) first++;
+            li.classList.add('ok');
+            b.classList.add('right');
+            b.setAttribute('aria-pressed', 'true');
+            grupo.querySelectorAll('.opt').forEach((x) => x.setAttribute('aria-disabled', 'true'));
+            fb.className = 'fb good';
+            fb.textContent = '';
+            fb.append(h('b', {}, T('Correct. ', 'Correcto. ')), P(it.why));
+            actualizar();
+          } else {
+            fallos++;
+            b.classList.add('ko');
+            b.setAttribute('aria-disabled', 'true');
+            fb.className = 'fb bad';
+            fb.textContent = T(`Not “${P(o.l)}”. Think again and try another option.`, `No es «${P(o.l)}». Piénsalo otra vez y prueba otra opción.`);
+          }
+        });
+        grupo.append(b);
+      });
+      lista.append(li);
+    });
+    host.append(h('div', { class: 'sort-head' }, score, otra), lista);
+    actualizar();
+  }
+  render();
+}
+
+const OPT_HSDU = [
+  { id: 'h', l: ['Hardware', 'Hardware'] },
+  { id: 's', l: ['Software', 'Software'] },
+  { id: 'd', l: ['Data', 'Datos'] },
+  { id: 'u', l: ['Users', 'Usuarios'] },
+];
+const OPT_HS = OPT_HSDU.slice(0, 2);
+const OPT_YN = [{ id: 'y', l: ['Yes', 'Sí'] }, { id: 'n', l: ['No', 'No'] }];
+
+/* ===== 1 · System parts ===== */
+(function () {
+  const host = $host('parts');
+  const four = h('div', { class: 'four' },
+    h('div', {}, h('b', {}, 'Hardware'), h('p', {}, T('The physical parts you can touch.', 'Las partes físicas, las que se pueden tocar.'))),
+    h('div', {}, h('b', {}, 'Software'), h('p', {}, T('Programs and instructions for the hardware.', 'Programas e instrucciones para el hardware.'))),
+    h('div', {}, h('b', {}, T('Data', 'Datos')), h('p', {}, T('What the system stores and processes.', 'Lo que el sistema guarda y procesa.'))),
+    h('div', {}, h('b', {}, T('Users', 'Usuarios')), h('p', {}, T('People who use, install or maintain it.', 'Las personas que lo usan, instalan o mantienen.'))));
+  const flow = h('div', { class: 'flow', role: 'group', 'aria-label': T('Functions of a computer system', 'Funciones de un sistema informático') },
+    h('span', {}, T('Input', 'Entrada')), h('i', { 'aria-hidden': 'true' }, '→'),
+    h('span', {}, T('Processing', 'Procesamiento')), h('i', { 'aria-hidden': 'true' }, '→'),
+    h('span', {}, T('Storage', 'Almacenamiento')), h('i', { 'aria-hidden': 'true' }, '→'),
+    h('span', {}, T('Output', 'Salida')), h('i', { 'aria-hidden': 'true' }, '·'),
+    h('span', {}, T('Control (coordinates everything)', 'Control (coordina todo)')));
+  const S = (name, items) => ({ name, items });
+  const scen = [
+    S(['Smartphone', 'Teléfono móvil'], [
+      [['The touchscreen', 'La pantalla táctil'], 'h', ['You can touch it: it is a physical part.', 'Se puede tocar: es una pieza física.']],
+      [['The operating system (Android or iOS)', 'El sistema operativo (Android o iOS)'], 's', ['It is a program that manages the hardware.', 'Es un programa que gestiona el hardware.']],
+      [['The photos you took', 'Las fotos que has hecho'], 'd', ['Photos are information that the programs store and process.', 'Las fotos son información que los programas guardan y procesan.']],
+      [['The owner who uses it every day', 'La persona propietaria que lo usa a diario'], 'u', ['The people who use a system are its users.', 'Las personas que usan un sistema son sus usuarios.']],
+      [['The camera app', 'La aplicación de cámara'], 's', ['An application is software.', 'Una aplicación es software.']],
+      [['The battery', 'La batería'], 'h', ['A physical component that supplies power.', 'Un componente físico que da energía.']],
+      [['The contacts list', 'La lista de contactos'], 'd', ['It is stored information: data.', 'Es información almacenada: datos.']],
+      [['The technician who repairs it', 'El técnico que lo repara'], 'u', ['Technicians who install, repair or maintain a system are users too.', 'Los técnicos que instalan, reparan o mantienen un sistema también son usuarios.']],
+    ]),
+    S(['Self-service checkout', 'Caja de autocobro'], [
+      [['The barcode scanner', 'El lector de códigos de barras'], 'h', ['A physical input device.', 'Un dispositivo físico de entrada.']],
+      [['The weighing scale', 'La báscula'], 'h', ['It is a physical part that sends data to the system.', 'Es una pieza física que envía datos al sistema.']],
+      [['The program that adds up the prices', 'El programa que suma los precios'], 's', ['It is a set of instructions: software.', 'Es un conjunto de instrucciones: software.']],
+      [['The price list stored in the database', 'La lista de precios guardada en la base de datos'], 'd', ['The prices are stored information: data.', 'Los precios son información almacenada: datos.']],
+      [['The customer who scans and pays', 'El cliente que escanea y paga'], 'u', ['The customer uses the system.', 'El cliente usa el sistema.']],
+      [['The assistant who unblocks the machine', 'La persona que desbloquea la máquina'], 'u', ['Someone who looks after the system is a user too.', 'Quien cuida del sistema también es usuario.']],
+      [['The receipt printer', 'La impresora de tickets'], 'h', ['A physical output device.', 'Un dispositivo físico de salida.']],
+      [['Today’s record of sales', 'El registro de ventas de hoy'], 'd', ['A collection of stored information: data.', 'Una colección de información almacenada: datos.']],
+    ]),
+    S(['School library', 'Biblioteca del centro'], [
+      [['The server that stores the catalogue', 'El servidor que guarda el catálogo'], 'h', ['A computer is hardware.', 'Un ordenador es hardware.']],
+      [['The library management program', 'El programa de gestión de la biblioteca'], 's', ['A program is software.', 'Un programa es software.']],
+      [['The list of loans and return dates', 'La lista de préstamos y fechas de devolución'], 'd', ['It is information that the program stores.', 'Es información que el programa guarda.']],
+      [['The librarian who registers the loans', 'La bibliotecaria que registra los préstamos'], 'u', ['She operates the system: a user.', 'Maneja el sistema: es usuaria.']],
+      [['The student who searches for a book', 'El estudiante que busca un libro'], 'u', ['A student using the catalogue is a user.', 'Un estudiante que usa el catálogo es un usuario.']],
+      [['The book records (title, author, ISBN)', 'Las fichas de libros (título, autor, ISBN)'], 'd', ['Records are data.', 'Las fichas son datos.']],
+      [['The network cable between the PCs', 'El cable de red entre los PC'], 'h', ['A cable is a physical part.', 'Un cable es una parte física.']],
+      [['The antivirus program on the librarian’s PC', 'El antivirus del PC de la bibliotecaria'], 's', ['An antivirus is a program: software.', 'Un antivirus es un programa: software.']],
+    ]),
+  ];
+  const zona = h('div');
+  const botones = h('div', { class: 'pills', role: 'group', 'aria-label': T('Choose a system', 'Elige un sistema') });
+  function elegirEscena(i) {
+    [...botones.children].forEach((b, j) => b.setAttribute('aria-pressed', String(i === j)));
+    sorter(zona, { opts: OPT_HSDU, items: scen[i].items.map((x) => ({ q: x[0], a: x[1], why: x[2] })) });
+  }
+  scen.forEach((s, i) => {
+    const b = h('button', { type: 'button', class: 'btn', 'aria-pressed': 'false' }, P(s.name));
+    b.addEventListener('click', () => elegirEscena(i));
+    botones.append(b);
+  });
+  host.append(h('div', { class: 'card' }, four, h('p', {}, T('Every computer system does five things:', 'Todo sistema informático hace cinco cosas:')), flow),
+    h('div', { class: 'card' }, h('h3', {}, T('Sort the parts of a system', 'Clasifica las partes de un sistema')), botones, zona));
+  elegirEscena(0);
+})();
+
+/* ===== 2 · Inside the box ===== */
+(function () {
+  const host = $host('inside');
+  const C = [
+    ['CPU', 'CPU', ['Runs the instructions of the programs (fetch, decode, execute) and coordinates the other parts.', 'Ejecuta las instrucciones de los programas (buscar, decodificar, ejecutar) y coordina las demás piezas.'], null, ['Cores and clock speed (GHz).', 'Núcleos y frecuencia (GHz).'], ['The computer does not start, or it crashes when it overheats.', 'El ordenador no arranca, o se cuelga cuando se sobrecalienta.']],
+    ['RAM (main memory)', 'RAM (memoria principal)', ['Holds the programs and data that are in use right now. It is the work table.', 'Guarda los programas y datos que se usan ahora mismo. Es la mesa de trabajo.'], 'vol', ['Capacity in GB.', 'Capacidad en GB.'], ['With too little RAM the system becomes slow because it uses the disk as extra memory.', 'Con poca RAM el sistema va lento porque usa el disco como memoria extra.']],
+    ['Storage (SSD or HDD)', 'Almacenamiento (SSD o HDD)', ['Keeps the operating system, programs and files for a long time. An SSD uses flash chips; an HDD uses spinning platters.', 'Guarda el sistema operativo, los programas y los archivos durante mucho tiempo. Un SSD usa chips flash; un HDD usa platos que giran.'], 'non', ['Capacity in GB or TB.', 'Capacidad en GB o TB.'], ['The system does not boot and files can be lost: make backups.', 'El sistema no arranca y se pueden perder archivos: haz copias de seguridad.']],
+    ['Motherboard', 'Placa base', ['The main circuit board. It connects all the parts and decides which CPU, RAM and cards you can install.', 'La placa de circuito principal. Conecta todas las piezas y decide qué CPU, RAM y tarjetas puedes instalar.'], null, ['Socket, chipset and form factor.', 'Zócalo, chipset y formato.'], ['Nothing works: every part depends on it.', 'Nada funciona: todas las piezas dependen de ella.']],
+    ['Graphics card (GPU)', 'Tarjeta gráfica (GPU)', ['Creates the image shown on the screen. It can also help with heavy calculations. It may be integrated into the CPU.', 'Crea la imagen que se muestra en la pantalla. También puede ayudar en cálculos pesados. Puede estar integrada en la CPU.'], null, ['Video memory and speed.', 'Memoria de vídeo y velocidad.'], ['No image, or strange colours and freezes in games and video.', 'No hay imagen, o aparecen colores extraños y bloqueos en juegos y vídeo.']],
+    ['Power supply (PSU)', 'Fuente de alimentación (PSU)', ['Converts the mains electricity into the low voltages (such as 12 V, 5 V and 3.3 V) that each part needs.', 'Convierte la electricidad de la red en las tensiones bajas (como 12 V, 5 V y 3,3 V) que necesita cada pieza.'], null, ['Power in watts (W).', 'Potencia en vatios (W).'], ['The computer does not switch on, or it restarts when the load is high.', 'El ordenador no se enciende, o se reinicia cuando la carga es alta.']],
+    ['Heat sink and fan', 'Disipador y ventilador', ['Take the heat away from the CPU so it can work at full speed.', 'Alejan el calor de la CPU para que pueda trabajar a máxima velocidad.'], null, ['Cooling capacity and noise.', 'Capacidad de refrigeración y ruido.'], ['The CPU slows down or switches the computer off to protect itself.', 'La CPU se ralentiza o apaga el ordenador para protegerse.']],
+    ['Network card', 'Tarjeta de red', ['Connects the computer to a network (Ethernet cable or Wi-Fi). It is a communication peripheral.', 'Conecta el ordenador a una red (cable Ethernet o Wi-Fi). Es un periférico de comunicación.'], null, ['Speed in Mb/s or Gb/s.', 'Velocidad en Mb/s o Gb/s.'], ['No network or internet, but the computer still works offline.', 'No hay red ni internet, pero el ordenador sigue funcionando sin conexión.']],
+    ['Firmware chip (UEFI or BIOS)', 'Chip de firmware (UEFI o BIOS)', ['Flash memory on the motherboard. Its software checks the hardware and starts the operating system.', 'Memoria flash de la placa base. Su software comprueba el hardware y arranca el sistema operativo.'], 'non', ['Version and settings.', 'Versión y configuración.'], ['The computer cannot start the operating system.', 'El ordenador no puede arrancar el sistema operativo.']],
+    ['Case', 'Caja (chasis)', ['Holds and protects the parts and directs the air flow.', 'Sujeta y protege las piezas y dirige el flujo de aire.'], null, ['Size (tower, mini tower, small form factor).', 'Tamaño (torre, minitorre, formato reducido).'], ['Poor air flow makes everything hotter.', 'Un mal flujo de aire calienta todo.']],
+  ];
+  const detalle = h('div', { class: 'detail', role: 'status' }, h('p', {}, T('Press a part of the board.', 'Pulsa una pieza de la placa.')));
+  const tablero = h('div', { class: 'board', role: 'group', 'aria-label': T('Parts of a PC', 'Piezas de un PC') });
+  C.forEach((c, i) => {
+    const b = h('button', { type: 'button', 'aria-pressed': 'false' }, T(c[0], c[1]));
+    b.addEventListener('click', () => {
+      [...tablero.children].forEach((x, j) => x.setAttribute('aria-pressed', String(i === j)));
+      detalle.textContent = '';
+      detalle.append(h('h3', {}, T(c[0], c[1])), h('dl', {},
+        h('dt', {}, T('What it does', 'Qué hace')), h('dd', {}, P(c[2])),
+        c[3] ? h('dt', {}, T('Memory', 'Memoria')) : null,
+        c[3] ? h('dd', {}, h('span', { class: 'vol' }, c[3] === 'vol' ? T('Volatile: loses data without power', 'Volátil: pierde los datos sin corriente') : T('Non-volatile: keeps data without power', 'No volátil: conserva los datos sin corriente'))) : null,
+        h('dt', {}, T('Measured in', 'Se mide en')), h('dd', {}, P(c[4])),
+        h('dt', {}, T('If it fails', 'Si falla')), h('dd', {}, P(c[5]))));
+    });
+    tablero.append(b);
+  });
+  const perif = h('div');
+  host.append(h('div', { class: 'card' }, h('h3', {}, T('Parts of a PC', 'Piezas de un PC')), tablero, detalle),
+    h('div', { class: 'card' }, h('h3', {}, T('Peripherals: which direction do the data go?', 'Periféricos: ¿en qué dirección van los datos?')), perif));
+  const O = (id, en, es) => ({ id, l: [en, es] });
+  sorter(perif, {
+    opts: [O('in', 'Input', 'Entrada'), O('out', 'Output', 'Salida'), O('io', 'Input and output', 'Entrada y salida'), O('st', 'Storage', 'Almacenamiento'), O('co', 'Communication', 'Comunicación')],
+    items: [
+      { q: ['Keyboard', 'Teclado'], a: 'in', why: ['It only sends data to the computer.', 'Solo envía datos al ordenador.'] },
+      { q: ['Monitor', 'Monitor'], a: 'out', why: ['It only shows information.', 'Solo muestra información.'] },
+      { q: ['Touchscreen', 'Pantalla táctil'], a: 'io', why: ['You touch it (input) and it shows the image (output).', 'La tocas (entrada) y muestra la imagen (salida).'] },
+      { q: ['Webcam', 'Webcam'], a: 'in', why: ['It captures images and sends them to the computer.', 'Capta imágenes y las envía al ordenador.'] },
+      { q: ['Laser printer', 'Impresora láser'], a: 'out', why: ['It receives data and prints them.', 'Recibe datos y los imprime.'] },
+      { q: ['USB flash drive', 'Memoria USB'], a: 'st', why: ['Its job is to keep data.', 'Su función es guardar datos.'] },
+      { q: ['Wi-Fi USB adapter', 'Adaptador Wi-Fi USB'], a: 'co', why: ['It connects the computer to a network.', 'Conecta el ordenador a una red.'] },
+      { q: ['Headset with microphone', 'Auriculares con micrófono'], a: 'io', why: ['Headphones are output and the microphone is input.', 'Los auriculares son salida y el micrófono es entrada.'] },
+      { q: ['Scanner', 'Escáner'], a: 'in', why: ['It reads a page and sends it to the computer.', 'Lee una página y la envía al ordenador.'] },
+      { q: ['External SSD', 'SSD externo'], a: 'st', why: ['A storage device outside the case.', 'Un dispositivo de almacenamiento fuera de la caja.'] },
+    ],
+  });
+})();
+
+/* ===== 3 · Software types ===== */
+(function () {
+  const host = $host('software');
+  const a = h('div'), b = h('div'), c = h('div'), d = h('div');
+  host.append(
+    h('div', { class: 'card' }, h('h3', {}, T('A · Hardware or software? Read a phone’s data sheet', 'A · ¿Hardware o software? Lee la ficha técnica de un móvil')), a),
+    h('div', { class: 'card' }, h('h3', {}, T('B · Which type of software?', 'B · ¿Qué tipo de software es?')), b),
+    h('div', { class: 'card' }, h('h3', {}, T('C · Does it have firmware?', 'C · ¿Tiene firmware?')), c),
+    h('div', { class: 'card' }, h('h3', {}, T('D · Compiler or interpreter?', 'D · ¿Compilador o intérprete?')), d));
+  sorter(a, {
+    opts: OPT_HS,
+    items: [
+      { q: ['Octa-core processor', 'Procesador de ocho núcleos'], a: 'h', why: ['The processor is a physical chip.', 'El procesador es un chip físico.'] },
+      { q: ['8 GB of RAM', '8 GB de RAM'], a: 'h', why: ['Memory modules are physical parts.', 'Los módulos de memoria son piezas físicas.'] },
+      { q: ['256 GB of storage', '256 GB de almacenamiento'], a: 'h', why: ['Storage is a physical device, even if it keeps files.', 'El almacenamiento es un dispositivo físico, aunque guarde archivos.'] },
+      { q: ['6.1-inch OLED screen', 'Pantalla OLED de 6,1 pulgadas'], a: 'h', why: ['You can touch it.', 'Se puede tocar.'] },
+      { q: ['Android operating system', 'Sistema operativo Android'], a: 's', why: ['An operating system is system software.', 'Un sistema operativo es software de sistema.'] },
+      { q: ['Camera app', 'Aplicación de cámara'], a: 's', why: ['Applications are software.', 'Las aplicaciones son software.'] },
+      { q: ['Firmware of the 5G modem', 'Firmware del módem 5G'], a: 's', why: ['Firmware is software, even though it lives inside a chip.', 'El firmware es software, aunque viva dentro de un chip.'] },
+      { q: ['4,000 mAh battery', 'Batería de 4.000 mAh'], a: 'h', why: ['A physical component.', 'Un componente físico.'] },
+    ],
+  });
+  const O = (id, en, es) => ({ id, l: [en, es] });
+  sorter(b, {
+    opts: [O('sys', 'System', 'De sistema'), O('app', 'Application', 'De aplicación'), O('prog', 'Programming', 'De programación'), O('fw', 'Firmware', 'Firmware')],
+    items: [
+      { q: ['The Linux kernel', 'El núcleo Linux'], a: 'sys', why: ['The kernel is the core of an operating system.', 'El núcleo es el centro de un sistema operativo.'] },
+      { q: ['A spreadsheet program', 'Un programa de hoja de cálculo'], a: 'app', why: ['It solves a specific task for the user.', 'Resuelve una tarea concreta del usuario.'] },
+      { q: ['A compiler', 'Un compilador'], a: 'prog', why: ['It is a tool for programmers.', 'Es una herramienta para programadores.'] },
+      { q: ['The UEFI that starts a PC', 'La UEFI que arranca un PC'], a: 'fw', why: ['It is stored in a chip on the motherboard.', 'Está guardada en un chip de la placa base.'] },
+      { q: ['A printer driver', 'Un controlador de impresora'], a: 'sys', why: ['Drivers let the operating system use a device.', 'Los controladores permiten al sistema operativo usar un dispositivo.'] },
+      { q: ['A web browser', 'Un navegador web'], a: 'app', why: ['An application for browsing the web.', 'Una aplicación para navegar por la web.'] },
+      { q: ['A debugger', 'Un depurador'], a: 'prog', why: ['It helps programmers find errors in programs.', 'Ayuda a los programadores a encontrar errores en los programas.'] },
+      { q: ['The control program stored inside a Wi-Fi router', 'El programa de control guardado dentro de un router Wi-Fi'], a: 'fw', why: ['Software stored in the device that controls its circuits.', 'Software guardado en el dispositivo que controla sus circuitos.'] },
+      { q: ['A video game', 'Un videojuego'], a: 'app', why: ['An application for entertainment.', 'Una aplicación de entretenimiento.'] },
+    ],
+  });
+  sorter(c, {
+    opts: OPT_YN,
+    items: [
+      { q: ['Smart TV', 'Televisor inteligente'], a: 'y', why: ['It has a computer inside and a program that controls it.', 'Lleva un ordenador dentro y un programa que lo controla.'] },
+      { q: ['Analogue wall clock', 'Reloj de pared analógico'], a: 'n', why: ['It is purely mechanical (or has no program).', 'Es puramente mecánico (o no tiene programa).'] },
+      { q: ['Wired mouse', 'Ratón con cable'], a: 'y', why: ['A small chip inside runs a program that reads the sensor and buttons.', 'Un pequeño chip interior ejecuta un programa que lee el sensor y los botones.'] },
+      { q: ['USB flash drive', 'Memoria USB'], a: 'y', why: ['Its controller chip runs firmware that manages the flash memory.', 'Su chip controlador ejecuta firmware que gestiona la memoria flash.'] },
+      { q: ['Bicycle with no electronics', 'Bicicleta sin electrónica'], a: 'n', why: ['No chip, no program.', 'Sin chip no hay programa.'] },
+      { q: ['Wi-Fi router', 'Router Wi-Fi'], a: 'y', why: ['Its whole behaviour is firmware.', 'Todo su comportamiento es firmware.'] },
+      { q: ['Pocket calculator', 'Calculadora de bolsillo'], a: 'y', why: ['A small processor runs a fixed program.', 'Un pequeño procesador ejecuta un programa fijo.'] },
+      { q: ['Desk lamp with a simple switch', 'Lámpara de escritorio con interruptor simple'], a: 'n', why: ['A switch only closes a circuit: nothing to program.', 'Un interruptor solo cierra un circuito: no hay nada que programar.'] },
+    ],
+  });
+
+  /* D: simulador de compilador e intérprete con el mismo programa */
+  const bug = h('input', { type: 'checkbox', id: 'sim-bug' });
+  bug.checked = true;
+  const progra = h('div', { class: 'code', role: 'group', 'aria-label': T('Program', 'Programa') });
+  const salida = h('ol', { class: 'log', 'aria-label': T('Result', 'Resultado') });
+  const aviso = h('p', { class: 'fb', role: 'status' });
+  function pintarPrograma() {
+    progra.textContent = '';
+    const l3 = bug.checked ? 'PRINT 2 +' : 'PRINT "Bye"';
+    [['1', 'PRINT "Hello"'], ['2', 'PRINT 2 + 3'], ['3', l3]].forEach(([n, t]) =>
+      progra.append(h('div', {}, h('span', { class: 'ln' }, n), h('span', { class: bug.checked && n === '3' ? 'bad' : '' }, t))));
+  }
+  const errTxt = () => T('Line 3: syntax error, a value is missing after “+”.', 'Línea 3: error de sintaxis, falta un valor después de «+».');
+  function ejecutar(modo) {
+    salida.textContent = '';
+    const add = (t, cls) => salida.append(h('li', { class: cls || '' }, t));
+    if (modo === 'c') {
+      add(T('Compiler: reading the whole program…', 'Compilador: leyendo todo el programa…'));
+      if (bug.checked) {
+        add(errTxt(), 'err');
+        add(T('No executable file was created, so nothing runs.', 'No se ha creado ningún archivo ejecutable, así que no se ejecuta nada.'), 'err');
+        aviso.textContent = T('The compiler found the error before anything ran.', 'El compilador encontró el error antes de ejecutar nada.');
+      } else {
+        add(T('Translated the whole program into machine code. Executable file created.', 'Traducido todo el programa a código máquina. Archivo ejecutable creado.'));
+        add(T('Running the executable file…', 'Ejecutando el archivo ejecutable…'));
+        ['Hello', '5', 'Bye'].forEach((x) => add(x, 'out'));
+        aviso.textContent = T('The executable file can now run again without the compiler.', 'El archivo ejecutable ya puede ejecutarse de nuevo sin el compilador.');
+      }
+    } else {
+      const sal = ['Hello', '5', 'Bye'];
+      for (let i = 0; i < 3; i++) {
+        if (i === 2 && bug.checked) {
+          add(errTxt(), 'err');
+          add(T('The interpreter stops here.', 'El intérprete se detiene aquí.'), 'err');
+          break;
+        }
+        add(T(`Interpreter: line ${i + 1} read and executed.`, `Intérprete: línea ${i + 1} leída y ejecutada.`));
+        add(sal[i], 'out');
+      }
+      aviso.textContent = bug.checked
+        ? T('Lines 1 and 2 already ran before the error was found.', 'Las líneas 1 y 2 ya se ejecutaron antes de encontrar el error.')
+        : T('Each line is translated while the program runs, every time you run it.', 'Cada línea se traduce mientras el programa se ejecuta, cada vez que lo ejecutas.');
+    }
+  }
+  const bC = h('button', { type: 'button', class: 'btn primary' }, T('Compile, then run', 'Compilar y ejecutar'));
+  const bI = h('button', { type: 'button', class: 'btn primary' }, T('Interpret', 'Interpretar'));
+  bC.addEventListener('click', () => ejecutar('c'));
+  bI.addEventListener('click', () => ejecutar('i'));
+  bug.addEventListener('change', () => { pintarPrograma(); salida.textContent = ''; aviso.textContent = ''; });
+  pintarPrograma();
+  d.append(progra,
+    h('div', { class: 'row' }, h('label', { for: 'sim-bug' }, bug, ' ', T('Put a mistake on line 3', 'Poner un error en la línea 3')), bC, bI),
+    salida, aviso,
+    h('p', { class: 'note' }, T('A compiler translates the whole program first and creates an executable file. An interpreter reads and runs one instruction at a time.', 'Un compilador traduce primero todo el programa y crea un archivo ejecutable. Un intérprete lee y ejecuta una instrucción cada vez.')));
+})();
+
+/* ===== 4 · Right computer for the job ===== */
+(function () {
+  const host = $host('computers');
+  const O = (id, en, es) => ({ id, l: [en, es] });
+  const zona = h('div');
+  const tipos = [
+    ['Supercomputer', 'Superordenador', ['Weather, science, huge AI training', 'Tiempo, ciencia, entrenamiento de IA enormes'], ['Thousands of cores working in parallel; huge cost and energy use.', 'Miles de núcleos en paralelo; coste y consumo enormes.']],
+    ['Mainframe', 'Mainframe', ['Banks, insurance, government', 'Bancos, seguros, administración'], ['Reliability and enormous numbers of simple transactions, always on.', 'Fiabilidad y enormes cantidades de transacciones sencillas, siempre encendido.']],
+    ['Server', 'Servidor', ['Websites, databases, files, printing', 'Webs, bases de datos, archivos, impresión'], ['Serves clients over a network 24/7, with redundancy.', 'Da servicio a clientes por la red 24/7, con redundancia.']],
+    ['Personal computer', 'Ordenador personal', ['Study, office work, internet, media', 'Estudio, ofimática, internet, multimedia'], ['General purpose and low cost: desktop, laptop, tablet.', 'Propósito general y bajo coste: sobremesa, portátil, tableta.']],
+    ['Workstation', 'Estación de trabajo', ['CAD, 3D, video editing, data science', 'CAD, 3D, edición de vídeo, ciencia de datos'], ['A powerful PC: many cores, lots of RAM, professional graphics.', 'Un PC potente: muchos núcleos, mucha RAM, gráficos profesionales.']],
+    ['Embedded system', 'Sistema empotrado', ['Cars, appliances, medical devices, sensors', 'Coches, electrodomésticos, equipos médicos, sensores'], ['A small computer inside a product, doing one fixed task.', 'Un ordenador pequeño dentro de un producto, que hace una tarea fija.']],
+  ];
+  const ids = ['sup', 'main', 'srv', 'pc', 'ws', 'emb'];
+  const opts = tipos.map((t, i) => ({ id: ids[i], l: [t[0], t[1]] }));
+  const tabla = h('div', { class: 'scroll' }, h('table', { class: 't' },
+    h('thead', {}, h('tr', {}, h('th', {}, T('Type', 'Tipo')), h('th', {}, T('Typical use', 'Uso típico')), h('th', {}, T('Key idea', 'Idea clave')))),
+    h('tbody', {}, tipos.map((t) => h('tr', {}, h('td', {}, h('b', {}, T(t[0], t[1]))), h('td', {}, P(t[2])), h('td', {}, P(t[3])))))));
+  host.append(h('div', { class: 'card' }, h('h3', {}, T('Which computer fits the job?', '¿Qué ordenador encaja con el trabajo?')), zona),
+    h('div', { class: 'card' }, h('h3', {}, T('The six types side by side', 'Los seis tipos, uno junto a otro')), tabla));
+  sorter(zona, {
+    opts,
+    items: [
+      { q: ['Simulating tomorrow’s weather for a whole continent with millions of calculations in parallel.', 'Simular el tiempo de mañana para todo un continente con millones de cálculos en paralelo.'], a: 'sup', why: ['Massive parallel calculation is the job of a supercomputer.', 'El cálculo paralelo masivo es el trabajo de un superordenador.'] },
+      { q: ['Processing millions of bank card payments every day, with almost no downtime.', 'Procesar millones de pagos con tarjeta cada día, casi sin paradas.'], a: 'main', why: ['Mainframes are built for huge volumes of transactions and continuous operation.', 'Los mainframes están hechos para enormes volúmenes de transacciones y funcionamiento continuo.'] },
+      { q: ['Hosting the school website for hundreds of students, day and night.', 'Alojar la web del centro para cientos de estudiantes, de día y de noche.'], a: 'srv', why: ['A server provides a service to many clients over a network.', 'Un servidor da un servicio a muchos clientes por la red.'] },
+      { q: ['A student writing essays, watching videos and browsing the web.', 'Un estudiante que escribe trabajos, ve vídeos y navega por la web.'], a: 'pc', why: ['Everyday general-purpose use.', 'Uso cotidiano de propósito general.'] },
+      { q: ['An architect rendering 3D models of buildings, with lots of RAM and a professional graphics card.', 'Una arquitecta que renderiza modelos 3D de edificios, con mucha RAM y una tarjeta gráfica profesional.'], a: 'ws', why: ['Professional technical work needs a workstation.', 'El trabajo técnico profesional necesita una estación de trabajo.'] },
+      { q: ['The control unit that decides when the ABS brakes of a car act.', 'La unidad de control que decide cuándo actúan los frenos ABS de un coche.'], a: 'emb', why: ['A small computer inside a product with a fixed task and strict timing.', 'Un ordenador pequeño dentro de un producto, con una tarea fija y tiempos estrictos.'] },
+      { q: ['Sharing files and printers between all computers of a small office.', 'Compartir archivos e impresoras entre todos los ordenadores de una oficina pequeña.'], a: 'srv', why: ['File and print services are classic server roles.', 'Los servicios de archivos e impresión son funciones clásicas de un servidor.'] },
+      { q: ['A video editor working on 4K projects all day.', 'Un editor de vídeo que trabaja todo el día con proyectos 4K.'], a: 'ws', why: ['Heavy video work needs many cores, RAM and fast storage.', 'El vídeo pesado necesita muchos núcleos, RAM y almacenamiento rápido.'] },
+      { q: ['A smart thermostat that follows a fixed programme.', 'Un termostato inteligente que sigue un programa fijo.'], a: 'emb', why: ['Fixed task, small resources: embedded.', 'Tarea fija y pocos recursos: empotrado.'] },
+    ],
+  });
+})();
+
+/* Se muestra la pestaña al final de cada bloque de código para que los demás ya estén dibujados. */
+
+/* ===== 5 · The OS layer cake ===== */
+(function () {
+  const host = $host('layers');
+  const CAPAS = [
+    [['You', 'Tú'], ''],
+    [['Application or shell', 'Aplicación o shell'], 'user'],
+    [['System call interface', 'Interfaz de llamadas al sistema'], 'gate'],
+    [['Kernel', 'Núcleo'], 'kernel'],
+    [['Device driver', 'Controlador de dispositivo'], 'kernel'],
+    [['Hardware', 'Hardware'], ''],
+  ];
+  const MODO = {
+    user: ['user mode', 'modo usuario'],
+    gate: ['user → kernel mode', 'modo usuario → modo núcleo'],
+    kernel: ['kernel mode', 'modo núcleo'],
+  };
+  const FN = {
+    proc: ['Process management', 'Gestión de procesos'],
+    mem: ['Memory management', 'Gestión de memoria'],
+    file: ['File management', 'Gestión de archivos'],
+    dev: ['Device management', 'Gestión de dispositivos'],
+    sec: ['Security and protection', 'Seguridad y protección'],
+    ui: ['User interface', 'Interfaz de usuario'],
+  };
+  const S = (l, f, t) => ({ l, f, t });
+  const PET = {
+    save: {
+      n: ['Save a file', 'Guardar un archivo'],
+      pasos: [
+        S(0, 'ui', { gui: ['You press Ctrl+S in the text editor.', 'Pulsas Ctrl+S en el editor de texto.'], cli: ['You type: echo hello > notes.txt', 'Escribes: echo hello > notes.txt'] }),
+        S(1, 'file', ['The program decides what to save and asks the operating system to write the data to a file called notes.txt. It cannot touch the disk by itself.', 'El programa decide qué guardar y pide al sistema operativo que escriba los datos en un archivo llamado notes.txt. No puede tocar el disco por sí solo.']),
+        S(2, 'sec', ['The program makes a system call (such as write). The CPU switches from user mode to kernel mode.', 'El programa hace una llamada al sistema (por ejemplo write). La CPU pasa de modo usuario a modo núcleo.']),
+        S(3, 'file', ['The kernel checks that you have permission, finds free space in the file system, records the name and size, and keeps the data in a buffer in RAM.', 'El núcleo comprueba que tienes permiso, busca espacio libre en el sistema de archivos, anota el nombre y el tamaño y guarda los datos en un búfer en la RAM.']),
+        S(4, 'dev', ['The SSD driver turns the request into commands that this particular SSD understands.', 'El controlador del SSD convierte la petición en órdenes que entiende ese SSD concreto.']),
+        S(5, 'dev', ['The SSD stores the bits and raises an interrupt to say it has finished.', 'El SSD guarda los bits y lanza una interrupción para avisar de que ha terminado.']),
+        S(6, 'ui', ['The kernel returns to the program, the CPU goes back to user mode and you see “Saved”.', 'El núcleo vuelve al programa, la CPU regresa al modo usuario y ves «Guardado».']),
+      ],
+    },
+    print: {
+      n: ['Print a page', 'Imprimir una página'],
+      pasos: [
+        S(0, 'ui', { gui: ['You click Print in the document viewer.', 'Pulsas Imprimir en el visor de documentos.'], cli: ['You type: lp report.pdf', 'Escribes: lp report.pdf'] }),
+        S(1, 'dev', ['The program converts the document into a format that the print system accepts and sends it as a print job.', 'El programa convierte el documento a un formato que acepta el sistema de impresión y lo envía como trabajo de impresión.']),
+        S(2, 'sec', ['A system call hands the job to the operating system, which checks that you are allowed to use the printer.', 'Una llamada al sistema entrega el trabajo al sistema operativo, que comprueba que puedes usar la impresora.']),
+        S(3, 'proc', ['The kernel and the print service put the job in a queue (the spooler), so your program can carry on. Other waiting jobs are printed in order.', 'El núcleo y el servicio de impresión ponen el trabajo en una cola (el spooler), así tu programa puede seguir. Los demás trabajos en espera se imprimen por orden.']),
+        S(4, 'dev', ['The printer driver translates the page into the language of that printer model.', 'El controlador de la impresora traduce la página al lenguaje de ese modelo de impresora.']),
+        S(5, 'dev', ['The printer prints and reports its state (for example “out of paper”) through interrupts.', 'La impresora imprime e informa de su estado (por ejemplo «sin papel») mediante interrupciones.']),
+        S(6, 'proc', ['The operating system tells the program that the job is done and the queue moves on to the next job.', 'El sistema operativo avisa al programa de que el trabajo ha terminado y la cola pasa al siguiente.']),
+      ],
+    },
+    start: {
+      n: ['Start a program', 'Iniciar un programa'],
+      pasos: [
+        S(0, 'ui', { gui: ['You double-click the program icon.', 'Haces doble clic en el icono del programa.'], cli: ['You type the program name and press Enter.', 'Escribes el nombre del programa y pulsas Intro.'] }),
+        S(1, 'proc', ['The desktop or the shell asks the operating system to start the program.', 'El escritorio o el shell pide al sistema operativo que inicie el programa.']),
+        S(2, 'proc', ['It makes a system call to create a new process (CreateProcess in Windows, fork and exec in Linux).', 'Hace una llamada al sistema para crear un proceso nuevo (CreateProcess en Windows, fork y exec en Linux).']),
+        S(3, 'mem', ['The kernel creates the process, gives it its own memory space, loads the program code and lets the scheduler give it CPU time.', 'El núcleo crea el proceso, le da su propio espacio de memoria, carga el código del programa y deja que el planificador le dé tiempo de CPU.']),
+        S(4, 'dev', ['The storage driver reads the program file from the disk.', 'El controlador de almacenamiento lee el archivo del programa desde el disco.']),
+        S(5, 'dev', ['The SSD sends the data to RAM and the CPU starts to run the program.', 'El SSD envía los datos a la RAM y la CPU empieza a ejecutar el programa.']),
+        S(6, 'ui', ['The window appears: the program is now a running process.', 'Aparece la ventana: el programa ya es un proceso en ejecución.']),
+      ],
+    },
+  };
+  let peticion = 'save';
+  let cli = false;
+  let paso = 0;
+  const pilaEl = h('div', { class: 'stack', role: 'list', 'aria-label': T('Layers', 'Capas') });
+  const caja = h('div', { class: 'stepbox', role: 'status' });
+  const bPet = h('div', { class: 'pills', role: 'group', 'aria-label': T('Choose a request', 'Elige una petición') });
+  const bIf = h('div', { class: 'pills', role: 'group', 'aria-label': T('Interface', 'Interfaz') });
+  const bPrev = h('button', { type: 'button', class: 'btn' }, T('◀ Back', '◀ Atrás'));
+  const bNext = h('button', { type: 'button', class: 'btn primary' }, T('Next step ▶', 'Siguiente paso ▶'));
+  const bReset = h('button', { type: 'button', class: 'btn' }, T('Start again', 'Empezar de nuevo'));
+  function pintar() {
+    const pasos = PET[peticion].pasos;
+    const s = pasos[paso];
+    const subida = s.l === 6;
+    pilaEl.textContent = '';
+    CAPAS.forEach((c, i) => {
+      const activa = !subida && i === s.l;
+      const pasada = subida ? true : i < s.l;
+      const modo = MODO[c[1]];
+      pilaEl.append(h('div', { class: 'layer' + (activa ? ' now' : pasada ? ' done' : ''), role: 'listitem', 'aria-current': activa ? 'step' : false },
+        h('b', {}, (i === 0 ? (cli ? T('You (command line)', 'Tú (línea de órdenes)') : T('You (graphical interface)', 'Tú (interfaz gráfica)')) : P(c[0]))),
+        modo ? h('span', { class: 'mode' }, P(modo)) : h('span', {})));
+    });
+    const texto = s.t.gui ? (cli ? P(s.t.cli) : P(s.t.gui)) : P(s.t);
+    caja.textContent = '';
+    caja.append(h('p', { class: 'mono' }, T(`Step ${paso + 1} of ${pasos.length}`, `Paso ${paso + 1} de ${pasos.length}`)),
+      h('p', {}, texto),
+      h('p', {}, T('Operating system function: ', 'Función del sistema operativo: '), h('span', { class: 'tag' }, P(FN[s.f]))));
+    bPrev.setAttribute('aria-disabled', String(paso === 0));
+    bNext.setAttribute('aria-disabled', String(paso === pasos.length - 1));
+    [...bPet.children].forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.k === peticion)));
+    [...bIf.children].forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.k === 'cli') === cli)));
+  }
+  Object.keys(PET).forEach((k) => {
+    const b = h('button', { type: 'button', class: 'btn', 'data-k': k, 'aria-pressed': 'false' }, P(PET[k].n));
+    b.addEventListener('click', () => { peticion = k; paso = 0; pintar(); });
+    bPet.append(b);
+  });
+  [['gui', 'Graphical (GUI)', 'Gráfica (GUI)'], ['cli', 'Command line (CLI)', 'Línea de órdenes (CLI)']].forEach(([k, en, es]) => {
+    const b = h('button', { type: 'button', class: 'btn', 'data-k': k, 'aria-pressed': 'false' }, T(en, es));
+    b.addEventListener('click', () => { cli = k === 'cli'; pintar(); });
+    bIf.append(b);
+  });
+  bPrev.addEventListener('click', () => { if (paso > 0) { paso--; pintar(); } });
+  bNext.addEventListener('click', () => { if (paso < PET[peticion].pasos.length - 1) { paso++; pintar(); } });
+  bReset.addEventListener('click', () => { paso = 0; pintar(); });
+  const quiz = h('div');
+  host.append(
+    h('div', { class: 'card' }, h('div', { class: 'row' }, bPet, bIf), pilaEl, caja, h('div', { class: 'row' }, bPrev, bNext, bReset)),
+    h('div', { class: 'card' }, h('h3', {}, T('Which layer does it?', '¿Qué capa lo hace?')), quiz));
+  pintar();
+  const O = (id, en, es) => ({ id, l: [en, es] });
+  sorter(quiz, {
+    opts: [O('app', 'Application', 'Aplicación'), O('call', 'System call', 'Llamada al sistema'), O('ker', 'Kernel', 'Núcleo'), O('drv', 'Driver', 'Controlador'), O('hw', 'Hardware', 'Hardware')],
+    items: [
+      { q: ['Draws the Save button on the screen.', 'Dibuja el botón Guardar en la pantalla.'], a: 'app', why: ['The application takes care of its own window and buttons.', 'La aplicación se ocupa de su propia ventana y sus botones.'] },
+      { q: ['Decides which process gets the CPU next.', 'Decide qué proceso usa la CPU a continuación.'], a: 'ker', why: ['Scheduling is a job of the kernel.', 'La planificación es tarea del núcleo.'] },
+      { q: ['The request a program sends to ask the operating system for a service.', 'La petición que envía un programa para pedir un servicio al sistema operativo.'], a: 'call', why: ['That is exactly what a system call is.', 'Eso es exactamente una llamada al sistema.'] },
+      { q: ['Translates a generic request into the commands of one specific SSD model.', 'Traduce una petición genérica a las órdenes de un modelo concreto de SSD.'], a: 'drv', why: ['Each device type needs a driver that knows its commands.', 'Cada tipo de dispositivo necesita un controlador que conozca sus órdenes.'] },
+      { q: ['Stores the bits physically.', 'Guarda los bits físicamente.'], a: 'hw', why: ['The memory chips of the SSD are hardware.', 'Los chips de memoria del SSD son hardware.'] },
+      { q: ['Checks the permissions of the user who wants to open a file.', 'Comprueba los permisos del usuario que quiere abrir un archivo.'], a: 'ker', why: ['Security checks are made in kernel mode.', 'Las comprobaciones de seguridad se hacen en modo núcleo.'] },
+    ],
+  });
+})();
+
+/* ===== 6 · Kernel architectures ===== */
+(function () {
+  const host = $host('kernels');
+  const ESC = [
+    ['drv', ['A driver crashes', 'Falla un controlador']],
+    ['core', ['A core part crashes (for example the scheduler)', 'Falla una parte básica (por ejemplo el planificador)']],
+    ['hw', ['You plug in new hardware', 'Conectas hardware nuevo']],
+  ];
+  const R = (s, l, t) => ({ s, l, t });
+  const DOWN = ['The whole system stops', 'Todo el sistema se detiene'];
+  const PART = ['Part of the system stops', 'Una parte del sistema se detiene'];
+  const KEEP = ['The system keeps running', 'El sistema sigue funcionando'];
+  const WORK = ['Needs work', 'Requiere trabajo'];
+  const EASY = ['Easy', 'Fácil'];
+  const ARQ = [
+    { n: ['Monolithic', 'Monolítico'], mini: [['Scheduler', 'Planificador'], ['Memory', 'Memoria'], ['File system', 'Sistema de archivos'], ['Drivers', 'Controladores']], core: false,
+      d: { drv: R('down', DOWN, ['Kernel panic or blue screen. The driver runs inside the one kernel address space, so a single bug can corrupt anything.', 'Pánico del núcleo o pantalla azul. El controlador se ejecuta dentro del único espacio de direcciones del núcleo, así que un solo error puede corromper cualquier cosa.']),
+        core: R('down', DOWN, ['The same result: every part shares one address space.', 'El mismo resultado: todas las partes comparten un espacio de direcciones.']),
+        hw: R('part', WORK, ['The driver has to be built into the kernel (the kernel is rebuilt) and the computer rebooted. Very fast, but not flexible.', 'El controlador hay que incluirlo en el núcleo (se recompila) y reiniciar el ordenador. Muy rápido, pero poco flexible.']) } },
+    { n: ['Layered', 'Por capas'], mini: [['Layer 3 · services', 'Capa 3 · servicios'], ['Layer 2 · I/O', 'Capa 2 · E/S'], ['Layer 1 · drivers', 'Capa 1 · controladores'], ['Layer 0 · hardware', 'Capa 0 · hardware']], core: false,
+      d: { drv: R('part', PART, ['Every layer above the driver loses that device; the layers below keep working. The strict interfaces make the broken layer easy to find.', 'Todas las capas por encima del controlador pierden ese dispositivo; las de debajo siguen funcionando. Las interfaces estrictas facilitan encontrar la capa rota.']),
+        core: R('part', PART, ['Every layer above the broken one stops; the layers below keep running. The fault is easy to locate.', 'Todas las capas por encima de la rota se detienen; las de debajo siguen funcionando. El fallo es fácil de localizar.']),
+        hw: R('part', WORK, ['Add or change a driver in its own layer, respecting the interface between layers. Clean, but it takes design effort.', 'Se añade o cambia un controlador en su capa, respetando la interfaz entre capas. Es limpio, pero exige trabajo de diseño.']) } },
+    { n: ['Modular', 'Modular'], mini: [['Core kernel', 'Núcleo base'], ['File system module', 'Módulo de archivos'], ['Network module', 'Módulo de red'], ['Driver modules', 'Módulos de controladores']], core: true,
+      d: { drv: R('down', DOWN, ['A loaded module runs in kernel mode with full privileges, so a serious bug can still stop the system. But you can fix or replace the module without rebuilding the kernel, or decide not to load it.', 'Un módulo cargado se ejecuta en modo núcleo con todos los privilegios, así que un error grave aún puede detener el sistema. Pero puedes corregir o sustituir el módulo sin recompilar el núcleo, o decidir no cargarlo.']),
+        core: R('down', DOWN, ['The core is a single kernel-mode program: if it fails, everything stops.', 'El núcleo base es un único programa en modo núcleo: si falla, todo se detiene.']),
+        hw: R('ok', EASY, ['The kernel loads the right module while it is running, often without a reboot.', 'El núcleo carga el módulo adecuado con el sistema en marcha, a menudo sin reiniciar.']) } },
+    { n: ['Microkernel (bonus)', 'Microkernel (extra)'], mini: [['Tiny core', 'Núcleo diminuto'], ['Driver (user mode)', 'Controlador (modo usuario)'], ['File service (user mode)', 'Servicio de archivos (modo usuario)']], core: true,
+      d: { drv: R('ok', KEEP, ['The driver is a normal program in user mode. Only that driver stops, and the system can restart it.', 'El controlador es un programa normal en modo usuario. Solo se detiene ese controlador y el sistema puede reiniciarlo.']),
+        core: R('down', DOWN, ['The tiny core must never fail. It is small, so it is easier to test.', 'El núcleo diminuto no debe fallar nunca. Es pequeño, así que es más fácil de probar.']),
+        hw: R('ok', EASY, ['Start a new driver as a normal program. The kernel does not change.', 'Se inicia un controlador nuevo como un programa normal. El núcleo no cambia.']) } },
+  ];
+  let esc = 'drv';
+  const bEsc = h('div', { class: 'pills', role: 'group', 'aria-label': T('Choose what happens', 'Elige qué ocurre') });
+  const matriz = h('div', { class: 'matrix', role: 'status' });
+  function pintar() {
+    [...bEsc.children].forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.k === esc)));
+    matriz.textContent = '';
+    ARQ.forEach((a) => {
+      const r = a.d[esc];
+      matriz.append(h('div', { class: 'arch' }, h('h3', {}, P(a.n)),
+        h('div', { class: 'mini' + (a.core ? ' core' : ''), 'aria-hidden': 'true' }, a.mini.map((m) => h('span', {}, P(m)))),
+        h('p', {}, h('span', { class: 'sev ' + r.s }, P(r.l))),
+        h('p', {}, P(r.t))));
+    });
+  }
+  ESC.forEach(([k, n]) => {
+    const b = h('button', { type: 'button', class: 'btn', 'data-k': k, 'aria-pressed': 'false' }, P(n));
+    b.addEventListener('click', () => { esc = k; pintar(); });
+    bEsc.append(b);
+  });
+  const resumen = h('div', { class: 'scroll' }, h('table', { class: 't' },
+    h('thead', {}, h('tr', {}, h('th', {}, ''), ['Monolithic', 'Layered', 'Modular'].map((x, i) => h('th', {}, T(x, ['Monolítico', 'Por capas', 'Modular'][i]))))),
+    h('tbody', {},
+      h('tr', {}, h('td', {}, h('b', {}, T('Speed', 'Velocidad'))), h('td', {}, T('Very high', 'Muy alta')), h('td', {}, T('Lower (calls cross layers)', 'Menor (las llamadas cruzan capas)')), h('td', {}, T('High', 'Alta'))),
+      h('tr', {}, h('td', {}, h('b', {}, T('Fault isolation', 'Aislamiento de fallos'))), h('td', {}, T('Poor', 'Pobre')), h('td', {}, T('Good in design, but layers above depend on lower ones', 'Buena en diseño, pero las capas altas dependen de las bajas')), h('td', {}, T('Poor to medium', 'Pobre a media'))),
+      h('tr', {}, h('td', {}, h('b', {}, T('Flexibility', 'Flexibilidad'))), h('td', {}, T('Low', 'Baja')), h('td', {}, T('Medium', 'Media')), h('td', {}, T('High', 'Alta'))))));
+  const quiz = h('div');
+  host.append(
+    h('div', { class: 'card' }, h('h3', {}, T('What happens in each design?', '¿Qué ocurre en cada diseño?')), bEsc, matriz,
+      h('p', { class: 'note' }, T('The microkernel is not in the syllabus list, but it shows the extreme case: only a tiny core in kernel mode.', 'El microkernel no está en la lista de contenidos, pero muestra el caso extremo: solo un núcleo diminuto en modo núcleo.'))),
+    h('div', { class: 'card' }, h('h3', {}, T('Summary', 'Resumen')), resumen),
+    h('div', { class: 'card' }, h('h3', {}, T('Which design is described?', '¿Qué diseño se describe?')), quiz));
+  pintar();
+  const O = (id, en, es) => ({ id, l: [en, es] });
+  sorter(quiz, {
+    opts: [O('mono', 'Monolithic', 'Monolítico'), O('lay', 'Layered', 'Por capas'), O('mod', 'Modular', 'Modular')],
+    items: [
+      { q: ['All services and drivers run together in one address space, like one big program.', 'Todos los servicios y controladores se ejecutan juntos en un espacio de direcciones, como un gran programa.'], a: 'mono', why: ['That is the definition of a monolithic kernel.', 'Esa es la definición de un núcleo monolítico.'] },
+      { q: ['Each part may only call the part directly below it.', 'Cada parte solo puede llamar a la parte inmediatamente inferior.'], a: 'lay', why: ['A strict hierarchy is the mark of a layered design.', 'Una jerarquía estricta es lo propio de un diseño por capas.'] },
+      { q: ['A small core can load and unload drivers while the system is running.', 'Un núcleo pequeño puede cargar y descargar controladores con el sistema en marcha.'], a: 'mod', why: ['Loadable modules are the key idea of the modular design.', 'Los módulos cargables son la idea clave del diseño modular.'] },
+      { q: ['Easy to test because every layer has a clear interface, but requests cross several layers.', 'Fácil de probar porque cada capa tiene una interfaz clara, pero las peticiones cruzan varias capas.'], a: 'lay', why: ['Clear interfaces help testing; crossing layers adds overhead.', 'Las interfaces claras ayudan a probar; cruzar capas añade sobrecarga.'] },
+      { q: ['Traditional UNIX is a classic example.', 'UNIX tradicional es un ejemplo clásico.'], a: 'mono', why: ['Early UNIX and BSD systems were monolithic.', 'Los primeros UNIX y BSD eran monolíticos.'] },
+      { q: ['Adding a new device driver does not need a kernel rebuild.', 'Añadir un controlador de dispositivo nuevo no exige recompilar el núcleo.'], a: 'mod', why: ['You load the driver as a module.', 'El controlador se carga como un módulo.'] },
+    ],
+  });
+})();
+
+/* ===== 7 · OS classifier ===== */
+(function () {
+  const host = $host('classifier');
+  const CRIT = {
+    users: { n: ['Users', 'Usuarios'], o: [['single', 'Single-user', 'Monousuario'], ['multi', 'Multi-user', 'Multiusuario'], ['net', 'Network OS', 'SO de red']] },
+    tasks: { n: ['Multitasking', 'Multitarea'], o: [['one', 'Single-tasking', 'Monotarea'], ['multi', 'Multitasking', 'Multitarea'], ['rt', 'Real-time', 'Tiempo real']] },
+    lic: { n: ['Licence', 'Licencia'], o: [['prop', 'Proprietary', 'Propietaria'], ['foss', 'Open source', 'Código abierto'], ['free', 'Freeware', 'Freeware']] },
+    cpus: { n: ['Number of CPUs', 'Número de CPU'], o: [['uni', 'Single processor', 'Monoprocesador'], ['smp', 'Multiprocessor (SMP)', 'Multiprocesador (SMP)']] },
+    struct: { n: ['Structure', 'Estructura'], o: [['mono', 'Monolithic', 'Monolítico'], ['lay', 'Layered', 'Por capas'], ['mod', 'Modular', 'Modular']] },
+  };
+  const X = (ok, en, es) => ({ ok, why: [en, es] });
+  const SO = [
+    { n: 'Ubuntu Desktop', d: ['A Linux distribution for PCs.', 'Una distribución de Linux para PC.'], c: {
+      users: X(['multi'], 'It has separate accounts with permissions, like all Unix-like systems.', 'Tiene cuentas separadas con permisos, como todos los sistemas tipo Unix.'),
+      tasks: X(['multi'], 'It shares CPU time among many processes.', 'Reparte el tiempo de CPU entre muchos procesos.'),
+      lic: X(['foss'], 'The Linux kernel is under the GPL and most of the system is open source.', 'El núcleo Linux usa la GPL y casi todo el sistema es de código abierto.'),
+      cpus: X(['smp'], 'Linux supports several CPUs and cores sharing memory.', 'Linux admite varias CPU y núcleos que comparten memoria.'),
+      struct: X(['mod', 'mono'], 'Linux is a monolithic kernel with loadable modules, so “modular” is the best answer and “monolithic” is also accepted.', 'Linux es un núcleo monolítico con módulos cargables: «modular» es la mejor respuesta y «monolítico» también se acepta.') } },
+    { n: 'Windows 11', d: ['The Microsoft desktop system.', 'El sistema de escritorio de Microsoft.'], c: {
+      users: X(['multi'], 'It has several accounts with permissions, even if one person normally uses the PC.', 'Tiene varias cuentas con permisos, aunque normalmente un solo usuario use el PC.'),
+      tasks: X(['multi'], 'Many programs share the CPU.', 'Muchos programas se reparten la CPU.'),
+      lic: X(['prop'], 'It is sold under an EULA and the code is closed.', 'Se vende con un EULA y el código es cerrado.'),
+      cpus: X(['smp'], 'It uses all the cores of the processor.', 'Usa todos los núcleos del procesador.'),
+      struct: X(['lay', 'mod'], 'Windows NT is usually called a hybrid kernel: layered ideas plus loadable drivers. Both answers are accepted.', 'Windows NT suele llamarse núcleo híbrido: ideas de capas más controladores cargables. Se aceptan las dos respuestas.') } },
+    { n: 'macOS', d: ['The Apple desktop system.', 'El sistema de escritorio de Apple.'], c: {
+      users: X(['multi'], 'It has several user accounts with permissions.', 'Tiene varias cuentas de usuario con permisos.'),
+      tasks: X(['multi'], 'It is a modern multitasking system.', 'Es un sistema multitarea moderno.'),
+      lic: X(['prop'], 'The Darwin core is open source, but macOS as a whole is proprietary.', 'El núcleo Darwin es de código abierto, pero macOS en conjunto es propietario.'),
+      cpus: X(['smp'], 'Every Mac has a multi-core processor.', 'Todos los Mac tienen un procesador multinúcleo.'),
+      struct: X(['mod'], 'Its XNU kernel is a hybrid that loads extensions; in this course we count it as modular.', 'Su núcleo XNU es un híbrido que carga extensiones; en este curso lo contamos como modular.') } },
+    { n: 'Android', d: ['The mobile system from Google, built on the Linux kernel.', 'El sistema móvil de Google, construido sobre el núcleo Linux.'], c: {
+      tasks: X(['multi'], 'Many apps run at the same time.', 'Muchas aplicaciones se ejecutan a la vez.'),
+      cpus: X(['smp'], 'Phones have multi-core processors.', 'Los móviles tienen procesadores multinúcleo.'),
+      struct: X(['mod', 'mono'], 'It uses the Linux kernel: monolithic with loadable modules. Both answers are accepted.', 'Usa el núcleo Linux: monolítico con módulos cargables. Se aceptan las dos respuestas.') } },
+    { n: 'iOS', d: ['The Apple system for iPhone.', 'El sistema de Apple para iPhone.'], c: {
+      users: X(['single'], 'It is a personal device: one user profile per device.', 'Es un dispositivo personal: un perfil de usuario por dispositivo.'),
+      tasks: X(['multi'], 'Apps are scheduled by the system; several can be active.', 'El sistema planifica las aplicaciones; varias pueden estar activas.'),
+      lic: X(['prop'], 'It is closed and only runs on Apple devices.', 'Es cerrado y solo funciona en dispositivos de Apple.'),
+      cpus: X(['smp'], 'iPhones have multi-core processors.', 'Los iPhone tienen procesadores multinúcleo.') } },
+    { n: 'Windows Server', d: ['The Windows edition made for servers.', 'La edición de Windows hecha para servidores.'], c: {
+      users: X(['net'], 'Its focus is sharing resources (files, printers, directory services) over a network.', 'Su finalidad es compartir recursos (archivos, impresoras, servicios de directorio) por la red.'),
+      tasks: X(['multi'], 'It serves many clients at once.', 'Atiende a muchos clientes a la vez.'),
+      lic: X(['prop'], 'It is sold under a paid licence.', 'Se vende con una licencia de pago.'),
+      cpus: X(['smp'], 'Servers often have several CPUs with many cores.', 'Los servidores suelen tener varias CPU con muchos núcleos.') } },
+    { n: 'FreeRTOS', d: ['A small real-time system for microcontrollers.', 'Un sistema pequeño de tiempo real para microcontroladores.'], c: {
+      users: X(['single'], 'There are no user accounts: it runs on a small device.', 'No hay cuentas de usuario: funciona en un dispositivo pequeño.'),
+      tasks: X(['rt'], 'It guarantees how fast tasks respond.', 'Garantiza lo rápido que responden las tareas.'),
+      lic: X(['foss'], 'It is released under the MIT licence.', 'Se publica con la licencia MIT.') } },
+    { n: 'MS-DOS', d: ['An old command-line system for PCs from the 1980s.', 'Un sistema antiguo de línea de órdenes para PC de los años 80.'], c: {
+      users: X(['single'], 'One user at a time and no accounts.', 'Un usuario a la vez y sin cuentas.'),
+      tasks: X(['one'], 'It runs one program at a time.', 'Ejecuta un programa a la vez.'),
+      cpus: X(['uni'], 'It was designed for a single processor.', 'Se diseñó para un solo procesador.') } },
+  ];
+  const sel = h('div', { class: 'pills', role: 'group', 'aria-label': T('Choose an operating system', 'Elige un sistema operativo') });
+  const zona = h('div', { class: 'card' });
+  function mostrar(i) {
+    [...sel.children].forEach((b, j) => b.setAttribute('aria-pressed', String(i === j)));
+    const so = SO[i];
+    zona.textContent = '';
+    const campos = [];
+    Object.keys(so.c).forEach((k) => {
+      const cr = CRIT[k];
+      const fb = h('p', { class: 'fb', role: 'status' });
+      const fs = h('fieldset', {}, h('legend', {}, P(cr.n)),
+        cr.o.map((o) => h('label', {}, h('input', { type: 'radio', name: 'crit-' + k, value: o[0] }), ' ', T(o[1], o[2]))), fb);
+      campos.push({ k, fb, fs });
+    });
+    const res = h('p', { class: 'score', role: 'status' });
+    const bC = h('button', { type: 'button', class: 'btn primary' }, T('Check', 'Comprobar'));
+    bC.addEventListener('click', () => {
+      let bien = 0;
+      let resp = 0;
+      campos.forEach(({ k, fb, fs }) => {
+        const v = fs.querySelector('input:checked');
+        const x = so.c[k];
+        if (!v) { fb.className = 'fb bad'; fb.textContent = T('Choose an option.', 'Elige una opción.'); return; }
+        resp++;
+        const ok = x.ok.includes(v.value);
+        if (ok) bien++;
+        fb.className = 'fb ' + (ok ? 'good' : 'bad');
+        fb.textContent = '';
+        fb.append(h('b', {}, ok ? T('Correct. ', 'Correcto. ') : T('Not quite. ', 'No exactamente. ')), P(x.why));
+      });
+      res.textContent = T(`${bien} of ${campos.length} correct`, `${bien} de ${campos.length} correctas`) + (resp < campos.length ? ' · ' + T('some are still empty', 'faltan algunas por responder') : '');
+    });
+    zona.append(h('h3', {}, so.n), h('p', {}, P(so.d)), campos.map((c) => c.fs), h('div', { class: 'row' }, bC, res));
+  }
+  SO.forEach((s, i) => {
+    const b = h('button', { type: 'button', class: 'btn', 'aria-pressed': 'false' }, s.n);
+    b.addEventListener('click', () => mostrar(i));
+    sel.append(b);
+  });
+  host.append(sel, zona,
+    h('p', { class: 'note' }, T('Some answers have more than one accepted option because real kernels mix designs. For market share, look at an independent source such as StatCounter Global Stats; the numbers change every month.', 'Algunas respuestas admiten más de una opción porque los núcleos reales mezclan diseños. Para la cuota de mercado consulta una fuente independiente como StatCounter Global Stats; las cifras cambian cada mes.')));
+  mostrar(0);
+})();
+
+/* ===== 8 · Licence detective ===== */
+(function () {
+  const host = $host('licences');
+  const FILAS = [['use', 'Use it', 'Usarlo'], ['see', 'Read the source code', 'Leer el código fuente'], ['mod', 'Modify it', 'Modificarlo'], ['share', 'Share copies', 'Compartir copias'], ['sell', 'Sell it', 'Venderlo'], ['keep', 'Keep your changes private', 'Guardar tus cambios en privado']];
+  const V = (s, en, es) => ({ s, t: [en, es] });
+  const NO = V('n', 'No', 'No');
+  const NA = V('n', 'No: you are not allowed to change it', 'No: no puedes cambiarlo');
+  const LIC = [
+    { id: 'prop', n: ['Proprietary (EULA)', 'Propietaria (EULA)'], ej: ['Windows, Microsoft Office, Adobe Photoshop', 'Windows, Microsoft Office, Adobe Photoshop'],
+      p: { use: V('c', 'Yes, under the terms of the EULA', 'Sí, según las condiciones del EULA'), see: NO, mod: NO, share: NO, sell: V('n', 'No (only the owner or authorised resellers)', 'No (solo el titular o revendedores autorizados)'), keep: NA } },
+    { id: 'free', n: ['Freeware', 'Freeware'], ej: ['Adobe Acrobat Reader, IrfanView (free for non-commercial use)', 'Adobe Acrobat Reader, IrfanView (gratuito para uso no comercial)'],
+      p: { use: V('c', 'Yes, free of charge. Check conditions such as “non-commercial use only”', 'Sí, gratis. Comprueba condiciones como «solo uso no comercial»'), see: NO, mod: NO, share: V('c', 'Only if the author allows it', 'Solo si el autor lo permite'), sell: NO, keep: NA } },
+    { id: 'share', n: ['Shareware / trial', 'Shareware / prueba'], ej: ['WinRAR (after the trial period)', 'WinRAR (tras el periodo de prueba)'],
+      p: { use: V('c', 'For a limited time or with limited features; then you pay', 'Durante un tiempo limitado o con funciones limitadas; después se paga'), see: NO, mod: NO, share: V('c', 'Often yes, unchanged', 'A menudo sí, sin cambios'), sell: NO, keep: NA } },
+    { id: 'copy', n: ['Copyleft open source (GPL)', 'Código abierto copyleft (GPL)'], ej: ['Linux kernel, GIMP, WordPress, Blender', 'Núcleo Linux, GIMP, WordPress, Blender'],
+      p: { use: V('y', 'Yes', 'Sí'), see: V('y', 'Yes', 'Sí'), mod: V('y', 'Yes', 'Sí'), share: V('y', 'Yes', 'Sí'), sell: V('y', 'Yes: you may charge for copies or services', 'Sí: puedes cobrar por copias o servicios'), keep: V('n', 'No: if you distribute your version you must share its source code under the same licence', 'No: si distribuyes tu versión debes compartir su código fuente con la misma licencia') } },
+    { id: 'perm', n: ['Permissive open source (MIT, BSD, Apache)', 'Código abierto permisiva (MIT, BSD, Apache)'], ej: ['FreeBSD, Apache HTTP Server, Node.js', 'FreeBSD, Apache HTTP Server, Node.js'],
+      p: { use: V('y', 'Yes', 'Sí'), see: V('y', 'Yes', 'Sí'), mod: V('y', 'Yes', 'Sí'), share: V('y', 'Yes', 'Sí'), sell: V('y', 'Yes', 'Sí'), keep: V('y', 'Yes: you may close your version, but keep the copyright notice', 'Sí: puedes cerrar tu versión, pero mantén el aviso de derechos de autor') } },
+  ];
+  const SIMB = { y: ['✔ ', 'Yes · ', 'Sí · '], n: ['✖ ', 'No · ', 'No · '], c: ['◐ ', 'Conditions · ', 'Condiciones · '] };
+  const bt = h('div', { class: 'pills', role: 'group', 'aria-label': T('Choose a licence type', 'Elige un tipo de licencia') });
+  const luces = h('div', { class: 'lights', role: 'status' });
+  const ej = h('p', { class: 'note' });
+  function ver(i) {
+    [...bt.children].forEach((b, j) => b.setAttribute('aria-pressed', String(i === j)));
+    const l = LIC[i];
+    luces.textContent = '';
+    FILAS.forEach((f) => {
+      const v = l.p[f[0]];
+      luces.append(h('div', { class: 'light ' + ({ y: 'yes', n: 'no', c: 'cond' })[v.s] },
+        h('b', {}, SIMB[v.s][0] + T(f[1], f[2])), h('span', {}, P(v.t))));
+    });
+    ej.textContent = T('Examples: ', 'Ejemplos: ') + P(l.ej);
+  }
+  LIC.forEach((l, i) => {
+    const b = h('button', { type: 'button', class: 'btn', 'aria-pressed': 'false' }, P(l.n));
+    b.addEventListener('click', () => ver(i));
+    bt.append(b);
+  });
+  const a = h('div'), b2 = h('div');
+  host.append(
+    h('div', { class: 'card' }, h('h3', {}, T('What does each licence allow?', '¿Qué permite cada licencia?')), bt, luces, ej),
+    h('div', { class: 'card' }, h('h3', {}, T('Which licence type is it?', '¿Qué tipo de licencia es?')), a),
+    h('div', { class: 'card' }, h('h3', {}, T('Is it allowed? Legal cases', '¿Está permitido? Casos legales')), b2));
+  ver(0);
+  const O = (id, en, es) => ({ id, l: [en, es] });
+  sorter(a, {
+    opts: [O('prop', 'Proprietary', 'Propietaria'), O('free', 'Freeware', 'Freeware'), O('share', 'Shareware / trial', 'Shareware / prueba'), O('copy', 'Copyleft open source', 'Copyleft de código abierto'), O('perm', 'Permissive open source', 'Permisiva de código abierto')],
+    items: [
+      { q: ['Free of charge, but you cannot see or change the source code and you cannot sell it.', 'Gratuito, pero no puedes ver ni cambiar el código fuente y no puedes venderlo.'], a: 'free', why: ['That is freeware: free of charge, but not free software.', 'Eso es freeware: gratuito, pero no es software libre.'] },
+      { q: ['You may use it for 30 days; after that you must pay to keep using it.', 'Puedes usarlo 30 días; después tienes que pagar para seguir usándolo.'], a: 'share', why: ['A trial period is typical of shareware.', 'Un periodo de prueba es típico del shareware.'] },
+      { q: ['You may modify it and sell your version, but you must publish the source code of your version under the same licence.', 'Puedes modificarlo y vender tu versión, pero debes publicar el código fuente de tu versión con la misma licencia.'], a: 'copy', why: ['“Same licence for derived works” is the idea of copyleft.', '«La misma licencia para las obras derivadas» es la idea del copyleft.'] },
+      { q: ['You may modify it, close the source of your version and sell it, as long as you keep the original copyright notice.', 'Puedes modificarlo, cerrar el código de tu versión y venderla, siempre que mantengas el aviso de derechos de autor original.'], a: 'perm', why: ['Permissive licences ask for very little in return.', 'Las licencias permisivas piden muy poco a cambio.'] },
+      { q: ['You buy the right to use it on one computer; giving copies to friends is forbidden.', 'Compras el derecho de usarlo en un ordenador; dar copias a amigos está prohibido.'], a: 'prop', why: ['This is a typical EULA of proprietary software.', 'Es un EULA típico del software propietario.'] },
+      { q: ['A program released under the GNU GPL.', 'Un programa publicado con la GPL de GNU.'], a: 'copy', why: ['The GPL is the best-known copyleft licence.', 'La GPL es la licencia copyleft más conocida.'] },
+      { q: ['A library released under the MIT licence.', 'Una biblioteca publicada con la licencia MIT.'], a: 'perm', why: ['MIT is a permissive licence.', 'MIT es una licencia permisiva.'] },
+      { q: ['A paid yearly subscription to an office suite in the cloud.', 'Una suscripción anual de pago a una suite ofimática en la nube.'], a: 'prop', why: ['Subscriptions are a model of proprietary licensing.', 'Las suscripciones son un modelo de licencia propietaria.'] },
+    ],
+  });
+  sorter(b2, {
+    opts: [O('ok', 'Allowed', 'Permitido'), O('no', 'Not allowed', 'No permitido'), O('dep', 'It depends', 'Depende')],
+    items: [
+      { q: ['A school installs LibreOffice (open source) on all its 300 computers without buying 300 licences.', 'Un centro instala LibreOffice (código abierto) en sus 300 ordenadores sin comprar 300 licencias.'], a: 'ok', why: ['Open-source licences allow using and copying the program on any number of computers.', 'Las licencias de código abierto permiten usar y copiar el programa en cualquier número de ordenadores.'] },
+      { q: ['A student copies a paid video-editing program from a friend’s USB drive.', 'Un estudiante copia un programa de edición de vídeo de pago desde la memoria USB de un amigo.'], a: 'no', why: ['Copying paid software without a licence is piracy.', 'Copiar software de pago sin licencia es piratería.'] },
+      { q: ['A company takes a GPL program, improves it and sells it without giving the source code to its customers.', 'Una empresa toma un programa GPL, lo mejora y lo vende sin dar el código fuente a sus clientes.'], a: 'no', why: ['The GPL is copyleft: if you distribute your version you must give its source code under the GPL.', 'La GPL es copyleft: si distribuyes tu versión debes dar su código fuente con la GPL.'] },
+      { q: ['A developer includes an MIT-licensed library in a closed-source product and keeps the copyright notice.', 'Un desarrollador incluye una biblioteca con licencia MIT en un producto de código cerrado y mantiene el aviso de derechos de autor.'], a: 'ok', why: ['Permissive licences allow it if the notice is kept.', 'Las licencias permisivas lo permiten si se mantiene el aviso.'] },
+      { q: ['A company uses, in its offices, a program that is free for personal, non-commercial use.', 'Una empresa usa en sus oficinas un programa gratuito solo para uso personal y no comercial.'], a: 'no', why: ['The free use is limited to non-commercial use, so the company needs a commercial licence.', 'El uso gratuito se limita al uso no comercial, así que la empresa necesita una licencia comercial.'] },
+      { q: ['You install one boxed (retail) licence of a paid operating system on two PCs at the same time.', 'Instalas una licencia retail (en caja) de un sistema operativo de pago en dos PC a la vez.'], a: 'no', why: ['Retail licences usually cover one device at a time. Always read the EULA to be sure.', 'Las licencias retail suelen cubrir un dispositivo a la vez. Lee siempre el EULA para estar seguro.'] },
+      { q: ['You want to use a free program at work, but you have not read its licence yet.', 'Quieres usar un programa gratuito en el trabajo, pero aún no has leído su licencia.'], a: 'dep', why: ['It depends on the licence: some free programs are free only for personal use or for students.', 'Depende de la licencia: algunos programas gratuitos lo son solo para uso personal o para estudiantes.'] },
+    ],
+  });
+})();
+
+/* ===== 9 · Practice ===== */
+(function () {
+  const host = $host('practice');
+  const A = (en, es) => [en, es];
+  /* Cada pregunta: [enunciado EN, ES, [opción correcta, incorrectas…], explicación] (la primera opción es la correcta; se barajan al mostrarlas) */
+  const BANCO = [
+    [A('Which group lists the four basic elements of a computer system?', '¿Qué grupo enumera los cuatro elementos básicos de un sistema informático?'), [A('Hardware, software, data and users', 'Hardware, software, datos y usuarios'), A('Hardware, firmware, drivers and applications', 'Hardware, firmware, controladores y aplicaciones'), A('CPU, RAM, disk and screen', 'CPU, RAM, disco y pantalla'), A('Input, output, storage and processing', 'Entrada, salida, almacenamiento y procesamiento')], A('The last option lists functions, not elements.', 'La última opción enumera funciones, no elementos.')],
+    [A('A microphone supports which function of a computer system?', '¿Qué función de un sistema informático apoya un micrófono?'), [A('Input', 'Entrada'), A('Output', 'Salida'), A('Storage', 'Almacenamiento'), A('Processing', 'Procesamiento')], A('It captures sound and sends it into the system.', 'Capta sonido y lo envía al sistema.')],
+    [A('What is the main difference between RAM and an SSD?', '¿Cuál es la diferencia principal entre la RAM y un SSD?'), [A('RAM is volatile and holds data in use; an SSD keeps data without power', 'La RAM es volátil y guarda los datos en uso; un SSD conserva los datos sin corriente'), A('RAM keeps data without power; an SSD does not', 'La RAM conserva los datos sin corriente; un SSD no'), A('RAM is slower than an SSD', 'La RAM es más lenta que un SSD'), A('An SSD is a type of RAM', 'Un SSD es un tipo de RAM')], A('RAM is the fast, temporary work table; the SSD is the permanent archive.', 'La RAM es la mesa de trabajo rápida y temporal; el SSD es el archivo permanente.')],
+    [A('Which part converts mains electricity into the low voltages that other components need?', '¿Qué pieza convierte la electricidad de la red en las tensiones bajas que necesitan los demás componentes?'), [A('The power supply', 'La fuente de alimentación'), A('The motherboard', 'La placa base'), A('The heat sink', 'El disipador'), A('The graphics card', 'La tarjeta gráfica')], A('The power supply (PSU) does that and is measured in watts.', 'La fuente de alimentación (PSU) lo hace y se mide en vatios.')],
+    [A('A touchscreen is…', 'Una pantalla táctil es…'), [A('both an input and an output peripheral', 'a la vez un periférico de entrada y de salida'), A('only an input peripheral', 'solo un periférico de entrada'), A('only an output peripheral', 'solo un periférico de salida'), A('a storage peripheral', 'un periférico de almacenamiento')], A('You touch it (input) and it shows the image (output).', 'La tocas (entrada) y muestra la imagen (salida).')],
+    [A('What does a device driver do?', '¿Qué hace un controlador de dispositivo?'), [A('It tells the operating system how to communicate with a specific device', 'Explica al sistema operativo cómo comunicarse con un dispositivo concreto'), A('It speeds up the CPU', 'Acelera la CPU'), A('It stores the user’s files', 'Guarda los archivos del usuario'), A('It protects the computer from viruses', 'Protege el ordenador de los virus')], A('Each device type needs a driver that knows its commands.', 'Cada tipo de dispositivo necesita un controlador que conozca sus órdenes.')],
+    [A('Where is the UEFI firmware of a PC stored?', '¿Dónde se guarda el firmware UEFI de un PC?'), [A('In a non-volatile flash chip on the motherboard', 'En un chip de memoria flash no volátil de la placa base'), A('In the RAM', 'En la RAM'), A('In the monitor', 'En el monitor'), A('On the keyboard', 'En el teclado')], A('Firmware lives in non-volatile memory, so it is there when the power is off.', 'El firmware está en memoria no volátil, así que sigue ahí sin corriente.')],
+    [A('Which of these is programming software?', '¿Cuál de estos es software de programación?'), [A('A compiler', 'Un compilador'), A('A web browser', 'Un navegador web'), A('A spreadsheet', 'Una hoja de cálculo'), A('A printer driver', 'Un controlador de impresora')], A('Compilers, interpreters, editors and debuggers help programmers build programs.', 'Los compiladores, intérpretes, editores y depuradores ayudan a crear programas.')],
+    [A('What does a compiler do?', '¿Qué hace un compilador?'), [A('Translates the whole program into machine code before it runs', 'Traduce todo el programa a código máquina antes de ejecutarlo'), A('Runs the program one line at a time', 'Ejecuta el programa una línea cada vez'), A('Stores the program in RAM', 'Guarda el programa en la RAM'), A('Checks the hardware at start-up', 'Comprueba el hardware al arrancar')], A('Running one line at a time is the job of an interpreter.', 'Ejecutar una línea cada vez es tarea de un intérprete.')],
+    [A('Which statement about firmware is correct?', '¿Qué afirmación sobre el firmware es correcta?'), [A('It is software stored in a device’s non-volatile memory that controls its circuits', 'Es software guardado en la memoria no volátil de un dispositivo que controla sus circuitos'), A('It is only found in PCs', 'Solo se encuentra en los PC'), A('It disappears when the device is switched off', 'Desaparece cuando se apaga el dispositivo'), A('It is an application that the user installs', 'Es una aplicación que instala el usuario')], A('Routers, mice, TVs and USB drives have firmware too.', 'Los routers, ratones, televisores y memorias USB también tienen firmware.')],
+    [A('A bank needs a machine for huge volumes of transactions with continuous operation. The best fit is a…', 'Un banco necesita una máquina para enormes volúmenes de transacciones con funcionamiento continuo. Encaja mejor un…'), [A('mainframe', 'mainframe'), A('workstation', 'estación de trabajo'), A('tablet', 'tableta'), A('embedded system', 'sistema empotrado')], A('Mainframes are built for reliability and large transaction volumes.', 'Los mainframes están hechos para la fiabilidad y grandes volúmenes de transacciones.')],
+    [A('A weather agency runs a simulation on thousands of processors working in parallel. This is a…', 'Un servicio meteorológico ejecuta una simulación en miles de procesadores en paralelo. Esto es un…'), [A('supercomputer', 'superordenador'), A('mainframe', 'mainframe'), A('personal computer', 'ordenador personal'), A('server', 'servidor')], A('Massive parallel calculation is typical of supercomputers.', 'El cálculo paralelo masivo es típico de los superordenadores.')],
+    [A('The unit that controls the airbags of a car is an example of a…', 'La unidad que controla los airbags de un coche es un ejemplo de…'), [A('embedded system', 'sistema empotrado'), A('workstation', 'estación de trabajo'), A('mainframe', 'mainframe'), A('supercomputer', 'superordenador')], A('It is a small computer inside a product, doing a fixed task.', 'Es un ordenador pequeño dentro de un producto que hace una tarea fija.')],
+    [A('What defines a server?', '¿Qué define a un servidor?'), [A('It provides services to other computers over a network', 'Da servicios a otros ordenadores a través de una red'), A('It always has the fastest CPU', 'Siempre tiene la CPU más rápida'), A('It has no operating system', 'No tiene sistema operativo'), A('It cannot be a virtual machine', 'No puede ser una máquina virtual')], A('A server can be small, or even virtual; what matters is the service it gives.', 'Un servidor puede ser pequeño o incluso virtual; lo importante es el servicio que da.')],
+    [A('An operating system is best described as…', 'Un sistema operativo se describe mejor como…'), [A('system software that manages the hardware and offers services to programs', 'software de sistema que gestiona el hardware y ofrece servicios a los programas'), A('an application for office work', 'una aplicación de ofimática'), A('a chip on the motherboard', 'un chip de la placa base'), A('a type of peripheral', 'un tipo de periférico')], A('It sits between the applications and the hardware.', 'Está entre las aplicaciones y el hardware.')],
+    [A('Which part of the OS runs in kernel mode with full access to the hardware?', '¿Qué parte del SO se ejecuta en modo núcleo con acceso total al hardware?'), [A('The kernel', 'El núcleo'), A('The web browser', 'El navegador web'), A('The desktop wallpaper', 'El fondo de escritorio'), A('The user’s documents', 'Los documentos del usuario')], A('Applications run in user mode with limited rights.', 'Las aplicaciones se ejecutan en modo usuario con derechos limitados.')],
+    [A('How does a program ask the OS to write a file?', '¿Cómo pide un programa al SO que escriba un archivo?'), [A('With a system call', 'Con una llamada al sistema'), A('By writing directly to the disk', 'Escribiendo directamente en el disco'), A('By rebooting the computer', 'Reiniciando el ordenador'), A('By installing a new driver', 'Instalando un controlador nuevo')], A('Programs in user mode cannot touch the hardware, so they ask the kernel.', 'Los programas en modo usuario no pueden tocar el hardware, así que se lo piden al núcleo.')],
+    [A('Which function decides which process uses the CPU next?', '¿Qué función decide qué proceso usa la CPU a continuación?'), [A('Process management (scheduling)', 'Gestión de procesos (planificación)'), A('File management', 'Gestión de archivos'), A('Device management', 'Gestión de dispositivos'), A('User interface', 'Interfaz de usuario')], A('The scheduler is part of process management.', 'El planificador forma parte de la gestión de procesos.')],
+    [A('What is virtual memory?', '¿Qué es la memoria virtual?'), [A('A technique that maps each process’s addresses to RAM and can use disk space when RAM is full', 'Una técnica que asigna las direcciones de cada proceso a la RAM y puede usar espacio de disco cuando la RAM se llena'), A('A faster type of RAM', 'Un tipo de RAM más rápido'), A('Memory inside the graphics card', 'Memoria dentro de la tarjeta gráfica'), A('A backup copy of the disk', 'Una copia de seguridad del disco')], A('It also isolates processes from each other.', 'También aísla los procesos entre sí.')],
+    [A('In a monolithic kernel…', 'En un núcleo monolítico…'), [A('all core services and drivers run together in one address space', 'todos los servicios básicos y controladores se ejecutan juntos en un espacio de direcciones'), A('every layer can only call the layer below', 'cada capa solo puede llamar a la capa inferior'), A('drivers run as normal programs in user mode', 'los controladores se ejecutan como programas normales en modo usuario'), A('the kernel cannot be changed', 'el núcleo no se puede cambiar')], A('That makes it fast, but one bug can stop the whole system.', 'Eso lo hace rápido, pero un error puede detener todo el sistema.')],
+    [A('Which kernel design lets you load a new driver while the system is running?', '¿Qué diseño de núcleo permite cargar un controlador nuevo con el sistema en marcha?'), [A('Modular', 'Modular'), A('Layered', 'Por capas'), A('Monolithic without modules', 'Monolítico sin módulos'), A('None of them', 'Ninguno')], A('Loadable modules are the key idea of the modular design.', 'Los módulos cargables son la idea clave del diseño modular.')],
+    [A('In a layered design, each layer may call…', 'En un diseño por capas, cada capa puede llamar a…'), [A('only the layer directly below', 'solo la capa inmediatamente inferior'), A('any other layer', 'cualquier otra capa'), A('only the layer above', 'solo la capa superior'), A('only the hardware', 'solo el hardware')], A('A strict hierarchy is what defines the design.', 'Una jerarquía estricta es lo que define el diseño.')],
+    [A('Which kernel does Android use?', '¿Qué núcleo usa Android?'), [A('The Linux kernel', 'El núcleo Linux'), A('Windows NT', 'Windows NT'), A('FreeRTOS', 'FreeRTOS'), A('XNU', 'XNU')], A('Android is built on top of the Linux kernel.', 'Android está construido sobre el núcleo Linux.')],
+    [A('In which system is a missed deadline a failure (hard real time)?', '¿En qué sistema es un fallo perder un plazo (tiempo real estricto)?'), [A('The controller of a car airbag', 'El controlador de un airbag'), A('A video player', 'Un reproductor de vídeo'), A('A web browser', 'Un navegador web'), A('A print queue', 'Una cola de impresión')], A('A late airbag is a failure; a late video frame is only annoying.', 'Un airbag tardío es un fallo; un fotograma tardío solo molesta.')],
+    [A('What does multitasking mean?', '¿Qué significa multitarea?'), [A('The OS shares CPU time so that several programs seem to run at the same time', 'El SO reparte el tiempo de CPU para que varios programas parezcan ejecutarse a la vez'), A('The OS can only run one program', 'El SO solo puede ejecutar un programa'), A('The computer has several screens', 'El ordenador tiene varias pantallas'), A('Several users share one keyboard', 'Varios usuarios comparten un teclado')], A('Even a single-core CPU can multitask by switching quickly between processes.', 'Incluso una CPU de un núcleo puede hacer multitarea cambiando rápido entre procesos.')],
+    [A('Ubuntu is open source and Windows is proprietary. Which classification criterion is this?', 'Ubuntu es de código abierto y Windows es propietario. ¿Qué criterio de clasificación es este?'), [A('By licence', 'Por licencia'), A('By structure', 'Por estructura'), A('By number of CPUs', 'Por número de CPU'), A('By multitasking', 'Por multitarea')], A('The licence says who owns the code and what you may do with it.', 'La licencia dice quién es dueño del código y qué puedes hacer con él.')],
+    [A('What does SMP mean?', '¿Qué significa SMP?'), [A('Several processors or cores share the same memory under one OS', 'Varios procesadores o núcleos comparten la misma memoria bajo un SO'), A('A single processor on the mainboard', 'Un único procesador en la placa'), A('A type of memory module', 'Un tipo de módulo de memoria'), A('A way to encrypt the disk', 'Una forma de cifrar el disco')], A('It stands for symmetric multiprocessing.', 'Son las siglas de multiprocesamiento simétrico.')],
+    [A('MS-DOS is classified as…', 'MS-DOS se clasifica como…'), [A('single-user and single-tasking', 'monousuario y monotarea'), A('multi-user and real-time', 'multiusuario y de tiempo real'), A('network and distributed', 'de red y distribuido'), A('multi-user and multitasking', 'multiusuario y multitarea')], A('It ran one program at a time for one user.', 'Ejecutaba un programa a la vez para un usuario.')],
+    [A('Which of these systems uses the Linux kernel?', '¿Cuál de estos sistemas usa el núcleo Linux?'), [A('ChromeOS', 'ChromeOS'), A('macOS', 'macOS'), A('iOS', 'iOS'), A('Windows 11', 'Windows 11')], A('ChromeOS and Android both use Linux; macOS and iOS use XNU.', 'ChromeOS y Android usan Linux; macOS e iOS usan XNU.')],
+    [A('Before installing an OS on an old PC, what should you compare first?', 'Antes de instalar un SO en un PC antiguo, ¿qué debes comparar primero?'), [A('The OS requirements with the PC’s CPU, RAM, free disk space and firmware', 'Los requisitos del SO con la CPU, la RAM, el espacio libre en disco y el firmware del PC'), A('The colour of the case', 'El color de la caja'), A('The price of the keyboard', 'El precio del teclado'), A('Only the number of USB ports', 'Solo el número de puertos USB')], A('Hardware suitability means the PC meets the requirements.', 'Idoneidad del hardware significa que el PC cumple los requisitos.')],
+    [A('What is the difference between minimum and recommended requirements?', '¿Qué diferencia hay entre los requisitos mínimos y los recomendados?'), [A('Minimum: it runs, maybe slowly. Recommended: it runs comfortably', 'Mínimos: funciona, quizá despacio. Recomendados: funciona con comodidad'), A('Minimum is for servers and recommended for PCs', 'Los mínimos son para servidores y los recomendados para PC'), A('They are the same', 'Son lo mismo'), A('Minimum is the most the PC can use', 'El mínimo es lo máximo que puede usar el PC')], A('Aim for the recommended requirements when you can.', 'Busca los requisitos recomendados cuando puedas.')],
+    [A('Which is one of the four freedoms of free software?', '¿Cuál es una de las cuatro libertades del software libre?'), [A('The freedom to study how the program works and change it', 'La libertad de estudiar cómo funciona el programa y cambiarlo'), A('The freedom to use it without paying', 'La libertad de usarlo sin pagar'), A('The freedom to remove the author’s name', 'La libertad de quitar el nombre del autor'), A('The freedom to get free support for life', 'La libertad de recibir soporte gratis de por vida')], A('Free means freedom, not price.', 'Libre significa libertad, no precio.')],
+    [A('What is freeware?', '¿Qué es el freeware?'), [A('Software that is free of charge but whose source code is closed', 'Software gratuito pero con el código fuente cerrado'), A('Software with open source code', 'Software con código fuente abierto'), A('Software you can try for 30 days', 'Software que puedes probar 30 días'), A('Software with no copyright', 'Software sin derechos de autor')], A('It has an author and a licence like any other program.', 'Tiene autor y licencia como cualquier otro programa.')],
+    [A('What does the GPL require if you distribute a modified version?', '¿Qué exige la GPL si distribuyes una versión modificada?'), [A('Giving the source code under the same licence', 'Entregar el código fuente con la misma licencia'), A('Paying the original author', 'Pagar al autor original'), A('Keeping the code secret', 'Mantener el código en secreto'), A('Nothing', 'Nada')], A('That is what copyleft means.', 'Eso es lo que significa copyleft.')],
+    [A('Which kind of licence lets you reuse code in a closed-source product if you keep the copyright notice?', '¿Qué tipo de licencia te permite reutilizar código en un producto de código cerrado si mantienes el aviso de derechos de autor?'), [A('A permissive licence such as MIT', 'Una licencia permisiva como MIT'), A('A copyleft licence such as GPL', 'Una licencia copyleft como GPL'), A('A trial licence', 'Una licencia de prueba'), A('An OEM licence', 'Una licencia OEM')], A('Permissive licences ask very little in return.', 'Las licencias permisivas piden muy poco a cambio.')],
+    [A('A licence that comes pre-installed and is tied to the computer it came with is called…', 'Una licencia que viene preinstalada y ligada al ordenador con el que se compró se llama…'), [A('OEM', 'OEM'), A('Volume', 'Por volumen'), A('Subscription', 'Suscripción'), A('Copyleft', 'Copyleft')], A('OEM licences usually cannot be moved to another computer.', 'Las licencias OEM normalmente no se pueden pasar a otro ordenador.')],
+    [A('What is shareware?', '¿Qué es el shareware?'), [A('Software you can try for a limited time before paying', 'Software que puedes probar un tiempo limitado antes de pagar'), A('Software that anyone can modify', 'Software que cualquiera puede modificar'), A('Software without a licence', 'Software sin licencia'), A('Software shared between two computers', 'Software compartido entre dos ordenadores')], A('If you want to keep using it, you must pay.', 'Si quieres seguir usándolo, tienes que pagar.')],
+    [A('Copying a paid program for a friend, without a licence, is…', 'Copiar un programa de pago para un amigo, sin licencia, es…'), [A('copyright infringement (piracy)', 'una infracción de los derechos de autor (piratería)'), A('allowed if you do not sell it', 'lícito si no lo vendes'), A('one of the freedoms of free software', 'una de las libertades del software libre'), A('allowed for one week', 'lícito durante una semana')], A('Only the licence can give you permission to copy.', 'Solo la licencia puede darte permiso para copiar.')],
+  ];
+
+  /* Cuestionario: 10 preguntas al azar, corrección inmediata y mejor puntuación recordada */
+  function cuestionario(zona) {
+    let preguntas;
+    let i;
+    let aciertos;
+    function nueva() { preguntas = shuffle(BANCO).slice(0, 10); i = 0; aciertos = 0; mostrar(); }
+    function mostrar() {
+      zona.textContent = '';
+      if (i >= preguntas.length) {
+        const mejor = Math.max(Number(Lab.leer('mejor')) || 0, aciertos);
+        Lab.guardar('mejor', mejor);
+        const otra = h('button', { type: 'button', class: 'btn primary' }, T('New round', 'Nueva ronda'));
+        otra.addEventListener('click', nueva);
+        zona.append(h('p', { class: 'q-prompt', role: 'status' }, T(`Your score: ${aciertos} of ${preguntas.length}`, `Tu puntuación: ${aciertos} de ${preguntas.length}`)),
+          h('p', {}, T(`Best score on this device: ${mejor} of ${preguntas.length}`, `Mejor puntuación en este dispositivo: ${mejor} de ${preguntas.length}`)), otra);
+        return;
+      }
+      const q = preguntas[i];
+      const fb = h('p', { class: 'fb', role: 'status' });
+      const sig = h('button', { type: 'button', class: 'btn primary', hidden: true }, i === preguntas.length - 1 ? T('See my score', 'Ver mi puntuación') : T('Next question', 'Siguiente pregunta'));
+      sig.addEventListener('click', () => { i++; mostrar(); });
+      const lista = h('div', { class: 'choices', role: 'group', 'aria-label': P(q[0]) });
+      let hecho = false;
+      shuffle(q[1].map((o, k) => ({ o, k }))).forEach(({ o, k }) => {
+        const b = h('button', { type: 'button', class: 'opt', 'aria-pressed': 'false' }, P(o));
+        b.addEventListener('click', () => {
+          if (hecho) return;
+          hecho = true;
+          const ok = k === 0;
+          if (ok) aciertos++;
+          b.setAttribute('aria-pressed', 'true');
+          b.classList.add(ok ? 'right' : 'ko');
+          lista.querySelectorAll('.opt').forEach((x) => x.setAttribute('aria-disabled', 'true'));
+          fb.className = 'fb ' + (ok ? 'good' : 'bad');
+          fb.textContent = '';
+          fb.append(h('b', {}, ok ? T('Correct. ', 'Correcto. ') : T('Not quite. ', 'No exactamente. ')),
+            ok ? '' : T('The right answer is: ', 'La respuesta correcta es: ') + P(q[1][0]) + '. ', P(q[2]));
+          sig.hidden = false;
+          sig.focus();
+        });
+        lista.append(b);
+      });
+      zona.append(h('p', { class: 'score' }, T(`Question ${i + 1} of ${preguntas.length}`, `Pregunta ${i + 1} de ${preguntas.length}`)),
+        h('p', { class: 'q-prompt' }, P(q[0])), lista, fb, sig);
+    }
+    nueva();
+  }
+
+  /* Comprobación de hardware: requisitos y tres PC generados al azar */
+  const APPS = [
+    { n: ['Photo editor', 'Editor de fotos'], ram: 8, disco: 20, gpu: false, b64: true },
+    { n: ['Video game', 'Videojuego'], ram: 16, disco: 100, gpu: true, b64: true },
+    { n: ['Office suite', 'Suite ofimática'], ram: 4, disco: 10, gpu: false, b64: false },
+    { n: ['Programming environment', 'Entorno de programación'], ram: 8, disco: 30, gpu: false, b64: true },
+    { n: ['4K video editor', 'Editor de vídeo 4K'], ram: 16, disco: 150, gpu: true, b64: true },
+  ];
+  const pick = (a) => a[Math.floor(Math.random() * a.length)];
+  function fallos(app, pc) {
+    const f = [];
+    if (pc.ram < app.ram) f.push(T(`RAM: ${pc.ram} GB is less than ${app.ram} GB`, `RAM: ${pc.ram} GB es menos de ${app.ram} GB`));
+    if (pc.disco < app.disco) f.push(T(`free disk space: ${pc.disco} GB is less than ${app.disco} GB`, `espacio libre en disco: ${pc.disco} GB es menos de ${app.disco} GB`));
+    if (app.b64 && !pc.b64) f.push(T('the CPU is 32-bit and the program needs 64-bit', 'la CPU es de 32 bits y el programa necesita 64 bits'));
+    if (app.gpu && !pc.gpu) f.push(T('it has only integrated graphics and the program needs a dedicated graphics card', 'solo tiene gráficos integrados y el programa necesita una tarjeta gráfica dedicada'));
+    return f;
+  }
+  function comprobacion(zona) {
+    function nuevo() {
+      zona.textContent = '';
+      const app = pick(APPS);
+      let pcs;
+      for (let n = 0; n < 60; n++) {
+        pcs = [0, 1, 2].map(() => ({ ram: pick([4, 8, 16, 32]), disco: pick([15, 40, 120, 500]), b64: Math.random() > 0.25, gpu: Math.random() > 0.5 }));
+        const buenos = pcs.filter((p) => fallos(app, p).length === 0).length;
+        if (buenos >= 1 && buenos <= 2) break;
+      }
+      const letras = ['A', 'B', 'C'];
+      const marcas = [];
+      const tarjetas = pcs.map((p, k) => {
+        const cb = h('input', { type: 'checkbox', id: 'pc-' + k });
+        marcas.push(cb);
+        const res = h('p', { class: 'fb', role: 'status' });
+        const desc = T(`${p.ram} GB RAM · ${p.disco} GB free · ${p.b64 ? '64-bit' : '32-bit'} CPU · ${p.gpu ? 'dedicated' : 'integrated'} graphics`,
+          `${p.ram} GB de RAM · ${p.disco} GB libres · CPU de ${p.b64 ? '64' : '32'} bits · gráficos ${p.gpu ? 'dedicados' : 'integrados'}`);
+        return { div: h('div', { class: 'pc' }, h('label', { for: 'pc-' + k }, cb, T(`PC ${letras[k]}`, `PC ${letras[k]}`)), h('p', { class: 'mono' }, desc), res), res };
+      });
+      const resumen = h('p', { class: 'score', role: 'status' });
+      const bC = h('button', { type: 'button', class: 'btn primary' }, T('Check', 'Comprobar'));
+      const bN = h('button', { type: 'button', class: 'btn' }, T('New exercise', 'Otro ejercicio'));
+      bN.addEventListener('click', nuevo);
+      bC.addEventListener('click', () => {
+        let bien = 0;
+        pcs.forEach((p, k) => {
+          const f = fallos(app, p);
+          const cumple = f.length === 0;
+          const acierto = marcas[k].checked === cumple;
+          if (acierto) bien++;
+          tarjetas[k].div.className = 'pc ' + (acierto ? 'ok' : 'ko');
+          tarjetas[k].res.className = 'fb ' + (acierto ? 'good' : 'bad');
+          tarjetas[k].res.textContent = (acierto ? T('Right. ', 'Bien. ') : T('Not quite. ', 'No exactamente. ')) +
+            (cumple ? T('It meets all the minimum requirements.', 'Cumple todos los requisitos mínimos.') : T('It does not meet them: ', 'No los cumple: ') + f.join('; ') + '.');
+        });
+        resumen.textContent = T(`${bien} of 3 right`, `${bien} de 3 bien`);
+        if (bien === 3) Lab.guardar('hw-perfectos', (Number(Lab.leer('hw-perfectos')) || 0) + 1);
+      });
+      zona.append(
+        h('p', {}, T('The program needs at least: ', 'El programa necesita como mínimo: '), h('b', {}, P(app.n)), ' → ',
+          T(`${app.ram} GB of RAM, ${app.disco} GB of free disk space, ${app.b64 ? 'a 64-bit CPU' : 'any CPU'}${app.gpu ? ' and a dedicated graphics card' : ''}.`,
+            `${app.ram} GB de RAM, ${app.disco} GB de espacio libre en disco, ${app.b64 ? 'una CPU de 64 bits' : 'cualquier CPU'}${app.gpu ? ' y una tarjeta gráfica dedicada' : ''}.`)),
+        h('p', {}, T('Tick the computers that meet all the requirements.', 'Marca los ordenadores que cumplen todos los requisitos.')),
+        h('div', { class: 'pcs' }, tarjetas.map((t) => t.div)),
+        h('div', { class: 'row' }, bC, bN, resumen));
+    }
+    nuevo();
+  }
+  const z1 = h('div'), z2 = h('div');
+  host.append(h('div', { class: 'card' }, h('h3', {}, T('Quiz: 10 questions', 'Cuestionario: 10 preguntas')), z1),
+    h('div', { class: 'card' }, h('h3', {}, T('Hardware check', 'Comprobación de hardware')), z2));
+  cuestionario(z1);
+  comprobacion(z2);
+})();
+
+mostrar(location.hash.slice(1) || Lab.leer('pestana'));
+</script>
+</body>
+</html>
