@@ -1,0 +1,1372 @@
+<!doctype html>
+<html lang="es" data-lab="perfil-empresa" data-idioma-original="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="/comun/lab.js"></script>
+<title>Laboratorio del sector TIC: perfil de empresa</title>
+<meta name="description" content="Construye la ficha de una empresa del sector TIC: mapa de empresas, organigrama, departamentos, clientes y volumen de negocio, Canvas, indicadores, ODS y autoevaluación por criterio.">
+<meta name="keywords" content="sector TIC, empresa, organigrama, departamentos, Canvas, indicadores, ODS, proyecto intermodular">
+<link rel="icon" href="/comun/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/comun/fuentes.css">
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f2f4ef;--surface:#ffffff;--surface2:#e9ede6;--ink:#16201b;--muted:#56655d;--line:#d3dbd4;
+  --accent:#b86e00;--accent-soft:#fbeed8;--pcb:#1f5244;
+  --ok:#1b6b3f;--ko:#a8281f;
+  --f-display:"Chakra Petch",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0e1411;--surface:#161f1b;--surface2:#1d2823;--ink:#e4ebe6;--muted:#95a69d;--line:#2b3832;
+  --accent:#f3aa3c;--accent-soft:#33260f;--pcb:#1a463a;
+  --ok:#6fd49a;--ko:#ff9d94;
+}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--f-body)}
+h1,h2,h3{font-family:var(--f-display);line-height:1.2;margin:0 0 .5rem}
+h1{font-size:1.25rem}
+h2{font-size:1.5rem}
+h3{font-size:1.1rem;margin-top:1.25rem}
+code,pre{font-family:var(--f-mono)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{border:1px solid var(--muted);background:var(--surface);border-radius:.4rem;padding:.35rem .8rem;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cabecera{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;padding:.6rem 1rem;background:var(--pcb);color:#fff}
+.cabecera h1{flex:1 1 12rem;margin:0}
+.cabecera a{color:#fff}
+.cabecera button{background:transparent;border-color:#fff;color:#fff}
+main{max-width:64rem;margin:0 auto;padding:1rem}
+.pestanas{display:flex;gap:.25rem;overflow-x:auto;border-bottom:1px solid var(--muted)}
+[role="tab"]{display:flex;gap:.5rem;align-items:baseline;white-space:nowrap;border:0;border-bottom:3px solid transparent;border-radius:.4rem .4rem 0 0;background:var(--surface2);font:600 1rem var(--f-display)}
+[role="tab"][aria-selected="true"]{background:var(--accent-soft);border-bottom-color:var(--accent)}
+.n{font:600 .8rem var(--f-mono);color:var(--muted)}
+[role="tabpanel"]{background:var(--surface);border:1px solid var(--line);border-top:0;padding:1rem 1.25rem}
+.intro{margin:.25rem 0 1rem;color:var(--muted)}
+.campos{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:.6rem .8rem;align-items:end;margin:.5rem 0}
+.campo{display:flex;flex-direction:column;gap:.2rem;min-width:0}
+.campo label,.etq{font-weight:700;font-size:.9rem}
+.ayuda{color:var(--muted);font-size:.85rem}
+input,select,textarea{width:100%;border:1px solid var(--muted);border-radius:.4rem;padding:.35rem .6rem;background:var(--surface)}
+input[type="checkbox"],input[type="radio"]{width:auto}
+textarea{resize:vertical;min-height:4.5rem}
+.fila{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin:.5rem 0}
+.primario{background:var(--pcb);border-color:var(--pcb);color:#fff}
+.pq{padding:.15rem .5rem;font-size:.85rem}
+.tabla{overflow-x:auto;margin:.5rem 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{border-bottom:1px solid var(--line);padding:.35rem .5rem;text-align:left;vertical-align:top}
+th{background:var(--surface2);font-family:var(--f-display);font-weight:600}
+td input,td select{min-width:5rem}
+td.num,th.num{text-align:right}
+.msg{margin:.5rem 0;min-height:1.4rem}
+.msg:empty{min-height:0;margin:0}
+.aviso{margin:.75rem 0;padding:.5rem .75rem;border-left:4px solid var(--accent);background:var(--accent-soft)}
+.correccion{margin:.75rem 0;padding:.4rem .75rem;border-left:4px solid var(--accent);background:var(--surface2)}
+.correccion:empty{display:none}
+.chips{display:inline-flex;flex-wrap:wrap;gap:.25rem;margin-left:.4rem}
+.chip{font-size:.78rem;padding:0 .45rem;border:1px solid var(--muted);border-radius:1rem;background:var(--surface2)}
+.arbol ul{list-style:none;margin:.3rem 0 .3rem 1rem;padding-left:1rem;border-left:2px solid var(--muted)}
+.arbol>ul{margin-left:0;padding-left:0;border-left:0}
+.arbol li{margin:.4rem 0}
+.caja{display:inline-flex;flex-wrap:wrap;gap:.3rem .5rem;align-items:center;padding:.3rem .6rem;border:2px solid var(--muted);border-radius:.5rem;background:var(--surface2)}
+.sem{display:inline-block;padding:.05rem .6rem;border-radius:1rem;border:2px solid var(--muted);font-weight:700;background:var(--surface2)}
+.sem-verde{border-color:var(--ok)}
+.sem-ambar{border-color:var(--accent);background:var(--accent-soft)}
+.sem-rojo{border-color:var(--ko)}
+.ok{color:var(--ok);font-weight:700}
+.ko{color:var(--ko);font-weight:700}
+.barra{display:flex;align-items:center;gap:.5rem;margin:.15rem 0;font-size:.9rem}
+.barra span.t{flex:0 0 11rem}
+.barra span.b{display:block;height:.8rem;background:var(--accent);border-radius:.2rem;min-width:2px}
+.dos{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1rem}
+.lienzo{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.4rem;margin:.75rem 0}
+.bloque{border:1px solid var(--muted);border-radius:.4rem;padding:.4rem;background:var(--surface2);display:flex;flex-direction:column;gap:.2rem}
+.bloque.vacio{background:var(--accent-soft);border-color:var(--accent)}
+.bloque textarea{min-height:5.5rem}
+.b-socios{grid-column:1;grid-row:1/3}.b-actividades{grid-column:2;grid-row:1}.b-recursos{grid-column:2;grid-row:2}
+.b-valor{grid-column:3;grid-row:1/3}.b-relacion{grid-column:4;grid-row:1}.b-canales{grid-column:4;grid-row:2}
+.b-segmentos{grid-column:5;grid-row:1/3}.b-costes{grid-column:1/4;grid-row:3}.b-ingresos{grid-column:4/6;grid-row:3}
+@media (max-width:48rem){.lienzo{grid-template-columns:1fr}.lienzo .bloque{grid-column:auto!important;grid-row:auto!important}}
+.opciones{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0}
+.tarea{font-size:1.15rem;font-weight:700;margin:.5rem 0}
+.tarjeta{border:1px solid var(--line);border-radius:.5rem;padding:.6rem .8rem;margin:.6rem 0;background:var(--surface)}
+.tarjeta h4{margin:0 0 .4rem;font-family:var(--f-display)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(8.5rem,1fr));gap:.4rem;margin:.5rem 0}
+.tile{border:1px solid var(--muted);border-radius:.4rem;padding:.3rem .5rem;font-size:.85rem;background:var(--surface2)}
+.tile b{font-family:var(--f-mono)}
+.tile.con{background:var(--accent-soft);border-color:var(--accent)}
+pre{white-space:pre-wrap;background:var(--surface2);padding:.75rem;border-radius:.4rem;max-height:22rem;overflow:auto;font-size:.82rem}
+details.datos{margin:.75rem 0;border:1px solid var(--line);border-radius:.5rem;padding:.4rem .8rem;background:var(--surface)}
+details.datos summary{cursor:pointer;font-weight:700}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="cabecera">
+  <a href="../../" data-lab-volver aria-label="Volver a la unidad">← <span>Unidad</span></a>
+  <h1>Laboratorio del sector TIC: perfil de empresa</h1>
+  <div role="group" aria-label="Tamaño del texto">
+    <button type="button" data-lab-zoom="-" aria-label="Reducir texto">A−</button>
+    <button type="button" data-lab-zoom="+" aria-label="Aumentar texto">A+</button>
+  </div>
+</header>
+<main>
+  <div id="banner" class="aviso" role="status" hidden></div>
+  <details class="datos">
+    <summary>Tus datos: guardar, exportar e importar</summary>
+    <p class="intro">Todo lo que escribes se guarda solo en este navegador. Para entregarlo en Aules o llevarlo a otro ordenador, exporta la ficha.</p>
+    <div class="fila" id="barra-datos"></div>
+    <p class="msg" id="aviso-datos" role="status"></p>
+  </details>
+
+  <div class="pestanas" role="tablist" aria-label="Secciones del laboratorio">
+    <button type="button" role="tab" id="tab-empresas" data-tab="empresas" aria-controls="panel-empresas" aria-selected="true"><span class="n">1</span><span>Mapa</span></button>
+    <button type="button" role="tab" id="tab-organigrama" data-tab="organigrama" aria-controls="panel-organigrama" aria-selected="false" tabindex="-1"><span class="n">2</span><span>Organigrama</span></button>
+    <button type="button" role="tab" id="tab-departamentos" data-tab="departamentos" aria-controls="panel-departamentos" aria-selected="false" tabindex="-1"><span class="n">3</span><span>Departamentos</span></button>
+    <button type="button" role="tab" id="tab-clientes" data-tab="clientes" aria-controls="panel-clientes" aria-selected="false" tabindex="-1"><span class="n">4</span><span>Clientes</span></button>
+    <button type="button" role="tab" id="tab-canvas" data-tab="canvas" aria-controls="panel-canvas" aria-selected="false" tabindex="-1"><span class="n">5</span><span>Canvas</span></button>
+    <button type="button" role="tab" id="tab-indicadores" data-tab="indicadores" aria-controls="panel-indicadores" aria-selected="false" tabindex="-1"><span class="n">6</span><span>Indicadores</span></button>
+    <button type="button" role="tab" id="tab-ods" data-tab="ods" aria-controls="panel-ods" aria-selected="false" tabindex="-1"><span class="n">7</span><span>ODS</span></button>
+    <button type="button" role="tab" id="tab-practica" data-tab="practica" aria-controls="panel-practica" aria-selected="false" tabindex="-1"><span class="n">8</span><span>Ficha y autoevaluación</span></button>
+  </div>
+
+  <section role="tabpanel" id="panel-empresas" aria-labelledby="tab-empresas" tabindex="0">
+    <h2>Mapa de empresas del sector</h2>
+    <p class="intro">Da de alta las empresas que investigues. Cada fila necesita su fuente. El tamaño se calcula solo con la plantilla (criterio orientativo): el oficial también mira la facturación o el balance, así que consulta la definición vigente de pyme.</p>
+    <div id="c-empresas"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-organigrama" aria-labelledby="tab-organigrama" tabindex="0" hidden>
+    <h2>Organigrama</h2>
+    <p class="intro">Parte de una plantilla según el tamaño o construye el tuyo puesto a puesto. El laboratorio te avisa de las funciones clave que nadie cubre.</p>
+    <div id="c-organigrama"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-departamentos" aria-labelledby="tab-departamentos" tabindex="0" hidden>
+    <h2>Departamentos y funciones</h2>
+    <p class="intro">Primero practica con el clasificador: elige el departamento de cada tarea y verás la corrección al momento. Después describe los departamentos de tu empresa.</p>
+    <div id="c-departamentos"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-clientes" aria-labelledby="tab-clientes" tabindex="0" hidden>
+    <h2>Clientes, volumen de negocio y recursos</h2>
+    <p class="intro">Estima ingresos y carga de trabajo a partir de los segmentos de clientes y valora los recursos humanos y materiales. Los datos del ejemplo están inventados.</p>
+    <div id="c-clientes"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-canvas" aria-labelledby="tab-canvas" tabindex="0" hidden>
+    <h2>Modelo de negocio (Canvas) y estrategia</h2>
+    <p class="intro">Rellena los nueve bloques, empezando por los segmentos y la propuesta de valor. Los bloques vacíos se resaltan. Después elige dos o tres decisiones estratégicas y justifícalas.</p>
+    <div id="c-canvas"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-indicadores" aria-labelledby="tab-indicadores" tabindex="0" hidden>
+    <h2>Indicadores de resultados</h2>
+    <p class="intro">Elige de cuatro a seis indicadores, fija el objetivo y escribe seis periodos de datos. El semáforo es un criterio de la unidad: verde si se cumple el objetivo, ámbar si estás a menos de un 10 % y rojo si estás más lejos.</p>
+    <div id="c-indicadores"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-ods" aria-labelledby="tab-ods" tabindex="0" hidden>
+    <h2>Productos, servicios y ODS</h2>
+    <p class="intro">Lista los servicios de la empresa y, para cada uno, elige el ODS, el efecto y una justificación que explique cómo ocurre. Incluye al menos un servicio circular.</p>
+    <div id="c-ods"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-practica" aria-labelledby="tab-practica" tabindex="0" hidden>
+    <h2>Ficha y autoevaluación</h2>
+    <p class="intro">Completa los datos básicos, revisa qué criterios tienes cubiertos, exporta la ficha y repasa con las preguntas.</p>
+    <div id="c-practica"></div>
+  </section>
+</main>
+
+<script>
+'use strict';
+/* ====== Utilidades ====== */
+const $ = (s, r) => (r || document).querySelector(s);
+function el(tag, attrs, ...hijos) {
+  const e = document.createElement(tag);
+  for (const k of Object.keys(attrs || {})) {
+    const v = attrs[k];
+    if (v === false || v == null) continue;
+    if (k === 'class') e.className = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (k === 'value') e.value = v;
+    else e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const h of hijos.flat(Infinity)) {
+    if (h == null || h === false) continue;
+    e.append(h instanceof Node ? h : document.createTextNode(String(h)));
+  }
+  return e;
+}
+function svgEl(tag, attrs) {
+  const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const k of Object.keys(attrs)) e.setAttribute(k, attrs[k]);
+  return e;
+}
+let contador = 0;
+const nuevoId = () => 'i' + Date.now().toString(36) + (++contador);
+const num = (s) => { const n = Number(String(s == null ? '' : s).replace(',', '.').trim()); return Number.isFinite(n) ? n : 0; };
+const lleno = (s) => String(s == null ? '' : s).trim() !== '';
+const largo = (s) => String(s == null ? '' : s).trim().length;
+const lineas = (s) => String(s == null ? '' : s).split('\n').map((x) => x.trim()).filter(Boolean);
+const fmt = (n, d) => Number(n).toLocaleString('es-ES', { maximumFractionDigits: d || 0 });
+const eur = (n) => fmt(n, 0) + ' €';
+const mezclar = (a) => { const r = a.slice(); for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
+let uid = 0;
+function campo(etiqueta, control, ayuda) {
+  const id = 'f' + (++uid);
+  control.id = id;
+  return el('div', { class: 'campo' }, el('label', { for: id }, etiqueta), control, ayuda ? el('small', { class: 'ayuda' }, ayuda) : null);
+}
+function entrada(valor, alCambiar, extra) {
+  const i = el('input', Object.assign({ type: 'text', value: valor == null ? '' : valor }, extra || {}));
+  if (alCambiar) i.addEventListener('input', () => alCambiar(i.value));
+  return i;
+}
+function areaTexto(valor, alCambiar, filas) {
+  const t = el('textarea', { rows: filas || 3 });
+  t.value = valor == null ? '' : valor;
+  if (alCambiar) t.addEventListener('input', () => alCambiar(t.value));
+  return t;
+}
+function selector(opciones, actual, alCambiar) {
+  const s = el('select', {}, opciones.map((o) => el('option', { value: o[0], selected: o[0] === actual }, o[1])));
+  if (alCambiar) s.addEventListener('change', () => alCambiar(s.value));
+  return s;
+}
+function tabla(cabeceras, filas, numericas) {
+  return el('div', { class: 'tabla' }, el('table', {},
+    el('thead', {}, el('tr', {}, cabeceras.map((c, i) => el('th', { scope: 'col', class: numericas && numericas.includes(i) ? 'num' : null }, c)))),
+    el('tbody', {}, filas.map((f) => el('tr', {}, f.map((c, i) => el('td', { class: numericas && numericas.includes(i) ? 'num' : null }, c)))))));
+}
+function semaforo(nivel, texto) {
+  const g = { verde: '●', ambar: '▲', rojo: '■', gris: '○' }[nivel];
+  return el('span', { class: 'sem sem-' + nivel }, g + ' ' + texto);
+}
+const celdaMd = (s) => String(s == null ? '' : s).replace(/\|/g, '\\|').replace(/\s*\n\s*/g, ' ').trim();
+function descargar(nombre, texto, tipo) {
+  const blob = new Blob([texto], { type: tipo + ';charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = nombre;
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function aviso(texto) { $('#aviso-datos').textContent = texto; }
+
+/* ====== Datos de referencia ====== */
+const TIPOS = [
+  ['servicio-tecnico', 'Servicio técnico local'],
+  ['msp', 'Proveedor de servicios gestionados (MSP) o integrador'],
+  ['tienda', 'Tienda o distribuidor'],
+  ['operador', 'Operador de telecomunicaciones'],
+  ['software', 'Desarrollo de software'],
+  ['interno', 'Departamento informático interno'],
+  ['otro', 'Otro'],
+];
+const nombreTipo = (id) => (TIPOS.find((t) => t[0] === id) || ['', 'Otro'])[1];
+function tamano(n) {
+  if (!lleno(n)) return 'Sin datos';
+  const v = num(n);
+  return v < 10 ? 'Microempresa' : v < 50 ? 'Pequeña' : v < 250 ? 'Mediana' : 'Grande';
+}
+const TAMANOS = ['Microempresa', 'Pequeña', 'Mediana', 'Grande', 'Sin datos'];
+
+const DEPTOS = [
+  { id: 'direccion', nombre: 'Dirección', finalidad: 'Marcar el rumbo de la empresa y tomar las decisiones importantes.', funciones: ['Fijar los objetivos del año', 'Aprobar inversiones y contrataciones', 'Representar a la empresa ante clientes y bancos'] },
+  { id: 'comercial', nombre: 'Comercial y marketing', finalidad: 'Conseguir y conservar clientes.', funciones: ['Buscar clientes nuevos', 'Elaborar presupuestos y ofertas', 'Negociar contratos de mantenimiento', 'Mantener la web y las redes sociales'] },
+  { id: 'soporte', nombre: 'Soporte técnico (SAT)', finalidad: 'Atender las averías e incidencias de los clientes.', funciones: ['Registrar y resolver incidencias', 'Reparar equipos en el taller', 'Instalar y configurar puestos de trabajo'] },
+  { id: 'sistemas', nombre: 'Sistemas e infraestructura', finalidad: 'Mantener los servicios y la red, propios y de los clientes.', funciones: ['Administrar servidores y redes', 'Hacer y probar copias de seguridad', 'Aplicar medidas de seguridad y monitorizar los servicios'] },
+  { id: 'desarrollo', nombre: 'Desarrollo', finalidad: 'Crear y mantener aplicaciones.', funciones: ['Programar aplicaciones a medida', 'Probar y corregir errores', 'Publicar y mantener las versiones'] },
+  { id: 'administracion', nombre: 'Administración y finanzas', finalidad: 'Controlar el dinero y la documentación.', funciones: ['Emitir y reclamar facturas', 'Pagar a proveedores y controlar la tesorería', 'Llevar la contabilidad y los impuestos'] },
+  { id: 'rrhh', nombre: 'Recursos humanos', finalidad: 'Cuidar a las personas de la empresa.', funciones: ['Seleccionar personal', 'Gestionar contratos y vacaciones', 'Planificar la formación'] },
+  { id: 'compras', nombre: 'Compras y logística', finalidad: 'Conseguir y mover los materiales.', funciones: ['Pedir y comparar proveedores', 'Controlar el stock', 'Gestionar envíos y recogidas de equipos'] },
+  { id: 'calidad', nombre: 'Calidad', finalidad: 'Asegurar que el trabajo se hace como se prometió.', funciones: ['Definir y revisar procedimientos', 'Registrar las no conformidades', 'Medir la satisfacción de los clientes y proponer mejoras'] },
+];
+const nombreDepto = (id) => (DEPTOS.find((d) => d.id === id) || { nombre: id }).nombre;
+const CLAVE = [['direccion', 'Dirección'], ['comercial', 'Comercial'], ['soporte', 'Soporte técnico'], ['administracion', 'Administración']];
+
+const TAREAS = [
+  ['Responder los tickets de avería de los clientes', 'soporte', 'Atender incidencias de los usuarios es la función del soporte técnico (SAT).'],
+  ['Emitir y reclamar facturas', 'administracion', 'Facturar y cobrar es trabajo de administración y finanzas.'],
+  ['Configurar el cortafuegos de la red de un cliente', 'sistemas', 'La red y la seguridad son servicios compartidos: sistemas e infraestructura.'],
+  ['Negociar el contrato anual de mantenimiento con una pyme', 'comercial', 'Negociar y cerrar contratos con clientes es función comercial.'],
+  ['Decidir los objetivos del año y aprobar las inversiones', 'direccion', 'Fijar el rumbo y decidir las inversiones corresponde a la dirección.'],
+  ['Programar una aplicación de gestión de pedidos', 'desarrollo', 'Crear software es la función del departamento de desarrollo.'],
+  ['Reponer el stock de discos y memorias', 'compras', 'Pedir material y controlar las existencias es compras y logística.'],
+  ['Publicar ofertas de empleo y entrevistar a candidatos', 'rrhh', 'La selección de personal es función de recursos humanos.'],
+  ['Medir la satisfacción de los clientes tras cada incidencia y proponer mejoras', 'calidad', 'Medir y mejorar cómo se hace el trabajo es función de calidad.'],
+  ['Reparar un portátil con la pantalla rota en el taller', 'soporte', 'Reparar equipos de los usuarios es soporte técnico.'],
+  ['Hacer copias de seguridad de los servidores y comprobar que se pueden restaurar', 'sistemas', 'Las copias son un servicio compartido: sistemas e infraestructura.'],
+  ['Gestionar los contratos, las altas y las vacaciones del personal', 'rrhh', 'Contratos, altas y vacaciones son gestión de personas: recursos humanos.'],
+  ['Pagar a los proveedores y controlar la tesorería', 'administracion', 'El control del dinero es administración y finanzas.'],
+  ['Elaborar presupuestos y ofertas para clientes nuevos', 'comercial', 'Preparar ofertas para conseguir clientes es función comercial.'],
+  ['Comparar tres proveedores y pedir precios de equipos', 'compras', 'Elegir y comprar a proveedores es compras y logística.'],
+  ['Revisar que se cumple el procedimiento de reparación y registrar las no conformidades', 'calidad', 'Vigilar que el trabajo se hace como se prometió es calidad.'],
+  ['Probar el código nuevo y corregir errores antes de entregarlo', 'desarrollo', 'Probar y depurar software forma parte de desarrollo.'],
+  ['Planificar la formación del personal y evaluar su desempeño', 'rrhh', 'Formar y evaluar a las personas es recursos humanos.'],
+  ['Organizar el envío y la recogida de equipos a reparar', 'compras', 'Mover materiales y equipos es logística (compras y logística).'],
+  ['Diseñar una campaña en redes sociales y actualizar la web corporativa', 'comercial', 'Dar a conocer la empresa y captar clientes es comercial y marketing.'],
+  ['Actualizar los servidores y vigilar que los servicios están disponibles', 'sistemas', 'Mantener servidores y servicios es sistemas e infraestructura.'],
+  ['Reunirse con el banco y firmar acuerdos de colaboración con otras empresas', 'direccion', 'Representar a la empresa y firmar acuerdos es función de dirección.'],
+].map((t, i) => ({ id: 't' + i, texto: t[0], depto: t[1], explica: t[2] }));
+
+const BLOQUES = [
+  ['segmentos', 'Segmentos de clientes', '¿Para quién? ¿Quién paga?'],
+  ['valor', 'Propuesta de valor', '¿Qué problema resolvemos y por qué nos eligen?'],
+  ['canales', 'Canales', '¿Cómo llegamos al cliente y le entregamos el servicio?'],
+  ['relacion', 'Relación con clientes', '¿Cómo los atendemos y los conservamos?'],
+  ['ingresos', 'Fuentes de ingresos', '¿Cómo y cuánto paga cada segmento?'],
+  ['recursos', 'Recursos clave', '¿Qué personas y medios necesitamos?'],
+  ['actividades', 'Actividades clave', '¿Qué hay que hacer cada día?'],
+  ['socios', 'Socios clave', '¿Quién nos ayuda? ¿Proveedores, fabricantes…?'],
+  ['costes', 'Estructura de costes', '¿Cuáles son los gastos más importantes?'],
+];
+const DECISIONES = [
+  ['especializacion', 'Especialización', 'Centrarse en un sector o en un servicio concreto.'],
+  ['precio', 'Precio competitivo', 'Tarifas bajas para ganar volumen.'],
+  ['sla', 'Nivel de servicio (SLA)', 'Comprometerse a un tiempo de respuesta.'],
+  ['cercania', 'Cercanía', 'Atención presencial y rapidez local.'],
+  ['recurrentes', 'Servicios recurrentes', 'Cuotas periódicas en lugar de cobrar por avería.'],
+  ['alianzas', 'Alianzas', 'Colaborar con fabricantes u otras empresas.'],
+  ['sostenibilidad', 'Sostenibilidad y reparación', 'Reparar y reutilizar antes que vender nuevo.'],
+  ['formacion', 'Formación y certificaciones', 'Apostar por la preparación del equipo.'],
+];
+const KPIS = [
+  ['facturacion', 'Facturación mensual', '€', 'sube'],
+  ['margen', 'Margen bruto', '%', 'sube'],
+  ['tickets', 'Incidencias resueltas al mes', 'nº', 'sube'],
+  ['tiempo', 'Tiempo medio de resolución', 'horas', 'baja'],
+  ['sla', 'Cumplimiento del SLA', '%', 'sube'],
+  ['satisfaccion', 'Satisfacción del cliente', 'nota 0-10', 'sube'],
+  ['renovacion', 'Renovación de contratos', '%', 'sube'],
+  ['utilizacion', 'Utilización de horas facturables', '%', 'sube'],
+  ['clientes', 'Clientes activos', 'nº', 'sube'],
+];
+const kpi = (id) => KPIS.find((k) => k[0] === id) || KPIS[0];
+const ODS = ['Fin de la pobreza', 'Hambre cero', 'Salud y bienestar', 'Educación de calidad', 'Igualdad de género', 'Agua limpia y saneamiento', 'Energía asequible y no contaminante', 'Trabajo decente y crecimiento económico', 'Industria, innovación e infraestructura', 'Reducción de las desigualdades', 'Ciudades y comunidades sostenibles', 'Producción y consumo responsables', 'Acción por el clima', 'Vida submarina', 'Vida de ecosistemas terrestres', 'Paz, justicia e instituciones sólidas', 'Alianzas para lograr los objetivos'];
+const EFECTOS = [['positivo', 'Positivo'], ['neutro', 'Neutro'], ['negativo', 'Negativo']];
+const CRITERIOS = [
+  ['a', 'Se han identificado las empresas tipo más representativas del sector.', 'empresas'],
+  ['b', 'Se ha descrito la estructura organizativa de las empresas.', 'organigrama'],
+  ['c', 'Se han caracterizado los principales departamentos.', 'departamentos'],
+  ['d', 'Se han determinado las funciones de cada departamento.', 'departamentos'],
+  ['e', 'Se ha evaluado el volumen de negocio de acuerdo a las necesidades de los clientes.', 'clientes'],
+  ['f', 'Se ha definido la estrategia para dar respuesta a las demandas.', 'canvas'],
+  ['g', 'Se han valorado los recursos humanos y materiales necesarios.', 'clientes'],
+  ['h', 'Se ha realizado el seguimiento de los resultados de acuerdo a la estrategia aplicada.', 'indicadores'],
+  ['i', 'Se han relacionado los productos o servicios con su posible contribución a los ODS.', 'ods'],
+];
+const NIVELES = [['0', 'Sin valorar'], ['1', 'No lo veo claro'], ['2', 'Lo he trabajado'], ['3', 'Lo domino']];
+
+const BANCO = [
+  ['a', 'Una empresa repara ordenadores, pero el 70 % de lo que factura es venta de equipos. ¿Cuál es su actividad principal?', ['La reparación, porque da nombre a la empresa', 'El comercio de equipos, porque es lo que más ingresos aporta', 'Ninguna: hay que elegir las dos'], 1, 'La actividad principal es la que más ingresos aporta. La reparación se anota como servicio secundario.'],
+  ['a', 'Una empresa tiene 38 personas empleadas. Mirando solo la plantilla, es…', ['Microempresa', 'Pequeña', 'Mediana', 'Grande'], 1, 'De 10 a menos de 50 personas es pequeña. El criterio oficial también mira la facturación o el balance: consulta la fuente vigente.'],
+  ['b', '¿Qué estructura es más probable en una empresa de tres personas?', ['Matricial', 'Plana', 'Con un departamento por función'], 1, 'En las empresas muy pequeñas hay pocos niveles y cada persona hace varias funciones: estructura plana.'],
+  ['b', 'En un organigrama, una línea entre dos cajas indica…', ['Que trabajan en la misma sala', 'De quién depende cada puesto', 'Que cobran lo mismo'], 1, 'El organigrama muestra las dependencias: quién responde ante quién.'],
+  ['c', '¿Para qué existe el departamento de calidad?', ['Para vender más', 'Para asegurar que el trabajo se hace como se prometió', 'Para preparar las nóminas'], 1, 'Calidad vigila los procedimientos, registra las no conformidades y mide la satisfacción.'],
+  ['c', 'Soporte técnico y sistemas e infraestructura se diferencian en que…', ['Soporte atiende al usuario y sistemas mantiene los servicios compartidos', 'Son lo mismo con otro nombre', 'Soporte solo existe en empresas grandes'], 0, 'Soporte trabaja de cara al usuario (un portátil que no arranca); sistemas, de cara a los servicios compartidos (servidor, red, copias).'],
+  ['d', '«Emitir y reclamar facturas» es función de…', ['Comercial', 'Administración y finanzas', 'Calidad'], 1, 'Facturar, cobrar y pagar es administración y finanzas.'],
+  ['d', 'En una microempresa no hay departamento de compras. ¿Qué significa?', ['Que la función no existe', 'Que alguien, por ejemplo la gerencia, hace las compras sin que haya un departamento', 'Que no compran nada'], 1, 'Departamento no es lo mismo que función: la función existe aunque la haga una persona que también hace otras cosas.'],
+  ['e', '40 clientes que pagan 1.200 € al año y 200 clientes que pagan 50 €. ¿Ingresos estimados?', ['58.000 €', '48.000 €', '1.250 €'], 0, '40 × 1.200 = 48.000 € y 200 × 50 = 10.000 €. En total, 58.000 €.'],
+  ['e', 'Los clientes demandan 1.400 horas y hay un técnico con 1.500 horas útiles. La carga es aproximadamente…', ['93 %', '107 %', '50 %'], 0, '1.400 ÷ 1.500 ≈ 93 %. Supera el 85 %: riesgo de sobrecarga.'],
+  ['f', '¿Con qué bloques del Canvas se empieza?', ['Con costes e ingresos', 'Con segmentos de clientes y propuesta de valor', 'Con socios clave'], 1, 'El resto del modelo depende de saber para quién se crea valor y cuál es ese valor.'],
+  ['f', '¿Cuál es una decisión estratégica bien planteada?', ['«Ser los mejores»', '«Cuotas mensuales de mantenimiento, porque las pymes no quieren averías imprevistas»', '«Tener muchos servicios»'], 1, 'Una decisión estratégica se justifica con la demanda que atiende.'],
+  ['g', '¿Por qué no se cuentan todas las horas del año de un técnico como capacidad?', ['Hay vacaciones, formación y gestión que no se pueden facturar', 'Porque los técnicos trabajan poco', 'Porque las horas no se pueden contar'], 0, 'La capacidad son las horas útiles: se descuentan vacaciones, festivos, formación y tareas de gestión.'],
+  ['g', '¿Cuál de estos es un recurso material de un servicio técnico?', ['El técnico de campo', 'La furgoneta de las visitas', 'La experiencia del gerente'], 1, 'Los vehículos, equipos, local y licencias son recursos materiales; las personas son recursos humanos.'],
+  ['h', 'Tiempo medio de resolución con objetivo de 6 h y último dato de 7,4 h. ¿Qué semáforo sale con el criterio de la unidad?', ['Verde', 'Ámbar', 'Rojo'], 2, 'En este indicador mejora al bajar. 7,4 h supera el objetivo en un 23 %, más del 10 %: rojo.'],
+  ['h', 'Un indicador bien definido tiene…', ['Solo un nombre', 'Medida, unidad, objetivo y dirección (mejor si sube o si baja)', 'Un color'], 1, 'Sin objetivo y sin dirección no se puede saber si el resultado es bueno.'],
+  ['i', '¿Qué ODS es «Producción y consumo responsables»?', ['ODS 9', 'ODS 12', 'ODS 13'], 1, 'Es el ODS 12. El 9 es Industria, innovación e infraestructura y el 13, Acción por el clima.'],
+  ['i', '¿Cuál es una justificación válida para relacionar un servicio con un ODS?', ['«Ayuda al planeta»', '«Reparar un portátil alarga su vida útil y evita comprar uno nuevo»', '«Contribuye al ODS 12»'], 1, 'Explica qué hace el servicio y cómo se produce el efecto. Las otras dos son genéricas.'],
+].map((q) => ({ ce: q[0], pregunta: q[1], opciones: q[2], ok: q[3], explica: q[4] }));
+
+/* ====== Estado ====== */
+function estadoVacio() {
+  return {
+    version: 1, tipo: 'ficha-empresa-ud01', ejemplo: false,
+    empresa: { nombre: '', localidad: '', tipo: 'servicio-tecnico', cnae: '', descripcion: '', ficticia: false, fuentes: '', valoracion: '' },
+    mapa: { filas: [], conclusion: '' },
+    organigrama: { nodos: [], comentario: '' },
+    departamentos: { existe: {}, finalidad: {}, funciones: {} },
+    clasificador: { mejor: 0, orden: [], respuestas: {} },
+    clientes: { segmentos: [], tecnicos: '', horasTec: '1500', interpretacion: '', recursos: [] },
+    canvas: { bloques: {}, decisiones: {} },
+    indicadores: { items: [], interpretacion: '' },
+    ods: { servicios: [], asignaciones: [] },
+    autoeval: {}, quiz: { aciertos: 0, intentos: 0 },
+  };
+}
+function fusionar(base, extra) {
+  if (Array.isArray(base) || typeof base !== 'object' || base === null) return extra === undefined ? base : extra;
+  const r = Object.assign({}, base);
+  if (extra && typeof extra === 'object' && !Array.isArray(extra)) {
+    for (const k of Object.keys(extra)) r[k] = k in base ? fusionar(base[k], extra[k]) : extra[k];
+  }
+  return r;
+}
+function normalizar(e) {
+  const ids = new Set(e.organigrama.nodos.map((n) => n.id));
+  for (const n of e.organigrama.nodos) {
+    if (n.padre != null && !ids.has(n.padre)) n.padre = null;
+    if (!Array.isArray(n.deptos)) n.deptos = [];
+  }
+  const ordenOk = Array.isArray(e.clasificador.orden) && e.clasificador.orden.length === TAREAS.length;
+  if (!ordenOk) { e.clasificador.orden = mezclar(TAREAS.map((t) => t.id)); e.clasificador.respuestas = {}; }
+  return e;
+}
+function ejemplo() {
+  const e = estadoVacio();
+  e.ejemplo = true;
+  e.empresa = { nombre: 'Reparaciones Byte Alacant, S. L. (empresa ficticia)', localidad: 'Alicante', tipo: 'servicio-tecnico', cnae: 'Reparación de ordenadores y equipos periféricos (grupo 95.1 de la CNAE-2009; comprueba la versión vigente)', descripcion: 'Servicio técnico local de cinco personas que repara equipos en su taller, da soporte a domicilio y mantiene los sistemas de unas pocas pymes. Datos inventados con fines didácticos.', ficticia: true, fuentes: 'Empresa inventada para el ejemplo: no hay fuentes reales.', valoracion: 'Me llama la atención lo mucho que dependen de los contratos con pymes. Me interesaría un puesto de soporte técnico en una empresa pequeña como esta.' };
+  const f = (n, l, t, em, fa, s, w) => ({ id: nuevoId(), nombre: n, localidad: l, tipo: t, empleados: em, facturacion: fa, servicios: s, web: w, fuente: 'Dato inventado para el ejemplo' });
+  e.mapa.filas = [
+    f('Reparaciones Byte Alacant, S. L. (ficticia)', 'Alicante', 'servicio-tecnico', '5', '215400', 'Reparación, soporte a pymes', 'sin web real'),
+    f('Infraservicios Costa Clara, S. L. (ficticia)', 'Elche', 'msp', '22', '', 'Mantenimiento de puestos y copias', 'sin web real'),
+    f('Distribuciones Chip Norte, S. A. (ficticia)', 'Alcoy', 'tienda', '85', '', 'Venta al por mayor de componentes', 'sin web real'),
+    f('Tecnotienda Plaza Mayor (ficticia)', 'Elda', 'tienda', '4', '', 'Venta de equipos y accesorios', 'sin web real'),
+    f('Telefibra Mediterránea, S. A. (ficticia)', 'Valencia', 'operador', '1200', '', 'Fibra, móvil y telefonía', 'sin web real'),
+    f('Aplicaciones Serra Verda, S. L. (ficticia)', 'Alicante', 'software', '14', '', 'Aplicaciones web a medida', 'sin web real'),
+    f('Departamento TIC de una cadena de supermercados (ficticia)', 'Alicante', 'interno', '9', '', 'Soporte de tiendas y tpv', 'sin web real'),
+    f('Servicio Técnico Express (ficticia)', 'Novelda', 'servicio-tecnico', '3', '', 'Reparación de móviles y portátiles', 'sin web real'),
+  ];
+  e.mapa.conclusion = 'De las ocho empresas del mapa, tres son microempresas de reparación o tienda y solo una es de gran tamaño.\nLa empresa tipo más representativa de la zona es el servicio técnico local.\nLos proveedores de servicios gestionados son menos numerosos pero atienden a pymes con contrato.\nLos operadores y distribuidores son grandes y pocos, y casi no contratan técnicos SMR.\nEl hueco que se ve es el de las pymes que no tienen a nadie que cuide sus sistemas.';
+  const n = (nombre, deptos, padre) => ({ id: nuevoId(), nombre, deptos, padre });
+  const o1 = n('Gerencia', ['direccion', 'comercial', 'administracion'], null);
+  const o2 = n('Responsable técnico', ['soporte', 'sistemas'], o1.id);
+  const o3 = n('Auxiliar administrativo/a (media jornada)', ['administracion'], o1.id);
+  const o4 = n('Técnico/a de taller', ['soporte'], o2.id);
+  const o5 = n('Técnico/a de campo', ['soporte'], o2.id);
+  e.organigrama.nodos = [o1, o2, o3, o4, o5];
+  e.organigrama.comentario = 'Estructura plana de tres niveles. La gerencia dirige, vende y lleva la administración con ayuda de una auxiliar a media jornada. No hay departamentos de calidad, compras ni recursos humanos: esas funciones las cubre la gerencia sin que figuren en el organigrama.';
+  for (const id of ['direccion', 'comercial', 'soporte', 'sistemas', 'administracion']) {
+    const d = DEPTOS.find((x) => x.id === id);
+    e.departamentos.existe[id] = true;
+    e.departamentos.finalidad[id] = d.finalidad;
+    e.departamentos.funciones[id] = d.funciones.join('\n');
+  }
+  const s = (nombre, clientes, ingreso, horas) => ({ id: nuevoId(), nombre, clientes, ingreso, horas });
+  e.clientes.segmentos = [s('Particulares', '900', '70', '1'), s('Autónomos y microempresas', '120', '450', '7'), s('Pymes con contrato de mantenimiento', '25', '3600', '40'), s('Entidades sociales', '12', '700', '10')];
+  e.clientes.tecnicos = '3';
+  e.clientes.horasTec = '1500';
+  e.clientes.interpretacion = 'La carga es equilibrada, pero casi la mitad de las horas las consumen solo 25 clientes con contrato. Perder dos de ellos sería un golpe grande en ingresos y dejaría ocioso a parte del equipo. El margen es ajustado, así que conviene ganar más contratos recurrentes antes de contratar.';
+  const r = (tipo, desc, cantidad, coste) => ({ id: nuevoId(), tipo, desc, cantidad, coste });
+  e.clientes.recursos = [r('humano', 'Gerencia', '1', '38000'), r('humano', 'Responsable técnico', '1', '36000'), r('humano', 'Técnico/a (taller y campo)', '2', '28000'), r('humano', 'Auxiliar administrativo/a (media jornada)', '1', '12000'), r('material', 'Local taller-tienda (alquiler)', '1', '9600'), r('material', 'Equipos y herramientas de taller (amortización)', '1', '3000'), r('material', 'Furgoneta en renting', '1', '4800'), r('material', 'Licencias y servicios (incidencias, antivirus, copias)', '1', '3600'), r('material', 'Repuestos y equipos para vender', '1', '38000'), r('material', 'Seguros y gestoría', '1', '3000')];
+  e.canvas.bloques = {
+    segmentos: 'Hogares, autónomos y microempresas, pymes con contrato y entidades sociales.',
+    valor: 'Reparación rápida con presupuesto cerrado y mantenimiento mensual que evita averías.',
+    canales: 'Tienda-taller, web con cita previa y visita a domicilio.',
+    relacion: 'Trato personal y revisión periódica a los clientes con contrato.',
+    ingresos: 'Pago por reparación, cuota mensual de mantenimiento y venta de equipos con margen.',
+    recursos: 'Equipo técnico, taller con herramientas, furgoneta y programa de incidencias.',
+    actividades: 'Reparar, atender incidencias, mantenimiento preventivo y compras.',
+    socios: 'Mayoristas de componentes, gestoría y fabricantes con programa de partners.',
+    costes: 'Personal, repuestos, alquiler del local, licencias y vehículo.',
+  };
+  e.canvas.decisiones = {
+    recurrentes: { sel: true, just: 'Las pymes no quieren afrontar averías imprevistas y prefieren una cuota mensual fija, que además da ingresos previsibles.' },
+    cercania: { sel: true, just: 'Los autónomos y los particulares valoran que se les atienda en el día y en persona.' },
+    sostenibilidad: { sel: true, just: 'Reparar y reutilizar equipos atiende a clientes con poco presupuesto y diferencia al taller.' },
+  };
+  const k = (kp, objetivo, datos) => ({ id: nuevoId(), kpi: kp, objetivo, datos });
+  e.indicadores.items = [
+    k('tiempo', '8', ['14', '12', '11', '10', '9', '8,5']),
+    k('sla', '90', ['78', '81', '84', '86', '88', '91']),
+    k('satisfaccion', '8,5', ['7,8', '8', '8,1', '8,3', '8,2', '8,4']),
+    k('facturacion', '18000', ['16200', '17100', '17900', '17400', '18300', '19100']),
+  ];
+  e.indicadores.interpretacion = 'La estrategia de atención rápida funciona: el tiempo de resolución baja cada mes y el SLA ya supera el objetivo. La satisfacción está cerca pero aún no llega. La facturación cumple el objetivo, aunque el dato del periodo 4 muestra que no es estable.';
+  const sv = (nombre, circular) => ({ id: nuevoId(), nombre, circular });
+  const s1 = sv('Reparación de equipos en taller', true);
+  const s2 = sv('Mantenimiento mensual de puestos y red para pymes', false);
+  const s3 = sv('Venta de equipos nuevos', false);
+  const s4 = sv('Formación básica de uso del ordenador', false);
+  const s5 = sv('Retirada de equipos antiguos para reciclaje', true);
+  e.ods.servicios = [s1, s2, s3, s4, s5];
+  const as = (sv2, ods, efecto, just) => ({ id: nuevoId(), servicio: sv2.id, ods, efecto, just });
+  e.ods.asignaciones = [
+    as(s1, 12, 'positivo', 'Reparar un equipo alarga su vida útil y evita comprar uno nuevo; el taller anota cuántos equipos repara cada año.'),
+    as(s2, 8, 'positivo', 'Un mantenimiento continuo permite a pequeñas empresas trabajar sin paradas y conservar su actividad y sus empleos.'),
+    as(s3, 12, 'negativo', 'Fabricar equipos consume materias primas y energía y acaba generando residuos; se reduce recogiendo el equipo antiguo.'),
+    as(s4, 4, 'positivo', 'Enseña a usar servicios digitales básicos a personas de entidades sociales que no tienen esa formación.'),
+    as(s4, 10, 'positivo', 'Reduce la brecha digital de grupos con menos acceso a la tecnología al ofrecer tarifas reducidas a asociaciones.'),
+    as(s5, 12, 'positivo', 'Entrega los equipos que ya no sirven a un gestor autorizado y reacondiciona los que aún funcionan para cederlos.'),
+  ];
+  return normalizar(e);
+}
+function cargar() {
+  let t = null;
+  try { const s = Lab.leer('estado'); if (s) t = JSON.parse(s); } catch (x) { t = null; }
+  if (t && t.tipo === 'ficha-empresa-ud01') return normalizar(fusionar(estadoVacio(), t));
+  return ejemplo();
+}
+let estado = cargar();
+function persistir() { Lab.guardar('estado', JSON.stringify(estado)); }
+function cambio() { persistir(); }
+
+/* ====== 1 · Mapa de empresas ====== */
+let editMapa = null;
+let filtroTipo = '';
+let filtroTam = '';
+function renderMapa() {
+  const c = $('#c-empresas');
+  c.textContent = '';
+  const m = estado.mapa;
+  const ed = editMapa ? m.filas.find((x) => x.id === editMapa) : null;
+  const v = ed || { nombre: '', localidad: '', tipo: 'servicio-tecnico', empleados: '', facturacion: '', servicios: '', web: '', fuente: '' };
+  const msg = el('p', { class: 'msg', role: 'status' });
+  const cn = entrada(v.nombre, null, { autocomplete: 'off' });
+  const cl = entrada(v.localidad);
+  const ct = selector(TIPOS, v.tipo);
+  const ce = entrada(v.empleados, null, { inputmode: 'numeric' });
+  const cf = entrada(v.facturacion, null, { inputmode: 'decimal' });
+  const cs = entrada(v.servicios);
+  const cw = entrada(v.web);
+  const cu = entrada(v.fuente);
+  const form = el('form', { autocomplete: 'off' },
+    el('h3', null, ed ? 'Editar empresa' : 'Añadir una empresa'),
+    el('div', { class: 'campos' },
+      campo('Nombre *', cn), campo('Localidad', cl), campo('Empresa tipo', ct), campo('Empleados', ce),
+      campo('Facturación anual (€, si es pública)', cf), campo('Servicios', cs), campo('Web (solo texto)', cw), campo('Fuente del dato *', cu, 'Dónde lo has encontrado')),
+    el('div', { class: 'fila' },
+      el('button', { type: 'submit', class: 'primario' }, ed ? 'Guardar cambios' : 'Añadir empresa'),
+      ed ? el('button', { type: 'button', onclick: () => { editMapa = null; renderMapa(); } }, 'Cancelar') : null),
+    msg);
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!lleno(cn.value) || !lleno(cu.value)) { msg.textContent = 'Faltan el nombre o la fuente: una fila sin fuente cuenta como no investigada.'; return; }
+    const fila = { id: ed ? ed.id : nuevoId(), nombre: cn.value.trim(), localidad: cl.value.trim(), tipo: ct.value, empleados: ce.value.trim(), facturacion: cf.value.trim(), servicios: cs.value.trim(), web: cw.value.trim(), fuente: cu.value.trim() };
+    if (ed) m.filas[m.filas.indexOf(ed)] = fila; else m.filas.push(fila);
+    editMapa = null;
+    cambio();
+    renderMapa();
+    const aviso2 = $('#c-empresas .msg');
+    if (aviso2) aviso2.textContent = 'Empresa guardada.';
+  });
+  c.append(form);
+
+  c.append(el('h3', null, 'Empresas del mapa (' + m.filas.length + ')'));
+  const filtros = el('div', { class: 'campos' },
+    campo('Filtrar por tipo', selector([['', 'Todos los tipos']].concat(TIPOS), filtroTipo, (x) => { filtroTipo = x; pintarTabla(); })),
+    campo('Filtrar por tamaño', selector([['', 'Todos los tamaños']].concat(TAMANOS.map((t) => [t, t])), filtroTam, (x) => { filtroTam = x; pintarTabla(); })));
+  c.append(filtros);
+  const cont = el('div');
+  c.append(cont);
+  function pintarTabla() {
+    cont.textContent = '';
+    const filas = m.filas.filter((f) => (!filtroTipo || f.tipo === filtroTipo) && (!filtroTam || tamano(f.empleados) === filtroTam));
+    if (!filas.length) { cont.append(el('p', null, m.filas.length ? 'Ninguna empresa cumple el filtro.' : 'Todavía no hay empresas: añade la primera con el formulario.')); return; }
+    cont.append(tabla(['Empresa', 'Localidad', 'Tipo', 'Empleados', 'Tamaño', 'Facturación', 'Servicios', 'Web', 'Fuente', 'Acciones'],
+      filas.map((f) => [f.nombre, f.localidad, nombreTipo(f.tipo), f.empleados, tamano(f.empleados), lleno(f.facturacion) ? eur(num(f.facturacion)) : '', f.servicios, f.web,
+        lleno(f.fuente) ? f.fuente : el('span', { class: 'ko' }, 'Falta fuente'),
+        el('span', { class: 'fila' },
+          el('button', { type: 'button', class: 'pq', 'aria-label': 'Editar ' + f.nombre, onclick: () => { editMapa = f.id; renderMapa(); $('#c-empresas input').focus(); } }, 'Editar'),
+          el('button', { type: 'button', class: 'pq', 'aria-label': 'Quitar ' + f.nombre, onclick: () => { m.filas.splice(m.filas.indexOf(f), 1); cambio(); renderMapa(); } }, 'Quitar'))]), [3]));
+  }
+  pintarTabla();
+
+  c.append(el('h3', null, 'Recuento'));
+  const barras = (titulo, clave, etiquetas) => {
+    const cuentas = etiquetas.map((e) => [e[1], m.filas.filter((f) => clave(f) === e[0]).length]).filter((x) => x[1] > 0);
+    const max = Math.max(1, ...cuentas.map((x) => x[1]));
+    return el('div', null, el('b', null, titulo), cuentas.length ? cuentas.map((x) => el('div', { class: 'barra' }, el('span', { class: 't' }, x[0]), el('span', { class: 'b', style: 'width:' + Math.round((x[1] / max) * 100) + '%' }), el('span', null, x[1]))) : el('p', null, 'Sin datos.'));
+  };
+  c.append(el('div', { class: 'dos' }, barras('Por empresa tipo', (f) => f.tipo, TIPOS), barras('Por tamaño', (f) => tamano(f.empleados), TAMANOS.map((t) => [t, t]))));
+
+  c.append(el('h3', null, 'Conclusión: empresas tipo más representativas'));
+  c.append(campo('Cinco líneas: ¿qué empresas tipo son las más representativas de tu zona y por qué?', areaTexto(m.conclusion, (x) => { m.conclusion = x; cambio(); }, 6)));
+  c.append(el('div', { class: 'fila' }, el('button', { type: 'button', onclick: exportarCsv }, 'Exportar el mapa en CSV')));
+}
+function exportarCsv() {
+  const cab = ['Empresa', 'Localidad', 'Tipo', 'Empleados', 'Tamaño', 'Facturación', 'Servicios', 'Web', 'Fuente'];
+  const esc = (s) => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
+  const filas = estado.mapa.filas.map((f) => [f.nombre, f.localidad, nombreTipo(f.tipo), f.empleados, tamano(f.empleados), f.facturacion, f.servicios, f.web, f.fuente].map(esc).join(';'));
+  descargar('mapa-de-empresas.csv', '﻿' + [cab.map(esc).join(';')].concat(filas).join('\n') + '\n', 'text/csv');
+  aviso('Se ha descargado mapa-de-empresas.csv (separado por punto y coma, para abrirlo con una hoja de cálculo).');
+}
+
+/* ====== 2 · Organigrama ====== */
+let editOrg = null;
+const PLANTILLAS = {
+  micro: [['Gerencia', ['direccion', 'comercial', 'administracion'], -1], ['Técnico/a 1', ['soporte', 'sistemas'], 0], ['Técnico/a 2', ['soporte'], 0]],
+  pequena: [['Dirección', ['direccion'], -1], ['Responsable técnico', ['soporte', 'sistemas'], 0], ['Técnico/a 1', ['soporte'], 1], ['Técnico/a 2', ['soporte'], 1], ['Responsable comercial', ['comercial'], 0], ['Administración', ['administracion'], 0]],
+  mediana: [['Dirección general', ['direccion'], -1], ['Comercial y marketing', ['comercial'], 0], ['Soporte técnico', ['soporte'], 0], ['Sistemas e infraestructura', ['sistemas'], 0], ['Desarrollo', ['desarrollo'], 0], ['Administración y finanzas', ['administracion'], 0], ['Recursos humanos', ['rrhh'], 0], ['Compras y logística', ['compras'], 0], ['Calidad', ['calidad'], 0]],
+};
+function cargarPlantilla(t) {
+  const nodos = [];
+  PLANTILLAS[t].forEach((p) => nodos.push({ id: nuevoId(), nombre: p[0], deptos: p[1].slice(), padre: p[2] < 0 ? null : nodos[p[2]].id }));
+  estado.organigrama.nodos = nodos;
+  editOrg = null;
+  cambio();
+  renderOrg();
+}
+const hijosDe = (padre) => estado.organigrama.nodos.filter((n) => n.padre === padre);
+function descendientes(id) {
+  const r = [];
+  for (const h of hijosDe(id)) { r.push(h.id, ...descendientes(h.id)); }
+  return r;
+}
+function profundidad(padre) {
+  const h = hijosDe(padre);
+  return h.length ? 1 + Math.max(...h.map((n) => profundidad(n.id))) : 0;
+}
+function coberturaOrg() {
+  const cubiertas = new Set();
+  estado.organigrama.nodos.forEach((n) => n.deptos.forEach((d) => cubiertas.add(d)));
+  return CLAVE.map((k) => [k[1], cubiertas.has(k[0])]);
+}
+function renderOrg() {
+  const c = $('#c-organigrama');
+  c.textContent = '';
+  const o = estado.organigrama;
+  c.append(el('div', { class: 'fila' }, el('b', null, 'Cargar plantilla:'),
+    el('button', { type: 'button', onclick: () => cargarPlantilla('micro') }, 'Microempresa'),
+    el('button', { type: 'button', onclick: () => cargarPlantilla('pequena') }, 'Pequeña'),
+    el('button', { type: 'button', onclick: () => cargarPlantilla('mediana') }, 'Mediana'),
+    el('small', { class: 'ayuda' }, 'Sustituye tu organigrama actual.')));
+
+  c.append(el('h3', null, 'Tu organigrama'));
+  function arbol(padre) {
+    const ul = el('ul');
+    for (const n of hijosDe(padre)) {
+      const hermanos = hijosDe(n.padre);
+      const pos = hermanos.indexOf(n);
+      const li = el('li', null, el('div', { class: 'caja' },
+        el('b', null, n.nombre),
+        el('span', { class: 'chips' }, n.deptos.map((d) => el('span', { class: 'chip' }, nombreDepto(d)))),
+        el('button', { type: 'button', class: 'pq', 'aria-label': 'Editar ' + n.nombre, onclick: () => { editOrg = n.id; renderOrg(); $('#c-organigrama form input').focus(); } }, 'Editar'),
+        el('button', { type: 'button', class: 'pq', 'aria-label': 'Subir ' + n.nombre + ' entre sus hermanos', disabled: pos === 0, onclick: () => mover(n, -1) }, '↑'),
+        el('button', { type: 'button', class: 'pq', 'aria-label': 'Bajar ' + n.nombre + ' entre sus hermanos', disabled: pos === hermanos.length - 1, onclick: () => mover(n, 1) }, '↓'),
+        el('button', { type: 'button', class: 'pq', 'aria-label': 'Borrar ' + n.nombre, onclick: () => borrar(n) }, 'Borrar')));
+      if (hijosDe(n.id).length) li.append(arbol(n.id));
+      ul.append(li);
+    }
+    return ul;
+  }
+  c.append(o.nodos.length ? el('div', { class: 'arbol' }, arbol(null)) : el('p', null, 'El organigrama está vacío: carga una plantilla o añade el primer puesto (la cúspide).'));
+  function mover(n, d) {
+    const h = hijosDe(n.padre);
+    const otro = h[h.indexOf(n) + d];
+    if (!otro) return;
+    const i = o.nodos.indexOf(n);
+    const j = o.nodos.indexOf(otro);
+    o.nodos[i] = otro;
+    o.nodos[j] = n;
+    cambio();
+    renderOrg();
+  }
+  function borrar(n) {
+    const kids = hijosDe(n.id);
+    if (kids.length) {
+      if (n.padre != null) kids.forEach((k) => { k.padre = n.padre; });
+      else { kids[0].padre = null; kids.slice(1).forEach((k) => { k.padre = kids[0].id; }); }
+    }
+    o.nodos.splice(o.nodos.indexOf(n), 1);
+    if (editOrg === n.id) editOrg = null;
+    cambio();
+    renderOrg();
+  }
+
+  const ed = editOrg ? o.nodos.find((n) => n.id === editOrg) : null;
+  const esCuspide = ed ? ed.padre == null : o.nodos.length === 0;
+  const excluidos = ed ? [ed.id, ...descendientes(ed.id)] : [];
+  const posibles = o.nodos.filter((n) => !excluidos.includes(n.id));
+  const msg = el('p', { class: 'msg', role: 'status' });
+  const cn = entrada(ed ? ed.nombre : '');
+  const cp = selector(posibles.map((n) => [n.id, n.nombre]), ed && ed.padre ? ed.padre : (posibles[0] ? posibles[0].id : ''));
+  if (esCuspide) cp.disabled = true;
+  const marcas = DEPTOS.map((d) => el('label', { class: 'fila' }, el('input', { type: 'checkbox', value: d.id, checked: ed ? ed.deptos.includes(d.id) : false }), d.nombre));
+  const form = el('form', { autocomplete: 'off' },
+    el('h3', null, ed ? 'Editar puesto' : (esCuspide ? 'Añadir la cúspide del organigrama' : 'Añadir un puesto')),
+    el('div', { class: 'campos' }, campo('Nombre del puesto o unidad *', cn), campo('Depende de', cp, esCuspide ? 'La cúspide no depende de nadie.' : null)),
+    el('fieldset', null, el('legend', null, 'Funciones que cubre (marca todas las que correspondan)'), el('div', { class: 'campos' }, marcas)),
+    el('div', { class: 'fila' },
+      el('button', { type: 'submit', class: 'primario' }, ed ? 'Guardar cambios' : 'Añadir puesto'),
+      ed ? el('button', { type: 'button', onclick: () => { editOrg = null; renderOrg(); } }, 'Cancelar') : null),
+    msg);
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!lleno(cn.value)) { msg.textContent = 'Escribe el nombre del puesto.'; return; }
+    const deptos = marcas.map((l) => l.querySelector('input')).filter((i) => i.checked).map((i) => i.value);
+    const padre = esCuspide ? null : cp.value;
+    if (ed) { ed.nombre = cn.value.trim(); ed.deptos = deptos; ed.padre = padre; }
+    else o.nodos.push({ id: nuevoId(), nombre: cn.value.trim(), deptos, padre });
+    editOrg = null;
+    cambio();
+    renderOrg();
+  });
+  c.append(form);
+
+  c.append(el('h3', null, 'Funciones clave cubiertas'));
+  const cob = coberturaOrg();
+  const faltan = cob.filter((x) => !x[1]).map((x) => x[0]);
+  c.append(el('ul', null, cob.map((x) => el('li', null, el('span', { class: x[1] ? 'ok' : 'ko' }, x[1] ? '✔ Cubierta: ' : '✘ Sin cubrir: '), x[0]))));
+  c.append(el('p', { class: 'correccion', role: 'status' }, o.nodos.length
+    ? (faltan.length ? 'Ojo: nadie cubre ' + faltan.join(', ').toLowerCase() + '. Asigna esa función a un puesto o comenta quién la hace en realidad.' : 'Las cuatro funciones clave están cubiertas.') + ' Niveles del organigrama: ' + niveles() + '.'
+    : ''));
+  c.append(campo('Comentario del organigrama: niveles, funciones cubiertas y funciones que no se ven', areaTexto(o.comentario, (x) => { o.comentario = x; cambio(); }, 4)));
+}
+function niveles() {
+  const raices = hijosDe(null);
+  return raices.length ? 1 + Math.max(...raices.map((r) => profundidad(r.id))) : 0;
+}
+
+/* ====== 3 · Departamentos y funciones ====== */
+let ultimaCorreccion = null;
+function renderDeptos() {
+  const c = $('#c-departamentos');
+  c.textContent = '';
+  c.append(el('h3', null, 'Clasificador de tareas'));
+  c.append(el('div', { id: 'clasif' }));
+  pintarClasificador();
+  c.append(el('h3', null, 'Los departamentos de tu empresa'));
+  c.append(el('p', { class: 'intro' }, 'Marca los que existen (o las funciones que alguien cubre), di para qué sirven y qué funciones tienen, una por línea. Mínimo dos líneas por departamento.'));
+  c.append(el('div', { class: 'fila' }, el('button', { type: 'button', onclick: () => {
+    DEPTOS.forEach((d) => {
+      if (!lleno(estado.departamentos.finalidad[d.id])) estado.departamentos.finalidad[d.id] = d.finalidad;
+      if (!lleno(estado.departamentos.funciones[d.id])) estado.departamentos.funciones[d.id] = d.funciones.join('\n');
+    });
+    cambio();
+    renderDeptos();
+  } }, 'Sugerir finalidad y funciones típicas en los huecos vacíos')));
+  const dp = estado.departamentos;
+  for (const d of DEPTOS) {
+    const caja = el('fieldset', { class: 'tarjeta' });
+    const cuerpo = el('div');
+    const chk = el('input', { type: 'checkbox', checked: !!dp.existe[d.id] });
+    chk.addEventListener('change', () => { dp.existe[d.id] = chk.checked; cuerpo.hidden = !chk.checked; cambio(); });
+    cuerpo.hidden = !dp.existe[d.id];
+    cuerpo.append(
+      campo('Finalidad (una frase)', entrada(dp.finalidad[d.id], (x) => { dp.finalidad[d.id] = x; cambio(); })),
+      campo('Funciones (una por línea)', areaTexto(dp.funciones[d.id], (x) => { dp.funciones[d.id] = x; cambio(); }, 3)));
+    caja.append(el('legend', null, d.nombre), el('label', { class: 'fila' }, chk, 'Existe en la empresa (o alguien cubre sus funciones)'), cuerpo);
+    c.append(caja);
+  }
+}
+function pintarClasificador() {
+  const cont = $('#clasif');
+  cont.textContent = '';
+  const cl = estado.clasificador;
+  const resp = cl.respuestas;
+  const total = TAREAS.length;
+  const hechas = cl.orden.filter((id) => id in resp).length;
+  const aciertos = cl.orden.filter((id) => id in resp && resp[id] === TAREAS.find((t) => t.id === id).depto).length;
+  const pendiente = cl.orden.find((id) => !(id in resp));
+  const mostrar = ultimaCorreccion ? TAREAS.find((t) => t.id === ultimaCorreccion.id) : (pendiente ? TAREAS.find((t) => t.id === pendiente) : null);
+  cont.append(el('p', null, 'Tarea ', el('b', null, Math.min(total, hechas + (ultimaCorreccion ? 0 : 1))), ' de ' + total + ' · Aciertos: ', el('b', null, aciertos), ' · Mejor ronda: ', el('b', null, cl.mejor + ' %')));
+  if (!mostrar) {
+    const pct = Math.round((aciertos / total) * 100);
+    const fallos = cl.orden.map((id) => TAREAS.find((t) => t.id === id)).filter((t) => resp[t.id] !== t.depto);
+    cont.append(el('div', { class: 'correccion', role: 'status' }, 'Ronda terminada: ' + aciertos + ' de ' + total + ' (' + pct + ' %). ' + (pct >= 70 ? 'Superas el 70 % que pide la actividad.' : 'Necesitas un 70 % para dar el criterio por trabajado: repasa la tabla de departamentos y repite.')));
+    if (fallos.length) cont.append(el('details', { open: true }, el('summary', null, 'Tareas falladas (' + fallos.length + ')'), el('ul', null, fallos.map((t) => el('li', null, '«' + t.texto + '» → ' + nombreDepto(t.depto) + '. ' + t.explica)))));
+    cont.append(el('div', { class: 'fila' }, el('button', { type: 'button', class: 'primario', onclick: () => { cl.orden = mezclar(TAREAS.map((t) => t.id)); cl.respuestas = {}; ultimaCorreccion = null; cambio(); pintarClasificador(); } }, 'Nueva ronda')));
+    return;
+  }
+  cont.append(el('p', { class: 'tarea' }, '«' + mostrar.texto + '»'));
+  if (ultimaCorreccion) {
+    const bien = ultimaCorreccion.elegido === mostrar.depto;
+    cont.append(el('p', { class: 'correccion', role: 'status' }, el('b', { class: bien ? 'ok' : 'ko' }, bien ? '✔ Correcto. ' : '✘ No es esa. Corresponde a ' + nombreDepto(mostrar.depto) + '. '), mostrar.explica));
+    const sig = el('button', { type: 'button', class: 'primario', onclick: () => { ultimaCorreccion = null; pintarClasificador(); const b = $('#clasif .opciones button'); if (b) b.focus(); } }, 'Siguiente');
+    cont.append(el('div', { class: 'fila' }, sig));
+    sig.focus();
+    return;
+  }
+  cont.append(el('div', { class: 'opciones', role: 'group', 'aria-label': 'Departamentos' }, DEPTOS.map((d) => el('button', { type: 'button', onclick: () => {
+    resp[mostrar.id] = d.id;
+    ultimaCorreccion = { id: mostrar.id, elegido: d.id };
+    if (cl.orden.every((id) => id in resp)) {
+      const ac = cl.orden.filter((id) => resp[id] === TAREAS.find((t) => t.id === id).depto).length;
+      cl.mejor = Math.max(cl.mejor, Math.round((ac / total) * 100));
+    }
+    cambio();
+    pintarClasificador();
+  } }, d.nombre))));
+}
+
+/* ====== 4 · Clientes, volumen de negocio y recursos ====== */
+function renderClientes() {
+  const c = $('#c-clientes');
+  c.textContent = '';
+  const cl = estado.clientes;
+  const filasSeg = [];
+  const cuerpo = el('tbody');
+  function filaSeg(s) {
+    const tdI = el('td', { class: 'num' });
+    const tdH = el('td', { class: 'num' });
+    const tr = el('tr', null,
+      el('td', null, entrada(s.nombre, (x) => { s.nombre = x; cambio(); }, { 'aria-label': 'Nombre del segmento' })),
+      el('td', null, entrada(s.clientes, (x) => { s.clientes = x; cambio(); calc(); }, { inputmode: 'decimal', 'aria-label': 'Número de clientes de ' + s.nombre })),
+      el('td', null, entrada(s.ingreso, (x) => { s.ingreso = x; cambio(); calc(); }, { inputmode: 'decimal', 'aria-label': 'Ingreso medio anual por cliente de ' + s.nombre })),
+      el('td', null, entrada(s.horas, (x) => { s.horas = x; cambio(); calc(); }, { inputmode: 'decimal', 'aria-label': 'Horas anuales por cliente de ' + s.nombre })),
+      tdI, tdH,
+      el('td', null, el('button', { type: 'button', class: 'pq', 'aria-label': 'Quitar segmento ' + s.nombre, onclick: () => { cl.segmentos.splice(cl.segmentos.indexOf(s), 1); cambio(); renderClientes(); } }, 'Quitar')));
+    filasSeg.push({ s, tdI, tdH });
+    return tr;
+  }
+  cl.segmentos.forEach((s) => cuerpo.append(filaSeg(s)));
+  c.append(el('h3', null, 'Segmentos de clientes'));
+  c.append(el('div', { class: 'tabla' }, el('table', null,
+    el('thead', null, el('tr', null, ['Segmento', 'Clientes', 'Ingreso medio anual (€)', 'Horas por cliente y año', 'Ingresos (€)', 'Horas demandadas', ''].map((h, i) => el('th', { scope: 'col', class: i > 0 && i < 6 ? 'num' : null }, h)))),
+    cuerpo)));
+  c.append(el('div', { class: 'fila' }, el('button', { type: 'button', onclick: () => { cl.segmentos.push({ id: nuevoId(), nombre: 'Nuevo segmento', clientes: '', ingreso: '', horas: '' }); cambio(); renderClientes(); } }, 'Añadir segmento')));
+
+  c.append(el('h3', null, 'Plantilla técnica'));
+  c.append(el('div', { class: 'campos' },
+    campo('Técnicos', entrada(cl.tecnicos, (x) => { cl.tecnicos = x; cambio(); calc(); }, { inputmode: 'decimal' })),
+    campo('Horas útiles por técnico y año', entrada(cl.horasTec, (x) => { cl.horasTec = x; cambio(); calc(); }, { inputmode: 'decimal' }), 'Descuenta vacaciones, formación y gestión')));
+  const resumen = el('div', { class: 'correccion', role: 'status', 'aria-live': 'polite' });
+  c.append(el('h3', null, 'Resultado'), resumen);
+  c.append(campo('Interpretación: ¿puede la plantilla atender a esos clientes? ¿Qué segmento pesa más?', areaTexto(cl.interpretacion, (x) => { cl.interpretacion = x; cambio(); }, 4)));
+
+  c.append(el('h3', null, 'Recursos humanos y materiales'));
+  const cuerpoR = el('tbody');
+  const filasRec = [];
+  function filaRec(r) {
+    const tdT = el('td', { class: 'num' });
+    const tr = el('tr', null,
+      el('td', null, selector([['humano', 'Humano'], ['material', 'Material']], r.tipo, (x) => { r.tipo = x; cambio(); calc(); }), ),
+      el('td', null, entrada(r.desc, (x) => { r.desc = x; cambio(); }, { 'aria-label': 'Descripción del recurso' })),
+      el('td', null, entrada(r.cantidad, (x) => { r.cantidad = x; cambio(); calc(); }, { inputmode: 'decimal', 'aria-label': 'Cantidad de ' + r.desc })),
+      el('td', null, entrada(r.coste, (x) => { r.coste = x; cambio(); calc(); }, { inputmode: 'decimal', 'aria-label': 'Coste anual por unidad de ' + r.desc })),
+      tdT,
+      el('td', null, el('button', { type: 'button', class: 'pq', 'aria-label': 'Quitar recurso ' + r.desc, onclick: () => { cl.recursos.splice(cl.recursos.indexOf(r), 1); cambio(); renderClientes(); } }, 'Quitar')));
+    filasRec.push({ r, tdT });
+    return tr;
+  }
+  cl.recursos.forEach((r) => cuerpoR.append(filaRec(r)));
+  c.append(el('div', { class: 'tabla' }, el('table', null,
+    el('thead', null, el('tr', null, ['Tipo', 'Recurso', 'Cantidad', 'Coste anual por unidad (€)', 'Coste total (€)', ''].map((h, i) => el('th', { scope: 'col', class: i > 1 && i < 5 ? 'num' : null }, h)))),
+    cuerpoR)));
+  c.append(el('div', { class: 'fila' }, el('button', { type: 'button', onclick: () => { cl.recursos.push({ id: nuevoId(), tipo: 'material', desc: 'Nuevo recurso', cantidad: '1', coste: '' }); cambio(); renderClientes(); } }, 'Añadir recurso')));
+  c.append(el('p', { class: 'ayuda' }, 'Los costes por persona son una estimación: indica de dónde la sacas (convenio, oferta de empleo…).'));
+  const resumenR = el('div', { class: 'correccion', role: 'status', 'aria-live': 'polite' });
+  c.append(resumenR);
+
+  function calc() {
+    let ingresos = 0;
+    let horas = 0;
+    for (const f of filasSeg) {
+      const i = num(f.s.clientes) * num(f.s.ingreso);
+      const h = num(f.s.clientes) * num(f.s.horas);
+      ingresos += i;
+      horas += h;
+      f.tdI.textContent = fmt(i);
+      f.tdH.textContent = fmt(h);
+    }
+    const disp = num(cl.tecnicos) * num(cl.horasTec);
+    resumen.textContent = '';
+    resumen.append(el('p', null, 'Ingresos estimados: ', el('b', null, eur(ingresos)), ' · Horas demandadas: ', el('b', null, fmt(horas)), ' · Horas disponibles: ', el('b', null, fmt(disp))));
+    if (disp > 0) {
+      const carga = (horas / disp) * 100;
+      const nivel = carga > 85 ? 'rojo' : carga < 50 ? 'ambar' : 'verde';
+      const texto = carga > 85 ? 'Riesgo de sobrecarga (más del 85 %)' : carga < 50 ? 'Infrautilización (menos del 50 %)' : 'Carga equilibrada';
+      const necesarios = Math.ceil(horas / (num(cl.horasTec) * 0.85) - 1e-9);
+      resumen.append(el('p', null, 'Carga de trabajo: ', el('b', null, fmt(carga, 1) + ' %'), ' ', semaforo(nivel, texto)));
+      resumen.append(el('p', null, 'Para trabajar como máximo al 85 % harían falta ', el('b', null, necesarios), ' técnicos. Ingreso por hora demandada: ', el('b', null, horas > 0 ? fmt(ingresos / horas, 1) + ' €/h' : '—'), '.'));
+    } else {
+      resumen.append(el('p', null, 'Indica cuántos técnicos hay y cuántas horas útiles aporta cada uno para calcular la carga.'));
+    }
+    let hum = 0;
+    let mat = 0;
+    for (const f of filasRec) {
+      const t = num(f.r.cantidad) * num(f.r.coste);
+      f.tdT.textContent = fmt(t);
+      if (f.r.tipo === 'humano') hum += t; else mat += t;
+    }
+    resumenR.textContent = '';
+    const res = ingresos - hum - mat;
+    resumenR.append(el('p', null, 'Coste humano: ', el('b', null, eur(hum)), ' · Coste material: ', el('b', null, eur(mat)), ' · Total: ', el('b', null, eur(hum + mat))));
+    resumenR.append(el('p', null, 'Resultado orientativo (ingresos − costes): ', el('b', null, eur(res)), ingresos > 0 ? ' (' + fmt((res / ingresos) * 100, 1) + ' % de los ingresos)' : '', '. Es solo una orientación: no incluye impuestos ni otros gastos.'));
+  }
+  calc();
+}
+
+/* ====== 5 · Canvas y estrategia ====== */
+function renderCanvas() {
+  const c = $('#c-canvas');
+  c.textContent = '';
+  const cv = estado.canvas;
+  const lienzo = el('div', { class: 'lienzo' });
+  for (const b of BLOQUES) {
+    const caja = el('div', { class: 'bloque b-' + b[0] });
+    const estado2 = el('small', { class: 'ayuda' });
+    const t = areaTexto(cv.bloques[b[0]], (x) => { cv.bloques[b[0]] = x; cambio(); pintar(); }, 4);
+    function pintar() {
+      const vacio = largo(cv.bloques[b[0]]) < 8;
+      caja.classList.toggle('vacio', vacio);
+      estado2.textContent = vacio ? 'Vacío o muy corto: complétalo' : '';
+    }
+    caja.append(campo(b[1], t, b[2]), estado2);
+    pintar();
+    lienzo.append(caja);
+  }
+  c.append(lienzo);
+
+  c.append(el('h3', null, 'Estrategia: dos o tres decisiones justificadas'));
+  const resumen = el('p', { class: 'correccion', role: 'status' });
+  const filas = [];
+  function pintarResumen() {
+    const sel = DECISIONES.filter((d) => cv.decisiones[d[0]] && cv.decisiones[d[0]].sel);
+    const cortas = sel.filter((d) => largo(cv.decisiones[d[0]].just) < 30).map((d) => d[1]);
+    resumen.textContent = 'Decisiones elegidas: ' + sel.length + '. ' + (sel.length < 2 ? 'Elige al menos dos.' : sel.length > 3 ? 'Son demasiadas: mejor pocas y bien justificadas.' : 'Número adecuado.') + (cortas.length ? ' Justificación demasiado corta en: ' + cortas.join(', ') + '.' : '');
+  }
+  for (const d of DECISIONES) {
+    if (!cv.decisiones[d[0]]) cv.decisiones[d[0]] = { sel: false, just: '' };
+    const dd = cv.decisiones[d[0]];
+    const chk = el('input', { type: 'checkbox', checked: dd.sel });
+    const caja = el('div', { class: 'tarjeta' });
+    const just = campo('¿Qué demanda atiende y por qué funciona?', areaTexto(dd.just, (x) => { dd.just = x; cambio(); pintarResumen(); }, 3));
+    just.hidden = !dd.sel;
+    chk.addEventListener('change', () => { dd.sel = chk.checked; just.hidden = !chk.checked; cambio(); pintarResumen(); });
+    caja.append(el('label', { class: 'fila' }, chk, el('b', null, d[1]), ' · ', d[2]), just);
+    filas.push(caja);
+  }
+  c.append(resumen, ...filas);
+  pintarResumen();
+}
+
+/* ====== 6 · Indicadores ====== */
+function evaluarKpi(item) {
+  const k = kpi(item.kpi);
+  const valores = item.datos.map((d) => (lleno(d) ? num(d) : null));
+  const rellenos = valores.filter((v) => v !== null);
+  const ultimo = rellenos.length ? rellenos[rellenos.length - 1] : null;
+  const objetivo = lleno(item.objetivo) ? num(item.objetivo) : null;
+  let nivel = 'gris';
+  let texto = 'Sin datos u objetivo';
+  if (ultimo !== null && objetivo !== null) {
+    if (k[3] === 'sube') {
+      nivel = ultimo >= objetivo ? 'verde' : ultimo >= objetivo * 0.9 ? 'ambar' : 'rojo';
+    } else {
+      nivel = ultimo <= objetivo ? 'verde' : ultimo <= objetivo * 1.1 ? 'ambar' : 'rojo';
+    }
+    texto = { verde: 'Verde: objetivo cumplido', ambar: 'Ámbar: cerca del objetivo (menos del 10 %)', rojo: 'Rojo: lejos del objetivo' }[nivel];
+  }
+  let tendencia = 'Hacen falta al menos dos datos para ver la tendencia.';
+  if (rellenos.length >= 2) {
+    const dif = rellenos[rellenos.length - 1] - rellenos[0];
+    const ref = Math.max(Math.abs(rellenos[0]), 1e-9);
+    if (Math.abs(dif) / ref < 0.01) tendencia = 'Tendencia estable.';
+    else tendencia = ((k[3] === 'sube') === (dif > 0)) ? 'Tendencia: mejora.' : 'Tendencia: empeora.';
+  }
+  return { k, valores, rellenos, ultimo, objetivo, nivel, texto, tendencia };
+}
+function graficoKpi(ev) {
+  const W = 240; const H = 80; const P = 8;
+  const svg = svgEl('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, 'aria-hidden': 'true' });
+  const todos = ev.valores.filter((v) => v !== null).concat(ev.objetivo !== null ? [ev.objetivo] : []);
+  if (!todos.length) return svg;
+  let min = Math.min(...todos); let max = Math.max(...todos);
+  if (max === min) { max += 1; min -= 1; }
+  const x = (i) => P + (i * (W - 2 * P)) / 5;
+  const y = (v) => H - P - ((v - min) / (max - min)) * (H - 2 * P);
+  const color = getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#b86e00';
+  if (ev.objetivo !== null) svg.append(svgEl('line', { x1: P, x2: W - P, y1: y(ev.objetivo), y2: y(ev.objetivo), stroke: 'currentColor', 'stroke-dasharray': '4 3', 'stroke-width': 1 }));
+  const pts = ev.valores.map((v, i) => (v === null ? null : [x(i), y(v)])).filter(Boolean);
+  if (pts.length > 1) svg.append(svgEl('polyline', { points: pts.map((p) => p.join(',')).join(' '), fill: 'none', stroke: color.trim() || '#b86e00', 'stroke-width': 2.5 }));
+  pts.forEach((p) => svg.append(svgEl('circle', { cx: p[0], cy: p[1], r: 3.5, fill: color.trim() || '#b86e00' })));
+  return svg;
+}
+function renderIndicadores() {
+  const c = $('#c-indicadores');
+  c.textContent = '';
+  const ind = estado.indicadores;
+  const sel = selector(KPIS.map((k) => [k[0], k[1] + ' (' + k[2] + ')']), 'facturacion');
+  const btn = el('button', { type: 'button', class: 'primario', disabled: ind.items.length >= 6, onclick: () => {
+    ind.items.push({ id: nuevoId(), kpi: sel.value, objetivo: '', datos: ['', '', '', '', '', ''] });
+    cambio();
+    renderIndicadores();
+  } }, 'Añadir indicador');
+  c.append(el('div', { class: 'fila' }, campo('Biblioteca de indicadores', sel), btn, el('small', { class: 'ayuda' }, 'Máximo seis.')));
+  if (!ind.items.length) c.append(el('p', null, 'Todavía no hay indicadores: elige uno de la biblioteca y pulsa «Añadir indicador».'));
+  for (const item of ind.items) {
+    const k = kpi(item.kpi);
+    const salida = el('div', { 'aria-live': 'polite' });
+    const pintar = () => {
+      const ev = evaluarKpi(item);
+      salida.textContent = '';
+      salida.append(el('div', { class: 'fila' }, graficoKpi(ev), el('div', null,
+        el('p', null, semaforo(ev.nivel, ev.texto)),
+        el('p', null, ev.ultimo !== null ? 'Último dato: ' + fmt(ev.ultimo, 2) + ' ' + k[2] + (ev.objetivo !== null ? ' · Objetivo: ' + fmt(ev.objetivo, 2) : '') : 'Escribe los datos de los periodos.'),
+        el('p', null, ev.tendencia))));
+    };
+    const datos = el('div', { class: 'campos' }, item.datos.map((d, i) => campo('Periodo ' + (i + 1), entrada(d, (x) => { item.datos[i] = x; cambio(); pintar(); }, { inputmode: 'decimal' }))));
+    c.append(el('div', { class: 'tarjeta' },
+      el('h4', null, k[1] + ' (' + k[2] + ') · mejor si ' + (k[3] === 'sube' ? 'sube' : 'baja')),
+      el('div', { class: 'campos' }, campo('Objetivo', entrada(item.objetivo, (x) => { item.objetivo = x; cambio(); pintar(); }, { inputmode: 'decimal' }))),
+      datos, salida,
+      el('button', { type: 'button', class: 'pq', 'aria-label': 'Quitar el indicador ' + k[1], onclick: () => { ind.items.splice(ind.items.indexOf(item), 1); cambio(); renderIndicadores(); } }, 'Quitar indicador')));
+    pintar();
+  }
+  c.append(campo('Interpretación: ¿funciona la estrategia? Argumenta con los datos', areaTexto(ind.interpretacion, (x) => { ind.interpretacion = x; cambio(); }, 4)));
+}
+
+/* ====== 7 · ODS ====== */
+const GENERICAS = [/ayuda a(l| el) (planeta|medio ambiente|mundo)/i, /es sostenible/i, /mejora el mundo/i, /contribuye al (ods|objetivo)/i, /cuida(mos)? el (planeta|medio ambiente)/i, /ayuda al planeta/i];
+function criticaJust(t) {
+  const n = largo(t);
+  if (n < 40) return 'Demasiado corta: di qué hace el servicio y cómo se produce el efecto.';
+  if (n < 90 && GENERICAS.some((g) => g.test(t))) return 'Parece genérica: explica qué hace el servicio y cómo se nota el efecto.';
+  return null;
+}
+function renderODS() {
+  const c = $('#c-ods');
+  c.textContent = '';
+  const od = estado.ods;
+  const nombreServ = (id) => (od.servicios.find((s) => s.id === id) || { nombre: '(servicio borrado)' }).nombre;
+  c.append(el('h3', null, 'Servicios y productos de la empresa'));
+  const msgS = el('p', { class: 'msg', role: 'status' });
+  const nombre = entrada('');
+  const circ = el('input', { type: 'checkbox' });
+  const fs = el('form', { autocomplete: 'off' }, el('div', { class: 'campos' }, campo('Nombre del servicio o producto', nombre), el('label', { class: 'fila' }, circ, 'Servicio circular (reutilizar, reparar, reciclar)')),
+    el('div', { class: 'fila' }, el('button', { type: 'submit', class: 'primario' }, 'Añadir servicio')), msgS);
+  fs.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!lleno(nombre.value)) { msgS.textContent = 'Escribe el nombre del servicio.'; return; }
+    od.servicios.push({ id: nuevoId(), nombre: nombre.value.trim(), circular: circ.checked });
+    cambio();
+    renderODS();
+  });
+  c.append(fs);
+  if (od.servicios.length) {
+    c.append(tabla(['Servicio', 'Circular', 'ODS asignados', ''], od.servicios.map((s) => [s.nombre, el('input', { type: 'checkbox', checked: s.circular, 'aria-label': 'Servicio circular: ' + s.nombre, onchange: (e) => { s.circular = e.target.checked; cambio(); } }),
+      od.asignaciones.filter((a) => a.servicio === s.id).length, el('button', { type: 'button', class: 'pq', 'aria-label': 'Quitar el servicio ' + s.nombre, onclick: () => { od.servicios.splice(od.servicios.indexOf(s), 1); od.asignaciones = od.asignaciones.filter((a) => a.servicio !== s.id); cambio(); renderODS(); } }, 'Quitar')]), [2]));
+  }
+
+  c.append(el('h3', null, 'Relacionar un servicio con un ODS'));
+  const msg = el('p', { class: 'msg', role: 'status' });
+  if (!od.servicios.length) {
+    c.append(el('p', null, 'Añade primero algún servicio.'));
+  } else {
+    const ss = selector(od.servicios.map((s) => [s.id, s.nombre]), od.servicios[0].id);
+    const so = selector(ODS.map((n, i) => [String(i + 1), (i + 1) + ' · ' + n]), '12');
+    const se = selector(EFECTOS, 'positivo');
+    const tj = areaTexto('', null, 3);
+    const f = el('form', { autocomplete: 'off' },
+      el('div', { class: 'campos' }, campo('Servicio', ss), campo('ODS', so), campo('Efecto', se)),
+      campo('Justificación: cómo ocurre el efecto', tj, 'Una o dos frases; si tienes un dato, añádelo'),
+      el('div', { class: 'fila' }, el('button', { type: 'submit', class: 'primario' }, 'Añadir relación')), msg);
+    f.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const critica = criticaJust(tj.value);
+      od.asignaciones.push({ id: nuevoId(), servicio: ss.value, ods: Number(so.value), efecto: se.value, just: tj.value.trim() });
+      cambio();
+      renderODS();
+      const m2 = $('#c-ods form:last-of-type .msg') || $('#c-ods .msg:last-of-type');
+      if (m2) m2.textContent = critica ? 'Relación añadida, pero revísala: ' + critica : 'Relación añadida.';
+    });
+    c.append(f);
+  }
+
+  c.append(el('h3', null, 'Matriz servicio-ODS'));
+  if (!od.asignaciones.length) c.append(el('p', null, 'Todavía no hay relaciones.'));
+  else c.append(tabla(['Servicio', 'ODS', 'Efecto', 'Justificación', 'Revisión', ''], od.asignaciones.map((a) => {
+    const cr = criticaJust(a.just);
+    return [nombreServ(a.servicio), a.ods + ' · ' + ODS[a.ods - 1], EFECTOS.find((x) => x[0] === a.efecto)[1], a.just, cr ? el('span', { class: 'ko' }, '✘ ' + cr) : el('span', { class: 'ok' }, '✔ Bien'),
+      el('button', { type: 'button', class: 'pq', 'aria-label': 'Quitar la relación de ' + nombreServ(a.servicio) + ' con el ODS ' + a.ods, onclick: () => { od.asignaciones.splice(od.asignaciones.indexOf(a), 1); cambio(); renderODS(); } }, 'Quitar')];
+  })));
+
+  c.append(el('h3', null, 'Huella ODS de la empresa'));
+  c.append(el('div', { class: 'tiles' }, ODS.map((n, i) => {
+    const as = od.asignaciones.filter((a) => a.ods === i + 1);
+    const p = as.filter((a) => a.efecto === 'positivo').length;
+    const ne = as.filter((a) => a.efecto === 'neutro').length;
+    const g = as.filter((a) => a.efecto === 'negativo').length;
+    return el('div', { class: 'tile' + (as.length ? ' con' : '') }, el('b', null, 'ODS ' + (i + 1)), ' ' + n, el('br'), as.length ? '▲ ' + p + ' · ● ' + ne + ' · ▼ ' + g : 'Sin relaciones');
+  })));
+  c.append(el('p', { class: 'ayuda' }, '▲ positivo · ● neutro · ▼ negativo'));
+}
+
+/* ====== Evaluación por criterio ====== */
+function evaluar() {
+  const e = estado;
+  const r = {};
+  const f = e.mapa.filas;
+  const a = [];
+  if (f.length < 8) a.push('Hay ' + f.length + ' empresas en el mapa: hacen falta al menos 8.');
+  if (new Set(f.map((x) => x.tipo)).size < 3) a.push('Hacen falta al menos 3 tipos de empresa distintos.');
+  if (f.some((x) => !lleno(x.fuente))) a.push('Todas las filas necesitan fuente.');
+  if (largo(e.mapa.conclusion) < 120) a.push('Falta la conclusión de cinco líneas sobre las empresas tipo.');
+  r.a = a;
+  const o = e.organigrama;
+  const b = [];
+  if (o.nodos.length < 3) b.push('El organigrama necesita al menos 3 puestos.');
+  const sinCubrir = coberturaOrg().filter((x) => !x[1]).map((x) => x[0]);
+  if (o.nodos.length && sinCubrir.length) b.push('Funciones clave sin cubrir: ' + sinCubrir.join(', ') + ' (o coméntalo).');
+  if (largo(o.comentario) < 60) b.push('Falta el comentario del organigrama.');
+  r.b = b;
+  const existentes = DEPTOS.filter((d) => e.departamentos.existe[d.id]);
+  const c = [];
+  if (existentes.length < 4) c.push('Marca y describe al menos 4 departamentos (hay ' + existentes.length + ').');
+  const sinFin = existentes.filter((d) => largo(e.departamentos.finalidad[d.id]) < 15).map((d) => d.nombre);
+  if (sinFin.length) c.push('Falta la finalidad de: ' + sinFin.join(', ') + '.');
+  r.c = c;
+  const d2 = [];
+  const sinFun = existentes.filter((d) => lineas(e.departamentos.funciones[d.id]).length < 2).map((d) => d.nombre);
+  if (!existentes.length) d2.push('Describe las funciones de los departamentos que existen.');
+  if (sinFun.length) d2.push('Faltan funciones (mínimo 2 líneas) en: ' + sinFun.join(', ') + '.');
+  if (e.clasificador.mejor < 70) d2.push('Supera el 70 % en el clasificador de tareas (tu mejor ronda: ' + e.clasificador.mejor + ' %).');
+  r.d = d2;
+  const cl = e.clientes;
+  const completos = cl.segmentos.filter((s) => num(s.clientes) > 0 && num(s.ingreso) > 0 && num(s.horas) > 0);
+  const ee = [];
+  if (completos.length < 2) ee.push('Define al menos 2 segmentos con clientes, ingreso y horas (hay ' + completos.length + ').');
+  if (!(num(cl.tecnicos) > 0 && num(cl.horasTec) > 0)) ee.push('Indica los técnicos y sus horas útiles.');
+  if (largo(cl.interpretacion) < 60) ee.push('Falta la interpretación del resultado.');
+  r.e = ee;
+  const ff = [];
+  const vacios = BLOQUES.filter((x) => largo(e.canvas.bloques[x[0]]) < 8).map((x) => x[1]);
+  if (vacios.length) ff.push('Bloques del Canvas por completar: ' + vacios.join(', ') + '.');
+  const dec = DECISIONES.filter((x) => e.canvas.decisiones[x[0]] && e.canvas.decisiones[x[0]].sel);
+  if (dec.length < 2 || dec.length > 3) ff.push('Elige 2 o 3 decisiones estratégicas (tienes ' + dec.length + ').');
+  if (dec.some((x) => largo(e.canvas.decisiones[x[0]].just) < 30)) ff.push('Justifica cada decisión estratégica.');
+  r.f = ff;
+  const g = [];
+  const hum = cl.recursos.filter((x) => x.tipo === 'humano' && num(x.cantidad) > 0 && num(x.coste) > 0);
+  const mat = cl.recursos.filter((x) => x.tipo === 'material' && num(x.cantidad) > 0 && num(x.coste) > 0);
+  if (!hum.length) g.push('Añade al menos un recurso humano con cantidad y coste.');
+  if (!mat.length) g.push('Añade al menos un recurso material con cantidad y coste.');
+  if (!(num(cl.tecnicos) > 0 && num(cl.horasTec) > 0)) g.push('Calcula la capacidad de la plantilla técnica.');
+  r.g = g;
+  const h = [];
+  const buenos = e.indicadores.items.filter((i) => lleno(i.objetivo) && i.datos.every(lleno));
+  if (buenos.length < 4) h.push('Hacen falta 4 indicadores con objetivo y 6 datos (hay ' + buenos.length + ').');
+  if (largo(e.indicadores.interpretacion) < 60) h.push('Falta la interpretación: ¿funciona la estrategia?');
+  r.h = h;
+  const i2 = [];
+  const od = e.ods;
+  if (!od.servicios.length) i2.push('Añade los servicios de la empresa.');
+  const sin = od.servicios.filter((s) => !od.asignaciones.some((x) => x.servicio === s.id)).map((s) => s.nombre);
+  if (sin.length) i2.push('Servicios sin ODS: ' + sin.join(', ') + '.');
+  if (od.asignaciones.some((x) => criticaJust(x.just))) i2.push('Hay justificaciones cortas o genéricas.');
+  if (!od.servicios.some((s) => s.circular)) i2.push('Incluye al menos un servicio de economía circular.');
+  r.i = i2;
+  return r;
+}
+
+/* ====== Exportación ====== */
+function aMarkdown() {
+  const e = estado;
+  const emp = e.empresa;
+  const L = [];
+  const lista = (s) => lineas(s).map((x) => '- ' + x);
+  L.push('# Ficha de empresa: ' + (emp.nombre || '(sin nombre)'), '');
+  L.push('## 1. Datos básicos', '', '- Nombre: ' + emp.nombre + (emp.ficticia ? ' (empresa ficticia)' : ''), '- Localidad: ' + emp.localidad, '- Empresa tipo: ' + nombreTipo(emp.tipo), '- Tamaño: ' + tamano(e.mapa.filas.length ? (e.mapa.filas[0].empleados) : ''), '', emp.descripcion, '');
+  L.push('## 2. Actividad y CNAE', '', emp.cnae, '');
+  L.push('## 3. Productos y servicios', '');
+  e.ods.servicios.forEach((s) => L.push('- ' + s.nombre + (s.circular ? ' (servicio circular)' : '')));
+  L.push('');
+  L.push('## 4. Clientes y volumen de negocio', '', '| Segmento | Clientes | Ingreso medio (€) | Horas por cliente | Ingresos (€) | Horas |', '|---|---:|---:|---:|---:|---:|');
+  let ing = 0; let hor = 0;
+  e.clientes.segmentos.forEach((s) => { const i = num(s.clientes) * num(s.ingreso); const h = num(s.clientes) * num(s.horas); ing += i; hor += h; L.push('| ' + celdaMd(s.nombre) + ' | ' + celdaMd(s.clientes) + ' | ' + celdaMd(s.ingreso) + ' | ' + celdaMd(s.horas) + ' | ' + fmt(i) + ' | ' + fmt(h) + ' |'); });
+  const disp = num(e.clientes.tecnicos) * num(e.clientes.horasTec);
+  L.push('', '- Ingresos estimados: ' + eur(ing), '- Horas demandadas: ' + fmt(hor) + ' · horas disponibles: ' + fmt(disp) + (disp > 0 ? ' · carga: ' + fmt((hor / disp) * 100, 1) + ' %' : ''), '', e.clientes.interpretacion, '');
+  L.push('## 5. Organigrama', '');
+  (function pintar(padre, nivel) { hijosDe(padre).forEach((n) => { L.push('  '.repeat(nivel) + '- ' + n.nombre + (n.deptos.length ? ' (' + n.deptos.map(nombreDepto).join(', ') + ')' : '')); pintar(n.id, nivel + 1); }); })(null, 0);
+  L.push('', e.organigrama.comentario, '');
+  L.push('## 6. Departamentos y funciones', '');
+  DEPTOS.filter((d) => e.departamentos.existe[d.id]).forEach((d) => { L.push('### ' + d.nombre, '', 'Finalidad: ' + e.departamentos.finalidad[d.id], '', ...lista(e.departamentos.funciones[d.id]), ''); });
+  L.push('## 7. Recursos humanos y materiales', '', '| Tipo | Recurso | Cantidad | Coste anual por unidad (€) | Total (€) |', '|---|---|---:|---:|---:|');
+  e.clientes.recursos.forEach((r) => L.push('| ' + (r.tipo === 'humano' ? 'Humano' : 'Material') + ' | ' + celdaMd(r.desc) + ' | ' + celdaMd(r.cantidad) + ' | ' + celdaMd(r.coste) + ' | ' + fmt(num(r.cantidad) * num(r.coste)) + ' |'));
+  L.push('');
+  L.push('## 8. Estrategia', '', '### Lienzo del modelo de negocio', '');
+  BLOQUES.forEach((b) => L.push('- **' + b[1] + ':** ' + (e.canvas.bloques[b[0]] || '')));
+  L.push('', '### Decisiones estratégicas', '');
+  DECISIONES.filter((d) => e.canvas.decisiones[d[0]] && e.canvas.decisiones[d[0]].sel).forEach((d) => L.push('- **' + d[1] + ':** ' + e.canvas.decisiones[d[0]].just));
+  L.push('');
+  L.push('## 9. Indicadores', '', '| Indicador | Mejor si | Objetivo | P1 | P2 | P3 | P4 | P5 | P6 | Semáforo |', '|---|---|---:|---:|---:|---:|---:|---:|---:|---|');
+  e.indicadores.items.forEach((i) => { const ev = evaluarKpi(i); L.push('| ' + ev.k[1] + ' (' + ev.k[2] + ') | ' + (ev.k[3] === 'sube' ? 'sube' : 'baja') + ' | ' + celdaMd(i.objetivo) + ' | ' + i.datos.map(celdaMd).join(' | ') + ' | ' + ev.texto + ' |'); });
+  L.push('', e.indicadores.interpretacion, '');
+  L.push('## 10. Productos, servicios y ODS', '', '| Servicio | ODS | Efecto | Justificación |', '|---|---|---|---|');
+  e.ods.asignaciones.forEach((a) => L.push('| ' + celdaMd((e.ods.servicios.find((s) => s.id === a.servicio) || { nombre: '' }).nombre) + ' | ' + a.ods + ' · ' + ODS[a.ods - 1] + ' | ' + a.efecto + ' | ' + celdaMd(a.just) + ' |'));
+  L.push('');
+  L.push('## 11. Fuentes', '', emp.fuentes, '', '### Mapa de empresas', '', '| Empresa | Localidad | Tipo | Empleados | Tamaño | Fuente |', '|---|---|---|---:|---|---|');
+  e.mapa.filas.forEach((f) => L.push('| ' + celdaMd(f.nombre) + ' | ' + celdaMd(f.localidad) + ' | ' + nombreTipo(f.tipo) + ' | ' + celdaMd(f.empleados) + ' | ' + tamano(f.empleados) + ' | ' + celdaMd(f.fuente) + ' |'));
+  L.push('', '### Conclusión sobre las empresas tipo', '', e.mapa.conclusion, '');
+  L.push('## 12. Valoración personal', '', emp.valoracion, '');
+  L.push('## Autoevaluación por criterio (RA1)', '', '| Criterio | Comprobación automática | Mi valoración |', '|---|---|---|');
+  const ev = evaluar();
+  CRITERIOS.forEach((cr) => L.push('| RA1.' + cr[0] + ' | ' + (ev[cr[0]].length ? 'Falta' : 'Cubierto') + ' | ' + NIVELES.find((n) => n[0] === String(e.autoeval[cr[0]] || 0))[1] + ' |'));
+  return L.join('\n') + '\n';
+}
+function nombreArchivo(ext) {
+  const base = (estado.empresa.nombre || 'ficha-empresa').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'ficha-empresa';
+  return 'ficha-' + base + '.' + ext;
+}
+function exportarMd() { descargar(nombreArchivo('md'), aMarkdown(), 'text/markdown'); aviso('Se ha descargado la ficha en Markdown. Entrégala en Aules.'); }
+function exportarJson() { descargar(nombreArchivo('json'), JSON.stringify(estado, null, 2), 'application/json'); aviso('Se ha descargado la copia en JSON: sirve para continuar en otro ordenador.'); }
+function copiarMd() {
+  const t = aMarkdown();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(t).then(() => aviso('Ficha copiada al portapapeles.'), () => aviso('No se ha podido copiar: usa la descarga.'));
+  } else aviso('Tu navegador no permite copiar desde aquí: usa la descarga.');
+}
+
+/* ====== 8 · Ficha y autoevaluación ====== */
+let serie = null;
+function nuevaSerie() {
+  serie = CRITERIOS.map((cr) => {
+    const q = mezclar(BANCO.filter((x) => x.ce === cr[0]))[0];
+    return { q, orden: mezclar(q.opciones.map((o, i) => i)), resp: null };
+  });
+}
+function renderPractica() {
+  const c = $('#c-practica');
+  c.textContent = '';
+  const emp = estado.empresa;
+  c.append(el('h3', null, 'Datos básicos de la empresa'));
+  c.append(el('div', { class: 'campos' },
+    campo('Nombre de la empresa', entrada(emp.nombre, (x) => { emp.nombre = x; cambio(); })),
+    campo('Localidad', entrada(emp.localidad, (x) => { emp.localidad = x; cambio(); })),
+    campo('Empresa tipo', selector(TIPOS, emp.tipo, (x) => { emp.tipo = x; cambio(); })),
+    campo('Actividad y CNAE (con la versión consultada)', entrada(emp.cnae, (x) => { emp.cnae = x; cambio(); }))));
+  c.append(el('label', { class: 'fila' }, el('input', { type: 'checkbox', checked: emp.ficticia, onchange: (e) => { emp.ficticia = e.target.checked; cambio(); } }), 'Es una empresa ficticia (dada por el profesor o inventada)'));
+  c.append(campo('Descripción breve', areaTexto(emp.descripcion, (x) => { emp.descripcion = x; cambio(); }, 3)));
+  c.append(campo('Fuentes consultadas (una por línea, con la fecha de consulta)', areaTexto(emp.fuentes, (x) => { emp.fuentes = x; cambio(); }, 3)));
+  c.append(campo('Valoración personal: qué tipo de empresa o puesto me interesa y por qué', areaTexto(emp.valoracion, (x) => { emp.valoracion = x; cambio(); }, 3)));
+
+  c.append(el('h3', null, 'Comprobación por criterio (RA1)'));
+  if (estado.ejemplo) c.append(el('p', { class: 'aviso' }, 'Estás viendo los datos de ejemplo: la comprobación vale para ver cómo funciona. Pulsa «Empezar con mi empresa» (en «Tus datos») para comprobar tu trabajo.'));
+  const ev = evaluar();
+  const cubiertos = CRITERIOS.filter((cr) => !ev[cr[0]].length).length;
+  c.append(el('p', { class: 'correccion', role: 'status' }, 'Criterios con evidencia: ' + cubiertos + ' de ' + CRITERIOS.length + '. La comprobación es automática y orientativa: la corrección la hace tu profesor.'));
+  c.append(tabla(['Criterio', 'Estado', 'Qué falta', 'Mi valoración'], CRITERIOS.map((cr) => {
+    const falta = ev[cr[0]];
+    return [el('span', null, el('b', null, 'RA1.' + cr[0]), ' ' + cr[1]),
+      el('span', { class: falta.length ? 'ko' : 'ok' }, falta.length ? '✘ Falta' : '✔ Cubierto'),
+      falta.length ? el('div', null, el('ul', null, falta.map((x) => el('li', null, x))), el('button', { type: 'button', class: 'pq', onclick: () => irA(cr[2]) }, 'Ir a la pestaña')) : 'Nada',
+      selector(NIVELES, String(estado.autoeval[cr[0]] || 0), (x) => { estado.autoeval[cr[0]] = Number(x); cambio(); })];
+  })));
+
+  c.append(el('h3', null, 'Ficha consolidada'));
+  c.append(el('div', { class: 'fila' },
+    el('button', { type: 'button', class: 'primario', onclick: exportarMd }, 'Descargar Markdown'),
+    el('button', { type: 'button', onclick: copiarMd }, 'Copiar Markdown'),
+    el('button', { type: 'button', onclick: exportarJson }, 'Descargar JSON')));
+  c.append(el('details', null, el('summary', null, 'Ver la ficha en Markdown'), el('pre', null, aMarkdown())));
+
+  c.append(el('h3', null, 'Preguntas de repaso'));
+  if (!serie) nuevaSerie();
+  const marcador = el('p', null, 'Aciertos acumulados: ', el('b', null, estado.quiz.aciertos + ' de ' + estado.quiz.intentos));
+  c.append(marcador);
+  serie.forEach((s, n) => {
+    const cr = CRITERIOS[n];
+    const fb = el('p', { class: 'correccion', role: 'status' });
+    const ops = el('div', { class: 'opciones', role: 'group', 'aria-label': 'Opciones de la pregunta RA1.' + cr[0] });
+    const botones = s.orden.map((i) => el('button', { type: 'button', onclick: () => {
+      if (s.resp !== null) return;
+      s.resp = i;
+      estado.quiz.intentos++;
+      if (i === s.q.ok) estado.quiz.aciertos++;
+      cambio();
+      pintar();
+      marcador.textContent = '';
+      marcador.append('Aciertos acumulados: ', el('b', null, estado.quiz.aciertos + ' de ' + estado.quiz.intentos));
+    } }, s.q.opciones[i]));
+    ops.append(...botones);
+    function pintar() {
+      if (s.resp === null) { fb.textContent = ''; return; }
+      botones.forEach((b, k) => { b.disabled = true; if (s.orden[k] === s.q.ok) b.textContent = '✔ ' + s.q.opciones[s.q.ok]; });
+      fb.textContent = '';
+      fb.append(el('b', { class: s.resp === s.q.ok ? 'ok' : 'ko' }, s.resp === s.q.ok ? '✔ Correcto. ' : '✘ No es esa. '), s.q.explica);
+    }
+    c.append(el('div', { class: 'tarjeta' }, el('h4', null, 'RA1.' + cr[0] + ' · ' + s.q.pregunta), ops, fb));
+    pintar();
+  });
+  c.append(el('div', { class: 'fila' }, el('button', { type: 'button', onclick: () => { nuevaSerie(); renderPractica(); } }, 'Otra serie de preguntas')));
+}
+
+/* ====== Barra de datos ====== */
+function confirmar(texto, base, accion) {
+  const b = el('button', { type: 'button' }, texto);
+  let espera = null;
+  b.addEventListener('click', () => {
+    if (espera) { clearTimeout(espera); espera = null; b.textContent = texto; accion(); return; }
+    b.textContent = '¿Seguro? Pulsa otra vez para confirmar';
+    espera = setTimeout(() => { espera = null; b.textContent = texto; }, 5000);
+  });
+  return b;
+}
+function renderTodo() {
+  renderMapa(); renderOrg(); renderDeptos(); renderClientes(); renderCanvas(); renderIndicadores(); renderODS(); renderPractica();
+  const b = $('#banner');
+  b.hidden = !estado.ejemplo;
+  b.textContent = estado.ejemplo ? 'Estás viendo datos de ejemplo de «Reparaciones Byte Alacant, S. L.» (empresa ficticia, datos inventados). Úsalos para ver cómo funciona todo y pulsa «Empezar con mi empresa» (dentro de «Tus datos») cuando quieras trabajar con la tuya.' : '';
+}
+function montarBarra() {
+  const barra = $('#barra-datos');
+  const archivo = el('input', { type: 'file', accept: '.json,application/json', 'aria-label': 'Importar una copia en JSON', hidden: true });
+  archivo.addEventListener('change', () => {
+    const f = archivo.files && archivo.files[0];
+    if (!f) return;
+    const lector = new FileReader();
+    lector.onload = () => {
+      try {
+        const d = JSON.parse(String(lector.result));
+        if (!d || d.tipo !== 'ficha-empresa-ud01') throw new Error('formato');
+        estado = normalizar(fusionar(estadoVacio(), d));
+        persistir();
+        serie = null;
+        renderTodo();
+        aviso('Datos importados correctamente.');
+      } catch (x) {
+        aviso('El archivo no es una copia en JSON exportada por este laboratorio.');
+      }
+      archivo.value = '';
+    };
+    lector.readAsText(f);
+  });
+  barra.append(
+    el('button', { type: 'button', class: 'primario', onclick: exportarMd }, 'Exportar Markdown'),
+    el('button', { type: 'button', onclick: exportarJson }, 'Exportar JSON'),
+    el('button', { type: 'button', onclick: () => archivo.click() }, 'Importar JSON'),
+    confirmar('Empezar con mi empresa', null, () => { estado = normalizar(estadoVacio()); persistir(); serie = null; renderTodo(); aviso('Datos vaciados: ya puedes trabajar con tu empresa.'); }),
+    confirmar('Cargar el ejemplo', null, () => { estado = ejemplo(); persistir(); serie = null; renderTodo(); aviso('Se ha cargado la empresa de ejemplo.'); }),
+    archivo);
+}
+
+/* ====== Pestañas (patrón WAI-ARIA) ====== */
+const pestanas = [...document.querySelectorAll('[role="tab"]')];
+function mostrar(id) {
+  const activa = pestanas.find((p) => p.dataset.tab === id) || pestanas[0];
+  for (const p of pestanas) {
+    const es = p === activa;
+    p.setAttribute('aria-selected', String(es));
+    p.tabIndex = es ? 0 : -1;
+    document.getElementById(p.getAttribute('aria-controls')).hidden = !es;
+  }
+  activa.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  if (activa.dataset.tab === 'practica') renderPractica();
+  return activa;
+}
+function elegir(id, enfocar) {
+  const activa = mostrar(id);
+  Lab.guardar('pestana', activa.dataset.tab);
+  history.replaceState(null, '', '#' + activa.dataset.tab);
+  if (enfocar) activa.focus();
+}
+function irA(id) { elegir(id); window.scrollTo(0, 0); }
+pestanas.forEach((p) => p.addEventListener('click', () => elegir(p.dataset.tab)));
+document.querySelector('[role="tablist"]').addEventListener('keydown', (e) => {
+  const i = pestanas.indexOf(document.activeElement);
+  const destino = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: pestanas.length - 1 }[e.key];
+  if (i < 0 || destino === undefined) return;
+  e.preventDefault();
+  elegir(pestanas[(destino + pestanas.length) % pestanas.length].dataset.tab, true);
+});
+window.addEventListener('hashchange', () => mostrar(location.hash.slice(1)));
+
+montarBarra();
+renderTodo();
+mostrar(location.hash.slice(1) || Lab.leer('pestana'));
+</script>
+</body>
+</html>
