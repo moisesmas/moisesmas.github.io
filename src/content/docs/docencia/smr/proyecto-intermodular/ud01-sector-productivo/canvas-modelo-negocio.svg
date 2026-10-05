@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 480" width="920" height="480" role="img" aria-labelledby="t">
+<title id="t">Lienzo del modelo de negocio con sus nueve bloques: socios clave, actividades clave, recursos clave, propuesta de valor, relaciones con clientes, canales, segmentos de clientes, estructura de costes y fuentes de ingresos.</title>
+<rect width="920" height="480" fill="#ffffff"/>
+<style>
+text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;fill:#16201b;font-size:13px}
+.b{font-weight:700;font-size:15px}.s{font-size:12px;fill:#56655d}
+.k{fill:#ffffff;stroke:#1f5244;stroke-width:2}
+.v{fill:#fbeed8;stroke:#1f5244;stroke-width:2}
+</style>
+
+<rect class="k" x="10" y="10" width="180" height="320" rx="6"/>
+<text x="22" y="34" class="b">Socios clave</text>
+<text x="22" y="56" class="s">¿Quién nos ayuda?</text><text x="22" y="74" class="s">Proveedores, mayoristas,</text><text x="22" y="92" class="s">fabricantes, gestoría…</text>
+
+<rect class="k" x="190" y="10" width="180" height="160" rx="6"/>
+<text x="202" y="34" class="b">Actividades clave</text>
+<text x="202" y="56" class="s">¿Qué hay que hacer</text><text x="202" y="74" class="s">cada día para que</text><text x="202" y="92" class="s">funcione?</text>
+
+<rect class="k" x="190" y="170" width="180" height="160" rx="6"/>
+<text x="202" y="194" class="b">Recursos clave</text>
+<text x="202" y="216" class="s">¿Qué personas y qué</text><text x="202" y="234" class="s">medios necesitamos?</text>
+
+<rect class="v" x="370" y="10" width="180" height="320" rx="6"/>
+<text x="382" y="34" class="b">Propuesta de valor</text>
+<text x="382" y="56" class="s">¿Qué problema</text><text x="382" y="74" class="s">resolvemos y por qué</text><text x="382" y="92" class="s">nos eligen a nosotros?</text>
+
+<rect class="k" x="550" y="10" width="180" height="160" rx="6"/>
+<text x="562" y="34" class="b">Relación con clientes</text>
+<text x="562" y="56" class="s">¿Cómo los atendemos</text><text x="562" y="74" class="s">y los mantenemos?</text>
+
+<rect class="k" x="550" y="170" width="180" height="160" rx="6"/>
+<text x="562" y="194" class="b">Canales</text>
+<text x="562" y="216" class="s">¿Cómo llegamos a ellos</text><text x="562" y="234" class="s">y les entregamos</text><text x="562" y="252" class="s">el servicio?</text>
+
+<rect class="k" x="730" y="10" width="180" height="320" rx="6"/>
+<text x="742" y="34" class="b">Segmentos de clientes</text>
+<text x="742" y="56" class="s">¿Para quién creamos</text><text x="742" y="74" class="s">valor? ¿Quién paga?</text>
+
+<rect class="k" x="10" y="330" width="450" height="140" rx="6"/>
+<text x="22" y="354" class="b">Estructura de costes</text>
+<text x="22" y="376" class="s">¿Cuáles son los gastos más importantes? Personal, local, materiales,</text><text x="22" y="394" class="s">licencias, vehículo…</text>
+
+<rect class="k" x="460" y="330" width="450" height="140" rx="6"/>
+<text x="472" y="354" class="b">Fuentes de ingresos</text>
+<text x="472" y="376" class="s">¿Por qué paga cada segmento y cómo? Por servicio, por cuota,</text><text x="472" y="394" class="s">por venta de equipos…</text>
+</svg>
