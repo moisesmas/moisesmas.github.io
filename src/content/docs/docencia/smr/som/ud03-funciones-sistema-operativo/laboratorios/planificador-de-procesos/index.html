@@ -1,0 +1,1715 @@
+<!doctype html>
+<html lang="en" data-lab="planificador-de-procesos" data-idioma-original="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="/comun/lab.js"></script>
+<title>Process &amp; CPU Scheduler Lab</title>
+<meta name="description" content="Inspect processes, move them through their states, run CPU scheduling algorithms with Gantt charts, try a Linux terminal with jobs and zombies, create a deadlock and compare polling, interrupts and DMA.">
+<meta name="keywords" content="processes, scheduling, FIFO, SJF, Round Robin, Gantt, deadlock, zombie, interrupts, DMA">
+<meta name="lab:titulo:es" content="Laboratorio del planificador de procesos">
+<meta name="lab:descripcion:es" content="Inspecciona procesos, llévalos por sus estados, ejecuta algoritmos de planificación de la CPU con diagramas de Gantt, prueba un terminal Linux con trabajos y zombis, provoca un interbloqueo y compara sondeo, interrupciones y DMA.">
+<meta name="lab:etiquetas:es" content="procesos, planificación, FIFO, SJF, Round Robin, Gantt, interbloqueo, zombi, interrupciones, DMA">
+<link rel="icon" href="/comun/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/comun/fuentes.css">
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f2f4ef;--surface:#ffffff;--surface2:#e9ede6;--ink:#16201b;--muted:#56655d;--line:#d3dbd4;
+  --accent:#b86e00;--accent-soft:#fbeed8;--pcb:#1f5244;
+  --ok:#1d6b3a;--bad:#a52a2a;
+  --c1:#cfe8dc;--c2:#f6dca8;--c3:#cfdcf0;--c4:#f0d0d8;--c5:#ddd0f0;--c6:#e3e3b8;
+  --f-display:"Chakra Petch",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0e1411;--surface:#161f1b;--surface2:#1d2823;--ink:#e4ebe6;--muted:#95a69d;--line:#2b3832;
+  --accent:#f3aa3c;--accent-soft:#33260f;--pcb:#1a463a;
+  --ok:#6fd392;--bad:#ff8a80;
+  --c1:#1f4a3d;--c2:#5a4210;--c3:#1f3a5c;--c4:#5a2a38;--c5:#402a5c;--c6:#4a4a1c;
+}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--f-body)}
+h1,h2,h3{font-family:var(--f-display);line-height:1.2;margin:0 0 .5rem}
+h1{font-size:1.25rem}
+h2{font-size:1.5rem}
+h3{font-size:1.1rem;margin-top:1.25rem}
+p{margin:.5rem 0}
+code,.mono{font-family:var(--f-mono);font-size:.92em}
+button,input,select{font:inherit;color:inherit}
+button{border:1px solid var(--muted);background:var(--surface);border-radius:.4rem;padding:.35rem .8rem;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+button[aria-pressed="true"]{background:var(--accent-soft);border:2px solid var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cabecera{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;padding:.6rem 1rem;background:var(--pcb);color:#fff}
+.cabecera h1{flex:1 1 12rem;margin:0}
+.cabecera a{color:#fff}
+.cabecera button{background:transparent;border-color:#fff;color:#fff}
+.cabecera [aria-pressed="true"]{background:#fff;color:var(--pcb);border-color:#fff}
+main{max-width:64rem;margin:0 auto;padding:1rem}
+.pestanas{display:flex;gap:.25rem;overflow-x:auto;border-bottom:1px solid var(--muted)}
+[role="tab"]{display:flex;gap:.5rem;align-items:baseline;white-space:nowrap;border:0;border-bottom:3px solid transparent;border-radius:.4rem .4rem 0 0;background:var(--surface2);font:600 1rem var(--f-display)}
+[role="tab"][aria-selected="true"]{background:var(--accent-soft);border-bottom-color:var(--accent)}
+.n{font:600 .8rem var(--f-mono);color:var(--muted)}
+[role="tabpanel"]{background:var(--surface);border:1px solid var(--line);border-top:0;padding:1rem 1.25rem}
+.fila{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;margin:.5rem 0}
+.primario{background:var(--pcb);border-color:var(--pcb);color:#fff}
+.primario[aria-pressed="true"]{background:var(--pcb);color:#fff}
+input[type=number],input[type=text],select{border:1px solid var(--muted);border-radius:.4rem;padding:.3rem .5rem;background:var(--surface);min-width:0}
+input[type=number]{width:4.5rem}
+input[type=range]{width:min(100%,20rem);accent-color:var(--accent)}
+label{display:inline-flex;align-items:center;gap:.4rem}
+.solo-lector{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.correccion{margin:.75rem 0;padding:.4rem .75rem;border-left:4px solid var(--accent);background:var(--surface2)}
+.correccion:empty{display:none}
+.bien{border-left-color:var(--ok)}
+.mal{border-left-color:var(--bad)}
+.nota{color:var(--muted);font-size:.92rem}
+.tarjeta{border:1px solid var(--line);background:var(--surface2);border-radius:.5rem;padding:.6rem .9rem}
+.tarjeta dl{display:grid;grid-template-columns:auto 1fr;gap:.15rem .8rem;margin:0}
+.tarjeta dt{color:var(--muted)}
+.tarjeta dd{margin:0}
+.dos-col{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:1rem;align-items:start}
+@media (max-width:48rem){.dos-col{grid-template-columns:minmax(0,1fr)}}
+.tabla-caja{overflow-x:auto;border:1px solid var(--line);border-radius:.4rem}
+.tabla{border-collapse:collapse;width:100%;font-size:.92rem}
+.tabla th,.tabla td{padding:.3rem .55rem;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+.tabla th{background:var(--surface2);font-family:var(--f-display)}
+.tabla td.num,.tabla th.num{text-align:right;font-family:var(--f-mono)}
+.tabla tbody tr.sel{background:var(--accent-soft)}
+.tabla tr.pie td{font-weight:700;background:var(--surface2)}
+.tabla button.fila-btn{border:0;background:transparent;padding:.1rem .3rem;font:inherit;text-align:left}
+.tabla input{width:3.6rem}
+.mejor{font-weight:700;color:var(--ink);background:var(--accent-soft)}
+.gantt-caja{overflow-x:auto;padding:1.4rem 0 .4rem}
+.gantt{position:relative;display:flex;min-height:2.6rem}
+.seg{flex:0 0 auto;display:flex;align-items:center;justify-content:center;border:1px solid var(--muted);border-left-width:0;font:600 .85rem var(--f-mono);position:relative;min-width:0}
+.seg:first-child{border-left-width:1px}
+.seg .t0{position:absolute;left:.15rem;bottom:-1.25rem;font:400 .72rem var(--f-mono);color:var(--muted)}
+.seg.ocioso{background:repeating-linear-gradient(45deg,var(--surface2),var(--surface2) .4rem,var(--surface) .4rem,var(--surface) .8rem);color:var(--muted)}
+.seg.c0{background:var(--c1)}.seg.c1{background:var(--c2)}.seg.c2{background:var(--c3)}.seg.c3{background:var(--c4)}.seg.c4{background:var(--c5)}.seg.c5{background:var(--c6)}
+.cursor{position:absolute;top:-.6rem;bottom:-.2rem;width:3px;background:var(--accent);z-index:2;pointer-events:none}
+.fin-t{position:absolute;right:-.2rem;bottom:-1.25rem;font:400 .72rem var(--f-mono);color:var(--muted)}
+.chip{display:inline-block;border:1px solid var(--muted);border-radius:.8rem;padding:0 .55rem;margin:.1rem .15rem .1rem 0;font:600 .85rem var(--f-mono)}
+.chip.c0{background:var(--c1)}.chip.c1{background:var(--c2)}.chip.c2{background:var(--c3)}.chip.c3{background:var(--c4)}.chip.c4{background:var(--c5)}.chip.c5{background:var(--c6)}
+.barra-caja{display:flex;align-items:center;gap:.4rem;min-width:8rem}
+.barra{height:.8rem;background:var(--pcb);border-radius:.2rem;min-width:2px}
+.barra.alt{background:var(--accent)}
+.term{background:#0b120f;color:#d6e4dc;border:1px solid var(--line);border-radius:.4rem;padding:.6rem .8rem;font:.88rem/1.4 var(--f-mono);min-height:14rem;max-height:24rem;overflow:auto}
+.term pre{margin:0;white-space:pre-wrap;word-break:break-word;font:inherit}
+.term .tip{color:#f3aa3c}
+.term-entrada{display:flex;gap:.4rem;align-items:center;margin-top:.3rem}
+.term-entrada span{color:#7fd6a8}
+.term-entrada input{flex:1;background:transparent;border:0;color:inherit;font:inherit;outline-offset:2px;min-width:0}
+.misiones{list-style:none;padding:0;margin:.5rem 0}
+.misiones li{display:flex;gap:.5rem;padding:.15rem 0}
+.misiones .hecha{font-weight:700}
+.papel{background:#fff;color:#16201b;border:1px solid var(--muted);border-radius:.3rem;padding:.5rem .8rem;font:.9rem/1.5 var(--f-mono);min-height:6.5rem;width:min(100%,24rem)}
+.papel div{white-space:pre}
+.proc-card{border:1px solid var(--line);border-radius:.5rem;padding:.5rem .8rem;background:var(--surface2);min-width:11rem}
+.estado{display:inline-block;border:1px solid var(--muted);border-radius:.8rem;padding:0 .6rem;background:var(--surface)}
+.celdas{display:flex;flex-wrap:wrap;gap:2px;margin:.3rem 0}
+.celda{width:1.15rem;height:1.3rem;font:600 .7rem/1.3rem var(--f-mono);text-align:center;border:1px solid var(--muted);border-radius:2px;background:var(--surface)}
+.celda.W{background:var(--c4)}.celda.F{background:var(--c1)}.celda.H{background:var(--c2)}.celda.C{background:var(--c4)}.celda.S{background:var(--c3)}
+.bloques{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
+.bloques button{min-width:4.2rem}
+.bloques .en-cache{background:var(--accent-soft);border:2px solid var(--accent)}
+.cola{display:grid;gap:.35rem;margin:.5rem 0}
+.trabajo{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;border:1px solid var(--line);border-radius:.4rem;padding:.25rem .6rem;background:var(--surface2)}
+.progreso{flex:1 1 6rem;height:.7rem;background:var(--surface);border:1px solid var(--muted);border-radius:.3rem;overflow:hidden}
+.progreso span{display:block;height:100%;background:var(--pcb)}
+svg text{font-family:var(--f-body);font-size:14px;fill:var(--ink)}
+svg .peq{font-size:12px;fill:var(--muted)}
+svg .nodo rect,svg .nodo circle{fill:var(--surface);stroke:var(--muted);stroke-width:2}
+svg .nodo.activo rect,svg .nodo.activo circle{fill:var(--accent-soft);stroke:var(--accent);stroke-width:4}
+svg .flecha{fill:none;stroke:var(--muted);stroke-width:2}
+svg .flecha.pidiendo{stroke-dasharray:6 4;stroke:var(--accent)}
+svg .punta{fill:var(--muted)}
+.entradas-ej{display:grid;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));gap:.5rem;margin:.5rem 0}
+.entradas-ej label{flex-direction:column;align-items:flex-start;gap:.15rem}
+.ok{color:var(--ok);font-weight:700}
+.ko{color:var(--bad);font-weight:700}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<script type="application/json" id="lab-textos">
+{
+ "es": {
+  "volver-aria": "Volver a la unidad",
+  "volver": "Unidad",
+  "titulo": "Laboratorio del planificador de procesos",
+  "zoom-aria": "Tamaño del texto",
+  "zoom-menos": "Reducir texto",
+  "zoom-mas": "Aumentar texto",
+  "idioma-aria": "Idioma",
+  "pestanas-aria": "Secciones del laboratorio",
+  "tab-inspector": "Inspector de procesos",
+  "tab-states": "Máquina de estados",
+  "tab-scheduler": "Simulador del planificador",
+  "tab-shootout": "Duelo de algoritmos",
+  "tab-terminal": "Terminal",
+  "tab-sync": "Sección crítica e interbloqueo",
+  "tab-io": "Gestor de E/S",
+  "tab-practica": "Práctica",
+  "ins-titulo": "Inspector de procesos",
+  "ins-texto": "Una lista simulada de procesos, como <code>ps aux</code> en Linux o la pestaña Detalles del Administrador de tareas de Windows. Haz clic en un proceso para ver su <b>PCB</b> (bloque de control de proceso). Después clasifica procesos tú mismo.",
+  "ins-so-aria": "Sistema operativo",
+  "ins-clas-titulo": "Clasifica un proceso",
+  "ins-clas-texto": "¿Qué tipo de proceso es este?",
+  "ins-b-user": "Proceso de usuario",
+  "ins-b-system": "Proceso del sistema",
+  "ins-b-service": "Servicio (demonio)",
+  "ins-aciertos": "Aciertos",
+  "est-titulo": "Máquina de estados",
+  "est-texto": "Un proceso cambia de estado siempre por una transición válida. Intenta moverlo: los movimientos válidos se explican y los imposibles se rechazan con el motivo. <b>Reto:</b> lleva el proceso de Nuevo a Terminado pasando al menos una vez por Bloqueado.",
+  "est-svg-aria": "Diagrama de los cinco estados de un proceso y las seis transiciones válidas",
+  "est-new": "Nuevo",
+  "est-ready": "Listo",
+  "est-running": "En ejecución",
+  "est-terminated": "Terminado",
+  "est-waiting": "Bloqueado",
+  "est-admit": "admisión",
+  "est-dispatch": "despacho",
+  "est-timeout": "fin de quantum",
+  "est-exit": "salida",
+  "est-wait": "espera E/S",
+  "est-done": "fin de E/S",
+  "est-actual": "Estado actual",
+  "est-mover-aria": "Mover el proceso a un estado",
+  "est-mover": "Mover a:",
+  "est-reset": "Proceso nuevo",
+  "est-stat-titulo": "En Linux (columna STAT de ps)",
+  "est-cambios": "Cambios de contexto (salidas de la CPU)",
+  "est-reto": "Reto",
+  "sim-titulo": "Simulador del planificador",
+  "sim-texto": "Edita los procesos, elige un algoritmo y lee el diagrama de Gantt. Mueve el deslizador del tiempo para ver quién se ejecuta y quién espera en cada momento. Un número de prioridad menor significa más prioridad. <b>Tiempo de respuesta</b> = finalización − llegada; <b>tiempo de espera</b> = respuesta − ráfaga.",
+  "sim-preset": "Carga de ejemplo:",
+  "pre-notas": "El ejemplo de los apuntes",
+  "pre-convoy": "Efecto convoy",
+  "pre-mezcla": "Llegadas mezcladas",
+  "pre-cinco": "Cinco procesos",
+  "pre-juntos": "Llegan todos a la vez",
+  "pre-simulador": "La carga del simulador",
+  "sim-algo": "Algoritmo:",
+  "alg-fifo": "FIFO",
+  "alg-sjf": "SJF (no expulsivo)",
+  "alg-srtf": "SRTF (expulsivo)",
+  "alg-prio": "Prioridades (no expulsivas)",
+  "alg-prioe": "Prioridades (expulsivas)",
+  "alg-rr": "Round Robin",
+  "sim-mas": "Añadir proceso",
+  "sim-menos": "Quitar el último",
+  "sim-ejercicio": "Modo ejercicio: ocultar los resultados hasta que pulse el botón",
+  "sim-gantt": "Diagrama de Gantt",
+  "sim-gantt-aria": "Diagrama de Gantt: qué proceso usa la CPU en cada unidad de tiempo",
+  "sim-play": "Reproducir / pausar",
+  "sim-tiempo": "Tiempo:",
+  "sim-resultados": "Resultados",
+  "sim-oculto": "Resultados ocultos. Trabaja en papel con los datos de la tabla y pulsa el botón cuando estés listo.",
+  "sim-mostrar": "Mostrar los resultados",
+  "duelo-titulo": "Duelo de algoritmos",
+  "duelo-texto": "La misma carga con los seis algoritmos. Se marca el mejor tiempo de espera medio. Después cambia el quantum de Round Robin y observa cómo cambian los cambios de contexto y el tiempo de respuesta. Al final, una demostración de <b>inanición</b> y <b>envejecimiento</b>.",
+  "duelo-q": "Quantum de Round Robin:",
+  "duelo-nota": "Los promedios están en unidades de tiempo. Cambio de contexto = la CPU pasa de un proceso a otro distinto.",
+  "duelo-q-titulo": "¿Qué cambia el quantum?",
+  "duelo-q-texto": "Round Robin con q = 1 a 8 para la misma carga.",
+  "ina-titulo": "Inanición y envejecimiento",
+  "ina-texto": "Un proceso largo L (ráfaga 5) llega en el instante 1. Cada 2 unidades llegan procesos cortos (ráfaga 2), empezando en el 0. Con SJF el proceso largo es adelantado siempre. Con <b>envejecimiento</b>, por cada 2 unidades que espera un proceso, su longitud efectiva se reduce en 1.",
+  "ina-cortos": "Número de procesos cortos:",
+  "ter-titulo": "Terminal: trabajos, señales y zombis",
+  "ter-texto": "Un shell de Linux simulado. Escribe <code>help</code> para ver las órdenes. El tiempo no pasa solo: usa los botones para dejar pasar segundos. Completa las seis misiones.",
+  "ter-log-aria": "Salida del terminal",
+  "ter-etiqueta": "Escribe una orden",
+  "ter-t5": "+ 5 s",
+  "ter-t60": "+ 60 s",
+  "ter-reset": "Reiniciar terminal",
+  "ter-reloj": "Reloj",
+  "ter-misiones": "Misiones",
+  "ter-ayuda": "Ejemplos: <code>xeyes &amp;</code>, <code>jobs</code>, <code>ps aux</code>, <code>kill -STOP 4100</code>, <code>bg %1</code>, <code>kill 4100</code>. Para el zombi: <code>bash -c 'sleep 2 &amp; exec sleep 300' &amp;</code>, después + 5 s y <code>ps aux</code>.",
+  "syn-titulo": "Sección crítica e interbloqueo",
+  "syn-a-titulo": "A. Dos procesos, una impresora",
+  "syn-a-texto": "P1 y P2 quieren imprimir un informe de cuatro líneas cada uno. Tú decides qué proceso ejecuta la siguiente instrucción. Sin cerrojo, las líneas se mezclan. Con cerrojo, la impresora es una <b>sección crítica</b>: el otro proceso pasa a <b>Bloqueado</b>.",
+  "syn-cerrojo": "Usar un cerrojo (exclusión mutua)",
+  "syn-p1": "Paso de P1",
+  "syn-p2": "Paso de P2",
+  "syn-reset": "Reiniciar",
+  "syn-papel": "Papel en la impresora:",
+  "syn-papel-aria": "Líneas impresas",
+  "dl-titulo": "B. Interbloqueo",
+  "dl-texto": "Dos recursos, la impresora (R1) y el escáner (R2). P1 pide R1 y después R2. P2 pide R2 y después R1. Alterna los pasos (P1, P2, P1, P2) y observa el grafo. Una flecha continua de un recurso a un proceso significa <i>asignado</i>; una flecha discontinua de un proceso a un recurso significa <i>esperándolo</i>.",
+  "dl-orden": "Los dos piden en el mismo orden (primero la impresora)",
+  "dl-matar": "El SO finaliza P2",
+  "dl-reset": "Reiniciar",
+  "dl-svg-aria": "Grafo de asignación de recursos con dos procesos y dos recursos",
+  "dl-impresora": "Impresora",
+  "dl-escaner": "Escáner",
+  "dl-cond-titulo": "Las cuatro condiciones del interbloqueo",
+  "dl-c1": "Exclusión mutua: un recurso solo tiene un usuario a la vez.",
+  "dl-c2": "Retención y espera: un proceso conserva lo que tiene mientras espera más.",
+  "dl-c3": "Sin expropiación: no se puede quitar un recurso.",
+  "dl-c4": "Espera circular: P1 espera a P2 y P2 espera a P1.",
+  "io-titulo": "Gestor de entrada/salida",
+  "io-a-titulo": "A. ¿Sondeo, interrupciones o DMA?",
+  "io-a-texto": "Un dispositivo envía varias palabras a la memoria. Cada fila muestra qué hace la CPU en cada unidad de tiempo. Modelo simplificado: copiar una palabra o ejecutar una rutina de interrupción cuesta 1 unidad.",
+  "io-n": "Palabras a transferir:",
+  "io-d": "Tiempo del dispositivo por palabra:",
+  "io-leyenda": "<b>W</b> = CPU esperando (ocupada), <b>C</b> = la CPU copia una palabra, <b>F</b> = CPU libre para otros procesos, <b>H</b> = rutina de interrupción, <b>S</b> = la CPU inicia la transferencia DMA.",
+  "ca-titulo": "B. Caché",
+  "ca-texto": "Lee bloques de un disco lento. Un acierto en la caché cuesta 1 unidad; un fallo cuesta 10. La caché retira el bloque usado hace más tiempo cuando está llena.",
+  "ca-capacidad": "Tamaño de la caché (bloques):",
+  "ca-reset": "Vaciar la caché",
+  "ca-bloques-aria": "Bloques de disco que puedes leer",
+  "sp-titulo": "C. Spooling",
+  "sp-texto": "Envía trabajos de impresión. La impresora imprime una página en cada momento. Con spooling, los trabajos esperan en una cola y puedes seguir trabajando. Sin él, el programa queda bloqueado mientras la impresora trabaja.",
+  "sp-activo": "Spooling activado",
+  "sp-a": "Imprimir informe (3 páginas)",
+  "sp-b": "Imprimir foto (5 páginas)",
+  "sp-c": "Imprimir factura (2 páginas)",
+  "sp-trabajar": "Seguir trabajando: escribir una palabra",
+  "pra-titulo": "Práctica",
+  "pra-modo-aria": "Tipo de ejercicio",
+  "pra-m-plan": "Ejercicio de planificación",
+  "pra-m-conc": "Pregunta de conceptos",
+  "pra-ayuda": "Escribe el tiempo de espera y el de respuesta de cada proceso, y el tiempo de espera medio (como máximo dos decimales). Round Robin: si un proceso nuevo llega cuando acaba un quantum, entra en la cola antes que el proceso expulsado.",
+  "pra-comprobar": "Comprobar",
+  "pra-solucion": "Ver solución",
+  "pra-otro": "Otro ejercicio",
+  "pra-marcador": "Resueltos / intentados",
+  "pra-opciones-aria": "Opciones de respuesta",
+  "pra-otra": "Otra pregunta"
+ }
+}
+</script>
+</head>
+<body>
+<header class="cabecera">
+  <a href="../../" data-lab-volver data-t-attr="aria-label:volver-aria" aria-label="Back to the unit">← <span data-t="volver">Unit</span></a>
+  <h1 data-t="titulo">Process &amp; CPU Scheduler Lab</h1>
+  <div role="group" data-t-attr="aria-label:zoom-aria" aria-label="Text size">
+    <button type="button" data-lab-zoom="-" data-t-attr="aria-label:zoom-menos" aria-label="Smaller text">A−</button>
+    <button type="button" data-lab-zoom="+" data-t-attr="aria-label:zoom-mas" aria-label="Larger text">A+</button>
+  </div>
+  <div role="group" data-t-attr="aria-label:idioma-aria" aria-label="Language">
+    <button type="button" data-lab-idioma="en"></button>
+    <button type="button" data-lab-idioma="es"></button>
+  </div>
+</header>
+<main>
+  <div class="pestanas" role="tablist" data-t-attr="aria-label:pestanas-aria" aria-label="Lab sections">
+    <button type="button" role="tab" id="tab-inspector" data-tab="inspector" aria-controls="panel-inspector" aria-selected="true"><span class="n">1</span><span data-t="tab-inspector">Process inspector</span></button>
+    <button type="button" role="tab" id="tab-states" data-tab="states" aria-controls="panel-states" aria-selected="false" tabindex="-1"><span class="n">2</span><span data-t="tab-states">State machine</span></button>
+    <button type="button" role="tab" id="tab-scheduler" data-tab="scheduler" aria-controls="panel-scheduler" aria-selected="false" tabindex="-1"><span class="n">3</span><span data-t="tab-scheduler">Scheduler simulator</span></button>
+    <button type="button" role="tab" id="tab-shootout" data-tab="shootout" aria-controls="panel-shootout" aria-selected="false" tabindex="-1"><span class="n">4</span><span data-t="tab-shootout">Algorithm shoot-out</span></button>
+    <button type="button" role="tab" id="tab-terminal" data-tab="terminal" aria-controls="panel-terminal" aria-selected="false" tabindex="-1"><span class="n">5</span><span data-t="tab-terminal">Terminal</span></button>
+    <button type="button" role="tab" id="tab-sync" data-tab="sync" aria-controls="panel-sync" aria-selected="false" tabindex="-1"><span class="n">6</span><span data-t="tab-sync">Critical section &amp; deadlock</span></button>
+    <button type="button" role="tab" id="tab-io" data-tab="io" aria-controls="panel-io" aria-selected="false" tabindex="-1"><span class="n">7</span><span data-t="tab-io">I/O manager</span></button>
+    <button type="button" role="tab" id="tab-practica" data-tab="practica" aria-controls="panel-practica" aria-selected="false" tabindex="-1"><span class="n">8</span><span data-t="tab-practica">Practice</span></button>
+  </div>
+
+  <!-- 1. Inspector -->
+  <section role="tabpanel" id="panel-inspector" aria-labelledby="tab-inspector" tabindex="0">
+    <h2 data-t="ins-titulo">Process inspector</h2>
+    <p data-t-html="ins-texto">A simulated process list, like <code>ps aux</code> in Linux or the Details tab of Windows Task Manager. Click a process to see its <b>PCB</b> (Process Control Block). Then classify processes yourself.</p>
+    <div class="fila" role="group" data-t-attr="aria-label:ins-so-aria" aria-label="Operating system">
+      <button type="button" id="so-linux" aria-pressed="true">Linux · ps aux</button>
+      <button type="button" id="so-win" aria-pressed="false">Windows · Task Manager</button>
+    </div>
+    <div class="dos-col">
+      <div class="tabla-caja"><table class="tabla" id="tabla-proc"></table></div>
+      <div class="tarjeta" id="pcb" aria-live="polite"></div>
+    </div>
+    <h3 data-t="ins-clas-titulo">Classify a process</h3>
+    <p data-t="ins-clas-texto">What kind of process is this one?</p>
+    <p>→ <b class="mono" id="clas-nombre"></b></p>
+    <div class="fila">
+      <button type="button" data-clas="user" data-t="ins-b-user">User process</button>
+      <button type="button" data-clas="system" data-t="ins-b-system">System process</button>
+      <button type="button" data-clas="service" data-t="ins-b-service">Service (daemon)</button>
+    </div>
+    <p class="correccion" id="clas-correccion" role="status"></p>
+    <p class="nota"><span data-t="ins-aciertos">Correct answers</span>: <b id="clas-aciertos">0</b> / <b id="clas-total">0</b></p>
+  </section>
+
+  <!-- 2. Estados -->
+  <section role="tabpanel" id="panel-states" aria-labelledby="tab-states" tabindex="0" hidden>
+    <h2 data-t="est-titulo">State machine</h2>
+    <p data-t-html="est-texto">A process always changes state through a valid transition. Try to move it: valid moves are explained, impossible moves are rejected with the reason. <b>Challenge:</b> take the process from New to Terminated going through Waiting at least once.</p>
+    <svg viewBox="0 0 760 330" width="100%" role="img" data-t-attr="aria-label:est-svg-aria" aria-label="Diagram of the five states of a process and the six valid transitions">
+      <defs><marker id="punta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="punta" d="M0 0L10 5L0 10z"/></marker></defs>
+      <g class="nodo" id="n-new"><rect x="20" y="130" width="110" height="56" rx="8"/><text x="75" y="163" text-anchor="middle" data-t="est-new">New</text></g>
+      <g class="nodo" id="n-ready"><rect x="210" y="130" width="110" height="56" rx="8"/><text x="265" y="163" text-anchor="middle" data-t="est-ready">Ready</text></g>
+      <g class="nodo" id="n-running"><rect x="430" y="130" width="110" height="56" rx="8"/><text x="485" y="163" text-anchor="middle" data-t="est-running">Running</text></g>
+      <g class="nodo" id="n-terminated"><rect x="630" y="130" width="110" height="56" rx="8"/><text x="685" y="163" text-anchor="middle" data-t="est-terminated">Terminated</text></g>
+      <g class="nodo" id="n-waiting"><rect x="320" y="256" width="130" height="56" rx="8"/><text x="385" y="289" text-anchor="middle" data-t="est-waiting">Waiting</text></g>
+      <path class="flecha" d="M130 158 H208" marker-end="url(#punta)"/><text class="peq" x="169" y="148" text-anchor="middle" data-t="est-admit">admit</text>
+      <path class="flecha" d="M320 170 H428" marker-end="url(#punta)"/><text class="peq" x="374" y="188" text-anchor="middle" data-t="est-dispatch">dispatch</text>
+      <path class="flecha" d="M450 130 C 450 60, 310 60, 310 128" marker-end="url(#punta)"/><text class="peq" x="380" y="56" text-anchor="middle" data-t="est-timeout">time out</text>
+      <path class="flecha" d="M540 158 H628" marker-end="url(#punta)"/><text class="peq" x="584" y="148" text-anchor="middle" data-t="est-exit">exit</text>
+      <path class="flecha" d="M470 186 L 410 254" marker-end="url(#punta)"/><text class="peq" x="500" y="232" text-anchor="middle" data-t="est-wait">waits for I/O</text>
+      <path class="flecha" d="M350 256 L 280 188" marker-end="url(#punta)"/><text class="peq" x="250" y="232" text-anchor="middle" data-t="est-done">I/O done</text>
+    </svg>
+    <p><span data-t="est-actual">Current state</span>: <b class="estado" id="est-actual-valor"></b></p>
+    <div class="fila" role="group" data-t-attr="aria-label:est-mover-aria" aria-label="Move the process to a state">
+      <span data-t="est-mover">Move to:</span>
+      <button type="button" data-dest="new" data-t="est-new">New</button>
+      <button type="button" data-dest="ready" data-t="est-ready">Ready</button>
+      <button type="button" data-dest="running" data-t="est-running">Running</button>
+      <button type="button" data-dest="waiting" data-t="est-waiting">Waiting</button>
+      <button type="button" data-dest="terminated" data-t="est-terminated">Terminated</button>
+      <button type="button" id="est-reset" data-t="est-reset">New process</button>
+    </div>
+    <p class="correccion" id="est-mensaje" role="status"></p>
+    <div class="tarjeta">
+      <p><b data-t="est-stat-titulo">In Linux (STAT column of ps)</b></p>
+      <p id="est-stat"></p>
+    </div>
+    <p class="nota"><span data-t="est-cambios">Context switches (leaving the CPU)</span>: <b id="est-ctx">0</b> · <span data-t="est-reto">Challenge</span>: <b id="est-reto-estado"></b></p>
+  </section>
+
+  <!-- 3. Simulador -->
+  <section role="tabpanel" id="panel-scheduler" aria-labelledby="tab-scheduler" tabindex="0" hidden>
+    <h2 data-t="sim-titulo">Scheduler simulator</h2>
+    <p data-t-html="sim-texto">Edit the processes, choose an algorithm and read the Gantt chart. Move the time slider to see who runs and who waits at each moment. A lower priority number means a higher priority. <b>Response time</b> = completion − arrival; <b>waiting time</b> = response − burst.</p>
+    <div class="fila">
+      <label><span data-t="sim-preset">Example load:</span>
+        <select id="sim-preset">
+          <option value="notas" data-t="pre-notas">The example of the notes</option>
+          <option value="convoy" data-t="pre-convoy">Convoy effect</option>
+          <option value="mezcla" data-t="pre-mezcla">Mixed arrivals</option>
+          <option value="cinco" data-t="pre-cinco">Five processes</option>
+        </select></label>
+      <label><span data-t="sim-algo">Algorithm:</span>
+        <select id="sim-algo">
+          <option value="fifo" data-t="alg-fifo">FIFO</option>
+          <option value="sjf" data-t="alg-sjf">SJF (non-preemptive)</option>
+          <option value="srtf" data-t="alg-srtf">SRTF (preemptive)</option>
+          <option value="prio" data-t="alg-prio">Priorities (non-preemptive)</option>
+          <option value="prioe" data-t="alg-prioe">Priorities (preemptive)</option>
+          <option value="rr" data-t="alg-rr">Round Robin</option>
+        </select></label>
+      <label id="sim-q-caja">Quantum <input type="number" id="sim-q" min="1" max="9" value="2"></label>
+    </div>
+    <div class="tabla-caja"><table class="tabla" id="sim-entrada"></table></div>
+    <div class="fila">
+      <button type="button" id="sim-mas" data-t="sim-mas">Add process</button>
+      <button type="button" id="sim-menos" data-t="sim-menos">Remove last</button>
+      <label><input type="checkbox" id="sim-ejercicio"> <span data-t="sim-ejercicio">Exercise mode: hide the results until I press the button</span></label>
+    </div>
+    <div id="sim-salida">
+      <h3 data-t="sim-gantt">Gantt chart</h3>
+      <div class="gantt-caja"><div class="gantt" id="sim-gantt" role="img" data-t-attr="aria-label:sim-gantt-aria" aria-label="Gantt chart: which process uses the CPU in each time unit"></div></div>
+      <div class="fila">
+        <button type="button" id="sim-play" data-t="sim-play">Play / pause</button>
+        <label><span data-t="sim-tiempo">Time:</span> <input type="range" id="sim-t" min="0" max="0" value="0"></label>
+        <b class="mono" id="sim-t-valor">t = 0</b>
+      </div>
+      <p class="correccion" id="sim-estado" role="status"></p>
+      <h3 data-t="sim-resultados">Results</h3>
+      <div class="tabla-caja"><table class="tabla" id="sim-resultados"></table></div>
+      <p class="nota" id="sim-resumen"></p>
+      <p class="nota" id="sim-desempate"></p>
+    </div>
+    <p class="correccion" id="sim-oculto" hidden data-t="sim-oculto">Results hidden. Work on paper with the data of the table and press the button when you are ready.</p>
+    <div class="fila" id="sim-mostrar-caja" hidden><button type="button" id="sim-mostrar" data-t="sim-mostrar">Show the results</button></div>
+  </section>
+
+  <!-- 4. Duelo -->
+  <section role="tabpanel" id="panel-shootout" aria-labelledby="tab-shootout" tabindex="0" hidden>
+    <h2 data-t="duelo-titulo">Algorithm shoot-out</h2>
+    <p data-t-html="duelo-texto">The same load with the six algorithms. The best average waiting time is marked. Then change the quantum of Round Robin and see how it changes context switches and response time. At the end, a demonstration of <b>starvation</b> and <b>aging</b>.</p>
+    <div class="fila">
+      <label><span data-t="sim-preset">Example load:</span>
+        <select id="duelo-preset">
+          <option value="cinco" data-t="pre-cinco">Five processes</option>
+          <option value="notas" data-t="pre-notas">The example of the notes</option>
+          <option value="convoy" data-t="pre-convoy">Convoy effect</option>
+          <option value="juntos" data-t="pre-juntos">All arrive together</option>
+          <option value="simulador" data-t="pre-simulador">The load of the simulator</option>
+        </select></label>
+      <label><span data-t="duelo-q">Round Robin quantum:</span> <input type="range" id="duelo-q" min="1" max="8" value="3"> <b id="duelo-q-valor">3</b></label>
+    </div>
+    <p class="mono nota" id="duelo-carga"></p>
+    <div class="tabla-caja"><table class="tabla" id="duelo-tabla"></table></div>
+    <p class="nota" data-t="duelo-nota">Averages are in time units. Context switch = the CPU changes from one process to a different one.</p>
+    <h3 data-t="duelo-q-titulo">What does the quantum change?</h3>
+    <p data-t="duelo-q-texto">Round Robin with q = 1 to 8 for the same load.</p>
+    <div class="tabla-caja"><table class="tabla" id="duelo-qtabla"></table></div>
+    <h3 data-t="ina-titulo">Starvation and aging</h3>
+    <p data-t-html="ina-texto">A long process L (burst 5) arrives at time 1. Short processes (burst 2) arrive every 2 units, starting at 0. With SJF the long process is always overtaken. With <b>aging</b>, every 2 units a process waits, its effective length is reduced by 1.</p>
+    <div class="fila"><label><span data-t="ina-cortos">Number of short processes:</span> <input type="range" id="ina-n" min="1" max="8" value="6"> <b id="ina-n-valor">6</b></label></div>
+    <div id="ina-salida"></div>
+  </section>
+
+  <!-- 5. Terminal -->
+  <section role="tabpanel" id="panel-terminal" aria-labelledby="tab-terminal" tabindex="0" hidden>
+    <h2 data-t="ter-titulo">Terminal: jobs, signals and zombies</h2>
+    <p data-t-html="ter-texto">A simulated Linux shell. Type <code>help</code> to see the commands. Time does not pass by itself: use the buttons to let seconds go by. Complete the six missions.</p>
+    <div class="term" id="term-salida" role="log" aria-live="polite" tabindex="0" data-t-attr="aria-label:ter-log-aria" aria-label="Terminal output"></div>
+    <form class="term-entrada term" id="term-form" autocomplete="off" style="min-height:0;margin-top:.2rem">
+      <span aria-hidden="true">student@lab:~$</span>
+      <label class="solo-lector" for="term-entrada" data-t="ter-etiqueta">Type a command</label>
+      <input type="text" id="term-entrada" spellcheck="false" autocapitalize="off">
+    </form>
+    <div class="fila">
+      <button type="button" id="term-ctrlc">Ctrl+C</button>
+      <button type="button" id="term-ctrlz">Ctrl+Z</button>
+      <button type="button" id="term-t5" data-t="ter-t5">+ 5 s</button>
+      <button type="button" id="term-t60" data-t="ter-t60">+ 60 s</button>
+      <button type="button" id="term-reset" data-t="ter-reset">Reset terminal</button>
+      <span class="nota"><span data-t="ter-reloj">Clock</span>: <b id="term-reloj">0</b> s</span>
+    </div>
+    <h3 data-t="ter-misiones">Missions</h3>
+    <ul class="misiones" id="term-misiones"></ul>
+    <p class="nota" data-t-html="ter-ayuda">Examples: <code>xeyes &amp;</code>, <code>jobs</code>, <code>ps aux</code>, <code>kill -STOP 4100</code>, <code>bg %1</code>, <code>kill 4100</code>. For the zombie: <code>bash -c 'sleep 2 &amp; exec sleep 300' &amp;</code>, then + 5 s and <code>ps aux</code>.</p>
+  </section>
+
+  <!-- 6. Sincronizacion -->
+  <section role="tabpanel" id="panel-sync" aria-labelledby="tab-sync" tabindex="0" hidden>
+    <h2 data-t="syn-titulo">Critical section and deadlock</h2>
+    <h3 data-t="syn-a-titulo">A. Two processes, one printer</h3>
+    <p data-t-html="syn-a-texto">P1 and P2 want to print a four-line report each. You decide which process runs the next instruction. Without a lock the lines get mixed. With a lock, the printer is a <b>critical section</b>: the other process goes to <b>Waiting</b>.</p>
+    <div class="fila">
+      <label><input type="checkbox" id="syn-cerrojo"> <span data-t="syn-cerrojo">Use a lock (mutual exclusion)</span></label>
+      <button type="button" id="syn-p1" class="primario" data-t="syn-p1">Step P1</button>
+      <button type="button" id="syn-p2" class="primario" data-t="syn-p2">Step P2</button>
+      <button type="button" id="syn-reset" data-t="syn-reset">Restart</button>
+    </div>
+    <div class="fila" style="align-items:flex-start">
+      <div class="proc-card"><b>P1</b> <span class="estado" id="syn-e1"></span><br><span class="nota" id="syn-i1"></span></div>
+      <div class="proc-card"><b>P2</b> <span class="estado" id="syn-e2"></span><br><span class="nota" id="syn-i2"></span></div>
+      <div><p class="nota" data-t="syn-papel">Paper in the printer:</p><div class="papel" id="syn-papel" role="img" data-t-attr="aria-label:syn-papel-aria" aria-label="Printed lines"></div></div>
+    </div>
+    <p class="correccion" id="syn-msg" role="status"></p>
+
+    <h3 data-t="dl-titulo">B. Deadlock</h3>
+    <p data-t-html="dl-texto">Two resources, the printer (R1) and the scanner (R2). P1 asks for R1 and then R2. P2 asks for R2 and then R1. Alternate the steps (P1, P2, P1, P2) and watch the graph. A solid arrow from a resource to a process means <i>assigned</i>; a dashed arrow from a process to a resource means <i>waiting for it</i>.</p>
+    <div class="fila">
+      <label><input type="checkbox" id="dl-orden"> <span data-t="dl-orden">Both ask in the same order (printer first)</span></label>
+      <button type="button" id="dl-p1" class="primario" data-t="syn-p1">Step P1</button>
+      <button type="button" id="dl-p2" class="primario" data-t="syn-p2">Step P2</button>
+      <button type="button" id="dl-matar" data-t="dl-matar">The OS ends P2</button>
+      <button type="button" id="dl-reset" data-t="dl-reset">Restart</button>
+    </div>
+    <svg viewBox="0 0 520 210" width="100%" style="max-width:34rem" role="img" id="dl-svg" data-t-attr="aria-label:dl-svg-aria" aria-label="Resource allocation graph with two processes and two resources">
+      <defs><marker id="punta2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="punta" d="M0 0L10 5L0 10z"/></marker></defs>
+      <g class="nodo" id="g-p1"><circle cx="70" cy="105" r="30"/><text x="70" y="110" text-anchor="middle">P1</text></g>
+      <g class="nodo" id="g-p2"><circle cx="450" cy="105" r="30"/><text x="450" y="110" text-anchor="middle">P2</text></g>
+      <g class="nodo"><rect x="220" y="20" width="80" height="50" rx="4"/><text x="260" y="42" text-anchor="middle" data-t="dl-impresora">Printer</text><text class="peq" x="260" y="60" text-anchor="middle">R1</text></g>
+      <g class="nodo"><rect x="220" y="140" width="80" height="50" rx="4"/><text x="260" y="162" text-anchor="middle" data-t="dl-escaner">Scanner</text><text class="peq" x="260" y="180" text-anchor="middle">R2</text></g>
+      <g id="dl-aristas"></g>
+    </svg>
+    <p class="correccion" id="dl-msg" role="status"></p>
+    <ul class="nota" id="dl-estado"></ul>
+    <div class="tarjeta">
+      <p><b data-t="dl-cond-titulo">The four conditions of a deadlock</b></p>
+      <ol>
+        <li data-t="dl-c1">Mutual exclusion: a resource has only one user at a time.</li><li data-t="dl-c2">Hold and wait: a process keeps what it has while it waits for more.</li><li data-t="dl-c3">No preemption: a resource cannot be taken away.</li><li data-t="dl-c4">Circular wait: P1 waits for P2 and P2 waits for P1.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 7. E/S -->
+  <section role="tabpanel" id="panel-io" aria-labelledby="tab-io" tabindex="0" hidden>
+    <h2 data-t="io-titulo">Input/output manager</h2>
+    <h3 data-t="io-a-titulo">A. Polling, interrupts or DMA?</h3>
+    <p data-t-html="io-a-texto">A device sends some words to memory. Each row shows what the CPU does in each time unit. Simplified model: copying a word or running an interrupt handler costs 1 unit.</p>
+    <div class="fila">
+      <label><span data-t="io-n">Words to transfer:</span> <input type="range" id="io-n" min="1" max="12" value="4"> <b id="io-n-v">4</b></label>
+      <label><span data-t="io-d">Device time per word:</span> <input type="range" id="io-d" min="1" max="8" value="5"> <b id="io-d-v">5</b></label>
+    </div>
+    <div id="io-filas"></div>
+    <p class="nota" data-t-html="io-leyenda"><b>W</b> = CPU waiting (busy), <b>C</b> = CPU copies a word, <b>F</b> = CPU free for other processes, <b>H</b> = interrupt handler, <b>S</b> = CPU starts the DMA transfer.</p>
+    <div class="tabla-caja"><table class="tabla" id="io-tabla"></table></div>
+
+    <h3 data-t="ca-titulo">B. Cache</h3>
+    <p data-t-html="ca-texto">Read blocks from a slow disk. A hit in the cache costs 1 unit; a miss costs 10. The cache removes the least recently used block when it is full.</p>
+    <div class="fila">
+      <label><span data-t="ca-capacidad">Cache size (blocks):</span> <select id="ca-cap"><option>1</option><option>2</option><option selected>3</option><option>4</option></select></label>
+      <button type="button" id="ca-reset" data-t="ca-reset">Empty the cache</button>
+    </div>
+    <div class="bloques" id="ca-bloques" role="group" data-t-attr="aria-label:ca-bloques-aria" aria-label="Disk blocks you can read"></div>
+    <p class="mono" id="ca-estado"></p>
+    <p class="correccion" id="ca-msg" role="status"></p>
+
+    <h3 data-t="sp-titulo">C. Spooling</h3>
+    <p data-t-html="sp-texto">Send print jobs. The printer prints one page every moment. With spooling, jobs wait in a queue and you can keep working. Without it, the program is blocked while the printer works.</p>
+    <div class="fila">
+      <label><input type="checkbox" id="sp-activo" checked> <span data-t="sp-activo">Spooling on</span></label>
+      <button type="button" id="sp-a" data-t="sp-a">Print report (3 pages)</button>
+      <button type="button" id="sp-b" data-t="sp-b">Print photo (5 pages)</button>
+      <button type="button" id="sp-c" data-t="sp-c">Print invoice (2 pages)</button>
+      <button type="button" id="sp-trabajar" data-t="sp-trabajar">Keep working: type a word</button>
+    </div>
+    <div class="cola" id="sp-cola"></div>
+    <p class="correccion" id="sp-msg" role="status"></p>
+  </section>
+
+  <!-- 8. Practica -->
+  <section role="tabpanel" id="panel-practica" aria-labelledby="tab-practica" tabindex="0" hidden>
+    <h2 data-t="pra-titulo">Practice</h2>
+    <div class="fila" role="group" data-t-attr="aria-label:pra-modo-aria" aria-label="Type of exercise">
+      <button type="button" id="pra-m-plan" aria-pressed="true" data-t="pra-m-plan">Scheduling exercise</button>
+      <button type="button" id="pra-m-conc" aria-pressed="false" data-t="pra-m-conc">Concept question</button>
+    </div>
+
+    <div id="pra-plan">
+      <p id="pra-enunciado"></p>
+      <div class="tabla-caja"><table class="tabla" id="pra-carga"></table></div>
+      <p class="nota" data-t="pra-ayuda">Enter the waiting time and the response time of each process, and the average waiting time (two decimals at most). Round Robin: if a new process arrives when a quantum ends, it enters the queue before the preempted process.</p>
+      <form id="pra-form" autocomplete="off">
+        <div class="entradas-ej" id="pra-campos"></div>
+        <div class="fila">
+          <button type="submit" class="primario" data-t="pra-comprobar">Check</button>
+          <button type="button" id="pra-solucion" data-t="pra-solucion">Show solution</button>
+          <button type="button" id="pra-otro" data-t="pra-otro">New exercise</button>
+        </div>
+      </form>
+      <p class="correccion" id="pra-correccion" role="status"></p>
+      <div id="pra-detalle"></div>
+      <p class="nota"><span data-t="pra-marcador">Solved / tried</span>: <b id="pra-aciertos">0</b> / <b id="pra-intentos">0</b></p>
+    </div>
+
+    <div id="pra-conc" hidden>
+      <p id="con-pregunta" style="font-weight:700"></p>
+      <div class="cola" id="con-opciones" role="group" data-t-attr="aria-label:pra-opciones-aria" aria-label="Answer options"></div>
+      <p class="correccion" id="con-correccion" role="status"></p>
+      <div class="fila"><button type="button" id="con-otra" data-t="pra-otra">Another question</button></div>
+      <p class="nota"><span data-t="pra-marcador">Solved / tried</span>: <b id="con-aciertos">0</b> / <b id="con-intentos">0</b></p>
+    </div>
+  </section>
+</main>
+
+<script>
+// ===== Utilidades =====
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => [...(r || document).querySelectorAll(s)];
+const T = (en, es) => Lab.t({ en, es });
+const EN = Lab.idioma !== 'es';
+function h(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === 'class') e.className = v;
+    else if (k === 'text') e.textContent = v;
+    else e.setAttribute(k, v);
+  }
+  for (const k of kids) if (k !== null && k !== undefined) e.append(k);
+  return e;
+}
+function fmt(x) {
+  let s = String(Number(x.toFixed(2)));
+  return EN ? s : s.replace('.', ',');
+}
+function vaciar(e) { while (e.firstChild) e.removeChild(e.firstChild); }
+function tabla(el, cabecera, filas, numeros) {
+  vaciar(el);
+  const th = h('tr');
+  cabecera.forEach((c, i) => th.append(h('th', { text: c, class: numeros && numeros.includes(i) ? 'num' : '', scope: 'col' })));
+  el.append(h('thead', {}, th));
+  const tb = h('tbody');
+  filas.forEach((f) => {
+    const tr = h('tr', f.clase ? { class: f.clase } : {});
+    (f.celdas || f).forEach((c, i) => {
+      const td = h('td', numeros && numeros.includes(i) ? { class: 'num' } : {});
+      if (c instanceof Node) td.append(c); else td.textContent = String(c);
+      tr.append(td);
+    });
+    tb.append(tr);
+  });
+  el.append(tb);
+  return tb;
+}
+function aleatorio(n) { return Math.floor(Math.random() * n); }
+function elegir(lista) { return lista[aleatorio(lista.length)]; }
+function barajar(lista) {
+  const a = lista.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = aleatorio(i + 1); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+function leerNum(clave) { return Number(Lab.leer(clave)) || 0; }
+
+// ===== Pestanas =====
+const pestanas = [...document.querySelectorAll('[role="tab"]')];
+function mostrar(id) {
+  const activa = pestanas.find((p) => p.dataset.tab === id) || pestanas[0];
+  for (const p of pestanas) {
+    const es = p === activa;
+    p.setAttribute('aria-selected', String(es));
+    p.tabIndex = es ? 0 : -1;
+    document.getElementById(p.getAttribute('aria-controls')).hidden = !es;
+  }
+  activa.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  return activa;
+}
+function elegirTab(id, enfocar) {
+  const activa = mostrar(id);
+  Lab.guardar('pestana', activa.dataset.tab);
+  history.replaceState(null, '', '#' + activa.dataset.tab);
+  if (enfocar) activa.focus();
+}
+pestanas.forEach((p) => p.addEventListener('click', () => elegirTab(p.dataset.tab)));
+document.querySelector('[role="tablist"]').addEventListener('keydown', (e) => {
+  const i = pestanas.indexOf(document.activeElement);
+  const destino = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: pestanas.length - 1 }[e.key];
+  if (i < 0 || destino === undefined) return;
+  e.preventDefault();
+  elegirTab(pestanas[(destino + pestanas.length) % pestanas.length].dataset.tab, true);
+});
+window.addEventListener('hashchange', () => mostrar(location.hash.slice(1)));
+mostrar(location.hash.slice(1) || Lab.leer('pestana'));
+
+// ===== Motor de planificacion (probado aparte con casos a mano) =====
+/*ENGINE-START*/
+// Motor de planificacion. Un paso = una unidad de tiempo. procs: [{n, a, b, p}]
+// algo: fifo | sjf | srtf | prio | prioe | rr | sjfage. Devuelve linea de tiempo, instantaneas y tiempos.
+function simulate(procs, algo, q) {
+  const P = procs.map((x, i) => ({ i, n: x.n, a: x.a, b: x.b, p: x.p || 0, rem: x.b, c: null, s: null, queued: false }));
+  const n = P.length, tl = [], snaps = [];
+  let t = 0, done = 0, cur = null, used = 0, tie = false;
+  const queue = [];
+  const preemptive = algo === 'srtf' || algo === 'prioe';
+  const waited = (x) => t - x.a - (x.b - x.rem);
+  const prim = (x) => {
+    switch (algo) {
+      case 'fifo': return x.a;
+      case 'sjf': return x.b;
+      case 'srtf': return x.rem;
+      case 'prio': case 'prioe': return x.p;
+      case 'sjfage': return x.b - Math.floor(waited(x) / 2);
+      default: return 0;
+    }
+  };
+  const order = (list) => list.map((x) => ({ x, k: [prim(x), x === cur ? 0 : 1, x.a, x.i] })).sort((u, v) => {
+    for (let j = 0; j < 4; j++) if (u.k[j] !== v.k[j]) return u.k[j] - v.k[j];
+    return 0;
+  });
+  const pick = (list) => {
+    if (!list.length) return null;
+    const o = order(list);
+    if (o.length > 1 && o[0].k[0] === o[1].k[0]) tie = true;
+    return o[0].x;
+  };
+  const enqueue = (when) => {
+    let cnt = 0;
+    for (const x of P) if (x.a === when && !x.queued) { x.queued = true; queue.push(x); cnt++; }
+    return cnt;
+  };
+  if (algo === 'rr') enqueue(0);
+  while (done < n) {
+    let readyList;
+    if (algo === 'rr') {
+      if (!cur && queue.length) { cur = queue.shift(); used = 0; }
+      readyList = queue.slice();
+    } else {
+      const ready = P.filter((x) => x.a <= t && x.rem > 0);
+      if (preemptive) cur = pick(ready);
+      else if (!cur) cur = pick(ready);
+      readyList = order(ready.filter((x) => x !== cur)).map((e) => e.x);
+    }
+    snaps.push({ run: cur ? cur.n : null, ready: readyList.map((x) => x.n), rem: P.map((x) => x.rem) });
+    if (!cur) { tl.push(null); t++; if (algo === 'rr') enqueue(t); continue; }
+    if (cur.s === null) cur.s = t;
+    cur.rem--; used++; tl.push(cur.n); t++;
+    if (algo === 'rr') {
+      const nuevos = enqueue(t);
+      if (cur.rem === 0) { cur.c = t; done++; cur = null; }
+      else if (used === q) { if (nuevos > 0) tie = true; queue.push(cur); cur = null; }
+    } else if (cur.rem === 0) { cur.c = t; done++; cur = null; }
+  }
+  const res = {};
+  let sw = 0, sumW = 0, sumR = 0, sumS = 0;
+  for (const x of P) {
+    const r = x.c - x.a, w = r - x.b, s = x.s - x.a;
+    res[x.n] = { c: x.c, r, w, s };
+    sumW += w; sumR += r; sumS += s;
+  }
+  for (let k = 1; k < tl.length; k++) if (tl[k] && tl[k - 1] && tl[k] !== tl[k - 1]) sw++;
+  const busy = tl.filter((v) => v).length;
+  return { tl, snaps, res, avgW: sumW / n, avgR: sumR / n, avgS: sumS / n, switches: sw, tie, end: tl.length, util: busy / tl.length };
+}
+function segments(tl) {
+  const out = [];
+  tl.forEach((v, i) => {
+    const last = out[out.length - 1];
+    if (last && last.n === v) last.to = i + 1; else out.push({ n: v, from: i, to: i + 1 });
+  });
+  return out;
+}
+/*ENGINE-END*/
+
+const ALG = {
+  fifo: () => 'FIFO',
+  sjf: () => T('SJF (non-preemptive)', 'SJF (no expulsivo)'),
+  srtf: () => T('SRTF (preemptive)', 'SRTF (expulsivo)'),
+  prio: () => T('Priorities (non-preemptive)', 'Prioridades (no expulsivas)'),
+  prioe: () => T('Priorities (preemptive)', 'Prioridades (expulsivas)'),
+  rr: (q) => 'Round Robin (q = ' + q + ')',
+};
+const PRESETS = {
+  notas: [[0, 6, 4], [1, 3, 1], [2, 1, 3], [3, 4, 2]],
+  convoy: [[0, 12, 2], [1, 2, 1], [2, 2, 3], [3, 2, 4], [4, 2, 5]],
+  mezcla: [[0, 4, 2], [2, 5, 1], [3, 2, 3], [14, 3, 2]],
+  cinco: [[0, 8, 3], [1, 4, 2], [2, 9, 4], [3, 5, 1], [6, 2, 2]],
+  juntos: [[0, 6, 3], [0, 3, 1], [0, 8, 5], [0, 2, 2], [0, 4, 4]],
+};
+const aProcs = (arr) => arr.map((x, i) => ({ n: 'P' + (i + 1), a: x[0], b: x[1], p: x[2] }));
+const textoGantt = (sim) => segments(sim.tl).map((s) => (s.n || T('idle', 'ocioso')) + ' [' + s.from + '-' + s.to + ']').join('  ');
+const UNIDAD = 1.7; // rem por unidad de tiempo
+function dibujarGantt(cont, sim, procs, conCursor) {
+  vaciar(cont);
+  const idx = (n) => procs.findIndex((p) => p.n === n);
+  const segs = segments(sim.tl);
+  segs.forEach((s) => {
+    const caja = h('div', { class: 'seg ' + (s.n ? 'c' + (idx(s.n) % 6) : 'ocioso'), style: 'width:' + ((s.to - s.from) * UNIDAD) + 'rem' });
+    caja.append(h('span', { text: s.n || '·' }), h('span', { class: 't0', text: String(s.from) }));
+    cont.append(caja);
+  });
+  cont.append(h('span', { class: 'fin-t', text: String(sim.end) }));
+  let cur = null;
+  if (conCursor) { cur = h('div', { class: 'cursor', 'aria-hidden': 'true' }); cont.append(cur); }
+  return cur;
+}
+
+// ===== 1. Inspector de procesos =====
+(function () {
+  const L = (pid, ppid, name, user, st, cpu, mem, pri, files, kind, en, es) => ({ pid, ppid, name, user, st, cpu, mem, pri, files, kind, d: T(en, es) });
+  const LINUX = [
+    L(1, 0, 'systemd', 'root', 'Ss', 0.0, 11, '20 / nice 0', 24, 'system', 'First process of the system (PID 1). It starts and supervises the services.', 'Primer proceso del sistema (PID 1). Inicia y supervisa los servicios.'),
+    L(2, 0, '[kthreadd]', 'root', 'S', 0.0, 0, '20 / nice 0', 0, 'system', 'Kernel thread that creates other kernel threads. Names in brackets have no user program.', 'Hilo del núcleo que crea otros hilos del núcleo. Los nombres entre corchetes no tienen programa de usuario.'),
+    L(612, 1, 'sshd', 'root', 'Ss', 0.0, 7, '20 / nice 0', 8, 'service', 'Service that accepts remote logins through SSH. It waits in the background.', 'Servicio que acepta conexiones remotas por SSH. Espera en segundo plano.'),
+    L(640, 1, 'cron', 'root', 'Ss', 0.0, 3, '20 / nice 0', 6, 'service', 'Service that runs scheduled tasks at the right time.', 'Servicio que ejecuta tareas programadas a su hora.'),
+    L(655, 1, 'cupsd', 'root', 'Ss', 0.0, 9, '20 / nice 0', 11, 'service', 'Print spooler: it keeps the queue of print jobs.', 'Gestor de impresión (spooler): guarda la cola de trabajos de impresión.'),
+    L(1450, 1, 'gnome-shell', 'student', 'Rl', 3.1, 280, '20 / nice 0', 96, 'user', 'The desktop of the user: windows, panel and menus. It runs with the rights of the user.', 'El escritorio del usuario: ventanas, panel y menús. Se ejecuta con los derechos del usuario.'),
+    L(2310, 1450, 'firefox', 'student', 'Sl', 8.5, 540, '20 / nice 0', 142, 'user', 'Web browser started by the user. It has many threads.', 'Navegador web iniciado por el usuario. Tiene muchos hilos.'),
+    L(3990, 1450, 'gnome-terminal', 'student', 'Sl', 0.2, 62, '20 / nice 0', 18, 'user', 'The terminal window. It is the parent of the shell.', 'La ventana del terminal. Es el padre del shell.'),
+    L(4021, 3990, 'bash', 'student', 'Ss+', 0.0, 5, '20 / nice 0', 5, 'user', 'The shell. It waits for you to type a command (state S, foreground +).', 'El shell. Espera a que escribas una orden (estado S, primer plano +).'),
+    L(4210, 4021, 'python3 backup.py', 'student', 'D', 0.4, 45, '20 / nice 0', 12, 'user', 'A script copying files. State D: it is waiting for the disk and cannot be interrupted.', 'Un script que copia archivos. Estado D: espera al disco y no se puede interrumpir.'),
+    L(4230, 4021, 'vim notes.txt', 'student', 'T', 0.0, 12, '20 / nice 0', 4, 'user', 'An editor stopped with Ctrl+Z. State T: it does not run until it receives SIGCONT.', 'Un editor detenido con Ctrl+Z. Estado T: no se ejecuta hasta recibir SIGCONT.'),
+    L(4251, 4021, 'tool-launcher', 'student', 'S', 0.0, 4, '20 / nice 0', 3, 'user', 'A program that started a child and never reads its exit status.', 'Un programa que lanzó un hijo y nunca lee su estado de salida.'),
+    L(4252, 4251, '[sleep] <defunct>', 'student', 'Z', 0.0, 0, '-', 0, 'user', 'Zombie: it already ended, but its parent has not collected the exit status. It uses no CPU and almost no memory.', 'Zombi: ya terminó, pero su padre no ha recogido el estado de salida. No usa CPU y casi nada de memoria.'),
+  ];
+  const W = (pid, ppid, name, user, st, cpu, mem, kind, en, es) => ({ pid, ppid, name, user, st, cpu, mem, pri: 'Normal', files: 0, kind, d: T(en, es) });
+  const WIN = [
+    W(4, 0, 'System', 'SYSTEM', 'running', 0.1, 0, 'system', 'The kernel process of Windows. It is the first one.', 'El proceso del núcleo de Windows. Es el primero.'),
+    W(372, 4, 'smss.exe', 'SYSTEM', 'running', 0.0, 1, 'system', 'Session Manager: it starts the user sessions during boot.', 'Administrador de sesiones: inicia las sesiones de usuario durante el arranque.'),
+    W(596, 372, 'wininit.exe', 'SYSTEM', 'running', 0.0, 1, 'system', 'Starts the basic services of the system at boot.', 'Inicia los servicios básicos del sistema al arrancar.'),
+    W(688, 596, 'services.exe', 'SYSTEM', 'running', 0.0, 8, 'system', 'Service Control Manager: it starts and stops the Windows services.', 'Administrador de control de servicios: inicia y detiene los servicios de Windows.'),
+    W(900, 688, 'svchost.exe', 'LOCAL SERVICE', 'running', 0.2, 24, 'service', 'Host process that runs several services at the same time to save memory.', 'Proceso anfitrión que ejecuta varios servicios a la vez para ahorrar memoria.'),
+    W(1820, 688, 'spoolsv.exe', 'SYSTEM', 'running', 0.0, 12, 'service', 'Print Spooler service: it keeps the queue of print jobs.', 'Servicio Cola de impresión: guarda la cola de trabajos de impresión.'),
+    W(3120, 688, 'SearchIndexer.exe', 'SYSTEM', 'running', 0.3, 40, 'service', 'Indexing service: it makes searches of files faster.', 'Servicio de indexación: acelera la búsqueda de archivos.'),
+    W(4210, 4180, 'explorer.exe', 'student', 'running', 0.8, 120, 'user', 'The desktop and the File Explorer of the user.', 'El escritorio y el Explorador de archivos del usuario.'),
+    W(5122, 4210, 'firefox.exe', 'student', 'running', 6.2, 480, 'user', 'Web browser started by the user.', 'Navegador web iniciado por el usuario.'),
+    W(6040, 4210, 'WINWORD.EXE', 'student', 'running', 1.1, 210, 'user', 'Word processor opened by the user.', 'Procesador de textos abierto por el usuario.'),
+    W(7001, 4210, 'CalculatorApp.exe', 'student', 'suspended', 0.0, 20, 'user', 'A modern app minimised: Windows has suspended it to save resources.', 'Una aplicación moderna minimizada: Windows la ha suspendido para ahorrar recursos.'),
+    W(7420, 4210, 'OldReport.exe', 'student', 'noresp', 0.0, 35, 'user', 'A program that does not answer to the system messages: Not responding.', 'Un programa que no responde a los mensajes del sistema: No responde.'),
+  ];
+  let so = 'linux', sel = null, ultimo = null, ok = 0, total = 0;
+  const lista = () => (so === 'linux' ? LINUX : WIN);
+  const estWin = { running: T('Running', 'En ejecución'), suspended: T('Suspended', 'Suspendido'), noresp: T('Not responding', 'No responde') };
+  const tipo = { user: T('User process', 'Proceso de usuario'), system: T('System process', 'Proceso del sistema'), service: T('Service (daemon)', 'Servicio (demonio)') };
+  function generico(p) {
+    if (so === 'linux') {
+      const c = p.st[0];
+      if (c === 'R') return T('Running or Ready', 'En ejecución o Listo');
+      if (c === 'S' || c === 'D') return T('Waiting (blocked)', 'Bloqueado (en espera)');
+      if (c === 'T') return T('Suspended (stopped)', 'Suspendido (detenido)');
+      return T('Terminated, not yet collected by the parent', 'Terminado, aún no recogido por el padre');
+    }
+    if (p.st === 'suspended') return T('Suspended by the system', 'Suspendido por el sistema');
+    if (p.st === 'noresp') return T('Running, but not answering', 'En ejecución, pero sin responder');
+    return T('Running or Ready', 'En ejecución o Listo');
+  }
+  function pintarPcb() {
+    const c = $('#pcb');
+    vaciar(c);
+    if (!sel) { c.append(h('p', { class: 'nota', text: T('Select a process in the table to see its PCB.', 'Selecciona un proceso de la tabla para ver su PCB.') })); return; }
+    const p = sel, padre = lista().find((x) => x.pid === p.ppid);
+    const dl = h('dl');
+    const f = (k, v) => dl.append(h('dt', { text: k }), h('dd', { text: v }));
+    c.append(h('p', {}, h('b', { text: 'PCB · ' + p.name })));
+    f('PID', String(p.pid));
+    f('PPID', p.ppid + (padre ? ' (' + padre.name + ')' : ''));
+    f(T('Owner', 'Propietario'), p.user);
+    f(T('State', 'Estado'), so === 'linux' ? p.st : estWin[p.st]);
+    f(T('Generic state', 'Estado genérico'), generico(p));
+    f(T('Priority', 'Prioridad'), p.pri);
+    f('CPU / ' + T('Memory', 'Memoria'), p.cpu + ' % / ' + p.mem + ' MiB');
+    f(T('Open files', 'Archivos abiertos'), String(p.files));
+    f(T('Type', 'Tipo'), tipo[p.kind]);
+    c.append(dl, h('p', { text: p.d }));
+  }
+  function pintarTabla() {
+    const cab = ['PID', T('Name', 'Nombre'), T('User', 'Usuario'), so === 'linux' ? 'STAT' : T('Status', 'Estado'), 'CPU %', T('Memory (MiB)', 'Memoria (MiB)')];
+    const filas = lista().map((p) => {
+      const b = h('button', { type: 'button', class: 'fila-btn', text: p.name });
+      b.addEventListener('click', () => { sel = p; pintarTabla(); pintarPcb(); });
+      return { clase: sel === p ? 'sel' : '', celdas: [String(p.pid), b, p.user, so === 'linux' ? p.st : estWin[p.st], String(p.cpu), String(p.mem)] };
+    });
+    tabla($('#tabla-proc'), cab, filas, [0, 4, 5]);
+  }
+  function nuevaPregunta() {
+    const posibles = lista().filter((p) => p !== ultimo && p.st !== 'Z');
+    ultimo = elegir(posibles);
+    $('#clas-nombre').textContent = ultimo.name + '  (' + ultimo.user + ')';
+    $('#clas-correccion').textContent = '';
+    $('#clas-correccion').className = 'correccion';
+  }
+  let explicacion = '';
+  $$('[data-clas]').forEach((b) => b.addEventListener('click', () => {
+    if (!ultimo) return;
+    const p = ultimo;
+    total++;
+    const bien = p.kind === b.dataset.clas;
+    if (bien) ok++;
+    explicacion = (bien ? T('Correct. ', 'Correcto. ') : T('Not quite. ', 'Casi. ')) + p.name + ': ' + tipo[p.kind].toLowerCase() + '. ' + p.d;
+    $('#clas-aciertos').textContent = String(ok);
+    $('#clas-total').textContent = String(total);
+    nuevaPregunta();
+    const c = $('#clas-correccion');
+    c.textContent = explicacion;
+    c.className = 'correccion ' + (bien ? 'bien' : 'mal');
+  }));
+  function elegirSo(nuevo) {
+    so = nuevo; sel = null; ultimo = null;
+    $('#so-linux').setAttribute('aria-pressed', String(so === 'linux'));
+    $('#so-win').setAttribute('aria-pressed', String(so === 'win'));
+    pintarTabla(); pintarPcb(); nuevaPregunta();
+  }
+  $('#so-linux').addEventListener('click', () => elegirSo('linux'));
+  $('#so-win').addEventListener('click', () => elegirSo('win'));
+  elegirSo('linux');
+})();
+
+// ===== 2. Maquina de estados =====
+(function () {
+  const NOMBRE = { new: () => T('New', 'Nuevo'), ready: () => T('Ready', 'Listo'), running: () => T('Running', 'En ejecución'), waiting: () => T('Waiting', 'Bloqueado'), terminated: () => T('Terminated', 'Terminado') };
+  const VALIDAS = {
+    'new>ready': () => T('admit', 'admisión'),
+    'ready>running': () => T('dispatch: the scheduler chooses it', 'despacho: el planificador lo elige'),
+    'running>ready': () => T('time out: its quantum ended or a more important process arrived (context switch)', 'fin de quantum: se acabó su porción de tiempo o llegó un proceso más importante (cambio de contexto)'),
+    'running>waiting': () => T('it asks for I/O or waits for an event (context switch)', 'pide E/S o espera un suceso (cambio de contexto)'),
+    'waiting>ready': () => T('the I/O operation ended; now it waits for the CPU', 'terminó la E/S; ahora espera la CPU'),
+    'running>terminated': () => T('exit: the process finishes (context switch)', 'salida: el proceso termina (cambio de contexto)'),
+  };
+  const MOTIVO = {
+    'new>running': () => T('A new process must be admitted first. The scheduler only chooses among Ready processes.', 'Un proceso nuevo debe ser admitido antes. El planificador solo elige entre los procesos Listos.'),
+    'new>waiting': () => T('It has not started to run, so it cannot ask for I/O.', 'Todavía no ha empezado a ejecutarse, así que no puede pedir E/S.'),
+    'new>terminated': () => T('A process that has not been admitted cannot finish. It has to run first.', 'Un proceso que no ha sido admitido no puede terminar. Antes tiene que ejecutarse.'),
+    'ready>waiting': () => T('Only a Running process executes instructions, so only it can ask for I/O and block.', 'Solo un proceso En ejecución ejecuta instrucciones, así que solo él puede pedir E/S y bloquearse.'),
+    'ready>terminated': () => T('In this model a process ends by itself when it runs and executes its exit. It must be Running first.', 'En este modelo un proceso termina por sí mismo cuando se ejecuta y llega a su salida. Antes debe estar En ejecución.'),
+    'waiting>running': () => T('After the I/O ends the process goes to Ready, not to Running. The scheduler decides later when it uses the CPU.', 'Al terminar la E/S el proceso pasa a Listo, no a En ejecución. El planificador decide más tarde cuándo usa la CPU.'),
+    'waiting>terminated': () => T('A waiting process is blocked: it cannot execute its exit. It must become Ready and Running first.', 'Un proceso bloqueado no puede ejecutar su salida. Antes debe pasar a Listo y a En ejecución.'),
+  };
+  const STAT = {
+    new: () => T('Not visible yet: the process is still being created.', 'Todavía no es visible: el proceso se está creando.'),
+    ready: () => T('R (running or runnable). It is in the run queue, waiting for a CPU.', 'R (en ejecución o ejecutable). Está en la cola de ejecución, esperando una CPU.'),
+    running: () => T('R, and R+ if it is in the foreground. It is using the CPU now.', 'R, y R+ si está en primer plano. Está usando la CPU ahora.'),
+    waiting: () => T('S (waiting for an event) or D (waiting for the disk, it cannot be interrupted).', 'S (espera un suceso) o D (espera al disco, no se puede interrumpir).'),
+    terminated: () => T('Z (zombie) until the parent collects the exit status. Then it disappears from ps.', 'Z (zombi) hasta que el padre recoge el estado de salida. Después desaparece de ps.'),
+  };
+  let est, ctx, paso;
+  const msg = $('#est-mensaje');
+  function pintar() {
+    ['new', 'ready', 'running', 'waiting', 'terminated'].forEach((s) => $('#n-' + s).classList.toggle('activo', s === est));
+    $('#est-actual-valor').textContent = NOMBRE[est]();
+    $('#est-stat').textContent = STAT[est]();
+    $('#est-ctx').textContent = String(ctx);
+    $('#est-reto-estado').textContent = paso.done ? T('completed', 'conseguido') : (paso.waiting ? T('now reach Terminated', 'ahora llega a Terminado') : T('pending', 'pendiente'));
+    $$('[data-dest]').forEach((b) => { b.disabled = est === 'terminated'; });
+  }
+  function reiniciar() {
+    est = 'new'; ctx = 0; paso = { waiting: false, done: false };
+    msg.textContent = T('A new process was created.', 'Se ha creado un proceso nuevo.');
+    msg.className = 'correccion';
+    pintar();
+  }
+  $$('[data-dest]').forEach((b) => b.addEventListener('click', () => {
+    const d = b.dataset.dest, k = est + '>' + d;
+    if (d === est) { msg.className = 'correccion'; msg.textContent = T('It is already in that state.', 'Ya está en ese estado.'); return; }
+    if (VALIDAS[k]) {
+      if (est === 'running') ctx++;
+      msg.className = 'correccion bien';
+      msg.textContent = T('Valid: ', 'Válido: ') + NOMBRE[est]() + ' → ' + NOMBRE[d]() + ' · ' + VALIDAS[k]();
+      est = d;
+      if (d === 'waiting') paso.waiting = true;
+      if (d === 'terminated' && paso.waiting) paso.done = true;
+    } else {
+      msg.className = 'correccion mal';
+      let motivo = MOTIVO[k] ? MOTIVO[k]() : (d === 'new' ? T('Nothing goes back to New: a process is created only once.', 'Nada vuelve a Nuevo: un proceso se crea una sola vez.') : T('This transition does not exist.', 'Esta transición no existe.'));
+      if (est === 'terminated') motivo = T('Terminated is the final state.', 'Terminado es el estado final.');
+      msg.textContent = T('Impossible: ', 'Imposible: ') + NOMBRE[est]() + ' → ' + NOMBRE[d]() + '. ' + motivo;
+    }
+    pintar();
+  }));
+  $('#est-reset').addEventListener('click', reiniciar);
+  reiniciar();
+})();
+
+// ===== 3. Simulador del planificador =====
+let cargaSim = aProcs(PRESETS.notas);
+(function () {
+  let procs = cargaSim, sim = null, t = 0, timer = null, cursor = null;
+  const algoSel = $('#sim-algo'), qIn = $('#sim-q');
+  const algo = () => algoSel.value;
+  const q = () => Math.max(1, Math.min(9, parseInt(qIn.value, 10) || 2));
+  function leerEntradas() {
+    $$('#sim-entrada tbody tr').forEach((tr, i) => {
+      const v = $$('input', tr).map((x) => parseInt(x.value, 10));
+      procs[i].a = Math.max(0, Math.min(30, isNaN(v[0]) ? 0 : v[0]));
+      procs[i].b = Math.max(1, Math.min(15, isNaN(v[1]) ? 1 : v[1]));
+      procs[i].p = Math.max(1, Math.min(9, isNaN(v[2]) ? 1 : v[2]));
+    });
+  }
+  function pintarEntrada() {
+    const filas = procs.map((p) => {
+      const mk = (clave, min, max) => {
+        const i = h('input', { type: 'number', min: String(min), max: String(max), value: String(p[clave]), 'aria-label': p.n + ' ' + ({ a: T('arrival', 'llegada'), b: T('burst', 'ráfaga'), p: T('priority', 'prioridad') })[clave] });
+        i.addEventListener('input', () => { leerEntradas(); ejecutar(true); });
+        return i;
+      };
+      return [h('b', { text: p.n }), mk('a', 0, 30), mk('b', 1, 15), mk('p', 1, 9)];
+    });
+    tabla($('#sim-entrada'), [T('Process', 'Proceso'), T('Arrival', 'Llegada'), T('Burst', 'Ráfaga'), T('Priority', 'Prioridad')], filas);
+  }
+  function descripcionEstado() {
+    const s = $('#sim-estado');
+    if (t >= sim.end) { s.textContent = 't = ' + t + ' · ' + T('All the processes have finished.', 'Todos los procesos han terminado.'); return; }
+    const sn = sim.snaps[t];
+    const rest = procs.map((p, i) => p.n + ' ' + sn.rem[i]).join(', ');
+    s.textContent = 't = ' + t + ' · ' + T('Running: ', 'En ejecución: ') + (sn.run || T('nobody (CPU idle)', 'nadie (CPU ociosa)')) + ' · ' + T('Ready: ', 'Listos: ') + (sn.ready.length ? sn.ready.join(', ') : '—') + ' · ' + T('Remaining: ', 'Restante: ') + rest;
+  }
+  function moverCursor() {
+    $('#sim-t').value = String(t);
+    $('#sim-t-valor').textContent = 't = ' + t;
+    if (cursor) cursor.style.left = 'calc(' + (t * UNIDAD) + 'rem - 1px)';
+    descripcionEstado();
+  }
+  function ejecutar(conservarT) {
+    sim = simulate(procs, algo(), q());
+    $('#sim-q-caja').hidden = algo() !== 'rr';
+    cursor = dibujarGantt($('#sim-gantt'), sim, procs, true);
+    $('#sim-gantt').setAttribute('aria-label', T('Gantt chart', 'Diagrama de Gantt') + ': ' + textoGantt(sim));
+    $('#sim-t').max = String(sim.end);
+    t = conservarT ? Math.min(t, sim.end) : 0;
+    const conPrio = algo() === 'prio' || algo() === 'prioe';
+    const cab = [T('Process', 'Proceso'), T('Arrival', 'Llegada'), T('Burst', 'Ráfaga')].concat(conPrio ? [T('Priority', 'Prioridad')] : [], [T('Completion', 'Finalización'), T('Response', 'Respuesta'), T('Waiting', 'Espera'), T('Start delay', 'Retraso de inicio')]);
+    const filas = procs.map((p) => {
+      const r = sim.res[p.n];
+      return [p.n, p.a, p.b].concat(conPrio ? [p.p] : [], [r.c, r.r, r.w, r.s]);
+    });
+    const pie = [T('Average', 'Media'), '', ''].concat(conPrio ? [''] : [], ['', fmt(sim.avgR), fmt(sim.avgW), fmt(sim.avgS)]);
+    filas.push({ clase: 'pie', celdas: pie });
+    tabla($('#sim-resultados'), cab, filas, cab.map((_, i) => i).slice(1));
+    $('#sim-resumen').textContent = T('Total time: ', 'Tiempo total: ') + sim.end + ' · ' + T('Context switches: ', 'Cambios de contexto: ') + sim.switches + ' · ' + T('CPU utilisation: ', 'Utilización de la CPU: ') + fmt(sim.util * 100) + ' %';
+    $('#sim-desempate').textContent = sim.tie ? (algo() === 'rr'
+      ? T('Tie-break rule used: a process that arrives when a quantum ends enters the queue before the preempted process.', 'Se ha aplicado una regla de desempate: un proceso que llega cuando acaba un quantum entra en la cola antes que el proceso expulsado.')
+      : T('Tie-break rule used: with equal values, the earlier arrival goes first, then the lower process number; a running process keeps the CPU when it ties.', 'Se ha aplicado una regla de desempate: con valores iguales va primero el que llegó antes y después el de menor número; un proceso en ejecución conserva la CPU si empata.')) : '';
+    moverCursor();
+  }
+  function cargarPreset(k) { procs = aProcs(PRESETS[k]); cargaSim = procs; pintarEntrada(); ejecutar(false); }
+  $('#sim-preset').addEventListener('change', (e) => cargarPreset(e.target.value));
+  algoSel.addEventListener('change', () => ejecutar(true));
+  qIn.addEventListener('input', () => ejecutar(true));
+  $('#sim-mas').addEventListener('click', () => {
+    if (procs.length >= 6) return;
+    procs.push({ n: 'P' + (procs.length + 1), a: 0, b: 3, p: 3 });
+    pintarEntrada(); ejecutar(true);
+  });
+  $('#sim-menos').addEventListener('click', () => {
+    if (procs.length <= 1) return;
+    procs.pop(); pintarEntrada(); ejecutar(true);
+  });
+  $('#sim-t').addEventListener('input', (e) => { t = parseInt(e.target.value, 10) || 0; moverCursor(); });
+  $('#sim-play').addEventListener('click', () => {
+    if (timer) { clearInterval(timer); timer = null; return; }
+    if (t >= sim.end) t = 0;
+    timer = setInterval(() => {
+      if (t >= sim.end) { clearInterval(timer); timer = null; return; }
+      t++; moverCursor();
+    }, 700);
+  });
+  const ocultar = (v) => {
+    $('#sim-salida').hidden = v; $('#sim-oculto').hidden = !v; $('#sim-mostrar-caja').hidden = !v;
+  };
+  $('#sim-ejercicio').addEventListener('change', (e) => ocultar(e.target.checked));
+  $('#sim-mostrar').addEventListener('click', () => { $('#sim-ejercicio').checked = false; ocultar(false); });
+  pintarEntrada(); ejecutar(false);
+  window.__cargaSim = () => procs;
+})();
+
+// ===== 4. Duelo de algoritmos =====
+(function () {
+  let procs = aProcs(PRESETS.cinco);
+  const qr = $('#duelo-q');
+  const orden = ['fifo', 'sjf', 'srtf', 'prio', 'prioe', 'rr'];
+  function pintar() {
+    const q = parseInt(qr.value, 10);
+    $('#duelo-q-valor').textContent = String(q);
+    $('#duelo-carga').textContent = procs.map((p) => p.n + ': ' + p.a + '/' + p.b + '/' + p.p).join('   ') + '   (' + T('arrival/burst/priority', 'llegada/ráfaga/prioridad') + ')';
+    const res = orden.map((a) => ({ a, s: simulate(procs, a, q) }));
+    const mejor = Math.min(...res.map((r) => r.s.avgW));
+    const maxW = Math.max(...res.map((r) => r.s.avgW));
+    const filas = res.map(({ a, s }) => {
+      const esMejor = s.avgW === mejor;
+      const c1 = h('span', { class: 'barra-caja' }, h('span', { class: 'barra', style: 'width:' + Math.max(2, Math.round((s.avgW / maxW) * 120)) + 'px' }), h('b', { text: fmt(s.avgW) }));
+      if (esMejor) c1.append(h('span', { text: ' ★' }), h('span', { class: 'solo-lector', text: T('best', 'mejor') }));
+      return { clase: esMejor ? 'mejor' : '', celdas: [ALG[a](q), c1, fmt(s.avgR), String(s.switches), fmt(s.util * 100) + ' %'] };
+    });
+    tabla($('#duelo-tabla'), [T('Algorithm', 'Algoritmo'), T('Average waiting', 'Espera media'), T('Average response', 'Respuesta media'), T('Context switches', 'Cambios de contexto'), T('CPU used', 'CPU usada')], filas, [2, 3, 4]);
+    const qs = [1, 2, 3, 4, 5, 6, 7, 8].map((x) => ({ x, s: simulate(procs, 'rr', x) }));
+    const maxSw = Math.max(...qs.map((r) => r.s.switches));
+    tabla($('#duelo-qtabla'), ['q', T('Average waiting', 'Espera media'), T('Average response', 'Respuesta media'), T('Context switches', 'Cambios de contexto')],
+      qs.map(({ x, s }) => ({ clase: x === q ? 'sel' : '', celdas: [String(x), fmt(s.avgW), fmt(s.avgR), h('span', { class: 'barra-caja' }, h('span', { class: 'barra alt', style: 'width:' + Math.max(2, Math.round((s.switches / maxSw) * 120)) + 'px' }), h('b', { text: String(s.switches) }))] })), [0, 1, 2]);
+  }
+  $('#duelo-preset').addEventListener('change', (e) => {
+    const k = e.target.value;
+    procs = k === 'simulador' ? window.__cargaSim().map((p) => ({ ...p })) : aProcs(PRESETS[k]);
+    pintar();
+  });
+  qr.addEventListener('input', pintar);
+  // Inanicion
+  const nI = $('#ina-n');
+  function flujo(n) {
+    const ps = [{ n: 'L', a: 1, b: 5, p: 1 }];
+    for (let i = 0; i < n; i++) ps.push({ n: 'S' + (i + 1), a: 2 * i, b: 2, p: 1 });
+    return ps;
+  }
+  function pintarInanicion() {
+    const n = parseInt(nI.value, 10);
+    $('#ina-n-valor').textContent = String(n);
+    const ps = flujo(n), salida = $('#ina-salida');
+    vaciar(salida);
+    [['sjf', T('SJF without aging', 'SJF sin envejecimiento')], ['sjfage', T('SJF with aging', 'SJF con envejecimiento')]].forEach(([a, titulo]) => {
+      const s = simulate(ps, a, 1);
+      const linea = h('p');
+      segments(s.tl).forEach((g) => linea.append(h('span', { class: 'chip ' + (g.n === 'L' ? 'c3' : 'c0'), text: g.n + '×' + (g.to - g.from) })));
+      salida.append(h('p', {}, h('b', { text: titulo })), linea,
+        h('p', { class: 'correccion ' + (a === 'sjf' ? 'mal' : 'bien'), text: T('The long process L waits ', 'El proceso largo L espera ') + s.res.L.w + T(' time units and ends at ', ' unidades de tiempo y termina en ') + s.res.L.c + '.' }));
+    });
+  }
+  nI.addEventListener('input', pintarInanicion);
+  pintar(); pintarInanicion();
+})();
+
+// ===== 5. Terminal simulado =====
+(function () {
+  const SHELL = 4021;
+  const out = $('#term-salida'), input = $('#term-entrada');
+  let S, historial = [], hpos = 0;
+  const MIS = [
+    () => T('Start xeyes in the background (xeyes &) and see it with jobs.', 'Inicia xeyes en segundo plano (xeyes &) y míralo con jobs.'),
+    () => T('Stop a process (Ctrl+Z or kill -STOP) and see state T in ps aux.', 'Detén un proceso (Ctrl+Z o kill -STOP) y mira el estado T en ps aux.'),
+    () => T('Resume the stopped process (bg, fg or kill -CONT).', 'Reanuda el proceso detenido (bg, fg o kill -CONT).'),
+    () => T('End a process with kill.', 'Finaliza un proceso con kill.'),
+    () => T('Create a zombie with the command of the notes and let time pass.', 'Crea un zombi con la orden de los apuntes y deja pasar el tiempo.'),
+    () => T('Remove the zombie by ending its parent.', 'Elimina el zombi finalizando a su padre.'),
+  ];
+  function nuevoEstado() {
+    const p = (pid, ppid, user, stat, cmd, tty, cpu, mem) => ({ pid, ppid, user, stat, cmd, tty, cpu, mem });
+    return {
+      now: 0, next: 4100, fg: null, locked: false, jobs: [], flags: [0, 0, 0, 0, 0, 0],
+      procs: [
+        p(1, 0, 'root', 'Ss', '/sbin/init', '?', 0.0, 0.1), p(2, 0, 'root', 'S', '[kthreadd]', '?', 0.0, 0.0),
+        p(612, 1, 'root', 'Ss', '/usr/sbin/sshd -D', '?', 0.0, 0.1), p(640, 1, 'root', 'Ss', '/usr/sbin/cron -f', '?', 0.0, 0.0),
+        p(1450, 1, 'student', 'Ssl', 'gnome-shell', 'tty2', 3.1, 3.5), p(3990, 1450, 'student', 'Sl', 'gnome-terminal', '?', 0.2, 0.8),
+        p(SHELL, 3990, 'student', 'Ss', 'bash', 'pts/0', 0.0, 0.1),
+      ],
+    };
+  }
+  function print(txt, cls) {
+    const pre = h('pre', cls ? { class: cls } : {});
+    pre.textContent = txt;
+    out.append(pre);
+    while (out.childNodes.length > 400) out.removeChild(out.firstChild);
+    out.scrollTop = out.scrollHeight;
+  }
+  const tip = (en, es) => print('# ' + T(en, es), 'tip');
+  function marcar(i) { if (!S.flags[i]) { S.flags[i] = 1; misiones(); } }
+  function misiones() {
+    const ul = $('#term-misiones');
+    vaciar(ul);
+    MIS.forEach((m, i) => {
+      const hecha = !!S.flags[i];
+      ul.append(h('li', { class: hecha ? 'hecha' : '' }, h('span', { 'aria-hidden': 'true', text: hecha ? '✔' : '○' }), h('span', { class: 'solo-lector', text: hecha ? T('Done: ', 'Hecha: ') : T('Pending: ', 'Pendiente: ') }), h('span', { text: m() })));
+    });
+  }
+  const buscar = (pid) => S.procs.find((p) => p.pid === pid);
+  const jobDe = (spec) => {
+    if (!spec) return S.jobs[S.jobs.length - 1];
+    const m = /^%(\d+)$/.exec(spec);
+    return m ? S.jobs.find((j) => j.id === Number(m[1])) : null;
+  };
+  function nuevoJob(proc, texto) {
+    let id = 1;
+    while (S.jobs.some((j) => j.id === id)) id++;
+    const j = { id, pid: proc.pid, texto };
+    S.jobs.push(j);
+    return j;
+  }
+  const marca = (j) => (j === S.jobs[S.jobs.length - 1] ? '+' : (j === S.jobs[S.jobs.length - 2] ? '-' : ' '));
+  const estadoJob = (j) => { const p = buscar(j.pid); return p && p.stat[0] === 'T' ? 'Stopped' : 'Running'; };
+  function lineaJob(j, estado) { return '[' + j.id + ']' + marca(j) + '  ' + (estado || estadoJob(j)).padEnd(24) + j.texto; }
+  function quitar(proc) {
+    S.procs = S.procs.filter((p) => p !== proc);
+    S.jobs = S.jobs.filter((j) => j.pid !== proc.pid);
+    if (S.fg === proc) S.fg = null;
+  }
+  function lanzar(texto, opc) {
+    const p = { pid: S.next++, ppid: SHELL, user: 'student', stat: opc.bg ? 'S' : 'S+', cmd: opc.cmd || texto, tty: 'pts/0', cpu: 0.0, mem: 0.3, fin: opc.dur ? S.now + opc.dur : null };
+    S.procs.push(p);
+    if (opc.bg) { const j = nuevoJob(p, texto + ' &'); print('[' + j.id + '] ' + p.pid); } else S.fg = p;
+    return p;
+  }
+  function avanzar(seg) {
+    S.now += seg;
+    $('#term-reloj').textContent = String(S.now);
+    S.procs.filter((p) => p.fin !== null && p.fin !== undefined && p.fin <= S.now).forEach((p) => {
+      if (p.zombiAlTerminar) {
+        p.stat = 'Z'; p.cmd = '[sleep] <defunct>'; p.fin = null; marcar(4);
+        tip('A child has ended and its parent never calls wait: it is now a zombie (Z).', 'Un hijo ha terminado y su padre nunca llama a wait: ahora es un zombi (Z).');
+      } else {
+        const j = S.jobs.find((x) => x.pid === p.pid);
+        if (j) print(lineaJob(j, 'Done'));
+        quitar(p);
+      }
+    });
+  }
+  function señal(proc, sig) {
+    if (proc.stat[0] === 'Z') { tip('A zombie is already dead: no signal can end it. Only its parent can remove it, by calling wait or by ending.', 'Un zombi ya está muerto: ninguna señal puede terminarlo. Solo su padre puede eliminarlo, llamando a wait o terminando.'); return; }
+    if (proc.pid === SHELL) {
+      if (sig === 'KILL') { print('Killed'); S.locked = true; tip('You killed your own shell: the terminal is closed. Press "Reset terminal".', 'Has matado tu propio shell: el terminal se ha cerrado. Pulsa «Reiniciar terminal».'); }
+      else tip('An interactive shell ignores SIGTERM. Only kill -9 would close it.', 'Un shell interactivo ignora SIGTERM. Solo kill -9 lo cerraría.');
+      return;
+    }
+    if (sig === 'STOP') { proc.stat = 'T'; marcar(1); return; }
+    if (sig === 'CONT') { if (proc.stat[0] === 'T') { proc.stat = 'S'; marcar(2); } return; }
+    // TERM / KILL / INT
+    const j = S.jobs.find((x) => x.pid === proc.pid);
+    const hijos = S.procs.filter((p) => p.ppid === proc.pid);
+    quitar(proc);
+    marcar(3);
+    if (j) print(lineaJob(j, 'Terminated'));
+    hijos.forEach((c) => {
+      if (c.stat[0] === 'Z') { S.procs = S.procs.filter((p) => p !== c); marcar(5); tip('Its zombie child was adopted by systemd (PID 1), which collected it and removed it.', 'Su hijo zombi fue adoptado por systemd (PID 1), que lo recogió y lo eliminó.'); }
+      else c.ppid = 1;
+    });
+  }
+  const SIG = { '-9': 'KILL', '-KILL': 'KILL', '-SIGKILL': 'KILL', '-15': 'TERM', '-TERM': 'TERM', '-SIGTERM': 'TERM', '-STOP': 'STOP', '-19': 'STOP', '-SIGSTOP': 'STOP', '-CONT': 'CONT', '-18': 'CONT', '-SIGCONT': 'CONT', '-2': 'TERM', '-INT': 'TERM' };
+  function psAux() {
+    const todos = S.procs.concat([{ pid: S.next, user: 'student', cpu: 0.0, mem: 0.0, tty: 'pts/0', stat: 'R+', cmd: 'ps aux' }]);
+    const fila = (u, pid, c, m, v, r, tty, st, ini, tm, cmd) => u.padEnd(8) + ' ' + String(pid).padStart(5) + ' ' + c.padStart(4) + ' ' + m.padStart(4) + ' ' + String(v).padStart(7) + ' ' + String(r).padStart(6) + ' ' + tty.padEnd(6) + ' ' + st.padEnd(4) + ' ' + ini + ' ' + tm.padStart(5) + ' ' + cmd;
+    const lineas = [fila('USER', 'PID', '%CPU', '%MEM', 'VSZ', 'RSS', 'TTY', 'STAT', 'START', 'TIME', 'COMMAND')];
+    todos.slice().sort((a, b) => a.pid - b.pid).forEach((p) => lineas.push(fila(p.user, p.pid, p.cpu.toFixed(1), p.mem.toFixed(1), Math.round(p.mem * 10240), Math.round(p.mem * 1024), p.tty, p.stat, '08:01', '0:00', p.cmd)));
+    print(lineas.join('\n'));
+  }
+  function top() {
+    const n = S.procs.length;
+    const cnt = (c) => S.procs.filter((p) => p.stat[0] === c).length;
+    const run = cnt('R') + 1, st = cnt('T'), z = cnt('Z'), sl = n - cnt('R') - st - z;
+    const ordenados = S.procs.slice().sort((a, b) => b.cpu - a.cpu).slice(0, 8);
+    const lineas = ['top - 09:41:07 up 1:40,  1 user,  load average: 0.12, 0.08, 0.05',
+      'Tasks: ' + String(n + 1).padStart(3) + ' total, ' + String(run).padStart(3) + ' running, ' + String(sl).padStart(3) + ' sleeping, ' + String(st).padStart(3) + ' stopped, ' + String(z).padStart(3) + ' zombie', '',
+      '  PID USER      PR  NI    VIRT    RES S  %CPU  %MEM COMMAND'];
+    ordenados.forEach((p) => lineas.push(String(p.pid).padStart(5) + ' ' + p.user.padEnd(9) + ' 20   0 ' + String(Math.round(p.mem * 10240)).padStart(7) + ' ' + String(Math.round(p.mem * 1024)).padStart(6) + ' ' + p.stat[0] + ' ' + p.cpu.toFixed(1).padStart(5) + ' ' + p.mem.toFixed(1).padStart(5) + ' ' + p.cmd));
+    print(lineas.join('\n'));
+    tip('In a real terminal top keeps updating until you press q. Here you see one snapshot.', 'En un terminal real top se actualiza hasta que pulsas q. Aquí ves una sola captura.');
+  }
+  function ayuda() {
+    print(['help, clear, echo $$, whoami',
+      'ps, ps aux, top, jobs',
+      'xeyes, xeyes &, sleep N, sleep N &',
+      "bash -c 'sleep 2 & exec sleep 300' &",
+      'kill [-9|-15|-STOP|-CONT] PID|%N',
+      'fg [%N], bg [%N]'].join('\n'));
+    tip('Also the buttons: Ctrl+C ends the foreground process, Ctrl+Z stops it. The + 5 s and + 60 s buttons make time pass.', 'También los botones: Ctrl+C finaliza el proceso en primer plano, Ctrl+Z lo detiene. Los botones + 5 s y + 60 s hacen pasar el tiempo.');
+  }
+  function ejecutar(linea) {
+    print('student@lab:~$ ' + linea);
+    if (S.locked) return;
+    let c = linea.trim();
+    if (!c) return;
+    if (S.fg) { tip('The terminal is busy with the foreground process: press Ctrl+C or Ctrl+Z, or let time pass.', 'El terminal está ocupado con el proceso en primer plano: pulsa Ctrl+C o Ctrl+Z, o deja pasar el tiempo.'); return; }
+    let bg = false;
+    if (/&\s*$/.test(c)) { bg = true; c = c.replace(/&\s*$/, '').trim(); }
+    const zm = /^bash -c '\s*sleep (\d+)\s*&\s*exec sleep (\d+)\s*'$/.exec(c);
+    if (zm) {
+      const padre = lanzar(c, { bg: true, cmd: 'sleep ' + zm[2] });
+      const hijo = { pid: S.next++, ppid: padre.pid, user: 'student', stat: 'S', cmd: 'sleep ' + zm[1], tty: 'pts/0', cpu: 0, mem: 0.1, fin: S.now + Number(zm[1]), zombiAlTerminar: true };
+      S.procs.push(hijo);
+      tip('The parent became "sleep ' + zm[2] + '", a program that never waits for children. Let 2 seconds pass with + 5 s.', 'El padre se ha convertido en «sleep ' + zm[2] + '», un programa que nunca espera a sus hijos. Deja pasar 2 segundos con + 5 s.');
+      return;
+    }
+    const a = c.split(/\s+/), cmd = a[0];
+    if (cmd === 'help') return ayuda();
+    if (cmd === 'clear') return vaciar(out);
+    if (cmd === 'whoami') return print('student');
+    if (cmd === 'echo') return print(a.slice(1).join(' ').replace('$$', String(SHELL)));
+    if (cmd === 'ps') {
+      if (a[1] === 'aux') return psAux();
+      const lineas = ['    PID TTY          TIME CMD'];
+      S.procs.filter((p) => p.tty === 'pts/0').concat([{ pid: S.next, tty: 'pts/0', cmd: 'ps' }]).sort((x, y) => x.pid - y.pid).forEach((p) => lineas.push(String(p.pid).padStart(7) + ' pts/0    00:00:00 ' + p.cmd));
+      return print(lineas.join('\n'));
+    }
+    if (cmd === 'top') return top();
+    if (cmd === 'jobs') { return S.jobs.length ? print(S.jobs.map((j) => lineaJob(j)).join('\n')) : undefined; }
+    if (cmd === 'xeyes') {
+      const p = lanzar('xeyes', { bg, dur: 0 });
+      if (bg) marcar(0); else tip('A window opens and the terminal waits for xeyes. Press Ctrl+C to end it or Ctrl+Z to stop it.', 'Se abre una ventana y el terminal espera a xeyes. Pulsa Ctrl+C para finalizarlo o Ctrl+Z para detenerlo.');
+      return p;
+    }
+    if (cmd === 'sleep' && /^\d+$/.test(a[1] || '')) {
+      lanzar('sleep ' + a[1], { bg, dur: Number(a[1]) });
+      if (!bg) tip('The terminal waits ' + a[1] + ' seconds. Use + 5 s or + 60 s to let time pass, or Ctrl+C.', 'El terminal espera ' + a[1] + ' segundos. Usa + 5 s o + 60 s para dejar pasar el tiempo, o Ctrl+C.');
+      return;
+    }
+    if (cmd === 'kill') {
+      let sig = 'TERM', objetivo = a[1];
+      if (a[1] && a[1][0] === '-') { sig = SIG[a[1].toUpperCase()]; objetivo = a[2]; if (!sig) return print('bash: kill: ' + a[1] + ': invalid signal specification'); }
+      if (!objetivo) return print('kill: usage: kill [-s sigspec | -n signum | -sigspec] pid | jobspec ...');
+      let proc;
+      if (objetivo[0] === '%') { const j = jobDe(objetivo); proc = j ? buscar(j.pid) : null; if (!proc) return print('bash: kill: ' + objetivo + ': no such job'); }
+      else proc = buscar(Number(objetivo));
+      if (!proc) return print('bash: kill: (' + objetivo + ') - No such process');
+      if (proc.user !== 'student') return print('bash: kill: (' + objetivo + ') - Operation not permitted');
+      return señal(proc, sig);
+    }
+    if (cmd === 'fg' || cmd === 'bg') {
+      const j = jobDe(a[1]);
+      if (!j) return print('bash: ' + cmd + ': ' + (a[1] || 'current') + ': no such job');
+      const p = buscar(j.pid);
+      if (!p) return;
+      if (p.stat[0] === 'T') { p.stat = 'S'; marcar(2); }
+      if (cmd === 'fg') { print(j.texto.replace(/ &$/, '')); p.stat = 'S+'; S.fg = p; S.jobs = S.jobs.filter((x) => x !== j); j.texto = j.texto.replace(/ &$/, ''); S.fgJob = j; }
+      else { j.texto = j.texto.replace(/ &$/, '') + ' &'; print('[' + j.id + ']' + marca(j) + ' ' + j.texto); p.stat = 'S'; }
+      return;
+    }
+    print('bash: ' + cmd + ': command not found');
+  }
+  function ctrlC() {
+    if (S.locked) return;
+    print('^C');
+    if (S.fg) { const p = S.fg; quitar(p); S.fgJob = null; marcar(3); }
+  }
+  function ctrlZ() {
+    if (S.locked) return;
+    print('^Z');
+    if (!S.fg) return;
+    const p = S.fg;
+    p.stat = 'T';
+    let j = S.fgJob;
+    if (!j) j = nuevoJob(p, p.cmd);
+    else { S.jobs.push(j); }
+    S.fgJob = null; S.fg = null;
+    marcar(1);
+    print(lineaJob(j, 'Stopped'));
+  }
+  function iniciar() {
+    S = nuevoEstado();
+    vaciar(out);
+    $('#term-reloj').textContent = '0';
+    print(T('Simulated terminal. Type help to see the commands.', 'Terminal simulado. Escribe help para ver las órdenes.'));
+    misiones();
+  }
+  $('#term-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const v = input.value;
+    if (v.trim()) { historial.push(v); hpos = historial.length; }
+    input.value = '';
+    ejecutar(v);
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && (e.key === 'c' || e.key === 'C') && (S.fg || !input.value)) { e.preventDefault(); ctrlC(); }
+    else if (e.ctrlKey && (e.key === 'z' || e.key === 'Z')) { e.preventDefault(); ctrlZ(); }
+    else if (e.key === 'ArrowUp' && historial.length) { e.preventDefault(); hpos = Math.max(0, hpos - 1); input.value = historial[hpos]; }
+    else if (e.key === 'ArrowDown' && historial.length) { e.preventDefault(); hpos = Math.min(historial.length, hpos + 1); input.value = historial[hpos] || ''; }
+  });
+  $('#term-ctrlc').addEventListener('click', () => { ctrlC(); input.focus(); });
+  $('#term-ctrlz').addEventListener('click', () => { ctrlZ(); input.focus(); });
+  $('#term-t5').addEventListener('click', () => avanzar(5));
+  $('#term-t60').addEventListener('click', () => avanzar(60));
+  $('#term-reset').addEventListener('click', iniciar);
+  iniciar();
+})();
+
+// ===== 6. Seccion critica e interbloqueo =====
+(function () {
+  const nom = (i) => 'P' + (i + 1);
+  const estTxt = { Ready: () => T('Ready', 'Listo'), Waiting: () => T('Waiting', 'Bloqueado'), Terminated: () => T('Terminated', 'Terminado') };
+  // --- A. Impresora ---
+  let A;
+  const conLock = () => $('#syn-cerrojo').checked;
+  const progA = () => (conLock() ? ['lock', 'p1', 'p2', 'p3', 'p4', 'unlock'] : ['p1', 'p2', 'p3', 'p4']);
+  function aReset() {
+    A = { pc: [0, 0], lock: null, est: ['Ready', 'Ready'], papel: [], msg: '' };
+    pintarA(T('Both processes are Ready. Choose who runs the next instruction.', 'Los dos procesos están Listos. Elige quién ejecuta la siguiente instrucción.'), '');
+  }
+  function sigInstr(i) {
+    const pr = progA();
+    if (A.pc[i] >= pr.length) return T('finished', 'terminado');
+    const x = pr[A.pc[i]];
+    if (x === 'lock') return T('ask for the lock', 'pedir el cerrojo');
+    if (x === 'unlock') return T('release the lock', 'liberar el cerrojo');
+    return T('print line ', 'imprimir la línea ') + x[1];
+  }
+  function pintarA(msg, cls) {
+    [0, 1].forEach((i) => {
+      $('#syn-e' + (i + 1)).textContent = estTxt[A.est[i]]();
+      $('#syn-i' + (i + 1)).textContent = T('Next: ', 'Siguiente: ') + sigInstr(i);
+    });
+    const pap = $('#syn-papel');
+    vaciar(pap);
+    A.papel.forEach((l) => pap.append(h('div', { text: l })));
+    const m = $('#syn-msg');
+    m.textContent = msg;
+    m.className = 'correccion ' + (cls || '');
+  }
+  function pasoA(i) {
+    const pr = progA(), o = 1 - i, x = pr[A.pc[i]];
+    if (A.est[i] === 'Terminated') return pintarA(nom(i) + T(' has already finished.', ' ya ha terminado.'), '');
+    let msg = '', cls = '';
+    if (x === 'lock') {
+      if (A.lock !== null && A.lock !== i) { A.est[i] = 'Waiting'; return pintarA(nom(i) + T(' asks for the lock, but ', ' pide el cerrojo, pero lo tiene ') + nom(o) + T(' has it: ' + nom(i) + ' goes to Waiting.', ': ' + nom(i) + ' pasa a Bloqueado.'), 'mal'); }
+      A.lock = i; A.pc[i]++; A.est[i] = 'Ready'; msg = nom(i) + T(' takes the lock.', ' toma el cerrojo.');
+    } else if (x === 'unlock') {
+      A.lock = null; A.pc[i]++; msg = nom(i) + T(' releases the lock.', ' libera el cerrojo.');
+      if (A.est[o] === 'Waiting') { A.est[o] = 'Ready'; msg += ' ' + nom(o) + T(' wakes up: Waiting → Ready.', ' despierta: Bloqueado → Listo.'); }
+    } else {
+      A.papel.push((i === 0 ? 'A' : 'B') + x[1] + ' · ' + T('Report ', 'Informe ') + (i === 0 ? 'A' : 'B') + ', ' + T('line ', 'línea ') + x[1]);
+      A.pc[i]++; msg = nom(i) + T(' prints line ', ' imprime la línea ') + x[1] + '.';
+    }
+    if (A.pc[i] >= pr.length) A.est[i] = 'Terminated';
+    if (A.est[0] === 'Terminated' && A.est[1] === 'Terminated') {
+      const s = A.papel.map((l) => l[0]).join('');
+      const limpio = s === 'AAAABBBB' || s === 'BBBBAAAA';
+      msg += ' ' + (limpio ? T('The two reports came out separated.', 'Los dos informes han salido separados.') : T('The pages are mixed: this is the race condition.', 'Las páginas salieron mezcladas: esta es la condición de carrera.'));
+      cls = limpio ? 'bien' : 'mal';
+    }
+    pintarA(msg, cls);
+  }
+  $('#syn-p1').addEventListener('click', () => pasoA(0));
+  $('#syn-p2').addEventListener('click', () => pasoA(1));
+  $('#syn-reset').addEventListener('click', aReset);
+  $('#syn-cerrojo').addEventListener('change', aReset);
+  aReset();
+
+  // --- B. Interbloqueo ---
+  let D;
+  const mismoOrden = () => $('#dl-orden').checked;
+  const RN = { R1: () => T('Printer', 'Impresora'), R2: () => T('Scanner', 'Escáner') };
+  const progD = (i) => (i === 1 && !mismoOrden() ? ['R2', 'R1', 'use', 'free'] : ['R1', 'R2', 'use', 'free']);
+  function dReset() { D = { pc: [0, 0], hold: { R1: null, R2: null }, pend: [null, null], est: ['Ready', 'Ready'] }; pintarD(T('Alternate the steps of P1 and P2.', 'Alterna los pasos de P1 y P2.'), ''); }
+  const lineaSvg = (x1, y1, x2, y2, cls) => {
+    const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    l.setAttribute('x1', x1); l.setAttribute('y1', y1); l.setAttribute('x2', x2); l.setAttribute('y2', y2);
+    l.setAttribute('class', 'flecha ' + cls); l.setAttribute('marker-end', 'url(#punta2)');
+    return l;
+  };
+  const ASIG = { 'R1,0': [222, 56, 98, 96], 'R1,1': [298, 56, 422, 96], 'R2,0': [222, 154, 98, 114], 'R2,1': [298, 154, 422, 114] };
+  const PIDE = { 'R1,0': [92, 86, 222, 38], 'R1,1': [428, 86, 298, 38], 'R2,0': [92, 124, 222, 172], 'R2,1': [428, 124, 298, 172] };
+  function interbloqueo() {
+    const a = D.pend[0], b = D.pend[1];
+    return a && b && D.hold[a] === 1 && D.hold[b] === 0;
+  }
+  function pintarD(msg, cls) {
+    const g = $('#dl-aristas');
+    vaciar(g);
+    ['R1', 'R2'].forEach((r) => { if (D.hold[r] !== null) g.append(lineaSvg(...ASIG[r + ',' + D.hold[r]], '')); });
+    [0, 1].forEach((i) => { if (D.pend[i]) g.append(lineaSvg(...PIDE[D.pend[i] + ',' + i], 'pidiendo')); });
+    const dl = interbloqueo();
+    $('#g-p1').classList.toggle('activo', dl); $('#g-p2').classList.toggle('activo', dl);
+    const ul = $('#dl-estado');
+    vaciar(ul);
+    [0, 1].forEach((i) => {
+      const tiene = ['R1', 'R2'].filter((r) => D.hold[r] === i).map((r) => RN[r]());
+      ul.append(h('li', { text: nom(i) + ': ' + estTxt[D.est[i]]() + ' · ' + T('holds: ', 'tiene: ') + (tiene.join(', ') || '—') + (D.pend[i] ? ' · ' + T('waits for: ', 'espera: ') + RN[D.pend[i]]() : '') + ' · ' + T('next: ', 'siguiente: ') + (D.pc[i] >= 4 ? T('finished', 'terminado') : ({ R1: T('request Printer', 'pedir Impresora'), R2: T('request Scanner', 'pedir Escáner'), use: T('work with both', 'trabajar con ambos'), free: T('release both', 'liberar ambos') })[progD(i)[D.pc[i]]]) }));
+    });
+    const m = $('#dl-msg');
+    if (dl) { m.setAttribute('role', 'alert'); m.textContent = T('DEADLOCK! P1 holds the ' + RN[D.pend[1]]() + ' and waits for the ' + RN[D.pend[0]]() + '; P2 holds the ' + RN[D.pend[0]]() + ' and waits for the ' + RN[D.pend[1]]() + '. Neither can go on: circular wait. Break it with the button "The OS ends P2" or restart with the same order.', '¡INTERBLOQUEO! P1 tiene: ' + RN[D.pend[1]]() + ' y espera: ' + RN[D.pend[0]]() + '; P2 tiene: ' + RN[D.pend[0]]() + ' y espera: ' + RN[D.pend[1]]() + '. Ninguno puede continuar: espera circular. Rómpelo con el botón «El SO finaliza P2» o reinicia con el mismo orden.'); m.className = 'correccion mal'; }
+    else { m.setAttribute('role', 'status'); m.textContent = msg; m.className = 'correccion ' + (cls || ''); }
+  }
+  function despertar() {
+    [0, 1].forEach((i) => { if (D.est[i] === 'Waiting' && D.pend[i] && D.hold[D.pend[i]] === null) D.est[i] = 'Ready'; });
+  }
+  function pasoD(i) {
+    if (D.est[i] === 'Terminated') return pintarD(nom(i) + T(' is not running any more.', ' ya no se ejecuta.'), '');
+    const x = progD(i)[D.pc[i]];
+    let msg = '';
+    if (x === 'R1' || x === 'R2') {
+      if (D.hold[x] === null || D.hold[x] === i) { D.hold[x] = i; D.pend[i] = null; D.pc[i]++; D.est[i] = 'Ready'; msg = nom(i) + T(' gets the ', ' obtiene: ') + RN[x]() + '.'; }
+      else { D.pend[i] = x; D.est[i] = 'Waiting'; msg = nom(i) + T(' asks for the ', ' pide: ') + RN[x]() + T(' but ' + nom(1 - i) + ' has it: ' + nom(i) + ' is Waiting.', '; lo tiene ' + nom(1 - i) + ': ' + nom(i) + ' queda Bloqueado.'); }
+    } else if (x === 'use') { D.pc[i]++; msg = nom(i) + T(' works with both resources.', ' trabaja con los dos recursos.'); }
+    else {
+      ['R1', 'R2'].forEach((r) => { if (D.hold[r] === i) D.hold[r] = null; });
+      D.pc[i]++; D.est[i] = 'Terminated'; msg = nom(i) + T(' releases both resources and ends.', ' libera los dos recursos y termina.');
+      despertar();
+    }
+    pintarD(msg, '');
+  }
+  $('#dl-p1').addEventListener('click', () => pasoD(0));
+  $('#dl-p2').addEventListener('click', () => pasoD(1));
+  $('#dl-matar').addEventListener('click', () => {
+    if (D.est[1] === 'Terminated') return;
+    ['R1', 'R2'].forEach((r) => { if (D.hold[r] === 1) D.hold[r] = null; });
+    D.pend[1] = null; D.est[1] = 'Terminated'; D.pc[1] = 4; despertar();
+    pintarD(T('The OS ended P2 and freed its resources. P1 can continue.', 'El SO ha finalizado P2 y ha liberado sus recursos. P1 puede continuar.'), 'bien');
+  });
+  $('#dl-reset').addEventListener('click', dReset);
+  $('#dl-orden').addEventListener('change', dReset);
+  dReset();
+})();
+
+// ===== 7. Gestor de E/S =====
+(function () {
+  // A. sondeo, interrupciones y DMA
+  function filaA(letras) {
+    const c = h('div', { class: 'celdas' });
+    letras.forEach((l) => c.append(h('span', { class: 'celda ' + l, text: l })));
+    return c;
+  }
+  function pintarA() {
+    const n = parseInt($('#io-n').value, 10), d = parseInt($('#io-d').value, 10);
+    $('#io-n-v').textContent = String(n); $('#io-d-v').textContent = String(d);
+    const rep = (l, k) => Array(k).fill(l);
+    let sond = [], inter = [];
+    for (let i = 0; i < n; i++) { sond = sond.concat(rep('W', d), ['C']); inter = inter.concat(rep('F', d), ['H']); }
+    const dma = ['S'].concat(rep('F', n * d), ['H']);
+    const modelos = [[T('Polling', 'Sondeo'), sond], [T('Interrupts', 'Interrupciones'), inter], ['DMA', dma]];
+    const cont = $('#io-filas');
+    vaciar(cont);
+    const filas = modelos.map(([nombre, cel]) => {
+      cont.append(h('p', {}, h('b', { text: nombre })), filaA(cel));
+      const libres = cel.filter((x) => x === 'F').length;
+      return [nombre, cel.length, cel.length - libres, libres, fmt((libres / cel.length) * 100) + ' %'];
+    });
+    tabla($('#io-tabla'), [T('Method', 'Método'), T('Total time', 'Tiempo total'), T('CPU busy', 'CPU ocupada'), T('CPU free', 'CPU libre'), T('% free', '% libre')], filas, [1, 2, 3, 4]);
+  }
+  $('#io-n').addEventListener('input', pintarA);
+  $('#io-d').addEventListener('input', pintarA);
+  pintarA();
+
+  // B. cache LRU
+  let cache, aciertos, fallos;
+  const bloques = $('#ca-bloques');
+  function pintarCache() {
+    $$('button', bloques).forEach((b) => b.classList.toggle('en-cache', cache.includes(Number(b.dataset.b))));
+    const coste = aciertos * 1 + fallos * 10, n = aciertos + fallos;
+    $('#ca-estado').textContent = T('Cache (oldest → newest): ', 'Caché (más antiguo → más reciente): ') + '[' + cache.join(', ') + ']  ' + T('hits: ', 'aciertos: ') + aciertos + '  ' + T('misses: ', 'fallos: ') + fallos + '  ' + T('cost: ', 'coste: ') + coste + (n ? '  ' + T('average: ', 'media: ') + fmt(coste / n) + ' ' + T('(without cache: 10)', '(sin caché: 10)') : '');
+  }
+  function leerBloque(b) {
+    const cap = parseInt($('#ca-cap').value, 10);
+    const i = cache.indexOf(b), m = $('#ca-msg');
+    if (i >= 0) { cache.splice(i, 1); cache.push(b); aciertos++; m.className = 'correccion bien'; m.textContent = T('Block ' + b + ': hit (cost 1).', 'Bloque ' + b + ': acierto (coste 1).'); }
+    else {
+      fallos++; m.className = 'correccion mal';
+      let extra = '';
+      if (cache.length >= cap) { extra = T(' Block ' + cache[0] + ' is removed (least recently used).', ' Se retira el bloque ' + cache[0] + ' (el menos usado recientemente).'); cache.shift(); }
+      cache.push(b);
+      m.textContent = T('Block ' + b + ': miss, read from the disk (cost 10).', 'Bloque ' + b + ': fallo, se lee del disco (coste 10).') + extra;
+    }
+    pintarCache();
+  }
+  function cacheReset() { cache = []; aciertos = 0; fallos = 0; $('#ca-msg').textContent = ''; $('#ca-msg').className = 'correccion'; pintarCache(); }
+  for (let b = 1; b <= 8; b++) {
+    const bt = h('button', { type: 'button', 'data-b': String(b), text: T('Block ', 'Bloque ') + b });
+    bt.addEventListener('click', () => leerBloque(b));
+    bloques.append(bt);
+  }
+  $('#ca-reset').addEventListener('click', cacheReset);
+  $('#ca-cap').addEventListener('change', cacheReset);
+  cacheReset();
+
+  // C. spooling
+  let cola = [], palabras = 0, reloj = null, nextJob = 1;
+  const sp = $('#sp-cola'), spMsg = $('#sp-msg');
+  const activo = () => $('#sp-activo').checked;
+  const NOMBRES = { a: [T('Report', 'Informe'), 3], b: [T('Photo', 'Foto'), 5], c: [T('Invoice', 'Factura'), 2] };
+  function bloqueado() { return !activo() && cola.length > 0; }
+  function pintarCola() {
+    vaciar(sp);
+    cola.forEach((j, i) => {
+      const cancelar = h('button', { type: 'button', text: T('Cancel', 'Cancelar') });
+      cancelar.addEventListener('click', () => { cola = cola.filter((x) => x !== j); pintarCola(); parar(); });
+      sp.append(h('div', { class: 'trabajo' }, h('b', { text: '#' + j.id + ' ' + j.nombre }), h('span', { text: (i === 0 ? T('printing ', 'imprimiendo ') : T('waiting ', 'esperando ')) + j.hechas + '/' + j.paginas }), h('div', { class: 'progreso' }, h('span', { style: 'width:' + Math.round((j.hechas / j.paginas) * 100) + '%' })), cancelar));
+    });
+    if (!cola.length) sp.append(h('p', { class: 'nota', text: T('The queue is empty.', 'La cola está vacía.') }));
+    ['#sp-a', '#sp-b', '#sp-c'].forEach((s) => { $(s).disabled = bloqueado(); });
+    $('#sp-trabajar').disabled = bloqueado();
+    spMsg.className = 'correccion' + (bloqueado() ? ' mal' : '');
+    spMsg.textContent = bloqueado()
+      ? T('Without spooling the program is blocked while the printer works. You cannot type.', 'Sin spooling el programa queda bloqueado mientras trabaja la impresora. No puedes escribir.')
+      : T('Words typed while the printer works: ', 'Palabras escritas mientras trabaja la impresora: ') + palabras;
+  }
+  function parar() { if (!cola.length && reloj) { clearInterval(reloj); reloj = null; } }
+  function paso() {
+    if (!cola.length) return parar();
+    const j = cola[0];
+    j.hechas++;
+    if (j.hechas >= j.paginas) cola.shift();
+    pintarCola();
+    parar();
+  }
+  function enviar(k) {
+    const [nombre, paginas] = NOMBRES[k];
+    cola.push({ id: nextJob++, nombre, paginas, hechas: 0 });
+    if (!reloj) reloj = setInterval(paso, 900);
+    pintarCola();
+  }
+  $('#sp-a').addEventListener('click', () => enviar('a'));
+  $('#sp-b').addEventListener('click', () => enviar('b'));
+  $('#sp-c').addEventListener('click', () => enviar('c'));
+  $('#sp-trabajar').addEventListener('click', () => { palabras++; pintarCola(); });
+  $('#sp-activo').addEventListener('change', pintarCola);
+  pintarCola();
+})();
+
+// ===== 8. Practica =====
+(function () {
+  // --- Ejercicios de planificacion ---
+  let ej = null, contado = false, ayudado = false;
+  let okP = leerNum('plan-ok'), nP = leerNum('plan-n');
+  const marcador = () => { $('#pra-aciertos').textContent = String(okP); $('#pra-intentos').textContent = String(nP); };
+  function generar() {
+    let r = null;
+    for (let k = 0; k < 500; k++) {
+      const n = 3 + aleatorio(2), arr = [];
+      for (let i = 0; i < n; i++) arr.push([i === 0 ? 0 : aleatorio(7), 1 + aleatorio(6), 1 + aleatorio(4)]);
+      const procs = aProcs(arr), algo = elegir(['fifo', 'sjf', 'srtf', 'prio', 'prioe', 'rr']), q = elegir([2, 3]);
+      const sim = simulate(procs, algo, q);
+      r = { procs, algo, q, sim };
+      if (!sim.tie && sim.tl.every(Boolean)) break;
+    }
+    return r;
+  }
+  function nuevo() {
+    ej = generar(); contado = false; ayudado = false;
+    const conPrio = ej.algo === 'prio' || ej.algo === 'prioe';
+    $('#pra-enunciado').textContent = T('Algorithm: ', 'Algoritmo: ') + ALG[ej.algo](ej.q) + (conPrio ? ' · ' + T('a lower number means a higher priority', 'un número menor significa más prioridad') : '') + '. ' + T('Calculate the times.', 'Calcula los tiempos.');
+    const cab = [T('Process', 'Proceso'), T('Arrival', 'Llegada'), T('Burst', 'Ráfaga')].concat(conPrio ? [T('Priority', 'Prioridad')] : []);
+    tabla($('#pra-carga'), cab, ej.procs.map((p) => [p.n, p.a, p.b].concat(conPrio ? [p.p] : [])), [1, 2, 3]);
+    const campos = $('#pra-campos');
+    vaciar(campos);
+    const campo = (id, texto) => {
+      const i = h('input', { type: 'text', inputmode: 'decimal', id, 'data-campo': id });
+      campos.append(h('label', { for: id }, h('span', { text: texto }), i));
+    };
+    ej.procs.forEach((p) => { campo('w-' + p.n, T('Waiting time of ', 'Tiempo de espera de ') + p.n); campo('r-' + p.n, T('Response time of ', 'Tiempo de respuesta de ') + p.n); });
+    campo('avg-w', T('Average waiting time', 'Tiempo de espera medio'));
+    $('#pra-correccion').textContent = ''; $('#pra-correccion').className = 'correccion';
+    vaciar($('#pra-detalle'));
+    marcador();
+  }
+  const numero = (v) => { const x = parseFloat(String(v).trim().replace(',', '.')); return isNaN(x) ? null : x; };
+  function detalle() {
+    const d = $('#pra-detalle');
+    vaciar(d);
+    d.append(h('h3', { text: T('Solution', 'Solución') }), h('p', { class: 'mono', text: 'Gantt: ' + textoGantt(ej.sim) }));
+    const filas = ej.procs.map((p) => {
+      const r = ej.sim.res[p.n];
+      return [p.n, r.c, r.c + ' − ' + p.a + ' = ' + r.r, r.r + ' − ' + p.b + ' = ' + r.w];
+    });
+    filas.push({ clase: 'pie', celdas: [T('Average', 'Media'), '', fmt(ej.sim.avgR), fmt(ej.sim.avgW)] });
+    d.append(h('div', { class: 'tabla-caja' }, (() => { const t = h('table', { class: 'tabla' }); tabla(t, [T('Process', 'Proceso'), T('Completion', 'Finalización'), T('Response = C − A', 'Respuesta = C − A'), T('Waiting = R − B', 'Espera = R − B')], filas); return t; })()));
+    if (ej.algo === 'rr') d.append(h('p', { class: 'nota', text: T('Round Robin: a process that arrives when a quantum ends enters the queue before the preempted process.', 'Round Robin: un proceso que llega cuando acaba un quantum entra en la cola antes que el proceso expulsado.') }));
+  }
+  function contar() { if (!contado) { contado = true; nP++; Lab.guardar('plan-n', nP); marcador(); } }
+  $('#pra-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!ej) return;
+    contar();
+    let bien = 0, total = 0;
+    const malos = [];
+    $$('[data-campo]').forEach((i) => {
+      total++;
+      const id = i.dataset.campo, v = numero(i.value);
+      let esperado;
+      if (id === 'avg-w') esperado = ej.sim.avgW;
+      else { const r = ej.sim.res[id.slice(2)]; esperado = id[0] === 'w' ? r.w : r.r; }
+      const ok = v !== null && Math.abs(v - esperado) <= (id === 'avg-w' ? 0.011 : 0);
+      const lab = i.closest('label').firstChild;
+      lab.textContent = lab.textContent.replace(/^[✔✘] /, '');
+      lab.textContent = (ok ? '✔ ' : '✘ ') + lab.textContent;
+      i.setAttribute('aria-invalid', String(!ok));
+      if (ok) bien++; else malos.push(lab.textContent.slice(2));
+    });
+    const c = $('#pra-correccion');
+    if (bien === total) {
+      c.className = 'correccion bien';
+      c.textContent = T('Perfect! All the fields are correct.', '¡Perfecto! Todos los campos son correctos.');
+      if (!ayudado && !ej.cuenta) { ej.cuenta = true; okP++; Lab.guardar('plan-ok', okP); marcador(); }
+      detalle();
+    } else {
+      c.className = 'correccion mal';
+      c.textContent = bien + ' / ' + total + ' ' + T('correct. Check: ', 'correctos. Revisa: ') + malos.join('; ') + '. ' + T('Tip: response = completion − arrival; waiting = response − burst. Draw the Gantt chart first. You can press "Show solution".', 'Pista: respuesta = finalización − llegada; espera = respuesta − ráfaga. Dibuja antes el diagrama de Gantt. Puedes pulsar «Ver solución».');
+    }
+  });
+  $('#pra-solucion').addEventListener('click', () => { if (!ej) return; contar(); ayudado = true; detalle(); });
+  $('#pra-otro').addEventListener('click', nuevo);
+
+  // --- Preguntas de conceptos ---
+  const Q = (qe, qs, ops, ok, ee, es) => ({ q: T(qe, qs), o: ops.map((o) => T(o[0], o[1])), ok, e: T(ee, es) });
+  const BANCO = [
+    Q('A process has asked the disk for data and cannot go on until they arrive. In which state is it?', 'Un proceso ha pedido datos al disco y no puede continuar hasta que lleguen. ¿En qué estado está?', [['Ready', 'Listo'], ['Running', 'En ejecución'], ['Waiting', 'Bloqueado'], ['Terminated', 'Terminado']], 2, 'It is blocked, in the Waiting state. When the I/O ends it will go to Ready.', 'Está bloqueado, en el estado Bloqueado. Cuando termine la E/S pasará a Listo.'),
+    Q('Which transition does NOT exist?', '¿Qué transición NO existe?', [['Ready → Running', 'Listo → En ejecución'], ['Running → Waiting', 'En ejecución → Bloqueado'], ['Waiting → Running', 'Bloqueado → En ejecución'], ['Waiting → Ready', 'Bloqueado → Listo']], 2, 'After an I/O operation the process must be Ready first; the scheduler decides when it runs.', 'Después de una operación de E/S el proceso debe pasar antes a Listo; el planificador decide cuándo se ejecuta.'),
+    Q('In ps aux a process has STAT = Z. What does it mean?', 'En ps aux un proceso tiene STAT = Z. ¿Qué significa?', [['It was stopped with Ctrl+Z', 'Se detuvo con Ctrl+Z'], ['It has ended, but its parent has not collected its exit status', 'Ha terminado, pero su padre no ha recogido su estado de salida'], ['It is waiting for the disk', 'Espera al disco'], ['It runs with the highest priority', 'Se ejecuta con la prioridad más alta']], 1, 'Z is a zombie: a dead process whose entry stays until the parent calls wait.', 'Z es un zombi: un proceso muerto cuya entrada permanece hasta que el padre llama a wait.'),
+    Q('You run kill -9 on a zombie. What happens?', 'Ejecutas kill -9 sobre un zombi. ¿Qué ocurre?', [['It disappears at once', 'Desaparece al instante'], ['Nothing: it is already dead, only its parent can remove it', 'Nada: ya está muerto, solo su padre puede eliminarlo'], ['It goes to the background', 'Pasa a segundo plano'], ['It becomes an orphan', 'Se convierte en huérfano']], 1, 'A signal cannot end something that already ended. End or fix the parent so that the zombie is collected.', 'Una señal no puede terminar lo que ya terminó. Finaliza o arregla al padre para que se recoja al zombi.'),
+    Q('What does Ctrl+Z do in a Linux terminal?', '¿Qué hace Ctrl+Z en un terminal de Linux?', [['Ends the foreground process', 'Finaliza el proceso en primer plano'], ['Stops (suspends) the foreground process', 'Detiene (suspende) el proceso en primer plano'], ['Sends it to the background running', 'Lo envía a segundo plano en ejecución'], ['Creates a zombie', 'Crea un zombi']], 1, 'Ctrl+Z stops the process (state T). Then bg continues it in the background or fg brings it back.', 'Ctrl+Z detiene el proceso (estado T). Después bg lo continúa en segundo plano o fg lo trae de vuelta.'),
+    Q('Which algorithm suffers the convoy effect: a long process in front makes the rest wait?', '¿Qué algoritmo sufre el efecto convoy: un proceso largo delante hace esperar al resto?', [['FIFO', 'FIFO'], ['Round Robin', 'Round Robin'], ['SRTF', 'SRTF'], ['Preemptive priorities', 'Prioridades expulsivas']], 0, 'FIFO is non-preemptive and runs in arrival order, so short processes wait behind a long one.', 'FIFO no es expulsivo y ejecuta por orden de llegada, así que los procesos cortos esperan detrás de uno largo.'),
+    Q('Round Robin with q = 4. A process needs only 3 units. How long does it keep the CPU?', 'Round Robin con q = 4. Un proceso necesita solo 3 unidades. ¿Cuánto tiempo conserva la CPU?', [['4 units', '4 unidades'], ['3 units', '3 unidades'], ['1 unit', '1 unidad'], ['Until all the others finish', 'Hasta que acaben todos los demás']], 1, 'It leaves the CPU when it finishes, before its quantum is over.', 'Deja la CPU cuando termina, antes de que acabe su quantum.'),
+    Q('What is starvation, and how is it solved?', '¿Qué es la inanición y cómo se resuelve?', [['A process waits forever because others always go first; aging', 'Un proceso espera para siempre porque otros pasan siempre antes; envejecimiento'], ['Two processes wait for each other; killing one', 'Dos procesos se esperan entre sí; matar a uno'], ['The CPU has no work; adding processes', 'La CPU no tiene trabajo; añadir procesos'], ['Memory is full; adding swap', 'La memoria está llena; añadir swap']], 0, 'Starvation is an indefinite wait. Aging raises the priority of the processes that wait for a long time.', 'La inanición es una espera indefinida. El envejecimiento sube la prioridad de los procesos que esperan mucho.'),
+    Q('Two processes request resources in the same fixed order. Which deadlock condition is broken?', 'Dos procesos piden recursos en el mismo orden fijo. ¿Qué condición del interbloqueo se rompe?', [['Mutual exclusion', 'Exclusión mutua'], ['Hold and wait', 'Retención y espera'], ['No preemption', 'Sin expropiación'], ['Circular wait', 'Espera circular']], 3, 'With a fixed order a cycle of processes waiting for each other cannot appear.', 'Con un orden fijo no puede aparecer un ciclo de procesos que se esperan unos a otros.'),
+    Q('Two processes read the same variable, add 1 and write it back. Sometimes one update is lost. What is this?', 'Dos procesos leen la misma variable, suman 1 y la escriben. A veces se pierde una actualización. ¿Qué es?', [['A race condition', 'Una condición de carrera'], ['A page fault', 'Un fallo de página'], ['A zombie', 'Un zombi'], ['Thrashing', 'Hiperpaginación']], 0, 'The result depends on the order in which the scheduler runs the processes. A lock around the critical section solves it.', 'El resultado depende del orden en que el planificador ejecuta los procesos. Un cerrojo alrededor de la sección crítica lo resuelve.'),
+    Q('Which technique moves a whole block between a device and RAM and interrupts the CPU only once at the end?', '¿Qué técnica mueve un bloque entero entre un dispositivo y la RAM e interrumpe a la CPU solo una vez al final?', [['Polling', 'Sondeo'], ['Interrupt per word', 'Interrupción por palabra'], ['DMA', 'DMA'], ['Spooling', 'Spooling']], 2, 'DMA lets the controller copy the data by itself, so the CPU is free during the transfer.', 'El DMA deja que la controladora copie los datos por sí sola, así que la CPU queda libre durante la transferencia.'),
+    Q('Why does a keyboard use interrupts and not polling?', '¿Por qué un teclado usa interrupciones y no sondeo?', [['Because it is faster than the CPU', 'Porque es más rápido que la CPU'], ['Because the CPU would waste time asking if a key was pressed', 'Porque la CPU perdería tiempo preguntando si se pulsó una tecla'], ['Because it uses DMA', 'Porque usa DMA'], ['Because it has no driver', 'Porque no tiene controlador']], 1, 'With an interrupt the CPU works on other things and the key press calls its attention.', 'Con una interrupción la CPU trabaja en otras cosas y la pulsación reclama su atención.'),
+    Q('A print queue on the disk lets you keep working while the printer is busy. What is it called?', 'Una cola de impresión en el disco te deja seguir trabajando mientras la impresora está ocupada. ¿Cómo se llama?', [['Cache', 'Caché'], ['Spooling', 'Spooling'], ['Paging', 'Paginación'], ['Aging', 'Envejecimiento']], 1, 'Spooling stores complete jobs for a device that cannot be shared.', 'El spooling guarda trabajos completos para un dispositivo que no se puede compartir.'),
+    Q('A video player downloads 10 seconds in advance so that the video does not stop. Which technique is this?', 'Un reproductor descarga 10 segundos por adelantado para que el vídeo no se pare. ¿Qué técnica es?', [['Buffering', 'Uso de búfer'], ['Spooling', 'Spooling'], ['Context switch', 'Cambio de contexto'], ['Segmentation', 'Segmentación']], 0, 'A buffer smooths the speed difference between the network and the player.', 'Un búfer suaviza la diferencia de velocidad entre la red y el reproductor.'),
+    Q('Which of these is a service (daemon)?', '¿Cuál de estos es un servicio (demonio)?', [['firefox', 'firefox'], ['sshd', 'sshd'], ['bash', 'bash'], ['vim notes.txt', 'vim notes.txt']], 1, 'sshd waits in the background, without a window, for remote connections.', 'sshd espera en segundo plano, sin ventana, conexiones remotas.'),
+    Q('What does the OS save in the PCB at a context switch?', '¿Qué guarda el SO en el PCB en un cambio de contexto?', [['The registers and the program counter of the process that leaves the CPU', 'Los registros y el contador de programa del proceso que deja la CPU'], ['The contents of the disk', 'El contenido del disco'], ['Only the name of the process', 'Solo el nombre del proceso'], ['The list of users', 'La lista de usuarios']], 0, 'This is how the process can continue exactly where it stopped.', 'Así el proceso puede continuar exactamente donde se quedó.'),
+    Q('Priorities 3, 1 and 2 (lower number = higher priority). Which process runs first?', 'Prioridades 3, 1 y 2 (número menor = prioridad mayor). ¿Qué proceso se ejecuta primero?', [['Priority 3', 'La de prioridad 3'], ['Priority 1', 'La de prioridad 1'], ['Priority 2', 'La de prioridad 2'], ['The longest one', 'La más larga']], 1, 'In this course a lower number means a higher priority, so priority 1 goes first.', 'En este curso un número menor significa mayor prioridad, así que va primero la de prioridad 1.'),
+  ];
+  let okC = leerNum('con-ok'), nC = leerNum('con-n'), cur = null, ultima = -1;
+  const marcC = () => { $('#con-aciertos').textContent = String(okC); $('#con-intentos').textContent = String(nC); };
+  function preguntar() {
+    let i;
+    do { i = aleatorio(BANCO.length); } while (i === ultima && BANCO.length > 1);
+    ultima = i;
+    const q = BANCO[i], orden = barajar(q.o.map((_, k) => k));
+    cur = { q, orden, hecha: false };
+    $('#con-pregunta').textContent = q.q;
+    $('#con-correccion').textContent = ''; $('#con-correccion').className = 'correccion';
+    const cont = $('#con-opciones');
+    vaciar(cont);
+    orden.forEach((k) => {
+      const b = h('button', { type: 'button', text: q.o[k] });
+      b.addEventListener('click', () => {
+        if (cur.hecha) return;
+        cur.hecha = true; nC++;
+        const bien = k === q.ok;
+        if (bien) okC++;
+        Lab.guardar('con-n', nC); Lab.guardar('con-ok', okC);
+        $$('button', cont).forEach((x) => { x.disabled = true; });
+        b.setAttribute('aria-pressed', 'true');
+        const c = $('#con-correccion');
+        c.className = 'correccion ' + (bien ? 'bien' : 'mal');
+        c.textContent = (bien ? T('Correct! ', '¡Correcto! ') : T('Not quite. The right answer: ', 'Casi. La respuesta correcta: ') + q.o[q.ok] + '. ') + q.e;
+        marcC();
+      });
+      cont.append(b);
+    });
+    marcC();
+  }
+  $('#con-otra').addEventListener('click', preguntar);
+  const modo = (plan) => {
+    $('#pra-plan').hidden = !plan; $('#pra-conc').hidden = plan;
+    $('#pra-m-plan').setAttribute('aria-pressed', String(plan));
+    $('#pra-m-conc').setAttribute('aria-pressed', String(!plan));
+    Lab.guardar('modo', plan ? 'plan' : 'conc');
+  };
+  $('#pra-m-plan').addEventListener('click', () => modo(true));
+  $('#pra-m-conc').addEventListener('click', () => modo(false));
+  nuevo(); preguntar();
+  modo(Lab.leer('modo') !== 'conc');
+})();
+
+</script>
+</body>
+</html>
