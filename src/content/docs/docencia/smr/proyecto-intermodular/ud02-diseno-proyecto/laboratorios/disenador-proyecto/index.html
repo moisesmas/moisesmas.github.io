@@ -408,7 +408,7 @@ function ejemplo() {
   const P = [[5, 4, 3, 3, 3, 4, 4], [3, 4, 3, 3, 3, 4, 3], [3, 3, 4, 2, 2, 3, 3], [4, 3, 3, 4, 3, 3, 2], [2, 3, 2, 2, 5, 2, 4], [2, 4, 3, 2, 2, 3, 2]];
   e.ideas.items.forEach((it, a) => { e.ideas.puntos[it.id] = {}; e.ideas.criterios.forEach((c, b) => { e.ideas.puntos[it.id][c.id] = String(P[a][b]); }); });
   e.ideas.elegida = i1.id;
-  e.ideas.justificacion = 'Es la que más puntúa y atiende la necesidad más prioritaria. Se mantiene en primer lugar aunque se varíe el peso de cada criterio; solo la superan si la innovación pesa muy por encima de la necesidad cubierta.';
+  e.ideas.justificacion = 'Es la que más puntúa y atiende la necesidad más prioritaria. Se mantiene en primer lugar al variar cada peso por separado; solo la superan si el coste pasa del 56 %, la innovación del 43 % o el impacto y los ODS del 44 %.';
   e.ideas.acta = 'Sesión de ideas del equipo. Técnica: escritura en silencio durante 5 minutos y puesta en común, y SCAMPER sobre «copia manual». Salieron seis ideas. Se descartó el reacondicionamiento de equipos por dar menos respuesta a la necesidad elegida, aunque se anota para una ampliación con ODS.';
   const ex = (nombre, hace, coste, carencias) => ({ id: nuevoId(), nombre, hace, coste, carencias, fuente: 'Descripción genérica inventada para el ejemplo (no es un producto real)' });
   e.ideas.existentes = [
