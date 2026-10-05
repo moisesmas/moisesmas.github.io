@@ -1,6 +1,6 @@
 ---
 title: Actividades
-description: Siete actividades de la Unidad 2 con VirtualBox: escenarios, instalación de software, importar un OVA, instantáneas, Guest Additions, una VM de Windows y una prueba de rendimiento anfitrión frente a invitado.
+description: "Siete actividades de la Unidad 2 con VirtualBox: escenarios, instalación de software, importar un OVA, instantáneas, Guest Additions, una VM de Windows y una prueba de rendimiento anfitrión frente a invitado."
 ---
 
 Estas son las actividades de la unidad. La mayoría se hacen con un hipervisor real, así que necesitas un ordenador donde puedas usar VirtualBox (los del aula o el tuyo). Algunas usan el laboratorio [Virtualization Playground](/docencia/smr/som/ud02-virtualizacion/laboratorios/virtualizacion/?lang=es), y su pestaña **Práctica** es una buena autoevaluación antes de entregar tu trabajo.

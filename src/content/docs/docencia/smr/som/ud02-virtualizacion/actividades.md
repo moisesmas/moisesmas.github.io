@@ -1,6 +1,6 @@
 ---
 title: Activities
-description: Seven activities for Unit 2 with VirtualBox: scenarios, installing software, importing an OVA, snapshots, Guest Additions, a Windows VM and a host-versus-guest performance test.
+description: "Seven activities for Unit 2 with VirtualBox: scenarios, installing software, importing an OVA, snapshots, Guest Additions, a Windows VM and a host-versus-guest performance test."
 ---
 
 These are the activities of the unit. Most of them are done with a real hypervisor, so you need a computer where you can use VirtualBox (the classroom computers, or your own). Some use the [Virtualization Playground](/docencia/smr/som/ud02-virtualizacion/laboratorios/virtualizacion/) lab, and its **Practice** tab is a good self-test before you hand in your work.
