@@ -10,6 +10,6 @@ export const video: Manejador = (nodo, archivo) => {
   return html(
     `<div class="bloque-video not-content" data-video-youtube="${id}" data-titulo="${escapar(titulo)}">` +
       `<button type="button" class="bloque-video__reproducir"><span aria-hidden="true">▶</span> ${escapar(titulo)}</button>` +
-      `<p class="bloque-video__aviso">Al reproducirlo, el vídeo se cargará desde YouTube.</p></div>`,
+      `<p class="bloque-video__aviso" lang="es">Al reproducirlo, el vídeo se cargará desde YouTube.</p></div>`,
   );
 };

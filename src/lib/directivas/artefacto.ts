@@ -11,11 +11,11 @@ export function tarjetaLaboratorio(ficha: FichaLaboratorio, href: string): strin
   const etiquetas = ficha.etiquetas.map((e) => `<span>${escapar(e)}</span>`).join('');
   return (
     `<a class="bloque-laboratorio" href="${escapar(href)}">` +
-    `<span class="bloque-laboratorio__marca">Laboratorio</span>` +
+    `<span class="bloque-laboratorio__marca" lang="es">Laboratorio</span>` +
     `<strong class="bloque-laboratorio__titulo">${escapar(ficha.titulo)}</strong>` +
     (ficha.descripcion ? `<span class="bloque-laboratorio__descripcion">${escapar(ficha.descripcion)}</span>` : '') +
     (etiquetas ? `<span class="bloque-laboratorio__etiquetas">${etiquetas}</span>` : '') +
-    `<span class="bloque-laboratorio__abrir">Abrir laboratorio →</span></a>`
+    `<span class="bloque-laboratorio__abrir" lang="es">Abrir laboratorio →</span></a>`
   );
 }
 
@@ -39,7 +39,7 @@ export const artefacto: Manejador = (nodo, archivo) => {
     return html(
       `<figure class="bloque-laboratorio-incrustado not-content">` +
         `<iframe src="${escapar(href)}" title="${escapar(titulo)}" loading="lazy" style="height:${alto}px"></iframe>` +
-        `<figcaption><a href="${escapar(href)}">${escapar(titulo)} · Abrir a pantalla completa ↗</a></figcaption></figure>`,
+        `<figcaption><a href="${escapar(href)}">${escapar(titulo)}<span lang="es"> · Abrir a pantalla completa ↗</span></a></figcaption></figure>`,
     );
   }
   return html(`<div class="not-content">${tarjetaLaboratorio({ ...ficha, titulo }, href)}</div>`);
