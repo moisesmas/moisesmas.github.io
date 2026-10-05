@@ -55,7 +55,7 @@ Hi ha altres classificacions que també trobaràs: per **ús** (escriptori, serv
 
 ## 3. Llicències i com comparar sistemes operatius
 
-El criteri 2.c de la unitat et demana **comparar sistemes operatius** per requisits, característiques, camp d'aplicació i llicència. La llicència és la part que més es descuida i més problemes dona.
+El criteri RA2.c de la unitat et demana **comparar sistemes operatius** per requisits, característiques, camp d'aplicació i llicència. La llicència és la part que més es descuida i més problemes dona.
 
 ### 3.1 Tipus de programari segons la llicència
 
