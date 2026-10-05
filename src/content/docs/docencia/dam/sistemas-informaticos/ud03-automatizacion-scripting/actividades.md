@@ -118,7 +118,7 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un únic document (P
    echo "Total: $total" > resum.log
    ```
 
-   Prova la teua versió amb una carpeta que tinga un espai en el nom (`mkdir "Mis documents"`).
+   Prova la teua versió amb una carpeta que tinga un espai en el nom (`mkdir "Mis documents"`) i també amb una carpeta que no tinga cap fitxer `.txt`.
 3. Este fragment de PowerShell té **tres problemes**. Explica'ls i corregix-los:
 
    ```powershell

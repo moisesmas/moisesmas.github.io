@@ -118,7 +118,7 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un único docume
    echo "Total: $total" > resum.log
    ```
 
-   Prueba tu versión con una carpeta que tenga un espacio en el nombre (`mkdir "Mis documents"`).
+   Prueba tu versión con una carpeta que tenga un espacio en el nombre (`mkdir "Mis documents"`) y también con una carpeta que no tenga ningún archivo `.txt`.
 3. Este fragmento de PowerShell tiene **tres problemas**. Explícalos y corrígelos:
 
    ```powershell
