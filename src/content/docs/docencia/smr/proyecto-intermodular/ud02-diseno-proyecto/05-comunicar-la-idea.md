@@ -8,7 +8,7 @@ Un proyecto que nadie entiende en cinco minutos tiene un problema. Presentar la 
 :::tip[Cómo trabajar esta página]
 **Tiempo orientativo:** unos 30 minutos de lectura y 3 horas de práctica, incluida la sesión de exposiciones.
 
-1. Lee las secciones 1 a 3 y escribe el guion en la pestaña «Memoria» del [laboratorio](/docencia/smr/proyecto-intermodular/ud02-diseno-proyecto/laboratorios/disenador-proyecto/#memoria), que calcula cuánto tardas en decirlo.
+1. Lee las secciones 1 a 3 y escribe el guion en la pestaña «Memoria» del [laboratorio](/docencia/smr/proyecto-intermodular/ud02-diseno-proyecto/laboratorios/disenador-proyecto/#practica), que calcula cuánto tardas en decirlo.
 2. Ensayad cronometrando. La sección 4 explica las preguntas; la sección 5, la valoración.
 3. Después prepara la [actividad 8](/docencia/smr/proyecto-intermodular/ud02-diseno-proyecto/actividades/).
 :::
