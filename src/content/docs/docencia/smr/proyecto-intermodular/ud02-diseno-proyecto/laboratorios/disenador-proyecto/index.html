@@ -1,0 +1,1443 @@
+<!doctype html>
+<html lang="es" data-lab="disenador-proyecto" data-idioma-original="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="/comun/lab.js"></script>
+<title>Laboratorio de diseño de proyecto: del problema a la memoria</title>
+<meta name="description" content="Diseña tu proyecto paso a paso: necesidades, ideas con criterios ponderados, requisitos y partes interesadas, viabilidad, alcance y EDT, presupuesto con IVA, calidad, memoria de diseño y autoevaluación por criterio.">
+<meta name="keywords" content="diseño de proyecto, necesidades, matriz de decisión, viabilidad, EDT, presupuesto, IVA, calidad, memoria, proyecto intermodular">
+<link rel="icon" href="/comun/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/comun/fuentes.css">
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f2f4ef;--surface:#ffffff;--surface2:#e9ede6;--ink:#16201b;--muted:#56655d;--line:#d3dbd4;
+  --accent:#b86e00;--accent-soft:#fbeed8;--pcb:#1f5244;
+  --ok:#1b6b3f;--ko:#a8281f;
+  --f-display:"Chakra Petch",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0e1411;--surface:#161f1b;--surface2:#1d2823;--ink:#e4ebe6;--muted:#95a69d;--line:#2b3832;
+  --accent:#f3aa3c;--accent-soft:#33260f;--pcb:#1a463a;
+  --ok:#6fd49a;--ko:#ff9d94;
+}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--f-body)}
+h1,h2,h3{font-family:var(--f-display);line-height:1.2;margin:0 0 .5rem}
+h1{font-size:1.25rem}
+h2{font-size:1.5rem}
+h3{font-size:1.1rem;margin-top:1.25rem}
+code,pre{font-family:var(--f-mono)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{border:1px solid var(--muted);background:var(--surface);border-radius:.4rem;padding:.35rem .8rem;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cabecera{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;padding:.6rem 1rem;background:var(--pcb);color:#fff}
+.cabecera h1{flex:1 1 12rem;margin:0}
+.cabecera a{color:#fff}
+.cabecera button{background:transparent;border-color:#fff;color:#fff}
+main{max-width:66rem;margin:0 auto;padding:1rem}
+.pestanas{display:flex;gap:.25rem;overflow-x:auto;border-bottom:1px solid var(--muted)}
+[role="tab"]{display:flex;gap:.5rem;align-items:baseline;white-space:nowrap;border:0;border-bottom:3px solid transparent;border-radius:.4rem .4rem 0 0;background:var(--surface2);font:600 1rem var(--f-display)}
+[role="tab"][aria-selected="true"]{background:var(--accent-soft);border-bottom-color:var(--accent)}
+.n{font:600 .8rem var(--f-mono);color:var(--muted)}
+[role="tabpanel"]{background:var(--surface);border:1px solid var(--line);border-top:0;padding:1rem 1.25rem}
+.intro{margin:.25rem 0 1rem;color:var(--muted)}
+.campos{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:.6rem .8rem;align-items:end;margin:.5rem 0}
+.campo{display:flex;flex-direction:column;gap:.2rem;min-width:0}
+.campo.ancho{grid-column:1/-1}
+.campo label,.etq{font-weight:700;font-size:.9rem}
+.ayuda{color:var(--muted);font-size:.85rem}
+input,select,textarea{width:100%;border:1px solid var(--muted);border-radius:.4rem;padding:.35rem .6rem;background:var(--surface)}
+input[type="checkbox"],input[type="radio"]{width:auto}
+input[type="range"]{padding:0;height:1.6rem;min-width:8rem;border:0;background:transparent;accent-color:var(--accent)}
+textarea{resize:vertical;min-height:4rem}
+.fila{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin:.5rem 0}
+.primario{background:var(--pcb);border-color:var(--pcb);color:#fff}
+.pq{padding:.15rem .5rem;font-size:.85rem}
+.tabla{overflow-x:auto;margin:.5rem 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{border-bottom:1px solid var(--line);padding:.35rem .5rem;text-align:left;vertical-align:top}
+th{background:var(--surface2);font-family:var(--f-display);font-weight:600}
+td input,td select,td textarea{min-width:5rem}
+td textarea{min-height:2.6rem}
+td.num,th.num{text-align:right}
+td.num input{text-align:right}
+tfoot td,tr.total td{font-weight:700;background:var(--surface2)}
+.msg{margin:.5rem 0;min-height:1.4rem}
+.msg:empty{min-height:0;margin:0}
+.aviso{margin:.75rem 0;padding:.5rem .75rem;border-left:4px solid var(--accent);background:var(--accent-soft)}
+.aviso ul{margin:.25rem 0 0;padding-left:1.2rem}
+.correccion{margin:.75rem 0;padding:.4rem .75rem;border-left:4px solid var(--accent);background:var(--surface2)}
+.correccion:empty{display:none}
+.sem{display:inline-block;padding:.05rem .6rem;border-radius:1rem;border:2px solid var(--muted);font-weight:700;background:var(--surface2)}
+.sem-verde{border-color:var(--ok)}
+.sem-ambar{border-color:var(--accent);background:var(--accent-soft)}
+.sem-rojo{border-color:var(--ko)}
+.ok{color:var(--ok);font-weight:700}
+.ko{color:var(--ko);font-weight:700}
+.barra{display:flex;align-items:center;gap:.5rem;margin:.15rem 0;font-size:.9rem}
+.barra span.t{flex:0 0 12rem}
+.barra span.b{display:block;height:.8rem;background:var(--accent);border-radius:.2rem;min-width:2px}
+.dos{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1rem}
+.opciones{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0}
+.tarjeta{border:1px solid var(--line);border-radius:.5rem;padding:.6rem .8rem;margin:.6rem 0;background:var(--surface)}
+.tarjeta h4{margin:0 0 .4rem;font-family:var(--f-display)}
+.tarjeta.elegida{border:2px solid var(--accent);background:var(--accent-soft)}
+.cuad{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem;margin:.5rem 0}
+.cuad>div{border:1px solid var(--muted);border-radius:.4rem;padding:.4rem .6rem;background:var(--surface2);min-height:5rem}
+.cuad b{display:block;font-family:var(--f-display);font-size:.9rem}
+.cuad small{display:block;color:var(--muted)}
+.cuad ul{margin:.25rem 0 0;padding-left:1.1rem}
+.arbol3{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.6rem;align-items:stretch;margin:.5rem 0}
+.arbol3>div{border:1px solid var(--muted);border-radius:.4rem;padding:.4rem .6rem;background:var(--surface2)}
+.arbol3 .centro{border:2px solid var(--accent);background:var(--accent-soft)}
+.arbol3 ul{margin:.25rem 0 0;padding-left:1.1rem}
+.fase{border:1px solid var(--muted);border-radius:.5rem;padding:.4rem .8rem .6rem;margin:.6rem 0;background:var(--surface)}
+.fase>.fila{justify-content:space-between}
+pre{white-space:pre-wrap;background:var(--surface2);padding:.75rem;border-radius:.4rem;max-height:22rem;overflow:auto;font-size:.82rem}
+details.datos{margin:.75rem 0;border:1px solid var(--line);border-radius:.5rem;padding:.4rem .8rem;background:var(--surface)}
+details.datos summary{cursor:pointer;font-weight:700}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="cabecera">
+  <a href="../../" data-lab-volver aria-label="Volver a la unidad">← <span>Unidad</span></a>
+  <h1>Laboratorio de diseño de proyecto</h1>
+  <div role="group" aria-label="Tamaño del texto">
+    <button type="button" data-lab-zoom="-" aria-label="Reducir texto">A−</button>
+    <button type="button" data-lab-zoom="+" aria-label="Aumentar texto">A+</button>
+  </div>
+</header>
+<main>
+  <div id="banner" class="aviso" role="status" hidden></div>
+  <details class="datos">
+    <summary>Tus datos: guardar, exportar e importar</summary>
+    <p class="intro">Todo lo que escribes se guarda solo en este navegador. Para entregarlo en Aules o llevarlo a otro ordenador, exporta el diseño. Este laboratorio no sustituye al entregable: te ayuda a prepararlo.</p>
+    <div class="fila" id="barra-datos"></div>
+    <p class="msg" id="aviso-datos" role="status"></p>
+  </details>
+
+  <div class="pestanas" role="tablist" aria-label="Secciones del laboratorio">
+    <button type="button" role="tab" id="tab-necesidades" data-tab="necesidades" aria-controls="panel-necesidades" aria-selected="true"><span class="n">1</span><span>Necesidades</span></button>
+    <button type="button" role="tab" id="tab-ideas" data-tab="ideas" aria-controls="panel-ideas" aria-selected="false" tabindex="-1"><span class="n">2</span><span>Ideas</span></button>
+    <button type="button" role="tab" id="tab-requisitos" data-tab="requisitos" aria-controls="panel-requisitos" aria-selected="false" tabindex="-1"><span class="n">3</span><span>Requisitos</span></button>
+    <button type="button" role="tab" id="tab-viabilidad" data-tab="viabilidad" aria-controls="panel-viabilidad" aria-selected="false" tabindex="-1"><span class="n">4</span><span>Viabilidad</span></button>
+    <button type="button" role="tab" id="tab-alcance" data-tab="alcance" aria-controls="panel-alcance" aria-selected="false" tabindex="-1"><span class="n">5</span><span>Alcance y EDT</span></button>
+    <button type="button" role="tab" id="tab-presupuesto" data-tab="presupuesto" aria-controls="panel-presupuesto" aria-selected="false" tabindex="-1"><span class="n">6</span><span>Presupuesto</span></button>
+    <button type="button" role="tab" id="tab-calidad" data-tab="calidad" aria-controls="panel-calidad" aria-selected="false" tabindex="-1"><span class="n">7</span><span>Calidad</span></button>
+    <button type="button" role="tab" id="tab-practica" data-tab="practica" aria-controls="panel-practica" aria-selected="false" tabindex="-1"><span class="n">8</span><span>Memoria y autoevaluación</span></button>
+  </div>
+
+  <section role="tabpanel" id="panel-necesidades" aria-labelledby="tab-necesidades" tabindex="0">
+    <h2>Registro de necesidades</h2>
+    <p class="intro">Anota de tres a cinco necesidades con su evidencia y su fuente. Escribe lo que falta o duele, no la solución. Después puntúa impacto y urgencia (de 1 a 5) y elige la necesidad de tu proyecto.</p>
+    <div id="c-necesidades"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-ideas" aria-labelledby="tab-ideas" tabindex="0" hidden>
+    <h2>Ideas y criterios ponderados</h2>
+    <p class="intro">Primero generad ideas (al menos seis) sin criticarlas. Después fijad los criterios y sus pesos (suman 100), puntuad de 1 a 5 y mirad cómo cambia el ranking si varía un peso. Recoged también qué soluciones existen ya.</p>
+    <div id="c-ideas"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-requisitos" aria-labelledby="tab-requisitos" tabindex="0" hidden>
+    <h2>Partes interesadas y requisitos</h2>
+    <p class="intro">Identifica quién afecta al proyecto o se ve afectado por él, y qué debe cumplir la solución. Cada requisito lleva su prioridad MoSCoW y, si puedes, su parte interesada y su criterio de aceptación.</p>
+    <div id="c-requisitos"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-viabilidad" aria-labelledby="tab-viabilidad" tabindex="0" hidden>
+    <h2>Viabilidad y riesgos iniciales</h2>
+    <p class="intro">Contesta las comprobaciones de las cinco dimensiones, compara dos alternativas técnicas y anota los riesgos principales. El semáforo y la recomendación son orientativos: la decisión es tuya y se justifica.</p>
+    <div id="c-viabilidad"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-alcance" aria-labelledby="tab-alcance" tabindex="0" hidden>
+    <h2>Objetivos, alcance y EDT</h2>
+    <p class="intro">Redacta objetivos medibles y con plazo, di qué entra y qué no, y descompón el proyecto en fases y paquetes de trabajo con sus horas. La EDT alimenta el presupuesto y, en la Unidad 3, el cronograma.</p>
+    <div id="c-alcance"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-presupuesto" aria-labelledby="tab-presupuesto" tabindex="0" hidden>
+    <h2>Recursos y presupuesto</h2>
+    <p class="intro">Todos los precios van sin IVA y con su fuente. El orden del cálculo es: costes directos, indirectos, contingencia, margen, base imponible, IVA y total. Los datos del ejemplo están inventados.</p>
+    <div id="c-presupuesto"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-calidad" aria-labelledby="tab-calidad" tabindex="0" hidden>
+    <h2>Plan de calidad</h2>
+    <p class="intro">Para cada entregable de la EDT define cómo sabrás que está bien hecho. Después repasa los cinco aspectos de la lista de comprobación.</p>
+    <div id="c-calidad"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-practica" aria-labelledby="tab-practica" tabindex="0" hidden>
+    <h2>Memoria de diseño y autoevaluación</h2>
+    <p class="intro">Completa los apartados que faltan, prepara el guion de la presentación, revisa qué criterios (RA2.a a RA2.k) tienes cubiertos, exporta la memoria y repasa con las preguntas.</p>
+    <div id="c-practica"></div>
+  </section>
+</main>
+
+<script>
+'use strict';
+/* ====== Utilidades ====== */
+const $ = (s, r) => (r || document).querySelector(s);
+function el(tag, attrs, ...hijos) {
+  const e = document.createElement(tag);
+  for (const k of Object.keys(attrs || {})) {
+    const v = attrs[k];
+    if (v === false || v == null) continue;
+    if (k === 'class') e.className = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (k === 'value') e.value = v;
+    else e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const h of hijos.flat(Infinity)) {
+    if (h == null || h === false) continue;
+    e.append(h instanceof Node ? h : document.createTextNode(String(h)));
+  }
+  return e;
+}
+let contador = 0;
+const nuevoId = () => 'i' + Date.now().toString(36) + (++contador);
+const num = (s) => { const n = Number(String(s == null ? '' : s).replace(',', '.').trim()); return Number.isFinite(n) ? n : 0; };
+const lleno = (s) => String(s == null ? '' : s).trim() !== '';
+const largo = (s) => String(s == null ? '' : s).trim().length;
+const lineas = (s) => String(s == null ? '' : s).split('\n').map((x) => x.trim()).filter(Boolean);
+const palabras = (s) => (String(s == null ? '' : s).trim().match(/\S+/g) || []).length;
+const redondear = (n) => Math.round((n + Number.EPSILON) * 100) / 100;
+const fmt = (n, d) => Number(n).toLocaleString('es-ES', { minimumFractionDigits: d == null ? 0 : d, maximumFractionDigits: d == null ? 0 : d, useGrouping: 'always' });
+const eur = (n) => fmt(n, 2) + ' €';
+const mezclar = (a) => { const r = a.slice(); for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
+let uid = 0;
+function campo(etiqueta, control, ayuda, ancho) {
+  const id = 'f' + (++uid);
+  control.id = id;
+  return el('div', { class: 'campo' + (ancho ? ' ancho' : '') }, el('label', { for: id }, etiqueta), control, ayuda ? el('small', { class: 'ayuda' }, ayuda) : null);
+}
+function selector(opciones, actual, alCambiar) {
+  const s = el('select', {}, opciones.map((o) => el('option', { value: o[0], selected: String(o[0]) === String(actual) }, o[1])));
+  if (alCambiar) s.addEventListener('change', () => alCambiar(s.value));
+  return s;
+}
+function tabla(cabeceras, filas, numericas, pie) {
+  return el('div', { class: 'tabla' }, el('table', {},
+    el('thead', {}, el('tr', {}, cabeceras.map((c, i) => el('th', { scope: 'col', class: numericas && numericas.includes(i) ? 'num' : null }, c)))),
+    el('tbody', {}, filas.map((f) => el('tr', { class: f.total ? 'total' : null }, (f.celdas || f).map((c, i) => el('td', { class: numericas && numericas.includes(i) ? 'num' : null }, c))))),
+    pie ? el('tfoot', {}, pie) : null));
+}
+function semaforo(nivel, texto) {
+  const g = { verde: '●', ambar: '▲', rojo: '■', gris: '○' }[nivel];
+  return el('span', { class: 'sem sem-' + nivel }, g + ' ' + texto);
+}
+function listaAviso(titulo, items) {
+  if (!items.length) return el('p', { class: 'ok' }, '✔ ' + titulo + ': todo en orden.');
+  return el('div', { class: 'aviso', role: 'status' }, el('b', null, titulo), el('ul', null, items.map((x) => el('li', null, x))));
+}
+const celdaMd = (s) => String(s == null ? '' : s).replace(/\|/g, '\\|').replace(/\s*\n\s*/g, ' ').trim();
+function descargar(nombre, texto, tipo) {
+  const blob = new Blob([texto], { type: tipo + ';charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = nombre;
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function aviso(texto) { $('#aviso-datos').textContent = texto; }
+
+/* Controles ligados a un objeto. def: { k, t, tipo: text|area|num|sel|chk, op, ancho }. alCambiar(def, esSelector, item). */
+function controlPara(def, item, alCambiar, etiqueta) {
+  let c;
+  if (def.tipo === 'sel') {
+    c = el('select', {}, def.op.map((o) => el('option', { value: o[0], selected: String(o[0]) === String(item[def.k] == null ? '' : item[def.k]), 'data-ref': o[2] || null }, o[1])));
+    c.addEventListener('change', () => { item[def.k] = c.value; alCambiar(def, true, item); });
+  } else if (def.tipo === 'chk') {
+    c = el('input', { type: 'checkbox', checked: !!item[def.k] });
+    c.addEventListener('change', () => { item[def.k] = c.checked; alCambiar(def, true, item); });
+  } else {
+    c = def.tipo === 'area' ? el('textarea', { rows: def.filas || 2 }) : el('input', { type: 'text', autocomplete: 'off' });
+    if (def.tipo === 'num') c.setAttribute('inputmode', 'decimal');
+    c.value = item[def.k] == null ? '' : item[def.k];
+    c.addEventListener('input', () => { item[def.k] = c.value; alCambiar(def, false, item); });
+  }
+  c.setAttribute('aria-label', etiqueta || def.t);
+  return c;
+}
+/* Tabla editable: una fila por elemento, un botón «Quitar» y, abajo, «Añadir». */
+function tablaEditable(items, defs, opc) {
+  const alCambiar = opc.alCambiar;
+  const cuerpo = el('tbody');
+  items.forEach((it, n) => {
+    cuerpo.append(el('tr', {},
+      defs.map((d) => el('td', { class: d.tipo === 'num' ? 'num' : null }, controlPara(d, it, alCambiar, d.t + ' (fila ' + (n + 1) + ')'))),
+      el('td', {}, el('button', { type: 'button', class: 'pq', 'aria-label': 'Quitar la fila ' + (n + 1) + ' de ' + (opc.nombre || 'la tabla'), onclick: () => { items.splice(n, 1); opc.alQuitar(); } }, 'Quitar'))));
+  });
+  const t = el('div', { class: 'tabla' }, el('table', {},
+    el('thead', {}, el('tr', {}, defs.map((d) => el('th', { scope: 'col', class: d.tipo === 'num' ? 'num' : null }, d.t)), el('th', { scope: 'col' }, 'Acción'))),
+    cuerpo));
+  const nuevo = el('button', { type: 'button', onclick: () => { items.push(opc.nuevo()); opc.alQuitar(); } }, opc.anadir || 'Añadir fila');
+  return el('div', null, items.length ? t : el('p', { class: 'ayuda' }, 'Todavía no hay filas.'), el('div', { class: 'fila' }, nuevo));
+}
+const OP15 = [['', '—'], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5']];
+const OP13 = [['', '—'], ['1', '1 (baja)'], ['2', '2 (media)'], ['3', '3 (alta)']];
+/* Pone al día, sin repintar, los textos de las opciones de listas desplegables que dependen de un nombre editable. */
+function renombrar(raiz, ref, texto) { raiz.querySelectorAll('option[data-ref="' + ref + '"]').forEach((o) => { o.textContent = texto || '(sin nombre)'; }); }
+
+/* ====== Datos de referencia ====== */
+const SOLUCION_RE = /\b(nas|vpn|firewall|cortafuegos|router|servidor nuevo|licencia|software|aplicaci[oó]n|comprar|instalar|implantar|migrar a)\b/i;
+const VIAS = [['', 'Sin aspecto innovador'], ['automatizacion', 'Automatización'], ['nube', 'Nube'], ['libre', 'Software libre'], ['monitorizacion', 'Monitorización y avisos'], ['energia', 'Eficiencia energética'], ['ia', 'Inteligencia artificial'], ['iot', 'IoT'], ['otro', 'Otro']];
+const nombreVia = (v) => (VIAS.find((x) => x[0] === v) || VIAS[0])[1];
+const CRITERIOS_DEF = [['Necesidad cubierta', 25], ['Viabilidad técnica con los medios del ciclo', 25], ['Coste y recursos', 15], ['Innovación', 10], ['Impacto y ODS', 10], ['Plazo', 10], ['Interés del equipo', 5]];
+const PODER = [['alto', 'Alto'], ['bajo', 'Bajo']];
+const TIPOS_REQ = [['funcional', 'Funcional'], ['nofuncional', 'No funcional'], ['restriccion', 'Restricción']];
+const PRIO = [['must', 'Must (debe)'], ['should', 'Should (debería)'], ['could', 'Could (podría)'], ['wont', "Won't (ahora no)"]];
+const nombrePrio = (v) => (PRIO.find((x) => x[0] === v) || ['', v])[1];
+const nombreTipoReq = (v) => (TIPOS_REQ.find((x) => x[0] === v) || ['', v])[1];
+const RESP = [['', 'Sin contestar'], ['si', 'Sí'], ['no', 'No'], ['nose', 'No lo sé']];
+const DIMENSIONES = [
+  ['tecnica', 'Técnica', ['¿Conocemos las tecnologías necesarias o podemos aprenderlas en el plazo?', '¿Disponemos, o podemos conseguir, los equipos y programas necesarios?', '¿Hemos visto o probado funcionar algo parecido?']],
+  ['economica', 'Económica', ['¿El coste total es asumible para el cliente?', '¿Lo que se evita o se gana compensa lo que cuesta?', '¿Los precios están contrastados en catálogos o presupuestos?']],
+  ['legal', 'Legal', ['¿Sabemos si se tratan datos personales y cómo se protegen?', '¿Las licencias de los programas permiten el uso previsto?', '¿Tenemos claros los permisos o contratos con terceros que hagan falta?']],
+  ['temporal', 'Temporal', ['¿El trabajo de la EDT cabe en el plazo disponible?', '¿Los horarios y fechas del cliente permiten hacerlo?', '¿Hay margen para imprevistos?']],
+  ['organizativa', 'Organizativa', ['¿Hay personas con el perfil necesario y disponibles?', '¿Cada tarea tiene una persona responsable?', '¿Hay una persona de contacto en el cliente?']],
+];
+const METODOS = [['', '—'], ['prueba', 'Prueba'], ['inspeccion', 'Inspección'], ['revision', 'Revisión'], ['demostracion', 'Demostración'], ['medicion', 'Medición']];
+const nombreMetodo = (v) => (METODOS.find((x) => x[0] === v) || METODOS[0])[1];
+const LISTA_CAL = [
+  ['datos', 'Datos personales', '¿Se tratan datos personales? Si es así, ¿están previstas medidas (cifrado, accesos limitados, contrato con quien los trata)?'],
+  ['seguridad', 'Seguridad de la información', '¿Está previsto proteger la confidencialidad, la integridad y la disponibilidad de la información del cliente?'],
+  ['accesibilidad', 'Accesibilidad', '¿Lo que se entrega (manuales, webs, documentos) se puede leer y usar por todas las personas?'],
+  ['ambiente', 'Medio ambiente', '¿Se ha previsto qué hacer con los equipos y los residuos (reutilizar, reciclar, RAEE)?'],
+  ['licencias', 'Licencias de software', '¿El software que se usa tiene una licencia que permite el uso previsto?'],
+];
+const RESP_CAL = [['', 'Sin contestar'], ['si', 'Sí'], ['no', 'No (pendiente)'], ['na', 'No aplica']];
+const CRITERIOS = [
+  ['a', 'Se han identificado las necesidades.', 'necesidades'],
+  ['b', 'Se han planteado en grupo posibles soluciones.', 'ideas'],
+  ['c', 'Se ha obtenido la información relativa a las soluciones planteadas.', 'ideas'],
+  ['d', 'Se han identificado aspectos innovadores que puedan ser de aplicación.', 'ideas'],
+  ['e', 'Se ha realizado el estudio de viabilidad técnica.', 'viabilidad'],
+  ['f', 'Se han identificado las partes que componen el proyecto.', 'alcance'],
+  ['g', 'Se han previsto los recursos materiales y humanos para realizarlo.', 'presupuesto'],
+  ['h', 'Se ha realizado el presupuesto económico correspondiente.', 'presupuesto'],
+  ['i', 'Se ha definido y elaborado la documentación para su diseño.', 'practica'],
+  ['j', 'Se han identificado los aspectos relacionados con la calidad del proyecto.', 'calidad'],
+  ['k', 'Se han presentado en público las ideas más relevantes de los proyectos propuestos.', 'practica'],
+];
+const NIVELES = [['0', 'Sin valorar'], ['1', 'No lo veo claro'], ['2', 'Lo he trabajado'], ['3', 'Lo domino']];
+const PITCH = [['problema', 'Problema', '¿Qué duele y a quién? Una cifra con fuente.'], ['solucion', 'Solución', '¿Qué proponéis?'], ['valor', 'Valor y diferencial', '¿Por qué esta y no otra? ¿Qué aporta de nuevo?'], ['costePlazo', 'Coste y plazo', '¿Cuánto cuesta y cuánto tarda?'], ['peticion', 'Petición', '¿Qué pedís al público?']];
+const PPM = 130; // palabras por minuto, valor orientativo
+
+const BANCO = [
+  ['a', 'Una pyme dice «necesitamos un NAS». ¿Qué hay que hacer primero?', ['Comprar el NAS más barato', 'Preguntar qué problema quiere resolver, porque nombra una solución y no una necesidad', 'Instalar una VPN'], 1, 'Una necesidad dice qué falta o qué duele, no qué se compra. Al descubrir el problema (por ejemplo, no poder recuperar archivos) pueden aparecer mejores soluciones.'],
+  ['b', 'Mientras el grupo propone ideas, una persona critica cada una. ¿Qué se pierde?', ['Nada, así se filtra antes', 'Ideas: hay que separar generar de evaluar', 'El acta'], 1, 'Si se critica mientras se propone, la gente se autocensura y salen menos ideas. Primero cantidad, después criterio.'],
+  ['c', '¿Qué lleva una buena ficha comparativa de soluciones existentes?', ['Solo los nombres de los productos', 'Función, coste, carencias y fuente con fecha de consulta', 'Una opinión del equipo'], 1, 'Sin fuente ni fecha el dato no es evidencia, y los precios y características cambian con el tiempo.'],
+  ['d', '¿Cuál es un aspecto innovador bien planteado?', ['«Usamos tecnología moderna»', '«Una restauración de prueba automática cada mes, con el resultado enviado por correo»', '«Es innovador porque nadie lo ha hecho»'], 1, 'Dice qué aporta y cómo se aplica. Innovar aquí es incorporar algo nuevo para ese cliente, no inventar algo inédito.'],
+  ['e', 'En el estudio de viabilidad, la dimensión económica sale en rojo. ¿Qué recomienda el laboratorio?', ['Go', 'Go con condiciones', 'No-go: no compensa y hay que replantear o elegir otra idea'], 2, 'Si la dimensión técnica o la económica son inviables, el proyecto no se sostiene tal como está.'],
+  ['f', '¿Cuál de estos objetivos es SMART?', ['«Mejorar las copias»', '«Instalar copias automáticas diarias en 5 pymes en 8 semanas»', '«Que el cliente esté contento»'], 1, 'Es específico, medible (5 pymes, diarias), alcanzable, relevante y con plazo (8 semanas).'],
+  ['g', 'La EDT suma 58 horas y en el presupuesto hay 45 horas de personas. ¿Qué indica?', ['Que todo está bien', 'Que no cuadran y hay que revisar la EDT o el presupuesto', 'Que sobran 13 horas de contingencia'], 1, 'Plan y presupuesto deben contar las mismas horas; si no, uno de los dos está mal estimado.'],
+  ['h', 'Un catálogo da un disco por 121 € con IVA incluido (21 %). ¿Qué precio pones en el presupuesto de una empresa que puede deducir el IVA?', ['121 €', '100 €', '146,41 €'], 1, '121 ÷ 1,21 = 100 €. El IVA que la empresa paga a su proveedor lo recupera, así que no es un coste y se añade aparte, al final, sobre la base imponible.'],
+  ['i', '¿Para qué sirve la memoria de diseño?', ['Para cumplir con el profesor', 'Para que otra persona pueda entender, valorar y construir el proyecto', 'Para sustituir la presentación'], 1, 'Documenta lo decidido y por qué, con esquemas, cifras y fuentes, sin necesidad de hablar con su autor.'],
+  ['j', '«La restauración tarda menos de 2 horas» es…', ['Un criterio de aceptación medible para un requisito no funcional', 'Un objetivo vago', 'Una partida del presupuesto'], 0, 'Se puede comprobar con una prueba y una medición: sirve para decidir si el entregable se acepta.'],
+  ['k', 'Tu guion tiene 650 palabras y el tiempo es de 3 minutos (unas 130 palabras por minuto). ¿Qué haces?', ['Hablar más deprisa', 'Recortarlo hasta unas 390 palabras', 'Quitar las diapositivas'], 1, '650 palabras son 5 minutos. Hay que quedarse con lo esencial, no acelerar: respetar el tiempo es parte del criterio.'],
+].map((q) => ({ ce: q[0], pregunta: q[1], opciones: q[2], ok: q[3], explica: q[4] }));
+
+/* ====== Estado ====== */
+function estadoVacio() {
+  return {
+    version: 1, tipo: 'diseno-proyecto-ud02', ejemplo: false,
+    proyecto: { titulo: '', empresa: '', equipo: '', resumen: '' },
+    necesidades: { items: [], elegida: '' },
+    ideas: { items: [], criterios: CRITERIOS_DEF.map((c) => ({ id: nuevoId(), nombre: c[0], peso: String(c[1]) })), puntos: {}, elegida: '', justificacion: '', acta: '', existentes: [], innovacion: '' },
+    requisitos: { partes: [], reqs: [] },
+    viabilidad: { resp: {}, notas: {}, alternativas: [], elegida: '', riesgos: [], decision: '' },
+    alcance: { general: '', especificos: [], dentro: '', fuera: '', supuestos: '', fases: [] },
+    presupuesto: { personas: [], equipos: [], licencias: [], subcontratas: [], indirectos: '10', contingencia: '5', margen: '0', iva: '21', unidades: '1' },
+    calidad: { filas: {}, lista: {} },
+    memoria: { antecedentes: '', esquema: '', conclusiones: '', declaracionIA: '', objetivoMin: '3', pitch: {}, diapositivas: [] },
+    autoeval: {}, quiz: { aciertos: 0, intentos: 0 },
+  };
+}
+function fusionar(base, extra) {
+  if (Array.isArray(base) || typeof base !== 'object' || base === null) return extra === undefined ? base : extra;
+  const r = Object.assign({}, base);
+  if (extra && typeof extra === 'object' && !Array.isArray(extra)) {
+    for (const k of Object.keys(extra)) r[k] = k in base ? fusionar(base[k], extra[k]) : extra[k];
+  }
+  return r;
+}
+function normalizar(e) {
+  const ids = new Set(e.necesidades.items.map((n) => n.id));
+  if (!ids.has(e.necesidades.elegida)) e.necesidades.elegida = '';
+  const idIdeas = new Set(e.ideas.items.map((n) => n.id));
+  if (!idIdeas.has(e.ideas.elegida)) e.ideas.elegida = '';
+  const idAlt = new Set(e.viabilidad.alternativas.map((n) => n.id));
+  if (!idAlt.has(e.viabilidad.elegida)) e.viabilidad.elegida = '';
+  const idPartes = new Set(e.requisitos.partes.map((n) => n.id));
+  for (const r of e.requisitos.reqs) if (r.parte && !idPartes.has(r.parte)) r.parte = '';
+  return e;
+}
+function ejemplo() {
+  const e = estadoVacio();
+  e.ejemplo = true;
+  e.proyecto = { titulo: 'Copias de seguridad con restauración comprobada para cinco pymes', empresa: 'Reparaciones Byte Alacant, S. L. (empresa ficticia)', equipo: 'Equipo de ejemplo', resumen: 'La empresa ficticia detecta que varias pymes con contrato pierden archivos porque sus copias son manuales y nunca se comprueban. Se propone un servicio piloto para cinco pymes: copia diaria automática, copia externa cifrada y una restauración de prueba mensual. Presupuesto de 5.904,79 € con IVA y ocho semanas de plazo. Todos los datos son inventados con fines didácticos.' };
+  const FUENTE = 'Dato inventado para el ejemplo';
+  const nec = (texto, afectados, evidencia, frecuencia, impacto, urgencia, causas, efectos) => ({ id: nuevoId(), texto, afectados, evidencia, fuente: FUENTE, frecuencia, impacto, urgencia, causas, efectos });
+  const n1 = nec('Las pymes con contrato no pueden recuperar sus archivos si el equipo falla', 'Las pymes con contrato de mantenimiento', '3 de 25 pymes perdieron archivos en el último año', '3 casos al año; cada uno cuesta varios días de trabajo', '5', '4', 'Copias manuales\nNadie las comprueba\nLa copia está en el mismo equipo\nNadie es responsable', 'Días sin trabajar\nReclamaciones de clientes\nCoste de recuperar datos en un laboratorio especializado');
+  const n2 = nec('Nadie vigila si el servidor de un cliente deja de funcionar', 'Pymes con servidor propio', '6 avisos por caídas que detectó el cliente y no la empresa', '6 veces al año', '4', '3', 'No hay monitorización\nEl servicio solo reacciona al aviso', 'Retrasos en la atención\nPérdida de confianza');
+  const n3 = nec('Los avisos por teléfono no quedan registrados', 'El equipo técnico', '1 de cada 4 avisos se olvida', 'Semanal', '3', '4', 'Se apuntan en papel\nNo hay un registro común', 'Clientes sin atender\nTrabajo repetido');
+  const n4 = nec('Los equipos antiguos se acumulan en el taller', 'La empresa', '14 equipos parados', 'Continuo', '2', '2', 'No hay un procedimiento de reutilización', 'Falta de espacio\nResiduos sin gestionar');
+  e.necesidades.items = [n1, n2, n3, n4];
+  e.necesidades.elegida = n1.id;
+  const idea = (nombre, desc, innov) => ({ id: nuevoId(), nombre, desc, innov });
+  const i1 = idea('Copias con restauración comprobada', 'Copia diaria automática, copia externa cifrada y restauración de prueba mensual.', 'automatizacion');
+  const i2 = idea('Monitorización de servicios', 'Avisar al técnico cuando un servicio de la pyme deja de responder.', 'monitorizacion');
+  const i3 = idea('Registro de incidencias con catálogo de servicios', 'Sistema libre de gestión de incidencias para las pymes y el equipo técnico.', 'libre');
+  const i4 = idea('Teletrabajo seguro', 'Acceso remoto con VPN y doble factor para el personal de las pymes.', 'otro');
+  const i5 = idea('Reacondicionamiento de equipos para entidades sociales', 'Reparar y ceder equipos antiguos a asociaciones.', 'energia');
+  const i6 = idea('Web, dominio y correo para comercios locales', 'Paquete básico de presencia en Internet.', '');
+  e.ideas.items = [i1, i2, i3, i4, i5, i6];
+  const P = [[5, 4, 3, 3, 3, 4, 4], [3, 4, 3, 3, 3, 4, 3], [3, 3, 4, 2, 2, 3, 3], [4, 3, 3, 4, 3, 3, 2], [2, 3, 2, 2, 5, 2, 4], [2, 4, 3, 2, 2, 3, 2]];
+  e.ideas.items.forEach((it, a) => { e.ideas.puntos[it.id] = {}; e.ideas.criterios.forEach((c, b) => { e.ideas.puntos[it.id][c.id] = String(P[a][b]); }); });
+  e.ideas.elegida = i1.id;
+  e.ideas.justificacion = 'Es la que más puntúa y atiende la necesidad más prioritaria. Se mantiene en primer lugar al variar cada peso por separado; solo la superan si el coste pasa del 56 %, la innovación del 43 % o el impacto y los ODS del 44 %.';
+  e.ideas.acta = 'Sesión de ideas del equipo. Técnica: escritura en silencio durante 5 minutos y puesta en común, y SCAMPER sobre «copia manual». Salieron seis ideas. Se descartó el reacondicionamiento de equipos por dar menos respuesta a la necesidad elegida, aunque se anota para una ampliación con ODS.';
+  const ex = (nombre, hace, coste, carencias) => ({ id: nuevoId(), nombre, hace, coste, carencias, fuente: 'Descripción genérica inventada para el ejemplo (no es un producto real)' });
+  e.ideas.existentes = [
+    ex('Copia en la nube de pago por puesto', 'Copia automática cifrada', 'Cuota mensual por equipo', 'Depende de la conexión; restauración lenta con mucho volumen'),
+    ex('Almacenamiento en red con copias programadas', 'Copia local rápida', 'Pago único y mantenimiento', 'Si hay incendio o robo se pierde también la copia'),
+    ex('Copia manual en disco externo', 'Copia puntual', 'Muy bajo', 'Depende de una persona y no se comprueba'),
+  ];
+  e.ideas.innovacion = 'Además de copiar, el servicio comprueba que se puede recuperar: una restauración de prueba automática cada mes cuyo resultado se envía por correo al técnico y a la persona de contacto de la pyme. Aporta la certeza de que la copia sirve, que hoy nadie tiene. Se aplica con tareas programadas y software libre, sin licencias adicionales.';
+  const parte = (nombre, poder, interes) => ({ id: nuevoId(), nombre, poder, interes });
+  const p1 = parte('Gerencia de cada pyme', 'alto', 'alto');
+  const p2 = parte('Personal administrativo de las pymes', 'bajo', 'alto');
+  const p3 = parte('Responsable técnico de la empresa', 'alto', 'alto');
+  const p4 = parte('Proveedor del servicio de copia externa', 'alto', 'bajo');
+  e.requisitos.partes = [p1, p2, p3, p4];
+  const rq = (texto, tipo, prio, pa, criterio) => ({ id: nuevoId(), texto, tipo, prio, parte: pa.id, criterio });
+  e.requisitos.reqs = [
+    rq('Copia diaria automática de las carpetas de trabajo', 'funcional', 'must', p1, 'Copia completa cada noche durante una semana'),
+    rq('Copia externa cifrada', 'funcional', 'must', p1, 'Los datos de la copia externa no se pueden leer sin la clave'),
+    rq('Restauración de prueba mensual', 'funcional', 'should', p3, 'Informe mensual de la prueba enviado por correo'),
+    rq('La restauración tarda menos de 2 horas', 'nofuncional', 'must', p1, 'Una prueba medida termina en menos de 2 horas'),
+    rq('Aviso por correo si una copia falla', 'funcional', 'should', p2, 'Se simula un fallo y llega el aviso'),
+    rq('Solo software con licencia que permita el uso comercial', 'restriccion', 'must', p3, 'Revisión de las licencias de cada programa'),
+    rq('Informe mensual con gráficas', 'funcional', 'could', p1, ''),
+    rq('Copia de los móviles personales', 'funcional', 'wont', p2, ''),
+    rq('Respetar los límites de uso del servicio de copia externa', 'restriccion', 'should', p4, 'Se comprueba el espacio contratado'),
+  ];
+  const ALT1 = nuevoId(); const ALT2 = nuevoId();
+  e.viabilidad.alternativas = [
+    { id: ALT1, nombre: 'A. Almacenamiento local con copia programada y copia externa cifrada', pros: 'Restauración rápida; los datos siguen a salvo si falla el equipo local', contras: 'Más piezas que mantener', coste: '4243' },
+    { id: ALT2, nombre: 'B. Solo copia en la nube', pros: 'Menos hardware', contras: 'Restauración lenta con mucho volumen; cuota permanente', coste: '3600' },
+  ];
+  e.viabilidad.elegida = ALT1;
+  DIMENSIONES.forEach((d) => d[2].forEach((q, n) => { e.viabilidad.resp[d[0] + n] = 'si'; }));
+  e.viabilidad.resp.legal2 = 'nose';
+  e.viabilidad.notas = { tecnica: 'Se ha probado una restauración en el taller con el mismo software.', economica: 'El coste por pyme es menor que lo que cuesta recuperar datos tras una pérdida.', legal: 'Hay datos personales en las copias: se cifran. Falta confirmar el contrato de encargado del tratamiento con cada pyme.', temporal: 'Ocho semanas para cinco pymes, fuera del horario de apertura.', organizativa: 'Hay un técnico de campo disponible y una persona de contacto en cada pyme.' };
+  const rs = (texto, prob, impacto, respuesta) => ({ id: nuevoId(), texto, prob, impacto, respuesta });
+  e.viabilidad.riesgos = [
+    rs('Una pyme no tiene conexión estable para la copia externa', '2', '3', 'Comprobarlo en el inventario inicial y, si falta, ampliar la copia local'),
+    rs('Retraso en la entrega de los equipos', '2', '2', 'Pedirlos al empezar y tener un proveedor alternativo'),
+    rs('Una restauración de prueba falla', '1', '3', 'Probar en el taller antes de instalar en el cliente'),
+  ];
+  e.viabilidad.decision = 'Go con condiciones: seguimos con la alternativa A y, antes de instalar, la gerencia firmará con cada pyme el contrato de tratamiento de datos.';
+  e.alcance.general = 'Proteger los datos de cinco pymes clientes con un servicio de copias que se pueda restaurar con seguridad.';
+  const ob = (texto) => ({ id: nuevoId(), texto });
+  e.alcance.especificos = [ob('Instalar copias automáticas diarias en 5 pymes clientes en 8 semanas'), ob('Restaurar con éxito una copia de prueba en cada pyme al menos una vez al mes, en menos de 2 horas'), ob('Entregar un manual de una página y formar a una persona de cada pyme antes del final de la semana 8')];
+  e.alcance.dentro = 'Copia diaria de las carpetas de trabajo\nCopia externa cifrada\nRestauración de prueba\nManual de una página y sesión de formación';
+  e.alcance.fuera = 'Migrar los programas de los clientes\nCopiar los móviles personales\nAtención 24 horas';
+  e.alcance.supuestos = 'Cada pyme tiene conexión a Internet estable\nCada pyme designa una persona de contacto\nLa instalación se hace fuera del horario de apertura';
+  const pq = (nombre, entregable, horas) => ({ id: nuevoId(), nombre, entregable, horas });
+  const fase = (nombre, paquetes) => ({ id: nuevoId(), nombre, paquetes });
+  e.alcance.fases = [
+    fase('1. Diseño', [pq('1.1 Inventario de datos y requisitos de cada pyme', 'Ficha de cada pyme', '8'), pq('1.2 Política de copias', 'Documento de política de copias', '6')]),
+    fase('2. Despliegue', [pq('2.1 Instalación y configuración del almacenamiento', 'Equipos configurados', '20'), pq('2.2 Copia externa cifrada', 'Copia en la nube activa', '6')]),
+    fase('3. Pruebas', [pq('3.1 Restauración de prueba en cada pyme', 'Informe de restauraciones', '8')]),
+    fase('4. Entrega', [pq('4.1 Formación y manual', 'Manual y sesión de formación', '6'), pq('4.2 Gestión y cierre', 'Acta de entrega', '4')]),
+  ];
+  const PF = 'Precio inventado para el ejemplo (sin IVA)';
+  const li = (desc, cantidad, precio) => ({ id: nuevoId(), desc, cantidad, precio, fuente: PF });
+  e.presupuesto.personas = [{ id: nuevoId(), perfil: 'Técnico/a de campo', horas: '40', tarifa: '19', fuente: '28.000 € anuales ÷ 1.500 h útiles (ficha de empresa ficticia)' }, { id: nuevoId(), perfil: 'Responsable técnico', horas: '12', tarifa: '24', fuente: '36.000 € anuales ÷ 1.500 h útiles (ficha de empresa ficticia)' }, { id: nuevoId(), perfil: 'Administración', horas: '6', tarifa: '16', fuente: '12.000 € anuales ÷ 750 h útiles (ficha de empresa ficticia)' }];
+  e.presupuesto.equipos = [li('Almacenamiento en red de 2 bahías (sin discos)', '5', '220'), li('Disco de 4 TB', '10', '95')];
+  e.presupuesto.licencias = [li('Copia externa cifrada, un año', '5', '96')];
+  e.presupuesto.subcontratas = [];
+  e.presupuesto.indirectos = '10'; e.presupuesto.contingencia = '5'; e.presupuesto.margen = '15'; e.presupuesto.iva = '21'; e.presupuesto.unidades = '5';
+  const todos = [];
+  e.alcance.fases.forEach((f) => f.paquetes.forEach((p) => todos.push(p)));
+  e.calidad.filas[todos[0].id] = { criterio: 'Hay una ficha completa de cada una de las 5 pymes', metodo: 'revision', responsable: 'Técnico/a de campo' };
+  e.calidad.filas[todos[1].id] = { criterio: 'La política está revisada por el responsable técnico', metodo: 'revision', responsable: 'Responsable técnico' };
+  e.calidad.filas[todos[2].id] = { criterio: 'Las 5 pymes tienen una copia completa cada noche durante una semana', metodo: 'inspeccion', responsable: 'Técnico/a de campo' };
+  e.calidad.filas[todos[3].id] = { criterio: 'Los datos de la copia externa no se pueden leer sin la clave', metodo: 'prueba', responsable: 'Técnico/a de campo' };
+  e.calidad.filas[todos[4].id] = { criterio: 'En cada pyme se restaura una copia de prueba en menos de 2 horas', metodo: 'medicion', responsable: 'Responsable técnico' };
+  e.calidad.filas[todos[5].id] = { criterio: 'Una persona sin conocimientos técnicos restaura un archivo con el manual', metodo: 'demostracion', responsable: 'Técnico/a de campo' };
+  e.calidad.filas[todos[6].id] = { criterio: 'Acta firmada por la persona de contacto de cada pyme', metodo: 'revision', responsable: 'Administración' };
+  e.calidad.lista = {
+    datos: { resp: 'no', nota: 'Falta firmar el contrato de tratamiento de datos con cada pyme.' },
+    seguridad: { resp: 'si', nota: 'Copias cifradas y acceso limitado al técnico responsable.' },
+    accesibilidad: { resp: 'si', nota: 'El manual usa letra grande y capturas con texto alternativo.' },
+    ambiente: { resp: 'si', nota: 'Los discos antiguos se entregan a un gestor autorizado de residuos.' },
+    licencias: { resp: 'si', nota: 'Software libre con licencia que permite el uso comercial.' },
+  };
+  e.memoria.antecedentes = 'Reparaciones Byte Alacant, S. L. es un servicio técnico ficticio de cinco personas con 25 pymes con contrato de mantenimiento. En el último año, tres de ellas perdieron archivos tras una avería porque sus copias eran manuales y no se comprobaban. Este proyecto convierte esa necesidad en un servicio de copias que se prueba de forma periódica.';
+  e.memoria.esquema = 'Esquema (se adjunta como imagen): en cada pyme, los equipos copian cada noche al almacenamiento en red; este envía una copia cifrada a un servicio externo; una tarea mensual restaura un archivo de prueba y manda un correo con el resultado al técnico y a la persona de contacto.';
+  e.memoria.conclusiones = 'La alternativa A es viable con la condición de firmar el contrato de datos con cada pyme. El presupuesto total es de 5.904,79 € con IVA para cinco pymes. El siguiente paso es planificar las actividades, los responsables y los riesgos en la Unidad 3.';
+  e.memoria.declaracionIA = 'Ejemplo: no se ha usado inteligencia artificial en este diseño.';
+  e.memoria.objetivoMin = '3';
+  e.memoria.pitch = {
+    problema: 'El año pasado, tres de nuestras veinticinco pymes con contrato perdieron archivos tras una avería. No fue un fallo de las personas: hacían copias a mano, nadie las comprobaba y las guardaban en el mismo equipo que querían proteger. Cada pérdida significa varios días sin poder trabajar, reclamaciones y, a veces, pagar a un laboratorio para intentar recuperar los datos.',
+    solucion: 'Proponemos un servicio de copias con tres piezas. Primera, una copia diaria automática de las carpetas de trabajo. Segunda, una copia externa cifrada, para que sobreviva a un robo o a un incendio. Tercera, una restauración de prueba cada mes. Lo instalaremos como piloto en cinco pymes, fuera del horario de apertura, durante ocho semanas.',
+    valor: 'Ya existen copias en la nube y en discos externos, y las hemos comparado. Casi ninguna comprueba que la copia se pueda recuperar, y ese es nuestro diferencial: una restauración de prueba automática con aviso por correo a la persona de contacto. Además se monta con software libre, así que no añade licencias y mantiene el precio contenido.',
+    costePlazo: 'El proyecto cuesta 5.904,79 euros con IVA para las cinco pymes, unos 1.181 euros por pyme. Necesita 58 horas de trabajo repartidas entre tres personas y ocho semanas. El mayor gasto son los equipos de almacenamiento, y hemos reservado una contingencia del cinco por ciento para imprevistos.',
+    peticion: 'Os pedimos que busquéis el riesgo que no hayamos visto, sobre todo en la conexión a Internet de las pymes, y que nos digáis si la restauración mensual os parece suficiente o preferís otra frecuencia. Gracias.',
+  };
+  const ds = (titulo, minutos, palabras2) => ({ id: nuevoId(), titulo, minutos, palabras: palabras2 });
+  e.memoria.diapositivas = [ds('Título, equipo y necesidad', '0,5', '15'), ds('El problema, con una cifra', '0,5', '20'), ds('La solución (esquema)', '0,5', '20'), ds('Lo que aporta', '0,5', '20'), ds('Coste y plazo', '0,5', '20'), ds('Riesgos, calidad y petición', '0,5', '25')];
+  e.autoeval = {};
+  return normalizar(e);
+}
+function cargar() {
+  let t = null;
+  try { const s = Lab.leer('estado'); if (s) t = JSON.parse(s); } catch (x) { t = null; }
+  if (t && t.tipo === 'diseno-proyecto-ud02') return normalizar(fusionar(estadoVacio(), t));
+  return ejemplo();
+}
+let estado = cargar();
+function persistir() { Lab.guardar('estado', JSON.stringify(estado)); }
+function cambio() { persistir(); }
+
+/* ====== 1 · Necesidades ====== */
+const prioridad = (n) => num(n.impacto) * num(n.urgencia);
+const nombreCorto = (s, n) => { const t = String(s || '').trim() || '(sin texto)'; return t.length > (n || 60) ? t.slice(0, n || 60) + '…' : t; };
+function renderNecesidades() {
+  const c = $('#c-necesidades');
+  c.textContent = '';
+  const nec = estado.necesidades;
+  const res = el('div');
+  const DEFS = [
+    { k: 'texto', t: 'Necesidad, sin nombrar la solución *', tipo: 'text', ancho: true },
+    { k: 'afectados', t: 'Quién la sufre', tipo: 'text' },
+    { k: 'frecuencia', t: 'Con qué frecuencia y cuánto cuesta', tipo: 'text' },
+    { k: 'evidencia', t: 'Evidencia', tipo: 'area', ancho: true },
+    { k: 'fuente', t: 'Fuente de la evidencia *', tipo: 'text' },
+    { k: 'impacto', t: 'Impacto (1-5)', tipo: 'sel', op: OP15 },
+    { k: 'urgencia', t: 'Urgencia (1-5)', tipo: 'sel', op: OP15 },
+    { k: 'causas', t: 'Causas (una por línea)', tipo: 'area' },
+    { k: 'efectos', t: 'Efectos (una por línea)', tipo: 'area' },
+  ];
+  const alCambiar = () => { cambio(); pintar(); };
+  function pintar() {
+    res.textContent = '';
+    const items = nec.items;
+    const av = [];
+    if (items.length < 3) av.push('Se piden de 3 a 5 necesidades: ahora hay ' + items.length + '.');
+    if (items.length > 5) av.push('Hay ' + items.length + ' necesidades: prioriza y quédate con las cinco más importantes.');
+    items.forEach((n, i) => {
+      const nom = 'Necesidad ' + (i + 1) + ' («' + nombreCorto(n.texto, 40) + '»)';
+      if (!lleno(n.texto)) av.push('La necesidad ' + (i + 1) + ' no tiene texto.');
+      else if (SOLUCION_RE.test(n.texto)) av.push(nom + ' parece nombrar una solución (' + (n.texto.match(SOLUCION_RE)[0]) + '). Pregúntate qué problema resuelve y escribe ese problema.');
+      if (!lleno(n.evidencia)) av.push(nom + ': falta la evidencia.');
+      if (!lleno(n.fuente)) av.push(nom + ': falta la fuente. Un dato sin fuente no es evidencia (si es una estimación, dilo).');
+      if (!lleno(n.impacto) || !lleno(n.urgencia)) av.push(nom + ': puntúa impacto y urgencia.');
+    });
+    if (!nec.elegida && items.length) av.push('Elige cuál es la necesidad de tu proyecto.');
+    res.append(listaAviso('Comprobaciones', av));
+
+    res.append(el('h3', null, 'Prioridad = impacto × urgencia'));
+    const orden = items.slice().sort((a, b) => prioridad(b) - prioridad(a));
+    if (orden.length) {
+      res.append(tabla(['Necesidad', 'Quién la sufre', 'Fuente', 'Impacto', 'Urgencia', 'Prioridad'],
+        orden.map((n) => [nombreCorto(n.texto, 70) + (n.id === nec.elegida ? ' ★ (proyecto)' : ''), n.afectados, lleno(n.fuente) ? n.fuente : el('span', { class: 'ko' }, 'Falta fuente'), n.impacto || '—', n.urgencia || '—', el('b', null, prioridad(n) || '—')]), [3, 4, 5]));
+    } else res.append(el('p', null, 'Añade la primera necesidad para ver el orden de prioridad.'));
+
+    res.append(el('h3', null, 'Matriz impacto × urgencia'));
+    const valoradas = items.filter((n) => lleno(n.impacto) && lleno(n.urgencia));
+    const cel = (titulo, ayuda, f) => el('div', null, el('b', null, titulo), el('small', null, ayuda), el('ul', null, valoradas.filter(f).map((n) => el('li', null, nombreCorto(n.texto, 50)))));
+    res.append(el('div', { class: 'cuad' },
+      cel('Planifícalo', 'Impacto alto, urgencia baja', (n) => num(n.impacto) >= 4 && num(n.urgencia) < 4),
+      cel('Hazlo primero', 'Impacto alto, urgencia alta', (n) => num(n.impacto) >= 4 && num(n.urgencia) >= 4),
+      cel('Déjalo para después', 'Impacto bajo, urgencia baja', (n) => num(n.impacto) < 4 && num(n.urgencia) < 4),
+      cel('Resuélvelo rápido o delega', 'Impacto bajo, urgencia alta', (n) => num(n.impacto) < 4 && num(n.urgencia) >= 4)));
+    res.append(el('p', { class: 'ayuda' }, 'Alto significa 4 o 5 (criterio orientativo de la unidad).'));
+
+    res.append(el('h3', null, 'Causas y efectos de la necesidad elegida'));
+    const el1 = items.find((n) => n.id === nec.elegida);
+    if (!el1) res.append(el('p', null, 'Elige una necesidad con el botón «Elegir como necesidad del proyecto» para ver su árbol.'));
+    else res.append(el('div', { class: 'arbol3' },
+      el('div', null, el('b', null, 'Causas'), el('ul', null, lineas(el1.causas).map((x) => el('li', null, x)))),
+      el('div', { class: 'centro' }, el('b', null, 'Problema'), el('p', null, el1.texto || '(sin texto)')),
+      el('div', null, el('b', null, 'Efectos'), el('ul', null, lineas(el1.efectos).map((x) => el('li', null, x))))));
+  }
+  nec.items.forEach((n, i) => {
+    const elegida = n.id === nec.elegida;
+    c.append(el('div', { class: 'tarjeta' + (elegida ? ' elegida' : '') },
+      el('h4', null, 'Necesidad ' + (i + 1) + (elegida ? ' · necesidad del proyecto' : '')),
+      el('div', { class: 'campos' }, DEFS.map((d) => campo(d.t, controlPara(d, n, alCambiar), null, d.ancho))),
+      el('div', { class: 'fila' },
+        el('button', { type: 'button', 'aria-pressed': String(elegida), onclick: () => { nec.elegida = elegida ? '' : n.id; cambio(); renderNecesidades(); } }, elegida ? 'Quitar la elección' : 'Elegir como necesidad del proyecto'),
+        el('button', { type: 'button', onclick: () => { nec.items.splice(i, 1); cambio(); renderNecesidades(); } }, 'Quitar'))));
+  });
+  c.append(el('div', { class: 'fila' }, el('button', { type: 'button', class: 'primario', onclick: () => { nec.items.push({ id: nuevoId(), texto: '', afectados: '', evidencia: '', fuente: '', frecuencia: '', impacto: '', urgencia: '', causas: '', efectos: '' }); cambio(); renderNecesidades(); } }, 'Añadir una necesidad')));
+  c.append(res);
+  pintar();
+}
+
+/* ====== 2 · Ideas y criterios ====== */
+const pesosActuales = () => estado.ideas.criterios.map((k) => num(k.peso));
+function puntuacion(idea, pesos) {
+  const pts = estado.ideas.puntos[idea.id] || {};
+  return estado.ideas.criterios.reduce((s, k, i) => s + (num(pts[k.id]) * pesos[i]) / 100, 0);
+}
+const rankingCon = (pesos) => estado.ideas.items.map((it) => ({ idea: it, total: puntuacion(it, pesos) })).sort((a, b) => b.total - a.total);
+function reescalar(pesos, idx, w) {
+  const otros = pesos.reduce((s, p, i) => (i === idx ? s : s + p), 0);
+  const resto = 100 - w;
+  return pesos.map((p, i) => (i === idx ? w : otros > 0 ? (p * resto) / otros : pesos.length > 1 ? resto / (pesos.length - 1) : 0));
+}
+let sensIdx = 0;
+let sensPeso = null;
+function renderIdeas() {
+  const c = $('#c-ideas');
+  c.textContent = '';
+  const I = estado.ideas;
+  const cabIdea = {};
+  const cabCrit = {};
+  const celdasTotal = {};
+  const cuenta = el('p', { class: 'msg', role: 'status' });
+  const sumaMsg = el('p', { class: 'msg', role: 'status' });
+  const rank = el('div');
+  const sens = el('div');
+  const exMsg = el('p', { class: 'msg', role: 'status' });
+
+  /* 1 · Ideas */
+  c.append(el('h3', null, '1. Ideas del grupo'));
+  c.append(el('p', { class: 'ayuda' }, 'Separad generar de evaluar: aquí solo se apuntan ideas, sin criticarlas. Mínimo seis.'));
+  c.append(tablaEditable(I.items, [
+    { k: 'nombre', t: 'Idea', tipo: 'text' }, { k: 'desc', t: 'Descripción breve', tipo: 'text' }, { k: 'innov', t: 'Aspecto innovador', tipo: 'sel', op: VIAS }],
+  { nombre: 'ideas', anadir: 'Añadir una idea', nuevo: () => ({ id: nuevoId(), nombre: '', desc: '', innov: '' }),
+    alCambiar: (d, f, it) => { cambio(); if (d.k === 'nombre' && cabIdea[it.id]) cabIdea[it.id].textContent = it.nombre || '(sin nombre)'; if (d.k === 'nombre') renombrar(c, 'idea:' + it.id, it.nombre); pintarCuenta(); },
+    alQuitar: () => { cambio(); normalizar(estado); renderIdeas(); } }));
+  c.append(cuenta);
+  function pintarCuenta() {
+    const n = I.items.filter((x) => lleno(x.nombre)).length;
+    cuenta.textContent = n >= 6 ? '✔ Ideas con nombre: ' + n + '.' : 'Ideas con nombre: ' + n + ' (se piden al menos 6).';
+    cuenta.className = 'msg ' + (n >= 6 ? 'ok' : '');
+  }
+  pintarCuenta();
+
+  /* 2 · Criterios */
+  c.append(el('h3', null, '2. Criterios y pesos'));
+  c.append(el('p', { class: 'ayuda' }, 'Fijad los criterios y los pesos antes de puntuar. Los pesos deben sumar 100.'));
+  c.append(tablaEditable(I.criterios, [{ k: 'nombre', t: 'Criterio', tipo: 'text' }, { k: 'peso', t: 'Peso', tipo: 'num' }],
+    { nombre: 'criterios', anadir: 'Añadir un criterio', nuevo: () => ({ id: nuevoId(), nombre: '', peso: '0' }),
+      alCambiar: (d, f, k) => { cambio(); if (d.k === 'nombre' && cabCrit[k.id]) cabCrit[k.id].textContent = k.nombre || '(sin nombre)'; pintarSuma(); pintarRanking(); },
+      alQuitar: () => { cambio(); renderIdeas(); } }));
+  c.append(sumaMsg);
+  c.append(el('div', { class: 'fila' },
+    el('button', { type: 'button', onclick: () => { const p = pesosActuales(); const t = p.reduce((a, b) => a + b, 0); if (t > 0) { I.criterios.forEach((k, i) => { k.peso = String(redondear((p[i] * 100) / t)); }); cambio(); renderIdeas(); } } }, 'Normalizar a 100'),
+    el('button', { type: 'button', onclick: () => { I.criterios = CRITERIOS_DEF.map((k) => ({ id: nuevoId(), nombre: k[0], peso: String(k[1]) })); I.puntos = {}; cambio(); renderIdeas(); } }, 'Criterios de partida (se borran las puntuaciones)')));
+  function pintarSuma() {
+    const t = redondear(pesosActuales().reduce((a, b) => a + b, 0));
+    sumaMsg.textContent = t === 100 ? '✔ Los pesos suman 100.' : '✘ Los pesos suman ' + fmt(t, 2) + ': tienen que sumar 100 (pulsa «Normalizar a 100» para ajustarlos).';
+    sumaMsg.className = 'msg ' + (t === 100 ? 'ok' : 'ko');
+  }
+  pintarSuma();
+
+  /* 3 · Puntuaciones */
+  c.append(el('h3', null, '3. Puntuaciones de 1 (muy mal) a 5 (muy bien)'));
+  if (!I.items.length || !I.criterios.length) c.append(el('p', null, 'Necesitas al menos una idea y un criterio para puntuar.'));
+  else {
+    const cab = el('tr', {}, el('th', { scope: 'col' }, 'Idea'), I.criterios.map((k) => { const s = el('span', null, k.nombre || '(sin nombre)'); cabCrit[k.id] = s; return el('th', { scope: 'col' }, s); }), el('th', { scope: 'col', class: 'num' }, 'Total'));
+    const filas = I.items.map((it) => {
+      const s = el('span', null, it.nombre || '(sin nombre)');
+      cabIdea[it.id] = s;
+      const tot = el('b');
+      celdasTotal[it.id] = tot;
+      if (!I.puntos[it.id]) I.puntos[it.id] = {};
+      return el('tr', {}, el('th', { scope: 'row' }, s),
+        I.criterios.map((k) => el('td', {}, (() => {
+          const sel = selector(OP15, I.puntos[it.id][k.id] || '', (v) => { I.puntos[it.id][k.id] = v; cambio(); pintarRanking(); });
+          sel.setAttribute('aria-label', 'Puntuación de la idea ' + (it.nombre || '(sin nombre)') + ' en ' + (k.nombre || '(sin nombre)'));
+          return sel;
+        })())),
+        el('td', { class: 'num' }, tot));
+    });
+    c.append(el('div', { class: 'tabla' }, el('table', {}, el('thead', {}, cab), el('tbody', {}, filas))));
+  }
+
+  /* 4 · Ranking y sensibilidad */
+  c.append(el('h3', null, '4. Ranking'));
+  c.append(rank);
+  c.append(el('h3', null, 'Sensibilidad: ¿y si cambia un peso?'));
+  c.append(sens);
+  function pintarRanking() {
+    const pesos = pesosActuales();
+    const r = rankingCon(pesos);
+    r.forEach((x) => { if (celdasTotal[x.idea.id]) celdasTotal[x.idea.id].textContent = fmt(x.total, 2); });
+    rank.textContent = '';
+    const sinPuntuar = I.items.filter((it) => I.criterios.some((k) => !lleno((I.puntos[it.id] || {})[k.id]))).length;
+    if (sinPuntuar) rank.append(el('p', { class: 'aviso' }, 'Hay ' + sinPuntuar + ' idea(s) con puntuaciones sin poner: cuentan como 0 hasta que las rellenes.'));
+    if (!r.length) { rank.append(el('p', null, 'Sin ideas todavía.')); sens.textContent = ''; return; }
+    const max = Math.max(0.01, ...r.map((x) => x.total));
+    r.forEach((x, i) => rank.append(el('div', { class: 'barra' }, el('span', { class: 't' }, (i + 1) + '. ' + (x.idea.nombre || '(sin nombre)')), el('span', { class: 'b', style: 'width:' + Math.round((x.total / max) * 60) + '%' }), el('span', null, fmt(x.total, 2)))));
+    pintarSens(pesos, r);
+  }
+  function pintarSens(pesos, r) {
+    sens.textContent = '';
+    if (I.criterios.length < 2 || !r.length) { sens.append(el('p', null, 'Necesitas al menos dos criterios para probar la sensibilidad.')); return; }
+    if (sensIdx >= I.criterios.length) sensIdx = 0;
+    if (sensPeso === null || sensPeso.idx !== sensIdx) sensPeso = { idx: sensIdx, w: pesos[sensIdx] };
+    const selC = selector(I.criterios.map((k, i) => [String(i), k.nombre || '(sin nombre)']), String(sensIdx), (v) => { sensIdx = Number(v); sensPeso = null; pintarSens(pesos, r); });
+    selC.setAttribute('aria-label', 'Criterio cuyo peso quieres variar');
+    const val = el('b', null, fmt(sensPeso.w, 0) + ' %');
+    const deslizador = el('input', { type: 'range', min: '0', max: '100', step: '1', 'aria-label': 'Nuevo peso del criterio, de 0 a 100' });
+    deslizador.value = String(Math.round(sensPeso.w));
+    const salida = el('div');
+    function simular() {
+      sensPeso.w = num(deslizador.value);
+      val.textContent = fmt(sensPeso.w, 0) + ' %';
+      const np = reescalar(pesos, sensIdx, sensPeso.w);
+      const r2 = rankingCon(np);
+      salida.textContent = '';
+      salida.append(tabla(['Posición', 'Idea', 'Puntuación con el peso nuevo', 'Con tus pesos'], r2.map((x, i) => [String(i + 1), x.idea.nombre || '(sin nombre)', fmt(x.total, 2), fmt(puntuacion(x.idea, pesos), 2)]), [0, 2, 3]));
+      const gana = r[0].idea.id;
+      const cambia = r2[0].idea.id !== gana && r2[0].total - (r2.find((x) => x.idea.id === gana) || { total: 0 }).total > 1e-9;
+      salida.append(el('p', { class: 'correccion', role: 'status' }, cambia ? 'Con este peso la ganadora cambia: pasa a ser «' + (r2[0].idea.nombre || '(sin nombre)') + '». Tu decisión depende de cómo valoréis este criterio: justificadlo.' : 'Con este peso la ganadora sigue siendo «' + (r[0].idea.nombre || '(sin nombre)') + '».'));
+      let mn = null; let mx = null;
+      for (let w = 0; w <= 100; w++) {
+        const q = rankingCon(reescalar(pesos, sensIdx, w));
+        const mejor = q[0].total;
+        const suyo = (q.find((x) => x.idea.id === gana) || { total: 0 }).total;
+        if (suyo >= mejor - 1e-9) { if (mn === null) mn = w; mx = w; }
+      }
+      if (mn !== null) salida.append(el('p', null, 'La idea «' + (r[0].idea.nombre || '(sin nombre)') + '» sigue en cabeza (o empata) mientras el peso de este criterio esté entre el ' + mn + ' % y el ' + mx + ' %. Los demás pesos se reparten en la misma proporción.'));
+    }
+    deslizador.addEventListener('input', simular);
+    sens.append(el('div', { class: 'campos' }, campo('Criterio', selC), el('div', { class: 'campo' }, el('label', { for: 'sens-peso' }, 'Nuevo peso: ', val), deslizador)), salida);
+    deslizador.id = 'sens-peso';
+    simular();
+  }
+  pintarRanking();
+
+  /* 5 · Decisión */
+  c.append(el('h3', null, '5. Decisión y acta'));
+  const selE = selector([['', '— elige la idea —']].concat(I.items.map((it) => [it.id, it.nombre || '(sin nombre)', 'idea:' + it.id])), I.elegida, (v) => { I.elegida = v; cambio(); });
+  c.append(el('div', { class: 'campos' },
+    campo('Idea elegida', selE),
+    campo('Justificación de la decisión', controlPara({ k: 'justificacion', t: 'Justificación de la decisión', tipo: 'area', filas: 3 }, I, () => cambio()), 'Por qué esta, también si no era vuestra favorita.', true),
+    campo('Acta de la sesión de ideas', controlPara({ k: 'acta', t: 'Acta de la sesión de ideas', tipo: 'area', filas: 3 }, I, () => cambio()), 'Fecha, quién participó, técnica usada, ideas descartadas y razones.', true)));
+  c.append(el('div', { class: 'fila' }, el('button', { type: 'button', onclick: () => { const r = rankingCon(pesosActuales()); if (r.length) { I.elegida = r[0].idea.id; cambio(); renderIdeas(); } } }, 'Elegir la primera del ranking')));
+
+  /* 6 · Qué existe ya */
+  c.append(el('h3', null, '6. Qué existe ya: ficha comparativa'));
+  c.append(el('p', { class: 'ayuda' }, 'Al menos tres soluciones existentes, cada una con su fuente y la fecha de consulta. No copies textos: resume con tus palabras.'));
+  c.append(tablaEditable(I.existentes, [
+    { k: 'nombre', t: 'Solución existente', tipo: 'text' }, { k: 'hace', t: 'Qué hace', tipo: 'text' }, { k: 'coste', t: 'Coste orientativo', tipo: 'text' }, { k: 'carencias', t: 'Carencias para nuestro caso', tipo: 'text' }, { k: 'fuente', t: 'Fuente y fecha de consulta', tipo: 'text' }],
+  { nombre: 'soluciones existentes', anadir: 'Añadir una solución existente', nuevo: () => ({ id: nuevoId(), nombre: '', hace: '', coste: '', carencias: '', fuente: '' }),
+    alCambiar: () => { cambio(); pintarEx(); }, alQuitar: () => { cambio(); renderIdeas(); } }));
+  c.append(exMsg);
+  function pintarEx() {
+    const ok = I.existentes.filter((x) => lleno(x.nombre) && lleno(x.fuente)).length;
+    exMsg.textContent = ok >= 3 ? '✔ Soluciones con nombre y fuente: ' + ok + '.' : 'Soluciones con nombre y fuente: ' + ok + ' (se piden al menos 3).';
+    exMsg.className = 'msg ' + (ok >= 3 ? 'ok' : '');
+  }
+  pintarEx();
+
+  /* 7 · Innovación */
+  c.append(el('h3', null, '7. Aspecto innovador de la propuesta'));
+  c.append(campo('Qué aspecto innovador aplica, qué aporta y cómo se aplica', controlPara({ k: 'innovacion', t: 'Aspecto innovador', tipo: 'area', filas: 4 }, I, () => cambio()), 'Innovar es incorporar algo nuevo para ese cliente, no inventar algo inédito. «Tecnología moderna» no vale.', true));
+}
+
+/* ====== 3 · Requisitos y partes interesadas ====== */
+function renderRequisitos() {
+  const c = $('#c-requisitos');
+  c.textContent = '';
+  const R = estado.requisitos;
+  const res = el('div');
+  const cuadro = el('div');
+  c.append(el('h3', null, '1. Partes interesadas'));
+  c.append(tablaEditable(R.partes, [
+    { k: 'nombre', t: 'Parte interesada', tipo: 'text' }, { k: 'poder', t: 'Poder', tipo: 'sel', op: PODER }, { k: 'interes', t: 'Interés', tipo: 'sel', op: PODER }],
+  { nombre: 'partes interesadas', anadir: 'Añadir una parte interesada', nuevo: () => ({ id: nuevoId(), nombre: '', poder: 'alto', interes: 'alto' }),
+    alCambiar: (d, f, p) => { cambio(); if (d.k === 'nombre') renombrar(c, 'parte:' + p.id, p.nombre); pintarCuadro(); pintar(); },
+    alQuitar: () => { cambio(); normalizar(estado); renderRequisitos(); } }));
+  c.append(cuadro);
+  function pintarCuadro() {
+    cuadro.textContent = '';
+    const en = (p, i) => R.partes.filter((x) => x.poder === p && x.interes === i).map((x) => el('li', null, x.nombre || '(sin nombre)'));
+    const q = (t, ayuda, p, i) => el('div', null, el('b', null, t), el('small', null, ayuda), el('ul', null, en(p, i)));
+    cuadro.append(el('div', { class: 'cuad' },
+      q('Mantener satisfecha', 'Poder alto, interés bajo', 'alto', 'bajo'), q('Gestionar de cerca', 'Poder alto, interés alto', 'alto', 'alto'),
+      q('Vigilar', 'Poder bajo, interés bajo', 'bajo', 'bajo'), q('Mantener informada', 'Poder bajo, interés alto', 'bajo', 'alto')));
+  }
+  pintarCuadro();
+
+  c.append(el('h3', null, '2. Requisitos'));
+  const opP = [['', '— ninguna —']].concat(R.partes.map((p) => [p.id, p.nombre || '(sin nombre)', 'parte:' + p.id]));
+  c.append(tablaEditable(R.reqs, [
+    { k: 'texto', t: 'Requisito', tipo: 'text' }, { k: 'tipo', t: 'Tipo', tipo: 'sel', op: TIPOS_REQ }, { k: 'prio', t: 'Prioridad MoSCoW', tipo: 'sel', op: PRIO }, { k: 'parte', t: 'Parte interesada', tipo: 'sel', op: opP }, { k: 'criterio', t: 'Criterio de aceptación', tipo: 'text' }],
+  { nombre: 'requisitos', anadir: 'Añadir un requisito', nuevo: () => ({ id: nuevoId(), texto: '', tipo: 'funcional', prio: 'should', parte: '', criterio: '' }),
+    alCambiar: () => { cambio(); pintar(); }, alQuitar: () => { cambio(); renderRequisitos(); } }));
+  c.append(res);
+  function pintar() {
+    res.textContent = '';
+    const rs = R.reqs;
+    const total = rs.length;
+    const cuentas = PRIO.map((p) => [p[1], rs.filter((r) => r.prio === p[0]).length]);
+    res.append(el('h3', null, 'Reparto de prioridades'));
+    res.append(tabla(['Prioridad', 'Requisitos', '%'], cuentas.map((x) => [x[0], String(x[1]), total ? fmt((x[1] * 100) / total, 0) + ' %' : '—']), [1, 2]));
+    const av = [];
+    const must = rs.filter((r) => r.prio === 'must').length;
+    if (total && (must * 100) / total > 60) av.push('Demasiados Must: ' + must + ' de ' + total + ' (' + fmt((must * 100) / total, 0) + ' %). Si casi todo es imprescindible, nada lo es; el límite de la unidad es el 60 %.');
+    rs.forEach((r, i) => {
+      const n = 'Requisito ' + (i + 1) + ' («' + nombreCorto(r.texto, 40) + '»)';
+      if (!lleno(r.texto)) av.push('El requisito ' + (i + 1) + ' no tiene texto.');
+      if (!r.parte) av.push(n + ' no tiene parte interesada: ¿quién lo necesita?');
+      if (r.prio === 'must' && !lleno(r.criterio)) av.push(n + ' es Must y no tiene criterio de aceptación.');
+    });
+    R.partes.forEach((p) => { if (!rs.some((r) => r.parte === p.id)) av.push('La parte interesada «' + (p.nombre || '(sin nombre)') + '» no tiene ningún requisito: pregúntale qué necesita o quítala.'); });
+    if (R.partes.length < 2) av.push('Identifica al menos dos partes interesadas (hay ' + R.partes.length + ').');
+    if (total < 4) av.push('Pocos requisitos (' + total + '): se esperan al menos cuatro.');
+    res.append(listaAviso('Comprobaciones', av));
+  }
+  pintar();
+}
+
+/* ====== 4 · Viabilidad ====== */
+function evalDim(id) {
+  const r = [0, 1, 2].map((n) => estado.viabilidad.resp[id + n] || '');
+  if (r.includes('no')) return 'rojo';
+  if (r.every((x) => x === '')) return 'gris';
+  if (r.every((x) => x === 'si')) return 'verde';
+  return 'ambar';
+}
+const TXT_SEM = { verde: 'Verde', ambar: 'Ámbar', rojo: 'Rojo', gris: 'Sin contestar' };
+function recomendacion() {
+  const niv = {};
+  DIMENSIONES.forEach((d) => { niv[d[0]] = evalDim(d[0]); });
+  const sinResp = DIMENSIONES.some((d) => niv[d[0]] === 'gris');
+  if (sinResp) return { nivel: 'gris', texto: 'Faltan dimensiones por contestar.', pend: DIMENSIONES.filter((d) => niv[d[0]] === 'gris').map((d) => d[1]) };
+  if (niv.tecnica === 'rojo' || niv.economica === 'rojo') return { nivel: 'rojo', texto: 'No-go: la dimensión ' + (niv.tecnica === 'rojo' ? 'técnica' : 'económica') + ' no es viable tal como está. Replantea el alcance o elige otra idea.', pend: [] };
+  const pend = DIMENSIONES.filter((d) => niv[d[0]] !== 'verde').map((d) => d[1]);
+  if (pend.length) return { nivel: 'ambar', texto: 'Go con condiciones: se puede seguir si resuelves lo pendiente (' + pend.join(', ').toLowerCase() + ').', pend };
+  return { nivel: 'verde', texto: 'Go: todas las dimensiones están resueltas.', pend: [] };
+}
+function renderViabilidad() {
+  const c = $('#c-viabilidad');
+  c.textContent = '';
+  const V = estado.viabilidad;
+  const resumen = el('div');
+  const semDim = {};
+  function pintarSem() {
+    DIMENSIONES.forEach((d) => { const n = evalDim(d[0]); semDim[d[0]].textContent = ''; semDim[d[0]].append(semaforo(n, TXT_SEM[n])); });
+    const r = recomendacion();
+    resumen.textContent = '';
+    resumen.append(el('p', null, 'Recomendación del laboratorio: ', semaforo(r.nivel, r.texto)));
+  }
+  c.append(el('h3', null, '1. Comprobaciones por dimensión'));
+  c.append(el('p', { class: 'ayuda' }, 'Un «No» pone la dimensión en rojo; un «No lo sé» o una pregunta sin contestar, en ámbar. La técnica es la que pide la programación; las otras cuatro son una propuesta de esta web.'));
+  DIMENSIONES.forEach((d) => {
+    const sem = el('span');
+    semDim[d[0]] = sem;
+    const tarj = el('div', { class: 'tarjeta' }, el('h4', null, d[1] + ' ', sem));
+    d[2].forEach((q, n) => {
+      const clave = d[0] + n;
+      const s = selector(RESP, V.resp[clave] || '', (v) => { V.resp[clave] = v; cambio(); pintarSem(); });
+      tarj.append(campo(q, s));
+    });
+    tarj.append(campo('Evidencia o nota de ' + d[1].toLowerCase(), controlPara({ k: d[0], t: 'Nota de ' + d[1], tipo: 'area', filas: 2 }, V.notas, () => cambio()), null, true));
+    c.append(tarj);
+  });
+  c.append(resumen);
+  pintarSem();
+
+  c.append(el('h3', null, '2. Alternativas técnicas'));
+  c.append(tablaEditable(V.alternativas, [
+    { k: 'nombre', t: 'Alternativa', tipo: 'text' }, { k: 'pros', t: 'Ventajas', tipo: 'text' }, { k: 'contras', t: 'Inconvenientes', tipo: 'text' }, { k: 'coste', t: 'Coste aprox. (€)', tipo: 'num' }],
+  { nombre: 'alternativas', anadir: 'Añadir una alternativa', nuevo: () => ({ id: nuevoId(), nombre: '', pros: '', contras: '', coste: '' }),
+    alCambiar: (d, f, a) => { cambio(); if (d.k === 'nombre') renombrar(c, 'alt:' + a.id, a.nombre); }, alQuitar: () => { cambio(); normalizar(estado); renderViabilidad(); } }));
+  const selA = selector([['', '— elige una —']].concat(V.alternativas.map((a) => [a.id, a.nombre || '(sin nombre)', 'alt:' + a.id])), V.elegida, (v) => { V.elegida = v; cambio(); });
+  c.append(el('div', { class: 'campos' }, campo('Alternativa elegida', selA, 'Se necesitan dos o tres, y explica por qué eliges una en la decisión final.')));
+
+  c.append(el('h3', null, '3. Riesgos iniciales'));
+  const tr = el('div');
+  c.append(tablaEditable(V.riesgos, [
+    { k: 'texto', t: 'Riesgo', tipo: 'text' }, { k: 'prob', t: 'Probabilidad', tipo: 'sel', op: OP13 }, { k: 'impacto', t: 'Impacto', tipo: 'sel', op: OP13 }, { k: 'respuesta', t: 'Respuesta', tipo: 'text' }],
+  { nombre: 'riesgos', anadir: 'Añadir un riesgo', nuevo: () => ({ id: nuevoId(), texto: '', prob: '', impacto: '', respuesta: '' }),
+    alCambiar: () => { cambio(); pintarRiesgos(); }, alQuitar: () => { cambio(); renderViabilidad(); } }));
+  c.append(tr);
+  function pintarRiesgos() {
+    tr.textContent = '';
+    const puntos = (r) => num(r.prob) * num(r.impacto);
+    const orden = V.riesgos.slice().sort((a, b) => puntos(b) - puntos(a));
+    if (!orden.length) { tr.append(el('p', null, 'Anota los dos o tres riesgos más importantes.')); return; }
+    tr.append(tabla(['Riesgo', 'Puntuación (prob. × impacto)', 'Nivel', 'Respuesta'], orden.map((r) => {
+      const p = puntos(r);
+      return [nombreCorto(r.texto, 70), String(p || '—'), p >= 6 ? semaforo('rojo', 'Alto') : p >= 3 ? semaforo('ambar', 'Medio') : p >= 1 ? semaforo('verde', 'Bajo') : semaforo('gris', 'Sin valorar'), r.respuesta];
+    }), [1]));
+  }
+  pintarRiesgos();
+
+  c.append(el('h3', null, '4. Tu decisión'));
+  c.append(campo('Decisión go / go con condiciones / no-go, y por qué', controlPara({ k: 'decision', t: 'Decisión final', tipo: 'area', filas: 3 }, V, () => cambio()), 'Explica también por qué eliges esa alternativa y qué condiciones hay que resolver.', true));
+}
+
+/* ====== 5 · Alcance y EDT ====== */
+const horasFase = (f) => f.paquetes.reduce((s, p) => s + num(p.horas), 0);
+const horasEdt = () => estado.alcance.fases.reduce((s, f) => s + horasFase(f), 0);
+const horasPersonas = () => estado.presupuesto.personas.reduce((s, p) => s + num(p.horas), 0);
+function pistasSmart(t) {
+  return { medible: /\d/.test(t), plazo: /(semana|mes|d[ií]a|trimestre|curso|antes d|en \d|\d{1,2}\/\d{1,2}|fecha|plazo)/i.test(t) };
+}
+function renderAlcance() {
+  const c = $('#c-alcance');
+  c.textContent = '';
+  const A = estado.alcance;
+  const pistas = el('div');
+  const tot = el('div');
+  const horasSpans = {};
+  c.append(el('h3', null, '1. Objetivos'));
+  c.append(el('div', { class: 'campos' }, campo('Objetivo general (para qué existe el proyecto)', controlPara({ k: 'general', t: 'Objetivo general', tipo: 'area', filas: 2 }, A, () => cambio()), null, true)));
+  c.append(el('p', { class: 'ayuda' }, 'Objetivos específicos, con el criterio SMART: concretos, medibles, alcanzables, relevantes y con plazo. De dos a cuatro.'));
+  c.append(tablaEditable(A.especificos, [{ k: 'texto', t: 'Objetivo específico', tipo: 'text' }],
+    { nombre: 'objetivos', anadir: 'Añadir un objetivo', nuevo: () => ({ id: nuevoId(), texto: '' }), alCambiar: () => { cambio(); pintarPistas(); }, alQuitar: () => { cambio(); renderAlcance(); } }));
+  c.append(pistas);
+  function pintarPistas() {
+    pistas.textContent = '';
+    if (!A.especificos.length) return;
+    pistas.append(el('p', { class: 'ayuda' }, 'Pistas automáticas (orientativas; solo detectan cifras y palabras de plazo, no juzgan si el objetivo es bueno):'));
+    pistas.append(el('ul', null, A.especificos.map((o, i) => { const p = pistasSmart(o.texto); return el('li', null, 'Objetivo ' + (i + 1) + ': ', el('span', { class: p.medible ? 'ok' : 'ko' }, p.medible ? '✔ lleva cifra' : '✘ sin cifra'), ' · ', el('span', { class: p.plazo ? 'ok' : 'ko' }, p.plazo ? '✔ lleva plazo' : '✘ sin plazo')); })));
+  }
+  pintarPistas();
+
+  c.append(el('h3', null, '2. Alcance'));
+  c.append(el('div', { class: 'campos' },
+    campo('Dentro del alcance (uno por línea)', controlPara({ k: 'dentro', t: 'Dentro del alcance', tipo: 'area', filas: 4 }, A, () => cambio())),
+    campo('Fuera del alcance (uno por línea)', controlPara({ k: 'fuera', t: 'Fuera del alcance', tipo: 'area', filas: 4 }, A, () => cambio()), 'Lo que descartáis aunque suene razonable.'),
+    campo('Supuestos y restricciones (uno por línea)', controlPara({ k: 'supuestos', t: 'Supuestos y restricciones', tipo: 'area', filas: 4 }, A, () => cambio()))));
+
+  c.append(el('h3', null, '3. EDT: fases y paquetes de trabajo'));
+  c.append(el('p', { class: 'ayuda' }, 'Cada paquete produce un entregable comprobable y tiene sus horas. Las horas de la EDT deben cuadrar con las de personas del presupuesto.'));
+  A.fases.forEach((f, i) => {
+    const sp = el('b');
+    horasSpans[f.id] = sp;
+    c.append(el('div', { class: 'fase' },
+      el('div', { class: 'fila' }, el('div', { class: 'campo' }, el('label', { for: 'fase-' + f.id }, 'Fase ' + (i + 1)), (() => { const x = controlPara({ k: 'nombre', t: 'Nombre de la fase ' + (i + 1), tipo: 'text' }, f, () => { cambio(); pintarTot(); }); x.id = 'fase-' + f.id; return x; })()),
+        el('span', null, 'Horas de la fase: ', sp), el('button', { type: 'button', onclick: () => { A.fases.splice(i, 1); cambio(); renderAlcance(); } }, 'Quitar la fase')),
+      tablaEditable(f.paquetes, [{ k: 'nombre', t: 'Paquete de trabajo', tipo: 'text' }, { k: 'entregable', t: 'Entregable', tipo: 'text' }, { k: 'horas', t: 'Horas', tipo: 'num' }],
+        { nombre: 'paquetes de la fase ' + (i + 1), anadir: 'Añadir un paquete', nuevo: () => ({ id: nuevoId(), nombre: '', entregable: '', horas: '' }), alCambiar: () => { cambio(); pintarTot(); }, alQuitar: () => { cambio(); renderAlcance(); } })));
+  });
+  c.append(el('div', { class: 'fila' },
+    el('button', { type: 'button', class: 'primario', onclick: () => { A.fases.push({ id: nuevoId(), nombre: (A.fases.length + 1) + '. ', paquetes: [] }); cambio(); renderAlcance(); } }, 'Añadir una fase'),
+    el('button', { type: 'button', onclick: exportarEdt }, 'Exportar la EDT en CSV')));
+  c.append(tot);
+  function pintarTot() {
+    A.fases.forEach((f) => { if (horasSpans[f.id]) horasSpans[f.id].textContent = fmt(horasFase(f), 1); });
+    tot.textContent = '';
+    const total = horasEdt();
+    const max = Math.max(1, ...A.fases.map(horasFase));
+    tot.append(el('h3', null, 'Horas por fase'));
+    A.fases.forEach((f) => tot.append(el('div', { class: 'barra' }, el('span', { class: 't' }, f.nombre || '(sin nombre)'), el('span', { class: 'b', style: 'width:' + Math.round((horasFase(f) / max) * 60) + '%' }), el('span', null, fmt(horasFase(f), 1) + ' h'))));
+    tot.append(el('p', null, el('b', null, 'Total de la EDT: ' + fmt(total, 1) + ' h'), ' · Horas de personas en el presupuesto: ' + fmt(horasPersonas(), 1) + ' h ', horasPersonas() === total && total > 0 ? el('span', { class: 'ok' }, '✔ cuadran') : el('span', { class: 'ko' }, '✘ no cuadran')));
+    const av = [];
+    if (A.fases.length < 3 || A.fases.length > 7) av.push('Se esperan de 3 a 7 fases o partes principales (ahora hay ' + A.fases.length + ').');
+    A.fases.forEach((f) => {
+      if (!f.paquetes.length) av.push('La fase «' + (f.nombre || '(sin nombre)') + '» no tiene paquetes de trabajo.');
+      f.paquetes.forEach((p) => { if (!lleno(p.entregable) || num(p.horas) <= 0) av.push('El paquete «' + nombreCorto(p.nombre, 40) + '» necesita entregable y horas.'); });
+    });
+    tot.append(listaAviso('Comprobaciones', av));
+  }
+  pintarTot();
+}
+function exportarEdt() {
+  const esc = (s) => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
+  const filas = [];
+  estado.alcance.fases.forEach((f) => f.paquetes.forEach((p) => filas.push([f.nombre, p.nombre, p.entregable, p.horas].map(esc).join(';'))));
+  descargar('edt-proyecto.csv', '﻿' + [['Fase', 'Paquete de trabajo', 'Entregable', 'Horas'].map(esc).join(';')].concat(filas).join('\n') + '\n', 'text/csv');
+  aviso('Se ha descargado edt-proyecto.csv: sirve de punto de partida para el cronograma de la Unidad 3.');
+}
+
+/* ====== 6 · Presupuesto ====== */
+function calcPres(p) {
+  const s = (arr, f) => arr.reduce((t, x) => t + f(x), 0);
+  const personas = redondear(s(p.personas, (x) => num(x.horas) * num(x.tarifa)));
+  const equipos = redondear(s(p.equipos, (x) => num(x.cantidad) * num(x.precio)));
+  const licencias = redondear(s(p.licencias, (x) => num(x.cantidad) * num(x.precio)));
+  const subcontratas = redondear(s(p.subcontratas, (x) => num(x.cantidad) * num(x.precio)));
+  const directos = redondear(personas + equipos + licencias + subcontratas);
+  const indirectos = redondear((directos * num(p.indirectos)) / 100);
+  const contingencia = redondear(((directos + indirectos) * num(p.contingencia)) / 100);
+  const coste = redondear(directos + indirectos + contingencia);
+  const margen = redondear((coste * num(p.margen)) / 100);
+  const base = redondear(coste + margen);
+  const iva = redondear((base * num(p.iva)) / 100);
+  const total = redondear(base + iva);
+  return { personas, equipos, licencias, subcontratas, directos, indirectos, contingencia, coste, margen, base, iva, total };
+}
+function renderPresupuesto() {
+  const c = $('#c-presupuesto');
+  c.textContent = '';
+  const P = estado.presupuesto;
+  const res = el('div');
+  const alC = () => { cambio(); pintar(); };
+  const defsL = [{ k: 'desc', t: 'Concepto', tipo: 'text' }, { k: 'cantidad', t: 'Cantidad', tipo: 'num' }, { k: 'precio', t: 'Precio unitario sin IVA (€)', tipo: 'num' }, { k: 'fuente', t: 'Fuente y fecha del precio', tipo: 'text' }];
+  const nuevaL = () => ({ id: nuevoId(), desc: '', cantidad: '1', precio: '', fuente: '' });
+  const seccion = (titulo, lista, defs, nuevo, anadir) => { c.append(el('h3', null, titulo)); c.append(tablaEditable(P[lista], defs, { nombre: titulo.toLowerCase(), anadir, nuevo, alCambiar: alC, alQuitar: () => { cambio(); renderPresupuesto(); } })); };
+  seccion('1. Personas (horas de la EDT)', 'personas', [{ k: 'perfil', t: 'Perfil', tipo: 'text' }, { k: 'horas', t: 'Horas', tipo: 'num' }, { k: 'tarifa', t: 'Coste por hora (€)', tipo: 'num' }, { k: 'fuente', t: 'De dónde sale el coste por hora', tipo: 'text' }], () => ({ id: nuevoId(), perfil: '', horas: '', tarifa: '', fuente: '' }), 'Añadir un perfil');
+  seccion('2. Equipos', 'equipos', defsL, nuevaL, 'Añadir un equipo');
+  seccion('3. Licencias y servicios', 'licencias', defsL, nuevaL, 'Añadir una licencia o servicio');
+  seccion('4. Subcontrataciones', 'subcontratas', defsL, nuevaL, 'Añadir una subcontratación');
+  c.append(el('h3', null, '5. Porcentajes'));
+  c.append(el('div', { class: 'campos' },
+    campo('Costes indirectos (% de los directos)', controlPara({ k: 'indirectos', t: 'Costes indirectos', tipo: 'num' }, P, alC)),
+    campo('Contingencia (% de directos + indirectos)', controlPara({ k: 'contingencia', t: 'Contingencia', tipo: 'num' }, P, alC)),
+    campo('Margen comercial (% sobre el coste total)', controlPara({ k: 'margen', t: 'Margen', tipo: 'num' }, P, alC), 'En un proyecto de aula puede ser 0.'),
+    campo('IVA (%)', controlPara({ k: 'iva', t: 'IVA', tipo: 'num' }, P, alC), 'Tipo general: 21 %. Consulta el vigente en la sede de la Agencia Tributaria.'),
+    campo('Repartir el total entre (clientes, equipos…)', controlPara({ k: 'unidades', t: 'Unidades', tipo: 'num' }, P, alC))));
+  c.append(res);
+  function pintar() {
+    res.textContent = '';
+    const r = calcPres(P);
+    res.append(el('h3', null, 'Resultado'));
+    const linea = (t, v, neg) => ({ celdas: [t, eur(v)], total: !!neg });
+    res.append(tabla(['Concepto', 'Importe'], [
+      ['Personas', eur(r.personas)], ['Equipos', eur(r.equipos)], ['Licencias y servicios', eur(r.licencias)], ['Subcontrataciones', eur(r.subcontratas)],
+      linea('Costes directos', r.directos, true),
+      ['Costes indirectos (' + fmt(num(P.indirectos), 2) + ' %)', eur(r.indirectos)], ['Contingencia (' + fmt(num(P.contingencia), 2) + ' %)', eur(r.contingencia)],
+      linea('Coste total', r.coste, true),
+      ['Margen comercial (' + fmt(num(P.margen), 2) + ' %)', eur(r.margen)],
+      linea('Base imponible', r.base, true),
+      ['IVA (' + fmt(num(P.iva), 2) + ' %)', eur(r.iva)],
+      linea('Total con IVA', r.total, true)], [1]));
+    const u = num(P.unidades);
+    if (u > 1) res.append(el('p', null, 'Total con IVA entre ' + fmt(u, 0) + ': ' + eur(redondear(r.total / u)) + ' por unidad (base imponible por unidad: ' + eur(redondear(r.base / u)) + ').'));
+    const partidas = [['Personas', r.personas], ['Equipos', r.equipos], ['Licencias y servicios', r.licencias], ['Subcontrataciones', r.subcontratas], ['Costes indirectos', r.indirectos], ['Contingencia', r.contingencia], ['Margen', r.margen], ['IVA', r.iva]].filter((x) => x[1] > 0);
+    if (r.total > 0) {
+      res.append(el('h3', null, 'Cómo se reparte el total'));
+      partidas.forEach((x) => res.append(el('div', { class: 'barra' }, el('span', { class: 't' }, x[0]), el('span', { class: 'b', style: 'width:' + Math.round((x[1] / r.total) * 60) + '%' }), el('span', null, fmt((x[1] * 100) / r.total, 1) + ' %'))));
+    }
+    const av = [];
+    const hp = horasPersonas(); const he = horasEdt();
+    if (!he) av.push('La EDT no tiene horas todavía: rellena la pestaña «Alcance y EDT».');
+    else if (hp !== he) av.push('Las horas de personas (' + fmt(hp, 1) + ' h) no coinciden con las de la EDT (' + fmt(he, 1) + ' h). Revisa uno de los dos.');
+    const sinFuente = [].concat(P.personas.filter((x) => num(x.horas) * num(x.tarifa) > 0 && !lleno(x.fuente)), P.equipos.concat(P.licencias, P.subcontratas).filter((x) => num(x.cantidad) * num(x.precio) > 0 && !lleno(x.fuente))).length;
+    if (sinFuente) av.push(sinFuente + ' partida(s) sin fuente del precio: cita catálogo, tarifa o presupuesto, con su fecha.');
+    if (![0, 4, 10, 21].includes(num(P.iva))) av.push('El IVA es ' + fmt(num(P.iva), 2) + ' %: comprueba que es un tipo vigente (el general es el 21 %).');
+    if (num(P.margen) < 0 || num(P.indirectos) < 0 || num(P.contingencia) < 0) av.push('Hay porcentajes negativos.');
+    if (num(P.contingencia) === 0) av.push('Contingencia a 0: ¿seguro que no puede haber imprevistos?');
+    res.append(listaAviso('Comprobaciones', av));
+    res.append(el('p', { class: 'ayuda' }, 'Recuerda: el IVA se calcula sobre la base imponible y se añade al final; los precios de compra se anotan sin IVA si la empresa puede deducirlo. Con otra base de cálculo del margen (sobre el precio de venta), el resultado cambia: indica siempre cuál usas.'));
+  }
+  pintar();
+}
+
+/* ====== 7 · Calidad ====== */
+function entregables() {
+  const r = [];
+  estado.alcance.fases.forEach((f) => f.paquetes.forEach((p) => r.push({ p, nombre: lleno(p.entregable) ? p.entregable : p.nombre })));
+  return r;
+}
+function renderCalidad() {
+  const c = $('#c-calidad');
+  c.textContent = '';
+  const Q = estado.calidad;
+  const res = el('div');
+  const al = () => { cambio(); pintar(); };
+  c.append(el('h3', null, '1. Criterios de aceptación por entregable'));
+  const ent = entregables();
+  if (!ent.length) c.append(el('p', null, 'Todavía no hay entregables: construye la EDT en la pestaña «Alcance y EDT» y vuelve aquí.'));
+  else {
+    const filas = ent.map((x, n) => {
+      if (!Q.filas[x.p.id]) Q.filas[x.p.id] = { criterio: '', metodo: '', responsable: '' };
+      const f = Q.filas[x.p.id];
+      return [x.nombre || '(sin nombre)',
+        controlPara({ k: 'criterio', t: 'Criterio de aceptación del entregable ' + (n + 1), tipo: 'area' }, f, al),
+        controlPara({ k: 'metodo', t: 'Verificación del entregable ' + (n + 1), tipo: 'sel', op: METODOS }, f, al),
+        controlPara({ k: 'responsable', t: 'Responsable del entregable ' + (n + 1), tipo: 'text' }, f, al)];
+    });
+    c.append(tabla(['Entregable', 'Criterio de aceptación (medible)', 'Cómo se verifica', 'Responsable'], filas));
+    c.append(el('p', { class: 'ayuda' }, 'Un buen criterio se puede comprobar con una prueba, una inspección, una revisión, una demostración o una medición, y dice «cumplido» o «no cumplido».'));
+  }
+  c.append(el('h3', null, '2. Lista de comprobación'));
+  c.append(tabla(['Aspecto', 'Pregunta', '¿Está previsto?', 'Nota o tarea'], LISTA_CAL.map((a) => {
+    if (!Q.lista[a[0]]) Q.lista[a[0]] = { resp: '', nota: '' };
+    const it = Q.lista[a[0]];
+    return [el('b', null, a[1]), a[2], controlPara({ k: 'resp', t: 'Respuesta sobre ' + a[1], tipo: 'sel', op: RESP_CAL }, it, al), controlPara({ k: 'nota', t: 'Nota sobre ' + a[1], tipo: 'area' }, it, al)];
+  })));
+  c.append(res);
+  function pintar() {
+    res.textContent = '';
+    const av = [];
+    entregables().forEach((x) => { const f = Q.filas[x.p.id] || {}; if (!lleno(f.criterio)) av.push('El entregable «' + nombreCorto(x.nombre, 50) + '» no tiene criterio de aceptación.'); else if (!lleno(f.metodo)) av.push('El entregable «' + nombreCorto(x.nombre, 50) + '» no tiene método de verificación.'); });
+    res.append(listaAviso('Entregables', av));
+    const pend = LISTA_CAL.filter((a) => (Q.lista[a[0]] || {}).resp === 'no').map((a) => a[1]);
+    const sin = LISTA_CAL.filter((a) => !(Q.lista[a[0]] || {}).resp).map((a) => a[1]);
+    const av2 = [];
+    if (sin.length) av2.push('Sin contestar: ' + sin.join(', ') + '.');
+    if (pend.length) av2.push('Tareas pendientes (respuesta «No»): ' + pend.join(', ') + '. Apúntalas en la nota y en la memoria.');
+    res.append(listaAviso('Lista de comprobación', av2));
+  }
+  pintar();
+}
+
+/* ====== Evaluación por criterio (RA2.a a RA2.k) ====== */
+const palabrasPitch = () => PITCH.reduce((s, p) => s + palabras((estado.memoria.pitch || {})[p[0]]), 0);
+const minutosPitch = () => palabrasPitch() / PPM;
+function estadoMemoria() {
+  const e = estado; const m = e.memoria; const p = e.proyecto;
+  const sinCriterio = entregables().some((x) => !lleno((e.calidad.filas[x.p.id] || {}).criterio));
+  return [
+    ['1. Resumen', lleno(p.titulo) && lleno(p.resumen), 'Título y resumen del proyecto'],
+    ['2. Antecedentes y necesidad', largo(m.antecedentes) >= 60 && !!e.necesidades.elegida, 'Antecedentes y necesidad elegida'],
+    ['3. Objetivos y alcance', lleno(e.alcance.general) && e.alcance.especificos.length >= 2 && lleno(e.alcance.dentro) && lleno(e.alcance.fuera), 'Objetivo general, dos específicos, dentro y fuera del alcance'],
+    ['4. Solución elegida', !!e.ideas.elegida && largo(e.ideas.justificacion) >= 40, 'Idea elegida y justificación'],
+    ['5. Diseño técnico', largo(m.esquema) >= 40, 'Descripción del esquema técnico'],
+    ['6. Requisitos y partes del proyecto', e.requisitos.reqs.length >= 4 && horasEdt() > 0, 'Al menos cuatro requisitos y una EDT con horas'],
+    ['7. Recursos y presupuesto', calcPres(e.presupuesto).total > 0, 'Presupuesto con total'],
+    ['8. Viabilidad y riesgos iniciales', e.viabilidad.riesgos.length >= 1 && largo(e.viabilidad.decision) >= 30, 'Riesgos y decisión de viabilidad'],
+    ['9. Calidad', entregables().length > 0 && !sinCriterio, 'Criterio de aceptación de cada entregable'],
+    ['10. Conclusiones y siguientes pasos', largo(m.conclusiones) >= 60, 'Conclusiones'],
+  ];
+}
+function evaluar() {
+  const e = estado; const r = {};
+  const N = e.necesidades.items.filter((n) => lleno(n.texto));
+  r.a = [];
+  if (N.length < 3) r.a.push('Registra al menos 3 necesidades (ahora ' + N.length + ').');
+  if (N.some((n) => !lleno(n.evidencia) || !lleno(n.fuente))) r.a.push('Cada necesidad necesita evidencia y fuente.');
+  if (N.some((n) => !lleno(n.impacto) || !lleno(n.urgencia))) r.a.push('Puntúa impacto y urgencia de todas las necesidades.');
+  if (!e.necesidades.elegida) r.a.push('Elige la necesidad de tu proyecto.');
+  const I = e.ideas;
+  const ideas = I.items.filter((i) => lleno(i.nombre));
+  r.b = [];
+  if (ideas.length < 6) r.b.push('Registra al menos 6 ideas (ahora ' + ideas.length + ').');
+  if (redondear(pesosActuales().reduce((a, b) => a + b, 0)) !== 100) r.b.push('Los pesos de los criterios deben sumar 100.');
+  if (ideas.some((i) => I.criterios.some((k) => !lleno((I.puntos[i.id] || {})[k.id])))) r.b.push('Puntúa todas las ideas en todos los criterios.');
+  if (largo(I.acta) < 60) r.b.push('Escribe el acta de la sesión de ideas.');
+  if (!I.elegida || largo(I.justificacion) < 40) r.b.push('Elige una idea y justifica la decisión por escrito.');
+  r.c = [];
+  if (I.existentes.filter((x) => lleno(x.nombre) && lleno(x.fuente)).length < 3) r.c.push('Compara al menos 3 soluciones existentes, cada una con su fuente.');
+  r.d = [];
+  if (largo(I.innovacion) < 60) r.d.push('Describe el aspecto innovador: qué aporta y cómo se aplica.');
+  const V = e.viabilidad;
+  r.e = [];
+  if (DIMENSIONES.some((d) => d[2].some((q, n) => !V.resp[d[0] + n]))) r.e.push('Contesta las comprobaciones de las cinco dimensiones.');
+  if (V.alternativas.filter((a) => lleno(a.nombre)).length < 2 || !V.elegida) r.e.push('Compara al menos dos alternativas técnicas y elige una.');
+  if (V.riesgos.filter((x) => lleno(x.texto) && lleno(x.respuesta)).length < 2) r.e.push('Anota al menos dos riesgos con su respuesta.');
+  if (largo(V.decision) < 30) r.e.push('Escribe la decisión go / no-go.');
+  const A = e.alcance;
+  r.f = [];
+  if (!lleno(A.general) || A.especificos.filter((o) => lleno(o.texto)).length < 2) r.f.push('Escribe el objetivo general y al menos dos específicos.');
+  if (!lleno(A.dentro) || !lleno(A.fuera)) r.f.push('Di qué entra y qué no entra en el alcance.');
+  if (A.fases.length < 3 || A.fases.length > 7 || A.fases.some((f) => !f.paquetes.length || f.paquetes.some((p) => !lleno(p.entregable) || num(p.horas) <= 0))) r.f.push('Construye la EDT con 3 a 7 fases, y cada paquete con entregable y horas.');
+  if (e.requisitos.partes.length < 2 || e.requisitos.reqs.length < 4) r.f.push('Identifica al menos 2 partes interesadas y 4 requisitos.');
+  const must = e.requisitos.reqs.filter((q) => q.prio === 'must').length;
+  if (e.requisitos.reqs.length && (must * 100) / e.requisitos.reqs.length > 60) r.f.push('Hay demasiados requisitos Must (más del 60 %).');
+  const P = e.presupuesto;
+  r.g = [];
+  if (!P.personas.some((x) => num(x.horas) > 0 && num(x.tarifa) > 0)) r.g.push('Añade al menos un perfil con horas y coste por hora.');
+  if (!P.equipos.concat(P.licencias, P.subcontratas).some((x) => num(x.cantidad) * num(x.precio) > 0)) r.g.push('Añade al menos un recurso material (equipo, licencia o servicio).');
+  if (horasEdt() === 0 || horasPersonas() !== horasEdt()) r.g.push('Las horas de personas deben coincidir con las de la EDT.');
+  const rp = calcPres(P);
+  r.h = [];
+  if (rp.total <= 0) r.h.push('El presupuesto no tiene total.');
+  if (P.personas.some((x) => num(x.horas) * num(x.tarifa) > 0 && !lleno(x.fuente)) || P.equipos.concat(P.licencias, P.subcontratas).some((x) => num(x.cantidad) * num(x.precio) > 0 && !lleno(x.fuente))) r.h.push('Todas las partidas necesitan la fuente del precio.');
+  if (!lleno(P.indirectos) || !lleno(P.contingencia) || !lleno(P.margen) || !lleno(P.iva)) r.h.push('Rellena indirectos, contingencia, margen e IVA (pueden ser 0).');
+  const mem = estadoMemoria();
+  r.i = mem.filter((x) => !x[1]).map((x) => 'Apartado sin completar: ' + x[0] + ' (' + x[2] + ').');
+  r.j = [];
+  const ent = entregables();
+  if (!ent.length) r.j.push('Define entregables en la EDT.');
+  if (ent.some((x) => largo((e.calidad.filas[x.p.id] || {}).criterio) < 10 || !lleno((e.calidad.filas[x.p.id] || {}).metodo))) r.j.push('Cada entregable necesita criterio de aceptación y método de verificación.');
+  if (LISTA_CAL.some((a) => !(e.calidad.lista[a[0]] || {}).resp)) r.j.push('Contesta la lista de comprobación de calidad.');
+  const M = e.memoria;
+  r.k = [];
+  if (PITCH.some((p) => largo((M.pitch || {})[p[0]]) < 15)) r.k.push('Escribe las cinco partes del guion.');
+  const obj = num(M.objetivoMin);
+  const dur = minutosPitch();
+  if (obj > 0 && (dur < obj * 0.6 || dur > obj * 1.1)) r.k.push('El guion dura unos ' + fmt(dur, 1) + ' min y el objetivo es ' + fmt(obj, 0) + ' min: ajusta su extensión.');
+  const ds = M.diapositivas;
+  const sumaDs = ds.reduce((s, d) => s + num(d.minutos), 0);
+  if (ds.length < 5 || ds.length > 7) r.k.push('Planifica de 5 a 7 diapositivas (ahora ' + ds.length + ').');
+  else if (Math.abs(sumaDs - obj) > 0.5) r.k.push('Los tiempos de las diapositivas suman ' + fmt(sumaDs, 1) + ' min y el objetivo es ' + fmt(obj, 0) + ' min.');
+  return r;
+}
+
+/* ====== Exportación ====== */
+function aMarkdown() {
+  const e = estado; const p = e.proyecto; const L = [];
+  const lista = (s) => lineas(s).map((x) => '- ' + x);
+  const rp = calcPres(e.presupuesto);
+  const nec = e.necesidades.items.find((n) => n.id === e.necesidades.elegida);
+  const idea = e.ideas.items.find((i) => i.id === e.ideas.elegida);
+  L.push('# Memoria de diseño: ' + (p.titulo || '(sin título)'), '', '- Empresa o cliente: ' + p.empresa, '- Equipo: ' + p.equipo, '- Versión: v1', '');
+  L.push('## 1. Resumen', '', p.resumen, '');
+  L.push('## 2. Antecedentes y necesidad', '', e.memoria.antecedentes, '');
+  if (nec) L.push('Necesidad del proyecto: ' + nec.texto, '', '- Quién la sufre: ' + nec.afectados, '- Evidencia: ' + nec.evidencia, '- Fuente: ' + nec.fuente, '', '| Necesidad | Impacto | Urgencia | Prioridad | Fuente |', '|---|---:|---:|---:|---|');
+  else L.push('| Necesidad | Impacto | Urgencia | Prioridad | Fuente |', '|---|---:|---:|---:|---|');
+  e.necesidades.items.slice().sort((a, b) => prioridad(b) - prioridad(a)).forEach((n) => L.push('| ' + celdaMd(n.texto) + ' | ' + n.impacto + ' | ' + n.urgencia + ' | ' + prioridad(n) + ' | ' + celdaMd(n.fuente) + ' |'));
+  L.push('');
+  L.push('## 3. Objetivos y alcance', '', '**Objetivo general:** ' + e.alcance.general, '', '**Objetivos específicos:**', '', ...e.alcance.especificos.map((o) => '- ' + o.texto), '', '**Dentro del alcance:**', '', ...lista(e.alcance.dentro), '', '**Fuera del alcance:**', '', ...lista(e.alcance.fuera), '', '**Supuestos y restricciones:**', '', ...lista(e.alcance.supuestos), '');
+  L.push('## 4. Solución elegida', '', 'Idea elegida: ' + (idea ? idea.nombre : '(sin elegir)'), '', e.ideas.justificacion, '', '### Matriz de decisión', '');
+  const crit = e.ideas.criterios;
+  L.push('| Idea | ' + crit.map((k) => celdaMd(k.nombre) + ' (' + k.peso + ')').join(' | ') + ' | Total |', '|---|' + crit.map(() => '---:').join('|') + '|---:|');
+  rankingCon(pesosActuales()).forEach((x) => L.push('| ' + celdaMd(x.idea.nombre) + ' | ' + crit.map((k) => (e.ideas.puntos[x.idea.id] || {})[k.id] || '').join(' | ') + ' | ' + fmt(x.total, 2) + ' |'));
+  L.push('', '### Soluciones existentes', '', '| Solución | Qué hace | Coste | Carencias | Fuente |', '|---|---|---|---|---|');
+  e.ideas.existentes.forEach((x) => L.push('| ' + [x.nombre, x.hace, x.coste, x.carencias, x.fuente].map(celdaMd).join(' | ') + ' |'));
+  L.push('', '### Aspecto innovador', '', e.ideas.innovacion, '', '### Acta de la sesión de ideas', '', e.ideas.acta, '');
+  L.push('## 5. Diseño técnico', '', e.memoria.esquema, '');
+  L.push('## 6. Requisitos y partes del proyecto', '', '### Partes interesadas', '', '| Parte interesada | Poder | Interés |', '|---|---|---|');
+  e.requisitos.partes.forEach((x) => L.push('| ' + celdaMd(x.nombre) + ' | ' + x.poder + ' | ' + x.interes + ' |'));
+  L.push('', '### Requisitos', '', '| Requisito | Tipo | Prioridad | Parte interesada | Criterio de aceptación |', '|---|---|---|---|---|');
+  e.requisitos.reqs.forEach((x) => L.push('| ' + [x.texto, nombreTipoReq(x.tipo), nombrePrio(x.prio), (e.requisitos.partes.find((q) => q.id === x.parte) || { nombre: '' }).nombre, x.criterio].map(celdaMd).join(' | ') + ' |'));
+  L.push('', '### Estructura de desglose del trabajo (EDT)', '', '| Fase | Paquete de trabajo | Entregable | Horas |', '|---|---|---|---:|');
+  e.alcance.fases.forEach((f) => f.paquetes.forEach((q) => L.push('| ' + [f.nombre, q.nombre, q.entregable].map(celdaMd).join(' | ') + ' | ' + celdaMd(q.horas) + ' |')));
+  L.push('', 'Total de la EDT: ' + fmt(horasEdt(), 1) + ' h.', '');
+  L.push('## 7. Recursos y presupuesto', '', '| Concepto | Cantidad | Precio unitario sin IVA (€) | Importe (€) | Fuente |', '|---|---:|---:|---:|---|');
+  e.presupuesto.personas.forEach((x) => L.push('| ' + celdaMd(x.perfil) + ' (personas) | ' + celdaMd(x.horas) + ' h | ' + celdaMd(x.tarifa) + ' | ' + fmt(num(x.horas) * num(x.tarifa), 2) + ' | ' + celdaMd(x.fuente) + ' |'));
+  [['equipos', 'equipo'], ['licencias', 'licencia o servicio'], ['subcontratas', 'subcontratación']].forEach((g) => e.presupuesto[g[0]].forEach((x) => L.push('| ' + celdaMd(x.desc) + ' (' + g[1] + ') | ' + celdaMd(x.cantidad) + ' | ' + celdaMd(x.precio) + ' | ' + fmt(num(x.cantidad) * num(x.precio), 2) + ' | ' + celdaMd(x.fuente) + ' |')));
+  L.push('', '| Resumen | Importe |', '|---|---:|', '| Costes directos | ' + eur(rp.directos) + ' |', '| Costes indirectos (' + e.presupuesto.indirectos + ' %) | ' + eur(rp.indirectos) + ' |', '| Contingencia (' + e.presupuesto.contingencia + ' %) | ' + eur(rp.contingencia) + ' |', '| Coste total | ' + eur(rp.coste) + ' |', '| Margen comercial (' + e.presupuesto.margen + ' %) | ' + eur(rp.margen) + ' |', '| Base imponible | ' + eur(rp.base) + ' |', '| IVA (' + e.presupuesto.iva + ' %) | ' + eur(rp.iva) + ' |', '| **Total con IVA** | **' + eur(rp.total) + '** |', '');
+  L.push('## 8. Viabilidad y riesgos iniciales', '', '| Dimensión | Estado | Nota |', '|---|---|---|');
+  DIMENSIONES.forEach((d) => L.push('| ' + d[1] + ' | ' + TXT_SEM[evalDim(d[0])] + ' | ' + celdaMd(e.viabilidad.notas[d[0]]) + ' |'));
+  L.push('', 'Recomendación del laboratorio: ' + recomendacion().texto, '', 'Decisión del equipo: ' + e.viabilidad.decision, '', '### Alternativas técnicas', '', '| Alternativa | Ventajas | Inconvenientes | Coste aprox. (€) |', '|---|---|---|---:|');
+  e.viabilidad.alternativas.forEach((a) => L.push('| ' + [a.nombre + (a.id === e.viabilidad.elegida ? ' (elegida)' : ''), a.pros, a.contras].map(celdaMd).join(' | ') + ' | ' + celdaMd(a.coste) + ' |'));
+  L.push('', '### Riesgos iniciales', '', '| Riesgo | Probabilidad | Impacto | Puntuación | Respuesta |', '|---|---:|---:|---:|---|');
+  e.viabilidad.riesgos.forEach((x) => L.push('| ' + celdaMd(x.texto) + ' | ' + x.prob + ' | ' + x.impacto + ' | ' + (num(x.prob) * num(x.impacto)) + ' | ' + celdaMd(x.respuesta) + ' |'));
+  L.push('');
+  L.push('## 9. Calidad', '', '| Entregable | Criterio de aceptación | Verificación | Responsable |', '|---|---|---|---|');
+  entregables().forEach((x) => { const f = e.calidad.filas[x.p.id] || {}; L.push('| ' + [x.nombre, f.criterio, nombreMetodo(f.metodo), f.responsable].map(celdaMd).join(' | ') + ' |'); });
+  L.push('', '| Aspecto | Previsto | Nota |', '|---|---|---|');
+  LISTA_CAL.forEach((a) => { const it = e.calidad.lista[a[0]] || {}; L.push('| ' + a[1] + ' | ' + (RESP_CAL.find((x) => x[0] === (it.resp || '')) || RESP_CAL[0])[1] + ' | ' + celdaMd(it.nota) + ' |'); });
+  L.push('');
+  L.push('## 10. Conclusiones y siguientes pasos', '', e.memoria.conclusiones, '');
+  L.push('## Anexo A. Guion de la presentación', '');
+  PITCH.forEach((q) => L.push('**' + q[1] + '.** ' + ((e.memoria.pitch || {})[q[0]] || ''), ''));
+  L.push('Duración estimada: ' + fmt(minutosPitch(), 1) + ' min (' + palabrasPitch() + ' palabras a ' + PPM + ' por minuto).', '', '| Diapositiva | Minutos | Palabras |', '|---|---:|---:|');
+  e.memoria.diapositivas.forEach((d, i) => L.push('| ' + (i + 1) + '. ' + celdaMd(d.titulo) + ' | ' + celdaMd(d.minutos) + ' | ' + celdaMd(d.palabras) + ' |'));
+  L.push('', '## Anexo B. Declaración de uso de inteligencia artificial y fuentes', '', e.memoria.declaracionIA, '');
+  L.push('## Autoevaluación por criterio (RA2)', '', '| Criterio | Comprobación automática | Mi valoración |', '|---|---|---|');
+  const ev = evaluar();
+  CRITERIOS.forEach((cr) => L.push('| RA2.' + cr[0] + ' | ' + (ev[cr[0]].length ? 'Falta' : 'Cubierto') + ' | ' + NIVELES.find((n) => n[0] === String(e.autoeval[cr[0]] || 0))[1] + ' |'));
+  return L.join('\n') + '\n';
+}
+function nombreArchivo(ext, pre) {
+  const base = (estado.proyecto.titulo || 'proyecto').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'proyecto';
+  return (pre || 'memoria') + '-' + base + '.' + ext;
+}
+function exportarMd() { descargar(nombreArchivo('md'), aMarkdown(), 'text/markdown'); aviso('Se ha descargado la memoria en Markdown. Entrégala en Aules.'); }
+function exportarJson() { descargar(nombreArchivo('json', 'diseno'), JSON.stringify(estado, null, 2), 'application/json'); aviso('Se ha descargado la copia en JSON: sirve para continuar en otro ordenador.'); }
+function copiarMd() {
+  const t = aMarkdown();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(t).then(() => aviso('Memoria copiada al portapapeles.'), () => aviso('No se ha podido copiar: usa la descarga.'));
+  } else aviso('Tu navegador no permite copiar desde aquí: usa la descarga.');
+}
+
+/* ====== 8 · Memoria y autoevaluación ====== */
+let serie = null;
+function nuevaSerie() {
+  serie = CRITERIOS.map((cr) => {
+    const q = BANCO.find((x) => x.ce === cr[0]);
+    return { q, orden: mezclar(q.opciones.map((o, i) => i)), resp: null };
+  });
+}
+function renderPractica() {
+  const c = $('#c-practica');
+  c.textContent = '';
+  const p = estado.proyecto; const M = estado.memoria;
+  const cEstado = el('div'); const cPitch = el('div'); const cAuto = el('div');
+  const al = () => { cambio(); pintarEstado(); };
+  c.append(el('h3', null, '1. Datos del proyecto'));
+  c.append(el('div', { class: 'campos' },
+    campo('Título del proyecto', controlPara({ k: 'titulo', t: 'Título', tipo: 'text' }, p, al)),
+    campo('Empresa o cliente', controlPara({ k: 'empresa', t: 'Empresa', tipo: 'text' }, p, al)),
+    campo('Nombre del equipo', controlPara({ k: 'equipo', t: 'Equipo', tipo: 'text' }, p, al)),
+    campo('Resumen (una página como máximo: necesidad, solución, coste y plazo)', controlPara({ k: 'resumen', t: 'Resumen', tipo: 'area', filas: 4 }, p, al), null, true)));
+  c.append(el('h3', null, '2. Apartados que escribes tú'));
+  c.append(el('div', { class: 'campos' },
+    campo('Antecedentes y necesidad: empresa, contexto y por qué hace falta el proyecto', controlPara({ k: 'antecedentes', t: 'Antecedentes', tipo: 'area', filas: 4 }, M, al), null, true),
+    campo('Diseño técnico: describe tu esquema (adjúntalo como imagen en la entrega)', controlPara({ k: 'esquema', t: 'Esquema técnico', tipo: 'area', filas: 4 }, M, al), 'Qué equipos y servicios intervienen y cómo se conectan.', true),
+    campo('Conclusiones y siguientes pasos', controlPara({ k: 'conclusiones', t: 'Conclusiones', tipo: 'area', filas: 3 }, M, al), null, true),
+    campo('Declaración de uso de inteligencia artificial y fuentes', controlPara({ k: 'declaracionIA', t: 'Declaración de IA', tipo: 'area', filas: 3 }, M, al), 'Qué herramienta, para qué y qué comprobaste a mano. Si no la usaste, dilo.', true)));
+  c.append(el('h3', null, '3. Estado de la memoria'));
+  c.append(cEstado);
+  c.append(el('h3', null, '4. Guion de la presentación'));
+  c.append(el('p', { class: 'ayuda' }, 'Cinco partes: problema, solución, valor, coste y plazo, y petición. El laboratorio calcula la duración con ' + PPM + ' palabras por minuto (cifra orientativa).'));
+  const selMin = selector([['3', '3 minutos'], ['4', '4 minutos'], ['5', '5 minutos']], M.objetivoMin, (v) => { M.objetivoMin = v; cambio(); pintarEstado(); });
+  selMin.setAttribute('aria-label', 'Tiempo objetivo de la presentación');
+  c.append(el('div', { class: 'campos' }, campo('Tiempo objetivo', selMin, 'Tu profesor puede indicar otro.')));
+  if (!M.pitch) M.pitch = {};
+  c.append(el('div', { class: 'campos' }, PITCH.map((q) => campo(q[1], controlPara({ k: q[0], t: q[1], tipo: 'area', filas: 3 }, M.pitch, al), q[2], true))));
+  c.append(el('h3', null, 'Diapositivas (de 5 a 7, una idea cada una)'));
+  c.append(tablaEditable(M.diapositivas, [{ k: 'titulo', t: 'Diapositiva (idea única)', tipo: 'text' }, { k: 'minutos', t: 'Minutos', tipo: 'num' }, { k: 'palabras', t: 'Palabras en la diapositiva', tipo: 'num' }],
+    { nombre: 'diapositivas', anadir: 'Añadir una diapositiva', nuevo: () => ({ id: nuevoId(), titulo: '', minutos: '', palabras: '' }), alCambiar: al, alQuitar: () => { cambio(); renderPractica(); } }));
+  c.append(cPitch);
+  c.append(el('h3', null, '5. Autoevaluación por criterio (RA2)'));
+  c.append(cAuto);
+  function pintarEstado() {
+    cEstado.textContent = '';
+    cEstado.append(tabla(['Apartado', 'Estado', 'Qué hace falta'], estadoMemoria().map((x) => [x[0], el('span', { class: x[1] ? 'ok' : 'ko' }, x[1] ? '✔ Listo' : '✘ Falta'), x[1] ? '' : x[2]])));
+    cPitch.textContent = '';
+    const obj = num(M.objetivoMin); const dur = minutosPitch(); const pal = palabrasPitch();
+    const ok = dur >= obj * 0.6 && dur <= obj * 1.1;
+    cPitch.append(el('p', { class: 'correccion', role: 'status' }, 'Guion: ' + pal + ' palabras, unos ' + fmt(dur, 1) + ' min. Objetivo: ' + fmt(obj, 0) + ' min (caben unas ' + Math.round(obj * PPM) + ' palabras). ' + (pal === 0 ? 'Escribe el guion.' : ok ? '✔ Dentro del tiempo.' : dur > obj * 1.1 ? '✘ Te pasas: recorta.' : '✘ Te quedas corto: desarrolla un poco más.')));
+    const av = [];
+    const ds = M.diapositivas; const suma = ds.reduce((s, d) => s + num(d.minutos), 0);
+    if (ds.length < 5 || ds.length > 7) av.push('Tienes ' + ds.length + ' diapositivas; se proponen de 5 a 7.');
+    if (ds.length && Math.abs(suma - obj) > 0.5) av.push('Los tiempos suman ' + fmt(suma, 1) + ' min y el objetivo es ' + fmt(obj, 0) + ' min.');
+    ds.forEach((d, i) => { if (num(d.palabras) > 40) av.push('La diapositiva ' + (i + 1) + ' lleva ' + fmt(num(d.palabras), 0) + ' palabras: demasiado texto o más de una idea; divídela o recórtala.'); });
+    cPitch.append(listaAviso('Diapositivas', av));
+    pintarAuto();
+  }
+  function pintarAuto() {
+    cAuto.textContent = '';
+    if (estado.ejemplo) cAuto.append(el('p', { class: 'aviso' }, 'Estás viendo el proyecto de ejemplo: la comprobación vale para ver cómo funciona. Pulsa «Empezar con mi proyecto» (en «Tus datos») para comprobar tu trabajo.'));
+    const ev = evaluar();
+    const cubiertos = CRITERIOS.filter((cr) => !ev[cr[0]].length).length;
+    cAuto.append(el('p', { class: 'correccion', role: 'status' }, 'Criterios con evidencia: ' + cubiertos + ' de ' + CRITERIOS.length + '. La comprobación es automática y orientativa: la corrección la hace tu profesor.'));
+    cAuto.append(tabla(['Criterio', 'Estado', 'Qué falta', 'Mi valoración'], CRITERIOS.map((cr) => {
+      const falta = ev[cr[0]];
+      const niv = selector(NIVELES, String(estado.autoeval[cr[0]] || 0), (x) => { estado.autoeval[cr[0]] = Number(x); cambio(); });
+      niv.setAttribute('aria-label', 'Mi valoración de RA2.' + cr[0]);
+      return [el('span', null, el('b', null, 'RA2.' + cr[0]), ' ' + cr[1]),
+        el('span', { class: falta.length ? 'ko' : 'ok' }, falta.length ? '✘ Falta' : '✔ Cubierto'),
+        falta.length ? el('div', null, el('ul', null, falta.map((x) => el('li', null, x))), el('button', { type: 'button', class: 'pq', onclick: () => irA(cr[2]) }, 'Ir a la pestaña')) : 'Nada',
+        niv];
+    })));
+  }
+  pintarEstado();
+
+  c.append(el('h3', null, '6. Memoria consolidada'));
+  c.append(el('div', { class: 'fila' },
+    el('button', { type: 'button', class: 'primario', onclick: exportarMd }, 'Descargar Markdown'),
+    el('button', { type: 'button', onclick: copiarMd }, 'Copiar Markdown'),
+    el('button', { type: 'button', onclick: exportarJson }, 'Descargar JSON')));
+  c.append(el('details', null, el('summary', null, 'Ver la memoria en Markdown'), el('pre', null, aMarkdown())));
+
+  c.append(el('h3', null, '7. Preguntas de repaso'));
+  if (!serie) nuevaSerie();
+  const marcador = el('p', null, 'Aciertos acumulados: ', el('b', null, estado.quiz.aciertos + ' de ' + estado.quiz.intentos));
+  c.append(marcador);
+  serie.forEach((s, n) => {
+    const cr = CRITERIOS[n];
+    const fb = el('p', { class: 'correccion', role: 'status' });
+    const ops = el('div', { class: 'opciones', role: 'group', 'aria-label': 'Opciones de la pregunta RA2.' + cr[0] });
+    const botones = s.orden.map((i) => el('button', { type: 'button', onclick: () => {
+      if (s.resp !== null) return;
+      s.resp = i;
+      estado.quiz.intentos++;
+      if (i === s.q.ok) estado.quiz.aciertos++;
+      cambio();
+      pintar();
+      marcador.textContent = '';
+      marcador.append('Aciertos acumulados: ', el('b', null, estado.quiz.aciertos + ' de ' + estado.quiz.intentos));
+    } }, s.q.opciones[i]));
+    ops.append(...botones);
+    function pintar() {
+      if (s.resp === null) { fb.textContent = ''; return; }
+      botones.forEach((b, k) => { b.disabled = true; if (s.orden[k] === s.q.ok) b.textContent = '✔ ' + s.q.opciones[s.q.ok]; });
+      fb.textContent = '';
+      fb.append(el('b', { class: s.resp === s.q.ok ? 'ok' : 'ko' }, s.resp === s.q.ok ? '✔ Correcto. ' : '✘ No es esa. '), s.q.explica);
+    }
+    c.append(el('div', { class: 'tarjeta' }, el('h4', null, 'RA2.' + cr[0] + ' · ' + s.q.pregunta), ops, fb));
+    pintar();
+  });
+  c.append(el('div', { class: 'fila' }, el('button', { type: 'button', onclick: () => { nuevaSerie(); renderPractica(); } }, 'Volver a intentarlo con las opciones en otro orden')));
+}
+
+/* ====== Barra de datos ====== */
+function confirmar(texto, accion) {
+  const b = el('button', { type: 'button' }, texto);
+  let espera = null;
+  b.addEventListener('click', () => {
+    if (espera) { clearTimeout(espera); espera = null; b.textContent = texto; accion(); return; }
+    b.textContent = '¿Seguro? Pulsa otra vez para confirmar';
+    espera = setTimeout(() => { espera = null; b.textContent = texto; }, 5000);
+  });
+  return b;
+}
+function renderTodo() {
+  renderNecesidades(); renderIdeas(); renderRequisitos(); renderViabilidad(); renderAlcance(); renderPresupuesto(); renderCalidad(); renderPractica();
+  const b = $('#banner');
+  b.hidden = !estado.ejemplo;
+  b.textContent = estado.ejemplo ? 'Estás viendo el proyecto de ejemplo de «Reparaciones Byte Alacant, S. L.» (empresa ficticia, datos inventados). Úsalo para ver cómo funciona todo y pulsa «Empezar con mi proyecto» (dentro de «Tus datos») cuando quieras trabajar con el tuyo.' : '';
+}
+function montarBarra() {
+  const barra = $('#barra-datos');
+  const archivo = el('input', { type: 'file', accept: '.json,application/json', 'aria-label': 'Importar una copia en JSON', hidden: true });
+  archivo.addEventListener('change', () => {
+    const f = archivo.files && archivo.files[0];
+    if (!f) return;
+    const lector = new FileReader();
+    lector.onload = () => {
+      try {
+        const d = JSON.parse(String(lector.result));
+        if (!d || d.tipo !== 'diseno-proyecto-ud02') throw new TypeError('formato');
+        estado = normalizar(fusionar(estadoVacio(), d));
+        persistir();
+        serie = null;
+        renderTodo();
+        aviso('Datos importados correctamente.');
+      } catch (x) {
+        aviso('El archivo no es una copia en JSON exportada por este laboratorio.');
+      }
+      archivo.value = '';
+    };
+    lector.readAsText(f);
+  });
+  barra.append(
+    el('button', { type: 'button', class: 'primario', onclick: exportarMd }, 'Exportar Markdown'),
+    el('button', { type: 'button', onclick: exportarJson }, 'Exportar JSON'),
+    el('button', { type: 'button', onclick: () => archivo.click() }, 'Importar JSON'),
+    confirmar('Empezar con mi proyecto', () => { estado = normalizar(estadoVacio()); persistir(); serie = null; renderTodo(); aviso('Datos vaciados: ya puedes trabajar con tu proyecto.'); }),
+    confirmar('Cargar el ejemplo', () => { estado = ejemplo(); persistir(); serie = null; renderTodo(); aviso('Se ha cargado el proyecto de ejemplo.'); }),
+    archivo);
+}
+
+/* ====== Pestañas (patrón WAI-ARIA) ====== */
+const pestanas = [...document.querySelectorAll('[role="tab"]')];
+function mostrar(id) {
+  const activa = pestanas.find((p) => p.dataset.tab === id) || pestanas[0];
+  for (const p of pestanas) {
+    const es = p === activa;
+    p.setAttribute('aria-selected', String(es));
+    p.tabIndex = es ? 0 : -1;
+    document.getElementById(p.getAttribute('aria-controls')).hidden = !es;
+  }
+  activa.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  const dep = { practica: renderPractica, calidad: renderCalidad, presupuesto: renderPresupuesto, requisitos: renderRequisitos, alcance: renderAlcance }[activa.dataset.tab];
+  if (dep) dep();
+  return activa;
+}
+function elegir(id, enfocar) {
+  const activa = mostrar(id);
+  Lab.guardar('pestana', activa.dataset.tab);
+  history.replaceState(null, '', '#' + activa.dataset.tab);
+  if (enfocar) activa.focus();
+}
+function irA(id) { elegir(id); window.scrollTo(0, 0); }
+pestanas.forEach((p) => p.addEventListener('click', () => elegir(p.dataset.tab)));
+document.querySelector('[role="tablist"]').addEventListener('keydown', (e) => {
+  const i = pestanas.indexOf(document.activeElement);
+  const destino = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: pestanas.length - 1 }[e.key];
+  if (i < 0 || destino === undefined) return;
+  e.preventDefault();
+  elegir(pestanas[(destino + pestanas.length) % pestanas.length].dataset.tab, true);
+});
+window.addEventListener('hashchange', () => mostrar(location.hash.slice(1)));
+
+montarBarra();
+renderTodo();
+mostrar(location.hash.slice(1) || Lab.leer('pestana'));
+</script>
+</body>
+</html>
