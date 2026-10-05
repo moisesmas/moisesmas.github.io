@@ -1,0 +1,989 @@
+<!doctype html>
+<html lang="en" data-lab="virtualizacion" data-idioma-original="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="/comun/lab.js"></script>
+<title>Virtualization Playground</title>
+<meta name="description" content="Consolidate servers, build Type 1 and Type 2 hypervisor stacks, see what VT-x changes, size virtual machines, run a New VM wizard and compare the VirtualBox network modes.">
+<meta name="keywords" content="virtualization, virtual machine, hypervisor, VirtualBox, VT-x, network modes, NAT">
+<meta name="lab:titulo:es" content="Laboratorio de virtualización">
+<meta name="lab:descripcion:es" content="Consolida servidores, construye pilas de hipervisor de tipo 1 y 2, mira qué cambia VT-x, dimensiona máquinas virtuales, usa un asistente de nueva VM y compara los modos de red de VirtualBox.">
+<meta name="lab:etiquetas:es" content="virtualización, máquina virtual, hipervisor, VirtualBox, VT-x, modos de red, NAT">
+<link rel="icon" href="/comun/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/comun/fuentes.css">
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f2f4ef;--surface:#ffffff;--surface2:#e9ede6;--ink:#16201b;--muted:#56655d;--line:#d3dbd4;
+  --accent:#b86e00;--accent-soft:#fbeed8;--pcb:#1f5244;
+  --f-display:"Chakra Petch",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0e1411;--surface:#161f1b;--surface2:#1d2823;--ink:#e4ebe6;--muted:#95a69d;--line:#2b3832;
+  --accent:#f3aa3c;--accent-soft:#33260f;--pcb:#1a463a;
+}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--f-body)}
+h1,h2,h3{font-family:var(--f-display);line-height:1.2;margin:0 0 .5rem}
+h1{font-size:1.25rem}
+h2{font-size:1.5rem}
+h3{font-size:1.05rem;margin-top:1rem}
+p{margin:.5rem 0}
+code{font-family:var(--f-mono);font-size:.92em}
+button,input,select{font:inherit;color:inherit}
+button{border:1px solid var(--muted);background:var(--surface);border-radius:.4rem;padding:.35rem .8rem;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+select{border:1px solid var(--muted);border-radius:.4rem;padding:.3rem .5rem;background:var(--surface)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cabecera{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;padding:.6rem 1rem;background:var(--pcb);color:#fff}
+.cabecera h1{flex:1 1 12rem;margin:0}
+.cabecera a{color:#fff}
+.cabecera button{background:transparent;border-color:#fff;color:#fff}
+.cabecera [aria-pressed="true"]{background:#fff;color:var(--pcb)}
+main{max-width:62rem;margin:0 auto;padding:1rem}
+.pestanas{display:flex;gap:.25rem;overflow-x:auto;border-bottom:1px solid var(--muted)}
+[role="tab"]{display:flex;gap:.5rem;align-items:baseline;white-space:nowrap;border:0;border-bottom:3px solid transparent;border-radius:.4rem .4rem 0 0;background:var(--surface2);font:600 1rem var(--f-display)}
+[role="tab"][aria-selected="true"]{background:var(--accent-soft);border-bottom-color:var(--accent)}
+.n{font:600 .8rem var(--f-mono);color:var(--muted)}
+[role="tabpanel"]{background:var(--surface);border:1px solid var(--line);border-top:0;padding:1rem 1.25rem}
+.fila{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;margin:.5rem 0}
+.primario{background:var(--pcb);border-color:var(--pcb);color:#fff}
+.sel{background:var(--accent-soft);border:2px solid var(--accent)}
+input[type=range]{width:min(16rem,100%);accent-color:var(--pcb)}
+input[type=text]{border:1px solid var(--muted);border-radius:.4rem;padding:.35rem .6rem;background:var(--surface);width:min(16rem,100%)}
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1rem}
+.cuadro{border:1px solid var(--line);border-radius:.5rem;padding:.75rem;background:var(--surface2)}
+.rack{display:flex;flex-wrap:wrap;gap:.5rem}
+.srv,.host{border:2px solid var(--muted);border-radius:.4rem;padding:.35rem .5rem;background:var(--surface);min-width:6.5rem;font-size:.85rem}
+.host{border-color:var(--pcb);min-width:11rem;flex:1 1 11rem}
+.barra{height:.7rem;border-radius:.35rem;background:var(--line);overflow:hidden;margin:.25rem 0}
+.barra>i{display:block;height:100%;background:var(--accent)}
+.barra.ok>i{background:var(--pcb)}
+.chip{display:inline-block;margin:.15rem;padding:.1rem .45rem;border-radius:.6rem;background:var(--accent-soft);border:1px solid var(--accent);font-size:.8rem}
+table{border-collapse:collapse;width:100%;margin:.6rem 0;font-size:.95rem}
+th,td{border:1px solid var(--line);padding:.3rem .5rem;text-align:left;vertical-align:top}
+th{background:var(--surface2)}
+.estado{margin:.5rem 0;padding:.4rem .75rem;border-left:4px solid var(--accent);background:var(--surface2)}
+.estado:empty{display:none}
+.ok{border-left-color:var(--pcb)}
+.mal{border-left-color:#b3261e}
+.lista-av{list-style:none;padding:0;margin:.5rem 0}
+.lista-av li{margin:.25rem 0;padding:.25rem .6rem;border-left:4px solid var(--muted);background:var(--surface2)}
+.lista-av li.ok{border-left-color:var(--pcb)}
+.lista-av li.aviso{border-left-color:var(--accent)}
+.lista-av li.error{border-left-color:#b3261e}
+.tarjeta{border:2px solid var(--line);border-radius:.6rem;padding:1rem;margin:.75rem 0;background:var(--surface2);font-size:1.05rem}
+.capas{display:flex;flex-direction:column-reverse;gap:.3rem;min-height:3rem;max-width:22rem;margin:.5rem 0}
+.capa{padding:.45rem .6rem;border:2px solid var(--pcb);border-radius:.4rem;text-align:center;font-weight:700;background:var(--surface2)}
+.capa.so{border-color:var(--muted)}
+.capa.inv{border-color:var(--accent);background:var(--accent-soft)}
+.capa.app{background:var(--surface)}
+.pasos{padding-left:1.4rem}
+.pasos li{margin:.3rem 0;color:var(--muted)}
+.pasos li.hecho{color:var(--ink)}
+.pasos li.actual{color:var(--ink);font-weight:700;border-left:4px solid var(--accent);padding-left:.5rem;margin-left:-.75rem;background:var(--accent-soft)}
+.maq{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.75rem}
+.opciones{display:grid;gap:.4rem;margin:.6rem 0}
+.opciones button{text-align:left}
+.opciones button.bien{border:2px solid var(--pcb);background:var(--accent-soft)}
+.opciones button.mal{border:2px solid #b3261e}
+svg text{font-family:var(--f-body)}
+.nota{color:var(--muted);font-size:.9rem}
+.pasoasis{border:1px solid var(--line);border-radius:.5rem;padding:.75rem;margin:.5rem 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<script type="application/json" id="lab-textos">
+{
+  "es": {
+    "volver-aria": "Volver a la unidad",
+    "volver": "Unidad",
+    "titulo": "Laboratorio de virtualización",
+    "zoom-aria": "Tamaño del texto",
+    "zoom-menos": "Reducir texto",
+    "zoom-mas": "Aumentar texto",
+    "idioma-aria": "Idioma",
+    "pestanas-aria": "Secciones del laboratorio",
+    "tab-physical": "Físico frente a virtual",
+    "tab-proscons": "Pros y contras",
+    "tab-stack": "Constructor de pilas",
+    "tab-vtx": "VT-x activado y desactivado",
+    "tab-resources": "Reparto de recursos",
+    "tab-wizard": "Asistente de nueva VM",
+    "tab-network": "Modos de red",
+    "tab-practice": "Práctica",
+    "physical-titulo": "Físico frente a virtual",
+    "physical-texto": "Cada servidor físico trabaja casi siempre muy por debajo de su capacidad. Elige cuántos servidores tiene la empresa y mira cómo cambia todo al agruparlos en máquinas virtuales sobre unos pocos <b>anfitriones</b>. Las cifras son un modelo sencillo, no datos reales.",
+    "proscons-titulo": "Pros y contras",
+    "proscons-texto": "Lee cada situación y decide si es una <b>ventaja</b> o un <b>inconveniente</b> de la virtualización. Después de cada respuesta verás qué concepto se esconde detrás.",
+    "stack-titulo": "Constructor de pilas",
+    "stack-texto": "Un hipervisor de <b>tipo 1</b> funciona sobre el hardware; uno de <b>tipo 2</b> es un programa que funciona sobre un sistema operativo. Monta la pila de capas en el orden correcto y después clasifica productos reales.",
+    "vtx-titulo": "VT-x activado y desactivado",
+    "vtx-texto": "Las instrucciones privilegiadas de un invitado no pueden ejecutarse sin más. Mira cómo lo resuelve cada método y qué ocurre si la virtualización por hardware está desactivada en la UEFI.",
+    "resources-titulo": "Reparto de recursos",
+    "resources-texto": "El anfitrión tiene recursos limitados. Crea las máquinas, ajusta sus deslizadores y vigila los avisos. Fíjate en cómo crece el disco dinámico cuando el invitado escribe datos y en que no se encoge cuando los borra.",
+    "wizard-titulo": "Asistente de nueva VM",
+    "wizard-texto": "Un asistente simulado como el de VirtualBox. Elige el sistema invitado y comprueba tus valores con los requisitos mínimos del sistema y con los límites del anfitrión (8 núcleos, 16 GB de RAM).",
+    "network-titulo": "Modos de red",
+    "network-texto": "Elige un modo de red y mira con quién puede hablar la máquina virtual. Una línea continua significa que cualquiera de los dos lados puede iniciar la conexión; una discontinua, que solo puede iniciarla la VM.",
+    "practice-titulo": "Práctica",
+    "practice-texto": "Ejercicios nuevos cada vez, con corrección al instante. Elige una respuesta y lee la explicación."
+  }
+}
+</script>
+</head>
+<body>
+<header class="cabecera">
+  <a href="../../" data-lab-volver data-t-attr="aria-label:volver-aria" aria-label="Back to the unit">← <span data-t="volver">Unit</span></a>
+  <h1 data-t="titulo">Virtualization Playground</h1>
+  <div role="group" data-t-attr="aria-label:zoom-aria" aria-label="Text size">
+    <button type="button" data-lab-zoom="-" data-t-attr="aria-label:zoom-menos" aria-label="Smaller text">A−</button>
+    <button type="button" data-lab-zoom="+" data-t-attr="aria-label:zoom-mas" aria-label="Larger text">A+</button>
+  </div>
+  <div role="group" data-t-attr="aria-label:idioma-aria" aria-label="Language">
+    <button type="button" data-lab-idioma="en"></button>
+    <button type="button" data-lab-idioma="es"></button>
+  </div>
+</header>
+<main>
+  <div class="pestanas" role="tablist" data-t-attr="aria-label:pestanas-aria" aria-label="Lab sections">
+    <button type="button" role="tab" id="tab-physical" data-tab="physical" aria-controls="panel-physical" aria-selected="true"><span class="n">1</span><span data-t="tab-physical">Physical vs virtual</span></button>
+    <button type="button" role="tab" id="tab-proscons" data-tab="proscons" aria-controls="panel-proscons" aria-selected="false" tabindex="-1"><span class="n">2</span><span data-t="tab-proscons">Pros &amp; cons</span></button>
+    <button type="button" role="tab" id="tab-stack" data-tab="stack" aria-controls="panel-stack" aria-selected="false" tabindex="-1"><span class="n">3</span><span data-t="tab-stack">Hypervisor stack builder</span></button>
+    <button type="button" role="tab" id="tab-vtx" data-tab="vtx" aria-controls="panel-vtx" aria-selected="false" tabindex="-1"><span class="n">4</span><span data-t="tab-vtx">VT-x on/off</span></button>
+    <button type="button" role="tab" id="tab-resources" data-tab="resources" aria-controls="panel-resources" aria-selected="false" tabindex="-1"><span class="n">5</span><span data-t="tab-resources">Resource allocator</span></button>
+    <button type="button" role="tab" id="tab-wizard" data-tab="wizard" aria-controls="panel-wizard" aria-selected="false" tabindex="-1"><span class="n">6</span><span data-t="tab-wizard">New VM wizard</span></button>
+    <button type="button" role="tab" id="tab-network" data-tab="network" aria-controls="panel-network" aria-selected="false" tabindex="-1"><span class="n">7</span><span data-t="tab-network">Network modes</span></button>
+    <button type="button" role="tab" id="tab-practice" data-tab="practice" aria-controls="panel-practice" aria-selected="false" tabindex="-1"><span class="n">8</span><span data-t="tab-practice">Practice</span></button>
+  </div>
+
+  <section role="tabpanel" id="panel-physical" aria-labelledby="tab-physical" tabindex="0">
+    <h2 data-t="physical-titulo">Physical vs virtual</h2>
+    <p data-t-html="physical-texto">Each physical server usually works far below its capacity. Choose how many servers the company has and see what changes when you group them as virtual machines on a few <b>hosts</b>. The numbers are a simple model, not real data.</p>
+    <div id="phys-ui"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-proscons" aria-labelledby="tab-proscons" tabindex="0" hidden>
+    <h2 data-t="proscons-titulo">Pros &amp; cons</h2>
+    <p data-t-html="proscons-texto">Read each situation and decide if it is an <b>advantage</b> or a <b>disadvantage</b> of virtualization. After each answer you will see which concept is behind it.</p>
+    <div id="pc-ui"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-stack" aria-labelledby="tab-stack" tabindex="0" hidden>
+    <h2 data-t="stack-titulo">Hypervisor stack builder</h2>
+    <p data-t-html="stack-texto">A <b>Type 1</b> hypervisor runs on the hardware; a <b>Type 2</b> hypervisor is a program that runs on an operating system. Build the stack of layers in the right order and then classify real products.</p>
+    <div id="stack-ui"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-vtx" aria-labelledby="tab-vtx" tabindex="0" hidden>
+    <h2 data-t="vtx-titulo">VT-x on/off</h2>
+    <p data-t-html="vtx-texto">A guest cannot simply run privileged instructions. See how each method solves it and what happens if hardware virtualization is switched off in the UEFI.</p>
+    <div id="vtx-ui"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-resources" aria-labelledby="tab-resources" tabindex="0" hidden>
+    <h2 data-t="resources-titulo">Resource allocator</h2>
+    <p data-t="resources-texto">The host has limited resources. Create the machines, move the sliders and watch the warnings. Notice how a dynamic disk grows when the guest writes data and does not shrink when it deletes it.</p>
+    <div id="res-ui"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-wizard" aria-labelledby="tab-wizard" tabindex="0" hidden>
+    <h2 data-t="wizard-titulo">New VM wizard</h2>
+    <p data-t="wizard-texto">A simulated wizard like the one in VirtualBox. Choose the guest system and check your values against the minimum requirements of the system and the limits of the host (8 cores, 16 GB of RAM).</p>
+    <div id="wiz-ui"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-network" aria-labelledby="tab-network" tabindex="0" hidden>
+    <h2 data-t="network-titulo">Network modes</h2>
+    <p data-t="network-texto">Choose a network mode and see who the virtual machine can talk to. A solid line means that both sides can start a connection; a dashed line means that only the VM can start it.</p>
+    <div id="net-ui"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-practice" aria-labelledby="tab-practice" tabindex="0" hidden>
+    <h2 data-t="practice-titulo">Practice</h2>
+    <p data-t="practice-texto">New exercises every time, with instant feedback. Choose an answer and read the explanation.</p>
+    <div id="prac-ui"></div>
+  </section>
+</main>
+
+<script>
+// ---------- Pestañas (patrón WAI-ARIA) ----------
+const pestanas = [...document.querySelectorAll('[role="tab"]')];
+function mostrar(id) {
+  const activa = pestanas.find((p) => p.dataset.tab === id) ?? pestanas[0];
+  for (const p of pestanas) {
+    const es = p === activa;
+    p.setAttribute('aria-selected', String(es));
+    p.tabIndex = es ? 0 : -1;
+    document.getElementById(p.getAttribute('aria-controls')).hidden = !es;
+  }
+  activa.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  return activa;
+}
+function elegir(id, enfocar) {
+  const activa = mostrar(id);
+  Lab.guardar('pestana', activa.dataset.tab);
+  history.replaceState(null, '', '#' + activa.dataset.tab);
+  if (enfocar) activa.focus();
+}
+pestanas.forEach((p) => p.addEventListener('click', () => elegir(p.dataset.tab)));
+document.querySelector('[role="tablist"]').addEventListener('keydown', (e) => {
+  const i = pestanas.indexOf(document.activeElement);
+  const destino = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: pestanas.length - 1 }[e.key];
+  if (i < 0 || destino === undefined) return;
+  e.preventDefault();
+  elegir(pestanas[(destino + pestanas.length) % pestanas.length].dataset.tab, true);
+});
+window.addEventListener('hashchange', () => mostrar(location.hash.slice(1)));
+mostrar(location.hash.slice(1) || Lab.leer('pestana'));
+
+// ---------- Utilidades ----------
+const T = (en, es) => Lab.t({ en, es });
+const $ = (id) => document.getElementById(id);
+function h(tag, props, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(props || {})) {
+    if (v === false || v === null || v === undefined) continue;
+    if (k === 'class') e.className = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (v === true) e.setAttribute(k, '');
+    else e.setAttribute(k, v);
+  }
+  for (const c of kids.flat()) e.append(c instanceof Node ? c : String(c));
+  return e;
+}
+function barra(pct, ok) {
+  const b = h('div', { class: 'barra' + (ok ? ' ok' : ''), 'aria-hidden': 'true' }, h('i'));
+  b.firstChild.style.width = Math.max(0, Math.min(100, pct)) + '%';
+  return b;
+}
+function mezclar(lista) {
+  const a = [...lista];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function azar(lista) { return lista[Math.floor(Math.random() * lista.length)]; }
+const MARCA = { ok: '✔', aviso: '⚠', error: '✖' };
+function aviso(nivel, texto) {
+  const palabra = nivel === 'ok' ? T('OK', 'Bien') : nivel === 'aviso' ? T('Warning', 'Aviso') : T('Problem', 'Problema');
+  return h('li', { class: nivel }, MARCA[nivel] + ' ' + palabra + ': ' + texto);
+}
+function selector(nombre, etiqueta, opciones, valor, alCambiar) {
+  const cont = h('div', { class: 'fila', role: 'radiogroup', 'aria-label': etiqueta });
+  const botones = [];
+  for (const [clave, texto] of opciones) {
+    const b = h('button', { type: 'button', role: 'radio', 'aria-checked': String(clave === valor), 'data-v': clave }, texto);
+    b.addEventListener('click', () => {
+      botones.forEach((x) => { x.setAttribute('aria-checked', String(x === b)); x.classList.toggle('sel', x === b); });
+      alCambiar(clave);
+    });
+    b.classList.toggle('sel', clave === valor);
+    botones.push(b);
+    cont.append(b);
+  }
+  return cont;
+}
+
+// ============ 1. Físico frente a virtual ============
+(function () {
+  const LOADS = [12, 8, 15, 5, 20, 10, 7, 18, 9, 14, 6, 11];
+  const MAXHOST = 70;
+  const ui = $('phys-ui');
+  const n = h('input', { type: 'range', id: 'srv-n', min: '2', max: '12', value: '6' });
+  const salida = h('output', { for: 'srv-n' });
+  const fisico = h('div', { class: 'rack' });
+  const virtual = h('div', { class: 'rack' });
+  const tabla = h('div');
+  ui.append(
+    h('div', { class: 'fila' }, h('label', { for: 'srv-n' }, T('Physical servers in the company', 'Servidores físicos de la empresa')), n, salida),
+    h('div', { class: 'duo' },
+      h('div', { class: 'cuadro' }, h('h3', {}, T('Without virtualization', 'Sin virtualización')), fisico),
+      h('div', { class: 'cuadro' }, h('h3', {}, T('With virtualization', 'Con virtualización')), virtual)),
+    tabla,
+    h('p', { class: 'nota' }, T(
+      'Model: each server uses the percentage of its CPU shown in its bar. A host is filled up to ' + MAXHOST + ' % so that it has some spare capacity. Prices and power are illustrative.',
+      'Modelo: cada servidor usa el porcentaje de CPU que indica su barra. Un anfitrión se llena hasta el ' + MAXHOST + ' % para dejar margen. Los precios y la potencia son ilustrativos.')));
+  function empaquetar(cargas) {
+    const orden = cargas.map((l, i) => ({ l, i })).sort((a, b) => b.l - a.l);
+    const hosts = [];
+    for (const s of orden) {
+      let host = hosts.find((x) => x.suma + s.l <= MAXHOST);
+      if (!host) { host = { suma: 0, vms: [] }; hosts.push(host); }
+      host.suma += s.l;
+      host.vms.push(s);
+    }
+    return hosts;
+  }
+  function pintar() {
+    const N = Number(n.value);
+    const cargas = LOADS.slice(0, N);
+    const total = cargas.reduce((a, b) => a + b, 0);
+    const hosts = empaquetar(cargas);
+    const H = hosts.length;
+    salida.textContent = String(N);
+    fisico.replaceChildren(...cargas.map((l, i) => h('div', { class: 'srv' },
+      h('div', {}, T('Server ', 'Servidor ') + (i + 1)), barra(l), h('div', {}, l + ' %'))));
+    virtual.replaceChildren(...hosts.map((x, i) => h('div', { class: 'host' },
+      h('div', {}, T('Host ', 'Anfitrión ') + (i + 1) + ' — ' + x.suma + ' %'), barra(x.suma, true),
+      h('div', {}, x.vms.map((v) => h('span', { class: 'chip' }, 'VM ' + (v.i + 1) + ' (' + v.l + ' %)'))))));
+    const filas = [
+      [T('Machines to buy and manage', 'Máquinas que comprar y gestionar'), String(N), String(H)],
+      [T('Average CPU use', 'Uso medio de CPU'), Math.round(total / N) + ' %', Math.round(total / H) + ' %'],
+      [T('Electricity (illustrative)', 'Electricidad (ilustrativo)'), N * 250 + ' W', H * 350 + ' W'],
+      [T('Hardware cost (illustrative)', 'Coste de hardware (ilustrativo)'), (N * 2000).toLocaleString() + ' €', (H * 3500).toLocaleString() + ' €'],
+      [T('Time to recover a failed machine', 'Tiempo para recuperar una máquina averiada'), T('about 8 hours (reinstall)', 'unas 8 horas (reinstalar)'), T('about 15 minutes (restore the VM)', 'unos 15 minutos (restaurar la VM)')],
+    ];
+    tabla.replaceChildren(h('table', {},
+      h('thead', {}, h('tr', {}, h('th', {}, T('Feature', 'Característica')), h('th', {}, T('Physical', 'Físico')), h('th', {}, T('Virtual', 'Virtual')))),
+      h('tbody', {}, filas.map((f) => h('tr', {}, h('td', {}, f[0]), h('td', {}, f[1]), h('td', {}, f[2]))))));
+  }
+  n.addEventListener('input', pintar);
+  pintar();
+})();
+
+// ============ 2. Pros y contras ============
+(function () {
+  const C = (en, es, a, ce, ces, xe, xes) => ({ en, es, a, c: [ce, ces], x: [xe, xes] });
+  const TARJETAS = [
+    C('A company replaces eight old servers with two hosts that run virtual machines.', 'Una empresa sustituye ocho servidores antiguos por dos anfitriones que ejecutan máquinas virtuales.', 'adv',
+      'Consolidation and cost', 'Consolidación y coste', 'Fewer machines mean less hardware, electricity and space. Idle time of one workload is used by another.', 'Menos máquinas significan menos hardware, electricidad y espacio. El tiempo libre de una carga lo aprovecha otra.'),
+    C('One VM writes huge files and the other VMs on the same disk become slow.', 'Una VM escribe archivos enormes y las otras VM del mismo disco se vuelven lentas.', 'dis',
+      'Resource bottleneck', 'Cuello de botella', 'All the VMs share the same disk. This is the "noisy neighbour" problem.', 'Todas las VM comparten el mismo disco. Es el problema del «vecino ruidoso».'),
+    C('A teacher gives every student the same prepared machine as a single file.', 'Un profesor da a cada alumno la misma máquina preparada en un solo archivo.', 'adv',
+      'Portability and consistency', 'Portabilidad y coherencia', 'A VM is a set of files, so it can be copied and everybody starts from the same state.', 'Una VM es un conjunto de archivos, así que se puede copiar y todos empiezan desde el mismo estado.'),
+    C('You test a risky update, it fails, and two minutes later the system is back as before.', 'Pruebas una actualización arriesgada, falla y dos minutos después el sistema está como antes.', 'adv',
+      'Easy recovery (snapshots)', 'Recuperación sencilla (instantáneas)', 'A snapshot lets you return to a known good state quickly.', 'Una instantánea permite volver rápidamente a un estado correcto conocido.'),
+    C('Every new VM and every host must be updated, patched and monitored.', 'Cada VM nueva y cada anfitrión deben actualizarse, parchearse y vigilarse.', 'dis',
+      'Complexity', 'Complejidad', 'There are more layers to manage: host, hypervisor and each guest.', 'Hay más capas que gestionar: anfitrión, hipervisor y cada invitado.'),
+    C('A database that needs the fastest possible disk runs a little slower inside a VM.', 'Una base de datos que necesita el disco más rápido posible va algo más lenta dentro de una VM.', 'dis',
+      'Overhead', 'Sobrecarga', 'The virtualization layer adds work, mostly for disk and network access.', 'La capa de virtualización añade trabajo, sobre todo en el acceso a disco y red.'),
+    C('A virus infects one VM, but the other VMs keep working normally.', 'Un virus infecta una VM, pero las otras VM siguen funcionando con normalidad.', 'adv',
+      'Isolation', 'Aislamiento', 'Each VM is a separate sandbox, so a failure stays inside it.', 'Cada VM es un entorno aislado, así que un fallo se queda dentro de ella.'),
+    C('The hypervisor has a serious vulnerability and every VM on it is exposed.', 'El hipervisor tiene una vulnerabilidad grave y todas las VM que aloja quedan expuestas.', 'dis',
+      'Security risk', 'Riesgo de seguridad', 'The hypervisor is a high-value target: it controls all the guests.', 'El hipervisor es un objetivo muy valioso: controla a todos los invitados.'),
+    C('Tomorrow you need twenty more test machines: you clone a template.', 'Mañana necesitas veinte máquinas de prueba más: clonas una plantilla.', 'adv',
+      'Scalability', 'Escalabilidad', 'New VMs are created from a template in minutes, without buying hardware.', 'Las VM nuevas se crean a partir de una plantilla en minutos, sin comprar hardware.'),
+    C('A paid operating system inside a VM still needs its own valid licence.', 'Un sistema operativo de pago dentro de una VM sigue necesitando su propia licencia válida.', 'dis',
+      'Licensing', 'Licencias', 'Virtual environments can have special licence rules that you must plan for.', 'Los entornos virtuales pueden tener reglas de licencia especiales que hay que planificar.'),
+    C('You run Windows and Linux at the same time on one laptop.', 'Ejecutas Windows y Linux a la vez en un mismo portátil.', 'adv',
+      'Flexibility', 'Flexibilidad', 'Different operating systems can share the same hardware.', 'Sistemas operativos distintos pueden compartir el mismo hardware.'),
+    C('You cannot give a VM 16 GB of RAM when the host has only 8 GB.', 'No puedes dar 16 GB de RAM a una VM si el anfitrión solo tiene 8 GB.', 'dis',
+      'Hardware limits', 'Límites del hardware', 'A guest can never be more powerful than the host that runs it.', 'Un invitado nunca puede ser más potente que el anfitrión que lo ejecuta.'),
+  ];
+  const ui = $('pc-ui');
+  let orden, i, aciertos, respondida;
+  const cont = h('div');
+  ui.append(cont);
+  function empezar() { orden = mezclar(TARJETAS); i = 0; aciertos = 0; pintar(); }
+  function pintar() {
+    if (i >= orden.length) {
+      cont.replaceChildren(
+        h('p', { class: 'estado ok', role: 'status' }, T('Finished! Score: ', '¡Terminado! Puntuación: ') + aciertos + ' / ' + orden.length),
+        h('button', { type: 'button', class: 'primario', onclick: empezar }, T('Play again', 'Jugar otra vez')));
+      return;
+    }
+    respondida = false;
+    const t = orden[i];
+    const fb = h('p', { class: 'estado', role: 'status' });
+    const sig = h('button', { type: 'button', hidden: true, class: 'primario', onclick: () => { i++; pintar(); } }, i === orden.length - 1 ? T('See my score', 'Ver mi puntuación') : T('Next card', 'Siguiente tarjeta'));
+    function responder(r) {
+      if (respondida) return;
+      respondida = true;
+      const bien = r === t.a;
+      if (bien) aciertos++;
+      const tipo = t.a === 'adv' ? T('an advantage', 'una ventaja') : T('a disadvantage', 'un inconveniente');
+      fb.className = 'estado ' + (bien ? 'ok' : 'mal');
+      fb.textContent = (bien ? T('Correct. ', 'Correcto. ') : T('Not quite. ', 'No exactamente. ')) + T('This is ', 'Esto es ') + tipo + ': ' + Lab.t({ en: t.c[0], es: t.c[1] }) + '. ' + Lab.t({ en: t.x[0], es: t.x[1] });
+      sig.hidden = false;
+      botones.forEach((b) => { b.disabled = true; });
+    }
+    const botones = [
+      h('button', { type: 'button', onclick: () => responder('adv') }, T('Advantage', 'Ventaja')),
+      h('button', { type: 'button', onclick: () => responder('dis') }, T('Disadvantage', 'Inconveniente')),
+    ];
+    cont.replaceChildren(
+      h('p', { class: 'nota' }, T('Card ', 'Tarjeta ') + (i + 1) + ' / ' + orden.length + ' · ' + T('score ', 'puntos ') + aciertos),
+      h('div', { class: 'tarjeta' }, Lab.t({ en: t.en, es: t.es })),
+      h('div', { class: 'fila' }, botones), fb, sig);
+  }
+  empezar();
+})();
+
+// ============ 3. Constructor de pilas ============
+(function () {
+  const CAPAS = {
+    hw: { n: ['Hardware', 'Hardware'], c: '' },
+    hyp: { n: ['Hypervisor', 'Hipervisor'], c: '' },
+    host: { n: ['Host OS', 'SO anfitrión'], c: 'so' },
+    guest: { n: ['Guest OS', 'SO invitado'], c: 'inv' },
+    app: { n: ['Applications', 'Aplicaciones'], c: 'app' },
+  };
+  const nom = (k) => Lab.t({ en: CAPAS[k].n[0], es: CAPAS[k].n[1] });
+  const ESPERADO = { t1: ['hw', 'hyp', 'guest', 'app'], t2: ['hw', 'host', 'hyp', 'guest', 'app'] };
+  const PRODUCTOS = [
+    ['VMware ESXi', 1, 'It runs directly on the server hardware and is used in data centres.', 'Funciona directamente sobre el hardware del servidor y se usa en centros de datos.'],
+    ['Microsoft Hyper-V', 1, 'When enabled, even Windows runs on top of the hypervisor.', 'Cuando está activado, hasta Windows se ejecuta sobre el hipervisor.'],
+    ['KVM', 1, 'It is part of the Linux kernel, so the kernel itself becomes the hypervisor.', 'Es parte del núcleo de Linux, así que el propio núcleo se convierte en el hipervisor.'],
+    ['Xen', 1, 'It starts before the operating systems and manages them.', 'Arranca antes que los sistemas operativos y los gestiona.'],
+    ['Proxmox VE', 1, 'It is a server platform that uses KVM.', 'Es una plataforma para servidores que usa KVM.'],
+    ['Oracle VirtualBox', 2, 'It is a program that you install on Windows, Linux or macOS.', 'Es un programa que se instala en Windows, Linux o macOS.'],
+    ['VMware Workstation', 2, 'It is a desktop program that runs on a host operating system.', 'Es un programa de escritorio que se ejecuta sobre un sistema operativo anfitrión.'],
+    ['Parallels Desktop', 2, 'It is installed on macOS like any other application.', 'Se instala en macOS como cualquier otra aplicación.'],
+  ];
+  const ui = $('stack-ui');
+  let tipo = 't1';
+  let capas = [];
+  const pila = h('div', { class: 'capas', 'aria-live': 'polite' });
+  const fb = h('p', { class: 'estado', role: 'status' });
+  const paleta = h('div', { class: 'fila' });
+  const botones = {};
+  function pintar() {
+    pila.replaceChildren(...capas.map((k, ix) => h('div', { class: 'capa ' + CAPAS[k].c }, (ix + 1) + '. ' + nom(k))));
+    if (!capas.length) pila.append(h('span', { class: 'nota' }, T('Empty. Add layers from the bottom up.', 'Vacía. Añade capas de abajo arriba.')));
+    for (const k in botones) botones[k].disabled = capas.includes(k);
+  }
+  function comprobar() {
+    const esp = ESPERADO[tipo];
+    if (capas.length === 0) { fb.className = 'estado'; fb.textContent = T('Add some layers first.', 'Añade primero algunas capas.'); return; }
+    if (tipo === 't1' && capas.includes('host')) {
+      fb.className = 'estado mal';
+      fb.textContent = T('A Type 1 hypervisor has no host operating system: it is the first software that starts on the hardware.', 'Un hipervisor de tipo 1 no tiene sistema operativo anfitrión: es el primer software que arranca sobre el hardware.');
+      return;
+    }
+    if (capas.join() === esp.join()) {
+      fb.className = 'estado ok';
+      fb.textContent = tipo === 't1'
+        ? T('Correct. Type 1: hardware, hypervisor, guest systems, applications. Fewer layers mean less overhead.', 'Correcto. Tipo 1: hardware, hipervisor, sistemas invitados, aplicaciones. Menos capas significan menos sobrecarga.')
+        : T('Correct. Type 2: hardware, host operating system, the hypervisor as a program, guest systems, applications.', 'Correcto. Tipo 2: hardware, sistema operativo anfitrión, el hipervisor como programa, sistemas invitados, aplicaciones.');
+      return;
+    }
+    const falta = esp.filter((k) => !capas.includes(k));
+    const mal = capas.findIndex((k, ix) => k !== esp[ix]);
+    let msg = '';
+    if (mal >= 0 && mal < esp.length) msg += T('Layer ' + (mal + 1) + ' from the bottom should be "', 'La capa ' + (mal + 1) + ' desde abajo debería ser «') + nom(esp[mal]) + T('".', '».') + ' ';
+    if (falta.length) msg += T('Missing: ', 'Faltan: ') + falta.map(nom).join(', ') + '.';
+    fb.className = 'estado mal';
+    fb.textContent = msg;
+  }
+  const selTipo = selector('tipo', T('Type of hypervisor', 'Tipo de hipervisor'), [['t1', T('Type 1 (bare metal)', 'Tipo 1 (sobre el hardware)')], ['t2', T('Type 2 (hosted)', 'Tipo 2 (alojado)')]], 't1', (v) => { tipo = v; capas = []; fb.textContent = ''; fb.className = 'estado'; pintar(); });
+  for (const k of Object.keys(CAPAS)) {
+    botones[k] = h('button', { type: 'button', onclick: () => { if (!capas.includes(k)) { capas.push(k); fb.textContent = ''; fb.className = 'estado'; pintar(); } } }, '+ ' + nom(k));
+    paleta.append(botones[k]);
+  }
+  const acciones = h('div', { class: 'fila' },
+    h('button', { type: 'button', onclick: () => { capas.pop(); pintar(); } }, T('Undo', 'Deshacer')),
+    h('button', { type: 'button', onclick: () => { capas = []; fb.textContent = ''; fb.className = 'estado'; pintar(); } }, T('Clear', 'Vaciar')),
+    h('button', { type: 'button', class: 'primario', onclick: comprobar }, T('Check my stack', 'Comprobar mi pila')));
+  // clasificador
+  const filas = PRODUCTOS.map((p) => {
+    const res = h('span', { role: 'status', class: 'nota' });
+    const resp = (v) => {
+      const bien = v === p[1];
+      res.textContent = (bien ? '✔ ' + T('Correct. ', 'Correcto. ') : '✖ ' + T('No, it is Type ', 'No, es de tipo ') + p[1] + '. ') + T(p[2], p[3]);
+    };
+    return h('tr', {}, h('td', {}, p[0]),
+      h('td', {}, h('button', { type: 'button', onclick: () => resp(1), 'aria-label': p[0] + ': ' + T('Type 1', 'Tipo 1') }, T('Type 1', 'Tipo 1')), ' ',
+        h('button', { type: 'button', onclick: () => resp(2), 'aria-label': p[0] + ': ' + T('Type 2', 'Tipo 2') }, T('Type 2', 'Tipo 2'))),
+      h('td', {}, res));
+  });
+  ui.append(
+    h('h3', {}, T('Build the stack', 'Construye la pila')), selTipo,
+    h('p', { class: 'nota' }, T('Click the layers in the order they are placed, starting from the bottom.', 'Pulsa las capas en el orden en que se colocan, empezando por abajo.')),
+    paleta, pila, acciones, fb,
+    h('h3', {}, T('Classify the products', 'Clasifica los productos')),
+    h('table', {}, h('thead', {}, h('tr', {}, h('th', {}, T('Product', 'Producto')), h('th', {}, T('Your answer', 'Tu respuesta')), h('th', {}, T('Feedback', 'Corrección')))), h('tbody', {}, filas)));
+  pintar();
+})();
+
+// ============ 4. VT-x activado y desactivado ============
+(function () {
+  const ui = $('vtx-ui');
+  const PASOS = {
+    sw: [
+      ['The guest kernel wants to run a privileged instruction, for example to change the page tables.', 'El núcleo del invitado quiere ejecutar una instrucción privilegiada, por ejemplo para cambiar las tablas de páginas.'],
+      ['The real CPU cannot let it run: the instruction would affect the whole computer, not only the guest.', 'La CPU real no puede dejar que se ejecute: la instrucción afectaría a todo el ordenador, no solo al invitado.'],
+      ['The hypervisor has to find the dangerous instruction before it runs. It scans the guest code and rewrites it, or emulates it in software.', 'El hipervisor tiene que encontrar la instrucción peligrosa antes de que se ejecute. Analiza el código del invitado y lo reescribe, o la emula por software.'],
+      ['A safe replacement changes only the virtual state of the guest.', 'Un sustituto seguro cambia solo el estado virtual del invitado.'],
+      ['Control returns to the guest. Every privileged instruction needed all this extra work, so the guest is slower.', 'El control vuelve al invitado. Cada instrucción privilegiada ha necesitado todo este trabajo extra, así que el invitado va más lento.'],
+    ],
+    hw: [
+      ['The CPU has a special guest mode (VT-x on Intel, AMD-V on AMD). The guest kernel runs in it, and normal instructions run at full speed directly on the CPU.', 'La CPU tiene un modo especial para invitados (VT-x en Intel, AMD-V en AMD). El núcleo del invitado se ejecuta en él y las instrucciones normales funcionan a toda velocidad directamente en la CPU.'],
+      ['The guest runs a sensitive instruction.', 'El invitado ejecuta una instrucción sensible.'],
+      ['The CPU detects it by itself and makes a "VM exit": it saves the guest state and jumps to the hypervisor.', 'La CPU lo detecta por sí misma y hace una «salida de VM» (VM exit): guarda el estado del invitado y salta al hipervisor.'],
+      ['The hypervisor handles the request on the virtual hardware. With EPT (Intel) or NPT (AMD), memory addresses are translated by the CPU and many requests never reach the hypervisor.', 'El hipervisor atiende la petición sobre el hardware virtual. Con EPT (Intel) o NPT (AMD), la CPU traduce las direcciones de memoria y muchas peticiones ni siquiera llegan al hipervisor.'],
+      ['A "VM entry" returns control to the guest. Only a few instructions needed this detour, so the guest is fast.', 'Una «entrada de VM» (VM entry) devuelve el control al invitado. Solo unas pocas instrucciones necesitaron este desvío, así que el invitado es rápido.'],
+    ],
+    pv: [
+      ['An application in the guest sends a network packet.', 'Una aplicación del invitado envía un paquete de red.'],
+      ['With an emulated network card, the driver writes to many hardware registers, and each write makes the hypervisor step in.', 'Con una tarjeta de red emulada, el controlador escribe en muchos registros de hardware, y cada escritura obliga al hipervisor a intervenir.'],
+      ['With paravirtualization the guest knows it is virtual. The virtio driver just puts the packet in a queue in shared memory.', 'Con la paravirtualización el invitado sabe que es virtual. El controlador virtio solo deja el paquete en una cola de memoria compartida.'],
+      ['It notifies the hypervisor once, even if there are several packets in the queue.', 'Avisa una sola vez al hipervisor, aunque haya varios paquetes en la cola.'],
+      ['The hypervisor reads the queue and sends the packets through the host network. Fewer interruptions mean faster I/O. The guest needs the virtio driver (many Linux systems include it).', 'El hipervisor lee la cola y envía los paquetes por la red del anfitrión. Menos interrupciones significan una E/S más rápida. El invitado necesita el controlador virtio (muchos sistemas Linux lo incluyen).'],
+    ],
+  };
+  const VELOC = { sw: [55, 45], hw: [95, 70], pv: [95, 90] };
+  let vtx = true, metodo = 'hw', paso = 0;
+  const check = h('input', { type: 'checkbox', id: 'vtx-on', checked: true });
+  const lista = h('ul', { class: 'lista-av' });
+  const aviso1 = h('p', { class: 'estado', role: 'status' });
+  const metodos = h('div');
+  const pasosOl = h('ol', { class: 'pasos' });
+  const progreso = h('p', { class: 'nota', role: 'status' });
+  const veloc = h('div');
+  const bSig = h('button', { type: 'button', class: 'primario' });
+  const bRep = h('button', { type: 'button' }, T('Restart', 'Reiniciar'));
+  function pintarLista() {
+    const todos = [
+      [T('Ubuntu (32-bit)', 'Ubuntu (32 bits)'), false], [T('Ubuntu (64-bit)', 'Ubuntu (64 bits)'), true],
+      [T('Windows 10 (32-bit)', 'Windows 10 (32 bits)'), false], [T('Windows 11 (64-bit)', 'Windows 11 (64 bits)'), true],
+    ];
+    lista.replaceChildren(...todos.filter((x) => vtx || !x[1]).map((x) => h('li', { class: 'ok' }, x[0])));
+    aviso1.className = 'estado ' + (vtx ? 'ok' : 'mal');
+    aviso1.textContent = vtx
+      ? T('Hardware virtualization is enabled: the 64-bit versions appear in the list.', 'La virtualización por hardware está activada: las versiones de 64 bits aparecen en la lista.')
+      : T('Hardware virtualization is disabled: only 32-bit versions appear, or the VM refuses to start with a VT-x error. Restart, enter the UEFI setup and enable Intel Virtualization Technology (Intel) or SVM Mode (AMD).', 'La virtualización por hardware está desactivada: solo aparecen versiones de 32 bits, o la VM no arranca y da un error de VT-x. Reinicia, entra en la configuración de la UEFI y activa Intel Virtualization Technology (Intel) o SVM Mode (AMD).');
+  }
+  function pintarMetodos() {
+    metodos.replaceChildren(selector('met', T('Method', 'Método'), [
+      ['sw', T('Software (binary translation)', 'Por software (traducción binaria)')],
+      ['hw', T('Hardware-assisted (VT-x / AMD-V)', 'Asistida por hardware (VT-x / AMD-V)')],
+      ['pv', T('Paravirtualized I/O (virtio)', 'E/S paravirtualizada (virtio)')],
+    ], metodo, (v) => { metodo = v; paso = 0; pintarPasos(); pintarVeloc(); pintarMetodosEstado(); }));
+    pintarMetodosEstado();
+  }
+  function pintarMetodosEstado() {
+    const bs = metodos.querySelectorAll('button');
+    bs.forEach((b) => {
+      const v = b.dataset.v;
+      b.disabled = !vtx && v !== 'sw';
+      b.setAttribute('aria-checked', String(v === metodo));
+      b.classList.toggle('sel', v === metodo);
+    });
+  }
+  function pintarPasos() {
+    const lista2 = PASOS[metodo];
+    pasosOl.replaceChildren(...lista2.map((p, ix) => h('li', { class: ix < paso ? 'hecho' : ix === paso ? 'actual' : '', 'aria-current': ix === paso ? 'step' : false }, T(p[0], p[1]))));
+    progreso.textContent = T('Step ', 'Paso ') + (paso + 1) + T(' of ', ' de ') + lista2.length;
+    bSig.textContent = T('Next step', 'Paso siguiente');
+    bSig.disabled = paso >= lista2.length - 1;
+  }
+  function pintarVeloc() {
+    const v = VELOC[metodo];
+    veloc.replaceChildren(
+      h('h3', {}, T('Relative speed (illustrative numbers)', 'Velocidad relativa (números ilustrativos)')),
+      h('div', {}, T('Calculation-heavy work: ', 'Trabajo de cálculo: ') + v[0] + ' %', barra(v[0], true)),
+      h('div', {}, T('Disk and network work: ', 'Trabajo de disco y red: ') + v[1] + ' %', barra(v[1], true)),
+      h('p', { class: 'nota' }, T('100 % is a physical computer. Real values depend on the hardware and the workload.', 'El 100 % es un ordenador físico. Los valores reales dependen del hardware y de la carga de trabajo.')));
+  }
+  check.addEventListener('change', () => {
+    vtx = check.checked;
+    if (!vtx) { metodo = 'sw'; }
+    else if (metodo === 'sw') { metodo = 'hw'; }
+    paso = 0;
+    pintarLista(); pintarMetodos(); pintarPasos(); pintarVeloc();
+  });
+  bSig.addEventListener('click', () => { if (paso < PASOS[metodo].length - 1) { paso++; pintarPasos(); } });
+  bRep.addEventListener('click', () => { paso = 0; pintarPasos(); });
+  ui.append(
+    h('div', { class: 'fila' }, check, h('label', { for: 'vtx-on' }, T('Intel VT-x / AMD-V is enabled in the UEFI setup', 'Intel VT-x / AMD-V está activado en la configuración de la UEFI'))),
+    h('h3', {}, T('New VM: guest versions offered by VirtualBox', 'Nueva VM: versiones de invitado que ofrece VirtualBox')), lista, aviso1,
+    h('h3', {}, T('How is a privileged instruction handled?', '¿Cómo se trata una instrucción privilegiada?')), metodos,
+    pasosOl, progreso, h('div', { class: 'fila' }, bSig, bRep), veloc,
+    h('p', { class: 'nota' }, T('Recent versions of VirtualBox always use hardware virtualization; the software method is shown only so you can compare.', 'Las versiones recientes de VirtualBox usan siempre la virtualización por hardware; el método por software se muestra solo para comparar.')));
+  pintarLista(); pintarMetodos(); pintarPasos(); pintarVeloc();
+})();
+
+// ============ 5. Reparto de recursos ============
+(function () {
+  const HOSTS = {
+    pc: { n: ['Classroom PC (4 cores, 8 GB RAM, 256 GB disk)', 'PC de aula (4 núcleos, 8 GB de RAM, disco de 256 GB)'], cores: 4, ram: 8, disk: 256, used: 80 },
+    lap: { n: ['Laptop (8 cores, 16 GB RAM, 512 GB disk)', 'Portátil (8 núcleos, 16 GB de RAM, disco de 512 GB)'], cores: 8, ram: 16, disk: 512, used: 120 },
+    ws: { n: ['Workstation (16 cores, 64 GB RAM, 2000 GB disk)', 'Estación de trabajo (16 núcleos, 64 GB de RAM, disco de 2000 GB)'], cores: 16, ram: 64, disk: 2000, used: 200 },
+  };
+  const RESERVA = 3;
+  let host = HOSTS.lap;
+  const vms = [
+    { n: 'Ubuntu', on: true, cpu: 2, ram: 4, disk: 25, dyn: true, used: 8, peak: 8 },
+    { n: 'Windows 11', on: true, cpu: 2, ram: 4, disk: 64, dyn: true, used: 20, peak: 20 },
+    { n: 'Test VM', on: false, cpu: 1, ram: 2, disk: 20, dyn: true, used: 3, peak: 3 },
+  ];
+  const ui = $('res-ui');
+  const refrescos = [];
+  const avisos = h('ul', { class: 'lista-av', 'aria-live': 'polite' });
+  const medidores = h('div');
+  const archivo = (v) => (v.dyn ? v.peak : v.disk);
+  function slider(id, etiqueta, min, max, step, obt, fij, unidad) {
+    const inp = h('input', { type: 'range', id, min, max, step, value: obt() });
+    const out = h('output', { for: id });
+    const act = () => { out.textContent = obt() + ' ' + unidad; };
+    inp.addEventListener('input', () => { fij(Number(inp.value)); act(); render(); });
+    refrescos.push(() => { inp.value = obt(); act(); });
+    act();
+    return h('div', { class: 'fila' }, h('label', { for: id }, etiqueta), inp, out);
+  }
+  const tarjetas = vms.map((v, ix) => {
+    const info = h('p', { class: 'nota', role: 'status' });
+    const upd = () => {
+      info.textContent = T('Data written by the guest: ', 'Datos escritos por el invitado: ') + (v.dyn ? v.used : '—') + ' GB · ' + T('disk file on the host: ', 'archivo de disco en el anfitrión: ') + archivo(v) + ' GB';
+    };
+    refrescos.push(upd);
+    const dynSel = h('select', { id: 'alloc-' + ix, 'aria-label': T('Allocation of ', 'Reserva de ') + v.n }, h('option', { value: 'dyn' }, T('Dynamically allocated', 'Reserva dinámica')), h('option', { value: 'fix' }, T('Fixed size', 'Tamaño fijo')));
+    dynSel.addEventListener('change', () => { v.dyn = dynSel.value === 'dyn'; upd(); render(); });
+    const bEsc = h('button', { type: 'button', onclick: () => { v.used = Math.min(v.disk, v.used + 5); v.peak = Math.max(v.peak, v.used); upd(); render(); } }, T('Guest writes 5 GB', 'El invitado escribe 5 GB'));
+    const bBor = h('button', { type: 'button', onclick: () => { v.used = Math.max(0, v.used - 5); upd(); render(); } }, T('Guest deletes 5 GB', 'El invitado borra 5 GB'));
+    const run = h('input', { type: 'checkbox', id: 'run-' + ix, checked: v.on });
+    run.addEventListener('change', () => { v.on = run.checked; render(); });
+    return h('div', { class: 'cuadro' },
+      h('h3', {}, 'VM ' + (ix + 1) + ': ' + v.n),
+      h('div', { class: 'fila' }, run, h('label', { for: 'run-' + ix }, T('Running', 'En marcha'))),
+      slider('cpu-' + ix, T('vCPUs', 'vCPU'), 1, 16, 1, () => v.cpu, (x) => { v.cpu = x; }, ''),
+      slider('ram-' + ix, T('RAM', 'RAM'), 1, 64, 1, () => v.ram, (x) => { v.ram = x; }, 'GB'),
+      slider('dsk-' + ix, T('Disk size', 'Tamaño del disco'), 10, 200, 5, () => v.disk, (x) => { v.disk = x; v.used = Math.min(v.used, x); v.peak = Math.min(Math.max(v.peak, v.used), x); }, 'GB'),
+      h('div', { class: 'fila' }, h('label', { for: 'alloc-' + ix }, T('Disk allocation', 'Reserva del disco')), dynSel),
+      h('div', { class: 'fila' }, bEsc, bBor), info);
+  });
+  const selHost = h('select', { id: 'host-sel' }, ...Object.entries(HOSTS).map(([k, x]) => h('option', { value: k, selected: k === 'lap' }, Lab.t({ en: x.n[0], es: x.n[1] }))));
+  selHost.addEventListener('change', () => { host = HOSTS[selHost.value]; render(); });
+  function medidor(titulo, texto, pct, nivel) {
+    const b = barra(pct, nivel === 'ok');
+    return h('div', {}, h('strong', {}, titulo), ' — ' + texto, b);
+  }
+  function render() {
+    const act = vms.filter((v) => v.on);
+    const ram = act.reduce((a, v) => a + v.ram, 0);
+    const cpu = act.reduce((a, v) => a + v.cpu, 0);
+    const ficheros = vms.reduce((a, v) => a + archivo(v), 0);
+    const declarado = vms.reduce((a, v) => a + v.disk, 0);
+    const libre = host.disk - host.used;
+    const lista = [];
+    let nRam = 'ok', nCpu = 'ok', nDsk = 'ok';
+    if (ram > host.ram) { nRam = 'error'; lista.push(['error', T('The running VMs need ' + ram + ' GB of RAM but the host has only ' + host.ram + ' GB.', 'Las VM en marcha necesitan ' + ram + ' GB de RAM pero el anfitrión solo tiene ' + host.ram + ' GB.')]); }
+    else if (ram > host.ram - RESERVA) { nRam = 'aviso'; lista.push(['aviso', T('Only ' + (host.ram - ram) + ' GB of RAM would be left for the host. Keep at least ' + RESERVA + ' GB free so that it stays responsive.', 'Solo quedarían ' + (host.ram - ram) + ' GB de RAM para el anfitrión. Deja al menos ' + RESERVA + ' GB libres para que siga respondiendo bien.')]); }
+    vms.forEach((v, ix) => {
+      if (v.cpu > host.cores) { nCpu = 'error'; lista.push(['error', 'VM ' + (ix + 1) + ': ' + T(v.cpu + ' vCPUs is more than the ' + host.cores + ' cores of the host.', v.cpu + ' vCPU son más que los ' + host.cores + ' núcleos del anfitrión.')]); }
+    });
+    if (nCpu === 'ok' && cpu > host.cores) { nCpu = 'aviso'; lista.push(['aviso', T('The running VMs have ' + cpu + ' vCPUs in total for ' + host.cores + ' cores. They will wait for each other and may be slower.', 'Las VM en marcha suman ' + cpu + ' vCPU para ' + host.cores + ' núcleos. Tendrán que esperarse entre ellas y pueden ir más lentas.')]); }
+    if (ficheros > libre) { nDsk = 'error'; lista.push(['error', T('The disk files need ' + ficheros + ' GB but the host has only ' + libre + ' GB free.', 'Los archivos de disco necesitan ' + ficheros + ' GB pero al anfitrión solo le quedan ' + libre + ' GB libres.')]); }
+    else if (declarado > libre) { nDsk = 'aviso'; lista.push(['aviso', T('The disks could grow up to ' + declarado + ' GB but only ' + libre + ' GB are free. If the guests fill them, the host disk will be full.', 'Los discos podrían crecer hasta ' + declarado + ' GB pero solo hay ' + libre + ' GB libres. Si los invitados los llenan, el disco del anfitrión se llenará.')]); }
+    if (vms.some((v) => v.dyn && v.peak > v.used)) lista.push(['aviso', T('A dynamic disk file does not shrink when the guest deletes data: it keeps the size of the maximum reached.', 'El archivo de un disco dinámico no se encoge cuando el invitado borra datos: conserva el tamaño del máximo alcanzado.')]);
+    if (!lista.length) lista.push(['ok', T('The allocation is reasonable for this host.', 'El reparto es razonable para este anfitrión.')]);
+    avisos.replaceChildren(...lista.map((x) => aviso(x[0], x[1])));
+    medidores.replaceChildren(
+      medidor('RAM', ram + ' / ' + host.ram + ' GB ' + T('assigned to running VMs', 'asignados a las VM en marcha'), 100 * ram / host.ram, nRam),
+      medidor('vCPU', cpu + ' / ' + host.cores + ' ' + T('cores', 'núcleos'), 100 * cpu / host.cores, nCpu),
+      medidor(T('Disk', 'Disco'), ficheros + ' / ' + libre + ' GB ' + T('of free space used by VM files', 'del espacio libre usados por los archivos de las VM'), 100 * ficheros / libre, nDsk));
+  }
+  ui.append(
+    h('div', { class: 'fila' }, h('label', { for: 'host-sel' }, T('Host computer', 'Ordenador anfitrión')), selHost),
+    h('div', { class: 'maq' }, tarjetas), h('h3', {}, T('Use of the host', 'Uso del anfitrión')), medidores, avisos,
+    h('p', { class: 'nota' }, T('Rule used here: keep at least ' + RESERVA + ' GB of RAM for the host. The host disk already holds ' + '80 to 200 GB of its own data.', 'Regla usada aquí: deja al menos ' + RESERVA + ' GB de RAM para el anfitrión. El disco del anfitrión ya contiene entre 80 y 200 GB de sus propios datos.')));
+  refrescos.forEach((f) => f());
+  render();
+})();
+
+// ============ 6. Asistente de nueva VM ============
+(function () {
+  const OS = {
+    ubuntu: { n: 'Ubuntu 24.04 Desktop (64-bit)', cpu: 2, ram: 4096, disk: 25, efi: false, tpm: false },
+    win11: { n: 'Windows 11 (64-bit)', cpu: 2, ram: 4096, disk: 64, efi: true, tpm: true },
+  };
+  const HOST = { cores: 8, ram: 16384 };
+  const RESERVA = 3072;
+  const s = { paso: 0, nombre: 'SOM-U2-Test', os: 'ubuntu', ram: 4096, cpu: 2, efi: false, tpm: false, disk: 25, dyn: true };
+  const ui = $('wiz-ui');
+  const NOMBRES_PASOS = [T('Name and OS', 'Nombre y SO'), T('Hardware', 'Hardware'), T('Disk', 'Disco'), T('Summary', 'Resumen')];
+  const nav = h('div', { class: 'fila', role: 'group', 'aria-label': T('Wizard steps', 'Pasos del asistente') });
+  const cuerpo = h('div', { class: 'pasoasis' });
+  const comprobaciones = h('ul', { class: 'lista-av', 'aria-live': 'polite' });
+  const resultado = h('p', { class: 'estado', role: 'status' });
+  function req() { return OS[s.os]; }
+  function checks() {
+    const r = req(); const c = [];
+    if (!s.nombre.trim()) c.push(['aviso', T('Give the VM a descriptive name.', 'Dale a la VM un nombre descriptivo.')]);
+    if (s.cpu < r.cpu) c.push(['error', T(r.n + ' needs at least ' + r.cpu + ' vCPUs.', r.n + ' necesita al menos ' + r.cpu + ' vCPU.')]);
+    else if (s.cpu > HOST.cores) c.push(['error', T('The host has only ' + HOST.cores + ' cores; a VM cannot have more vCPUs.', 'El anfitrión solo tiene ' + HOST.cores + ' núcleos; una VM no puede tener más vCPU.')]);
+    else if (s.cpu > HOST.cores / 2) c.push(['aviso', T('More than half of the host cores: the host and other VMs will suffer.', 'Más de la mitad de los núcleos del anfitrión: el anfitrión y otras VM lo notarán.')]);
+    else c.push(['ok', T('vCPUs: ' + s.cpu + '. Enough for this system and fair for the host.', 'vCPU: ' + s.cpu + '. Suficiente para este sistema y razonable para el anfitrión.')]);
+    if (s.ram < r.ram) c.push(['error', T(r.n + ' needs at least ' + r.ram / 1024 + ' GB of RAM.', r.n + ' necesita al menos ' + r.ram / 1024 + ' GB de RAM.')]);
+    else if (s.ram > HOST.ram - RESERVA) c.push(['error', T('That would leave the host with less than ' + RESERVA / 1024 + ' GB of RAM.', 'Eso dejaría al anfitrión con menos de ' + RESERVA / 1024 + ' GB de RAM.')]);
+    else if (s.ram > HOST.ram / 2) c.push(['aviso', T('More than half of the host RAM: VirtualBox shows this in the red zone of the slider.', 'Más de la mitad de la RAM del anfitrión: VirtualBox lo muestra en la zona roja del deslizador.')]);
+    else c.push(['ok', T('RAM: ' + s.ram / 1024 + ' GB. Enough and in the green zone.', 'RAM: ' + s.ram / 1024 + ' GB. Suficiente y en la zona verde.')]);
+    if (r.efi && !s.efi) c.push(['error', T(r.n + ' needs UEFI: enable EFI.', r.n + ' necesita UEFI: activa EFI.')]);
+    if (r.tpm && !s.tpm) c.push(['error', T(r.n + ' needs a TPM 2.0: enable the virtual TPM (it also needs EFI).', r.n + ' necesita un TPM 2.0: activa el TPM virtual (también necesita EFI).')]);
+    if (s.tpm && !s.efi) c.push(['aviso', T('The TPM is normally used together with EFI.', 'El TPM se suele usar junto con EFI.')]);
+    if (s.disk < r.disk) c.push(['error', T(r.n + ' needs at least ' + r.disk + ' GB of disk.', r.n + ' necesita al menos ' + r.disk + ' GB de disco.')]);
+    else c.push(['ok', T('Disk: ' + s.disk + ' GB (' + (s.dyn ? 'dynamic' : 'fixed') + ').', 'Disco: ' + s.disk + ' GB (' + (s.dyn ? 'dinámico' : 'fijo') + ').')]);
+    if (!s.dyn) c.push(['aviso', T('A fixed-size disk reserves ' + s.disk + ' GB now and takes longer to create.', 'Un disco de tamaño fijo reserva ' + s.disk + ' GB ahora y tarda más en crearse.')]);
+    return c;
+  }
+  function slider(id, et, min, max, step, obt, fij, fmt, ayuda) {
+    const inp = h('input', { type: 'range', id, min, max, step, value: obt() });
+    const out = h('output', { for: id }, fmt(obt()));
+    inp.addEventListener('input', () => { fij(Number(inp.value)); out.textContent = fmt(obt()); pintarChecks(); });
+    return h('div', {}, h('div', { class: 'fila' }, h('label', { for: id }, et), inp, out), h('p', { class: 'nota' }, ayuda));
+  }
+  function pintarNav() {
+    nav.replaceChildren(...NOMBRES_PASOS.map((nm, ix) => h('button', { type: 'button', class: ix === s.paso ? 'sel' : '', 'aria-current': ix === s.paso ? 'step' : false, onclick: () => { s.paso = ix; pintar(); } }, (ix + 1) + '. ' + nm)));
+  }
+  function pintarChecks() {
+    comprobaciones.replaceChildren(...checks().map((x) => aviso(x[0], x[1])));
+  }
+  function pintarCuerpo() {
+    const c = [];
+    if (s.paso === 0) {
+      const nombre = h('input', { type: 'text', id: 'w-nombre', value: s.nombre });
+      nombre.addEventListener('input', () => { s.nombre = nombre.value; pintarChecks(); });
+      const so = h('select', { id: 'w-os' }, ...Object.entries(OS).map(([k, x]) => h('option', { value: k, selected: k === s.os }, x.n)));
+      so.addEventListener('change', () => {
+        s.os = so.value; const r = OS[s.os];
+        s.cpu = r.cpu; s.ram = r.ram; s.disk = r.disk; s.efi = r.efi; s.tpm = r.tpm;
+        pintar();
+      });
+      c.push(h('div', { class: 'fila' }, h('label', { for: 'w-nombre' }, T('Name', 'Nombre')), nombre),
+        h('p', { class: 'nota' }, T('A descriptive name helps you find the VM later.', 'Un nombre descriptivo te ayuda a encontrar la VM más tarde.')),
+        h('div', { class: 'fila' }, h('label', { for: 'w-os' }, T('Type and version', 'Tipo y versión')), so),
+        h('p', { class: 'nota' }, T('VirtualBox uses this choice to select safe default settings (memory, firmware, controllers). Choose the real system you will install.', 'VirtualBox usa esta elección para escoger ajustes por defecto seguros (memoria, firmware, controladoras). Elige el sistema real que vas a instalar.')),
+        h('p', {}, T('Minimum requirements: ', 'Requisitos mínimos: ') + req().cpu + ' vCPUs, ' + req().ram / 1024 + ' GB RAM, ' + req().disk + ' GB ' + T('disk', 'de disco') + (req().efi ? T(', UEFI and TPM 2.0', ', UEFI y TPM 2.0') : '') + '.'));
+    } else if (s.paso === 1) {
+      const efi = h('input', { type: 'checkbox', id: 'w-efi', checked: s.efi });
+      efi.addEventListener('change', () => { s.efi = efi.checked; pintarChecks(); });
+      const tpm = h('input', { type: 'checkbox', id: 'w-tpm', checked: s.tpm });
+      tpm.addEventListener('change', () => { s.tpm = tpm.checked; pintarChecks(); });
+      c.push(
+        slider('w-ram', T('Base memory', 'Memoria base'), 512, 16384, 256, () => s.ram, (x) => { s.ram = x; }, (v) => v / 1024 + ' GB', T('RAM that the guest sees. It is taken from the host while the VM runs.', 'RAM que ve el invitado. Se toma del anfitrión mientras la VM funciona.')),
+        slider('w-cpu', T('Processors', 'Procesadores'), 1, 16, 1, () => s.cpu, (x) => { s.cpu = x; }, (v) => String(v), T('Virtual CPUs. More does not always mean faster; never more than the host cores.', 'CPU virtuales. Más no siempre es más rápido; nunca más que los núcleos del anfitrión.')),
+        h('div', { class: 'fila' }, efi, h('label', { for: 'w-efi' }, T('Enable EFI (UEFI firmware)', 'Activar EFI (firmware UEFI)'))),
+        h('p', { class: 'nota' }, T('The VM starts with UEFI instead of the old BIOS. Windows 11 requires it.', 'La VM arranca con UEFI en lugar de la antigua BIOS. Windows 11 lo exige.')),
+        h('div', { class: 'fila' }, tpm, h('label', { for: 'w-tpm' }, T('Enable virtual TPM 2.0', 'Activar TPM 2.0 virtual'))),
+        h('p', { class: 'nota' }, T('A virtual security chip. Windows 11 requires version 2.0.', 'Un chip de seguridad virtual. Windows 11 exige la versión 2.0.')));
+    } else if (s.paso === 2) {
+      const dyn = h('select', { id: 'w-dyn' }, h('option', { value: 'dyn', selected: s.dyn }, T('Dynamically allocated', 'Reserva dinámica')), h('option', { value: 'fix', selected: !s.dyn }, T('Fixed size (pre-allocate)', 'Tamaño fijo (reservar ya)')));
+      dyn.addEventListener('change', () => { s.dyn = dyn.value === 'dyn'; pintarChecks(); });
+      c.push(
+        slider('w-disk', T('Disk size', 'Tamaño del disco'), 5, 200, 1, () => s.disk, (x) => { s.disk = x; }, (v) => v + ' GB', T('Maximum size of the virtual disk file.', 'Tamaño máximo del archivo de disco virtual.')),
+        h('div', { class: 'fila' }, h('label', { for: 'w-dyn' }, T('Allocation', 'Reserva')), dyn),
+        h('p', { class: 'nota' }, T('Dynamic: the file starts small and grows. Fixed: all the space is reserved at once.', 'Dinámica: el archivo empieza pequeño y crece. Fija: todo el espacio se reserva de golpe.')));
+    } else {
+      const r = req();
+      c.push(h('table', {}, h('tbody', {},
+        [[T('Name', 'Nombre'), s.nombre || '—'], [T('System', 'Sistema'), r.n], [T('Memory', 'Memoria'), s.ram / 1024 + ' GB'], [T('Processors', 'Procesadores'), String(s.cpu)],
+          ['EFI / TPM', (s.efi ? 'EFI' : 'BIOS') + ' / ' + (s.tpm ? 'TPM 2.0' : T('no TPM', 'sin TPM'))], [T('Disk', 'Disco'), s.disk + ' GB, ' + (s.dyn ? T('dynamic', 'dinámico') : T('fixed', 'fijo'))]]
+          .map((f) => h('tr', {}, h('th', {}, f[0]), h('td', {}, f[1]))))),
+        h('button', { type: 'button', class: 'primario', onclick: crear }, T('Create virtual machine', 'Crear máquina virtual')), resultado);
+    }
+    cuerpo.replaceChildren(...c);
+  }
+  function crear() {
+    const errores = checks().filter((x) => x[0] === 'error');
+    if (!errores.length) {
+      resultado.className = 'estado ok';
+      resultado.textContent = T('The VM "' + s.nombre + '" is created. The installer of ' + req().n + ' should start without complaints.', 'Se ha creado la VM «' + s.nombre + '». El instalador de ' + req().n + ' debería arrancar sin quejas.');
+    } else {
+      resultado.className = 'estado mal';
+      resultado.textContent = T('VirtualBox would create the VM, but the installer would stop. Fix ' + errores.length + ' problem(s) in the list.', 'VirtualBox crearía la VM, pero el instalador se detendría. Corrige ' + errores.length + ' problema(s) de la lista.');
+    }
+  }
+  function pintar() { pintarNav(); pintarCuerpo(); pintarChecks(); resultado.textContent = ''; resultado.className = 'estado'; }
+  ui.append(nav, cuerpo, h('h3', {}, T('Checks', 'Comprobaciones')), comprobaciones,
+    h('div', { class: 'fila' },
+      h('button', { type: 'button', onclick: () => { if (s.paso > 0) { s.paso--; pintar(); } } }, T('Back', 'Atrás')),
+      h('button', { type: 'button', class: 'primario', onclick: () => { if (s.paso < 3) { s.paso++; pintar(); } } }, T('Next', 'Siguiente'))));
+  pintar();
+})();
+
+// ============ 7. Modos de red ============
+(function () {
+  // filas: VM→Internet, VM→anfitrión, anfitrión→VM, VM↔VM, resto de la LAN→VM  (y = sí, n = no, p = redirección de puertos)
+  const MODOS = {
+    nat: { n: ['NAT', 'NAT'], m: 'yypnp', u: ['Default. Browsing and updates. Nobody from outside can start a connection to the VM unless you add port forwarding. Each VM is alone in its own private network.', 'Por defecto. Navegar y actualizar. Nadie de fuera puede iniciar una conexión con la VM salvo que añadas redirección de puertos. Cada VM está sola en su propia red privada.'] },
+    br: { n: ['Bridged adapter', 'Adaptador puente'], m: 'yyyyy', u: ['The VM gets its own address on the real network, like another physical computer. Use it for a server that other computers must reach. It may not work on school networks or with some Wi-Fi cards.', 'La VM recibe su propia dirección en la red real, como otro ordenador físico. Úsalo para un servidor al que deben llegar otros ordenadores. Puede no funcionar en redes de centros educativos o con algunas tarjetas Wi-Fi.'] },
+    ho: { n: ['Host-only adapter', 'Adaptador solo anfitrión'], m: 'nyyyn', u: ['A private network with only the host and the VMs. No Internet. A safe lab where the host connects to the VMs.', 'Una red privada solo con el anfitrión y las VM. Sin Internet. Un laboratorio seguro donde el anfitrión se conecta a las VM.'] },
+    inn: { n: ['Internal network', 'Red interna'], m: 'nnnyn', u: ['Only the VMs with the same network name can talk. Not even the host is in the network. Fully isolated labs.', 'Solo pueden hablar las VM con el mismo nombre de red. Ni siquiera el anfitrión está en la red. Laboratorios totalmente aislados.'] },
+    nn: { n: ['NAT Network', 'Red NAT'], m: 'yypyp', u: ['Like NAT, but several VMs share one private network, so they can talk to each other and to the Internet.', 'Como NAT, pero varias VM comparten una red privada, así que pueden hablar entre ellas y con Internet.'] },
+  };
+  const FILAS = [
+    ['VM → Internet', 'VM → Internet'], ['VM → host', 'VM → anfitrión'], ['Host → VM', 'Anfitrión → VM'], ['VM ↔ VM', 'VM ↔ VM'], ['Rest of the LAN → VM', 'Resto de la LAN → VM'],
+  ];
+  const ui = $('net-ui');
+  let modo = 'nat', dup = false;
+  const diag = h('div', { class: 'cuadro' });
+  const tabla = h('div');
+  const uso = h('p', { class: 'estado', role: 'status' });
+  const mac = h('p', { class: 'estado', role: 'status' });
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  function s(tag, attrs, texto) {
+    const e = document.createElementNS(SVGNS, tag);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+    if (texto) e.textContent = texto;
+    return e;
+  }
+  const celda = (c) => (c === 'y' ? T('Yes', 'Sí') : c === 'n' ? T('No', 'No') : T('Port forwarding', 'Redirección de puertos'));
+  function nodo(svg, x, y, w, texto, fondo, borde) {
+    svg.append(s('rect', { x, y, width: w, height: 44, rx: 8, fill: fondo, stroke: borde, 'stroke-width': 2 }));
+    svg.append(s('text', { x: x + w / 2, y: y + 27, 'text-anchor': 'middle', 'font-size': 15, 'font-weight': 700, fill: '#16201b' }, texto));
+  }
+  function linea(svg, x1, y1, x2, y2, estado) {
+    if (estado === 'n') return;
+    svg.append(s('line', { x1, y1, x2, y2, stroke: '#1f5244', 'stroke-width': 4, 'stroke-dasharray': estado === 'p' ? '10 7' : '0' }));
+  }
+  function relacion(sale, entra) { return sale === 'n' ? 'n' : entra === 'y' ? 'y' : entra === 'p' ? 'p' : 'n'; }
+  function pintar() {
+    const m = MODOS[modo].m;
+    const svg = s('svg', { viewBox: '0 0 560 250', width: '100%', role: 'img', 'aria-label': T('Diagram of the connections of a VM in ' + MODOS[modo].n[0] + ' mode', 'Esquema de las conexiones de una VM en modo ' + MODOS[modo].n[1]) });
+    svg.append(s('rect', { x: 0, y: 0, width: 560, height: 250, fill: '#ffffff', rx: 8 }));
+    // VM A (40,30), VM B (380,30), Anfitrión (40,170), Fuera (380,170)
+    linea(svg, 180, 52, 380, 52, m[3] === 'y' ? 'y' : 'n');
+    linea(svg, 110, 74, 110, 170, relacion(m[1], m[2]));
+    linea(svg, 180, 74, 380, 170, relacion(m[0], m[4]));
+    nodo(svg, 40, 30, 140, 'VM', '#fbeed8', '#b86e00');
+    nodo(svg, 380, 30, 140, T('Other VM', 'Otra VM'), '#fbeed8', '#b86e00');
+    nodo(svg, 40, 170, 140, T('Host', 'Anfitrión'), '#e3ece7', '#1f5244');
+    nodo(svg, 380, 170, 140, T('LAN / Internet', 'LAN / Internet'), '#d9dfda', '#56655d');
+    diag.replaceChildren(svg);
+    tabla.replaceChildren(h('table', {},
+      h('thead', {}, h('tr', {}, h('th', {}, T('Who reaches whom', 'Quién llega a quién')), h('th', {}, T('Result in ', 'Resultado en ') + Lab.t({ en: MODOS[modo].n[0], es: MODOS[modo].n[1] })))),
+      h('tbody', {}, FILAS.map((f, i) => h('tr', {}, h('td', {}, Lab.t({ en: f[0], es: f[1] })), h('td', {}, (m[i] === 'y' ? '✔ ' : m[i] === 'n' ? '✖ ' : '↪ ') + celda(m[i])))))));
+    uso.className = 'estado';
+    uso.textContent = T('When to use it: ', 'Cuándo usarlo: ') + Lab.t({ en: MODOS[modo].u[0], es: MODOS[modo].u[1] });
+    const compartida = modo !== 'nat';
+    mac.className = 'estado ' + (dup ? (compartida ? 'mal' : '') : 'ok');
+    mac.textContent = dup
+      ? (compartida
+        ? T('Conflict: two machines with the same MAC address share one network segment, so the connection of both fails at random. Generate new MAC addresses when you import or clone.', 'Conflicto: dos máquinas con la misma dirección MAC comparten un mismo segmento de red, así que la conexión de ambas falla de forma aleatoria. Genera nuevas direcciones MAC al importar o clonar.')
+        : T('In NAT each VM is behind its own private network, so you may not notice any problem. But it is still bad practice: change the MAC as soon as the VM moves to another mode.', 'En NAT cada VM está detrás de su propia red privada, así que quizá no notes ningún problema. Aun así es mala práctica: cambia la MAC en cuanto la VM pase a otro modo.'))
+      : T('Each VM has its own MAC address: no conflicts.', 'Cada VM tiene su propia dirección MAC: no hay conflictos.');
+  }
+  const sel = selector('modo', T('Network mode', 'Modo de red'), Object.entries(MODOS).map(([k, x]) => [k, Lab.t({ en: x.n[0], es: x.n[1] })]), 'nat', (v) => { modo = v; pintar(); });
+  const chk = h('input', { type: 'checkbox', id: 'mac-dup' });
+  chk.addEventListener('change', () => { dup = chk.checked; pintar(); });
+  ui.append(sel, diag, tabla, uso,
+    h('p', { class: 'nota' }, T('Solid line: both sides can start a connection. Dashed line: only the VM can start it (the other side needs port forwarding). No line: no connection.', 'Línea continua: cualquiera de los dos lados puede iniciar la conexión. Discontinua: solo la VM (el otro lado necesita redirección de puertos). Sin línea: sin conexión.')),
+    h('h3', {}, T('The MAC address problem', 'El problema de la dirección MAC')),
+    h('div', { class: 'fila' }, chk, h('label', { for: 'mac-dup' }, T('Two VMs were imported from the same OVA without new MAC addresses', 'Dos VM se importaron del mismo OVA sin generar nuevas direcciones MAC'))), mac);
+  pintar();
+})();
+
+// ============ 8. Práctica ============
+(function () {
+  const ui = $('prac-ui');
+  const mc = (q, correcta, malas, why) => {
+    const unicas = [...new Set(malas.filter((x) => x !== correcta))];
+    const opts = mezclar([correcta, ...unicas]);
+    return { q, opts, ans: opts.indexOf(correcta), why };
+  };
+  const PRODUCTOS = [['VMware ESXi', 1], ['Microsoft Hyper-V', 1], ['KVM', 1], ['Xen', 1], ['Oracle VirtualBox', 2], ['VMware Workstation', 2], ['Parallels Desktop', 2]];
+  function gProducto() {
+    const p = azar(PRODUCTOS);
+    const t1 = T('Type 1 (bare metal)', 'Tipo 1 (sobre el hardware)'), t2 = T('Type 2 (hosted)', 'Tipo 2 (alojado)');
+    return mc(T('What type of hypervisor is ' + p[0] + '?', '¿De qué tipo es el hipervisor ' + p[0] + '?'), p[1] === 1 ? t1 : t2, [p[1] === 1 ? t2 : t1],
+      p[1] === 1
+        ? T(p[0] + ' is Type 1: the hypervisor itself runs on the hardware (even if you manage it from another system).', p[0] + ' es de tipo 1: el propio hipervisor funciona sobre el hardware (aunque lo administres desde otro sistema).')
+        : T(p[0] + ' is Type 2: it is a program installed on a host operating system.', p[0] + ' es de tipo 2: es un programa instalado sobre un sistema operativo anfitrión.'));
+  }
+  const REDES = [
+    [['A VM only needs to browse the web and download updates. Nobody has to connect to it.', 'Una VM solo necesita navegar y descargar actualizaciones. Nadie tiene que conectarse a ella.'], 'NAT', 'NAT lets the VM go out but does not let anyone start a connection to it.', 'NAT deja salir a la VM pero no deja que nadie inicie una conexión hacia ella.'],
+    [['A web server in a VM must be reached by other computers of the classroom with its own IP address.', 'Un servidor web en una VM debe ser accesible desde otros ordenadores del aula con su propia dirección IP.'], 'Bridged adapter', 'Bridged puts the VM on the real network like another computer.', 'El modo puente pone la VM en la red real como otro ordenador más.'],
+    [['You want the host to connect to the VMs, but the VMs must have no Internet access.', 'Quieres que el anfitrión se conecte a las VM, pero las VM no deben tener acceso a Internet.'], 'Host-only adapter', 'Host-only is a private network with only the host and the VMs, and no way out.', 'Solo anfitrión es una red privada con solo el anfitrión y las VM, sin salida.'],
+    [['Two VMs must talk only to each other. Not even the host should see them.', 'Dos VM deben hablar solo entre ellas. Ni siquiera el anfitrión debe verlas.'], 'Internal network', 'An internal network only includes the VMs with the same network name.', 'Una red interna solo incluye a las VM con el mismo nombre de red.'],
+    [['Several VMs must see each other and also reach the Internet, all in one private network.', 'Varias VM deben verse entre ellas y también llegar a Internet, todas en una red privada.'], 'NAT Network', 'NAT Network works like NAT but shares one private network among several VMs.', 'La red NAT funciona como NAT pero comparte una red privada entre varias VM.'],
+  ];
+  const NOM_RED = { 'NAT': 'NAT', 'Bridged adapter': 'Adaptador puente', 'Host-only adapter': 'Adaptador solo anfitrión', 'Internal network': 'Red interna', 'NAT Network': 'Red NAT' };
+  function gRed() {
+    const r = azar(REDES);
+    const nom = (k) => T(k, NOM_RED[k]);
+    return mc(Lab.t({ en: r[0][0], es: r[0][1] }) + T(' Which network mode fits best?', ' ¿Qué modo de red encaja mejor?'), nom(r[1]), Object.keys(NOM_RED).map(nom), T(r[2], r[3]));
+  }
+  function gRam() {
+    const host = azar([8, 16, 32]), res = azar([3, 4]), vm = azar([2, 4]);
+    const n = Math.floor((host - res) / vm);
+    return mc(T('A host has ' + host + ' GB of RAM and you keep ' + res + ' GB for the host. How many VMs with ' + vm + ' GB each can run at the same time?', 'Un anfitrión tiene ' + host + ' GB de RAM y reservas ' + res + ' GB para él. ¿Cuántas VM de ' + vm + ' GB cada una pueden funcionar a la vez?'),
+      String(n), [String(n + 1), String(Math.max(0, n - 1)), String(Math.floor(host / vm))],
+      T('Available RAM = ' + host + ' − ' + res + ' = ' + (host - res) + ' GB. ' + (host - res) + ' ÷ ' + vm + ' = ' + n + ' VMs (rounded down).', 'RAM disponible = ' + host + ' − ' + res + ' = ' + (host - res) + ' GB. ' + (host - res) + ' ÷ ' + vm + ' = ' + n + ' VM (redondeando hacia abajo).'));
+  }
+  function gDisco() {
+    const D = azar([40, 50, 80]), W = azar([8, 12, 15]), X = azar([3, 5]);
+    const dinamico = Math.random() < 0.6;
+    const tipo = dinamico ? T('dynamically allocated', 'de reserva dinámica') : T('fixed-size', 'de tamaño fijo');
+    const q = T('A ' + tipo + ' virtual disk of ' + D + ' GB is new. The guest writes ' + W + ' GB and then deletes ' + X + ' GB. About how big is the disk file on the host?', 'Un disco virtual ' + tipo + ' de ' + D + ' GB es nuevo. El invitado escribe ' + W + ' GB y después borra ' + X + ' GB. ¿Cuánto ocupa aproximadamente el archivo de disco en el anfitrión?');
+    const f = (n) => n + ' GB';
+    return dinamico
+      ? mc(q, f(W), [f(W - X), f(D), f(D - X)], T('The dynamic file grows to ' + W + ' GB and does not shrink when the guest deletes data. (Real files are a little bigger because of overhead.)', 'El archivo dinámico crece hasta ' + W + ' GB y no se encoge cuando el invitado borra datos. (Los archivos reales son algo mayores por la sobrecarga.)'))
+      : mc(q, f(D), [f(W), f(W - X), f(D - X)], T('A fixed-size file reserves all ' + D + ' GB at creation, whatever the guest writes or deletes.', 'Un archivo de tamaño fijo reserva los ' + D + ' GB desde su creación, escriba o borre lo que escriba o borre el invitado.'));
+  }
+  function gSnap() {
+    const nombres = mezclar(['report.txt', 'photo.jpg', 'data.csv', 'todo.txt', 'song.mp3']).slice(0, 3);
+    const [a, b, c] = nombres;
+    const k = azar([1, 2]);
+    const elimina = Math.random() < 0.4;
+    const todos = ['base.txt', a, b, c];
+    const q = T('A VM has the file base.txt. You create ' + a + ', take snapshot S1, create ' + b + ', take snapshot S2 and create ' + c + '. Then you ' + (elimina ? 'DELETE snapshot S1' : 'RESTORE snapshot S' + k) + '. Which files exist now?',
+      'Una VM tiene el archivo base.txt. Creas ' + a + ', tomas la instantánea S1, creas ' + b + ', tomas la instantánea S2 y creas ' + c + '. Después ' + (elimina ? 'ELIMINAS la instantánea S1' : 'RESTAURAS la instantánea S' + k) + '. ¿Qué archivos existen ahora?');
+    const sets = [['base.txt', a], ['base.txt', a, b], todos, ['base.txt']];
+    const correcta = elimina ? todos : (k === 1 ? sets[0] : sets[1]);
+    const f = (l) => l.join(', ');
+    return mc(q, f(correcta), sets.map(f),
+      elimina
+        ? T('Deleting a snapshot only removes the checkpoint and merges its layer. No data is lost: all four files remain.', 'Eliminar una instantánea solo quita el punto de control y fusiona su capa. No se pierde ningún dato: siguen los cuatro archivos.')
+        : T('Restoring S' + k + ' discards everything done after it. Files created after S' + k + ' disappear.', 'Restaurar S' + k + ' descarta todo lo hecho después. Los archivos creados después de S' + k + ' desaparecen.'));
+  }
+  const SINTOMAS = [
+    [['VirtualBox only offers 32-bit guest versions.', 'VirtualBox solo ofrece versiones de invitado de 32 bits.'], ['VT-x / AMD-V is disabled in the UEFI setup', 'VT-x / AMD-V está desactivado en la configuración de la UEFI']],
+    [['Two VMs imported from the same OVA on a bridged network keep losing the connection.', 'Dos VM importadas del mismo OVA en una red en modo puente pierden la conexión continuamente.'], ['They have the same MAC address', 'Tienen la misma dirección MAC']],
+    [['A VM in host-only mode cannot open web pages.', 'Una VM en modo solo anfitrión no puede abrir páginas web.'], ['Host-only networks have no way out to the Internet', 'Las redes de solo anfitrión no tienen salida a Internet']],
+    [['The VM folder keeps growing and the VM gets slower, but you only change a few files each day.', 'La carpeta de la VM no deja de crecer y la VM va cada vez más lenta, pero solo cambias unos pocos archivos al día.'], ['There is a very long chain of snapshots', 'Hay una cadena muy larga de instantáneas']],
+    [['The mouse is trapped in the VM window and the screen cannot be resized.', 'El ratón queda atrapado en la ventana de la VM y no se puede cambiar el tamaño de la pantalla.'], ['The Guest Additions are not installed', 'Las Guest Additions no están instaladas']],
+    [['The host and all the VMs become very slow when you start the third VM.', 'El anfitrión y todas las VM se vuelven muy lentos al arrancar la tercera VM.'], ['Too much RAM and too many vCPUs are assigned in total', 'Se han asignado en total demasiada RAM y demasiadas vCPU']],
+  ];
+  function gSintoma() {
+    const q = azar(SINTOMAS);
+    const todas = SINTOMAS.map((x) => T(x[1][0], x[1][1]));
+    return mc(T('Symptom: ', 'Síntoma: ') + Lab.t({ en: q[0][0], es: q[0][1] }) + T(' What is the most likely cause?', ' ¿Cuál es la causa más probable?'), T(q[1][0], q[1][1]), todas,
+      T('The likely cause is: ' + q[1][0] + '.', 'La causa probable es: ' + q[1][1] + '.'));
+  }
+  function gRend() {
+    const host = azar([400, 800, 1200, 2000]), pct = azar([65, 75, 85, 90, 95]);
+    const inv = host * pct / 100;
+    const f = (n) => n + ' %';
+    return mc(T('In a CPU test the host gets ' + host + ' events per second and the guest ' + inv + '. What is the relative performance of the guest?', 'En una prueba de CPU el anfitrión obtiene ' + host + ' eventos por segundo y el invitado ' + inv + '. ¿Cuál es el rendimiento relativo del invitado?'),
+      f(pct), [f(100 - pct), f(pct + 10), f(Math.round(host / inv * 100))],
+      T('Relative performance = guest ÷ host × 100 = ' + inv + ' ÷ ' + host + ' × 100 = ' + pct + ' %.', 'Rendimiento relativo = invitado ÷ anfitrión × 100 = ' + inv + ' ÷ ' + host + ' × 100 = ' + pct + ' %.'));
+  }
+  const GEN = [gProducto, gRed, gRam, gDisco, gSnap, gSintoma, gRend];
+  let ultimo = -1, intentos = Number(Lab.leer('intentos')) || 0, aciertos = Number(Lab.leer('aciertos')) || 0;
+  const cont = h('div');
+  const marcador = h('p', { class: 'nota', role: 'status' });
+  function pintarMarcador() { marcador.textContent = T('Correct answers: ', 'Aciertos: ') + aciertos + ' / ' + intentos; }
+  function nueva() {
+    let g;
+    do { g = Math.floor(Math.random() * GEN.length); } while (g === ultimo);
+    ultimo = g;
+    const e = GEN[g]();
+    let hecho = false;
+    const fb = h('p', { class: 'estado', role: 'status' });
+    const sig = h('button', { type: 'button', class: 'primario', hidden: true, onclick: nueva }, T('Next exercise', 'Otro ejercicio'));
+    const botones = e.opts.map((o, ix) => h('button', { type: 'button', onclick: () => {
+      if (hecho) return;
+      hecho = true; intentos++;
+      const bien = ix === e.ans;
+      if (bien) aciertos++;
+      Lab.guardar('intentos', intentos); Lab.guardar('aciertos', aciertos);
+      botones.forEach((b, j) => { b.disabled = true; if (j === e.ans) b.classList.add('bien'); else if (j === ix) b.classList.add('mal'); });
+      fb.className = 'estado ' + (bien ? 'ok' : 'mal');
+      fb.textContent = (bien ? '✔ ' + T('Correct. ', 'Correcto. ') : '✖ ' + T('Not quite. ', 'Casi. ') + T('The right answer is: ', 'La respuesta correcta es: ') + e.opts[e.ans] + '. ') + e.why;
+      sig.hidden = false; pintarMarcador();
+    } }, o));
+    cont.replaceChildren(h('p', { class: 'tarjeta' }, e.q), h('div', { class: 'opciones' }, botones), fb, sig);
+  }
+  ui.append(cont, marcador);
+  pintarMarcador();
+  nueva();
+})();
+</script>
+</body>
+</html>
