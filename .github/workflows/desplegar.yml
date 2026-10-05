@@ -1,0 +1,46 @@
+name: Desplegar la web
+
+# Cada cambio en main se comprueba, se compila y se publica en GitHub Pages.
+# Si algo falla (pruebas, enlaces rotos, bloques mal escritos), no se publica
+# y la versión anterior de la web sigue en pie.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  compilar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Pruebas unitarias
+        run: npm test
+      - name: Compilar y probar la salida (el informe de pendientes sale en el resumen)
+        run: npm run verificar
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  publicar:
+    needs: compilar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - id: despliegue
+        uses: actions/deploy-pages@v5
