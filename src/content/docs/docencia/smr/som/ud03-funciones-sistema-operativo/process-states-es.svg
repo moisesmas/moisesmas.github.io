@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" width="760" height="360" role="img" aria-labelledby="t">
+<title id="t">Diagrama de estados de un proceso. Nuevo pasa a Listo (admisión). Listo pasa a En ejecución (despacho). En ejecución vuelve a Listo (fin de quantum), pasa a Bloqueado (espera E/S o un suceso) o a Terminado (salida). Bloqueado pasa a Listo cuando ocurre el suceso.</title>
+<rect width="760" height="360" fill="#ffffff"/>
+<style>
+text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;fill:#16201b;font-size:14px}
+.b{font-weight:700}.s{font-size:12px;fill:#56655d}.c{text-anchor:middle}.t{font-size:16px;font-weight:700}
+</style>
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1f5244"/></marker>
+</defs>
+<rect x="20" y="140" width="110" height="56" rx="8" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="75" y="173" class="c b">Nuevo</text>
+<rect x="210" y="140" width="110" height="56" rx="8" fill="#fbeed8" stroke="#1f5244" stroke-width="2"/><text x="265" y="173" class="c b">Listo</text>
+<rect x="430" y="140" width="110" height="56" rx="8" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/><text x="485" y="173" class="c b">En ejecución</text>
+<rect x="630" y="140" width="110" height="56" rx="8" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="685" y="173" class="c b">Terminado</text>
+<rect x="320" y="280" width="130" height="56" rx="8" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="385" y="313" class="c b">Bloqueado</text>
+<path d="M130 168 H208" fill="none" stroke="#1f5244" stroke-width="2" marker-end="url(#ar)"/><text x="169" y="158" class="c s">admisión</text>
+<path d="M320 178 H428" fill="none" stroke="#1f5244" stroke-width="2" marker-end="url(#ar)"/><text x="374" y="198" class="c s">despacho</text>
+<path d="M450 140 C 450 70, 310 70, 310 138" fill="none" stroke="#1f5244" stroke-width="2" marker-end="url(#ar)"/><text x="380" y="64" class="c s">fin de quantum</text>
+<path d="M540 168 H628" fill="none" stroke="#1f5244" stroke-width="2" marker-end="url(#ar)"/><text x="584" y="158" class="c s">salida</text>
+<path d="M470 196 L 400 278" fill="none" stroke="#1f5244" stroke-width="2" marker-end="url(#ar)"/><text x="500" y="252" class=" s">espera E/S</text>
+<path d="M340 280 L 270 198" fill="none" stroke="#1f5244" stroke-width="2" marker-end="url(#ar)"/><text x="222" y="252" class=" s">fin de E/S</text>
+<text x="20" y="20" class="s">Un proceso nunca pasa de Bloqueado a En ejecución: antes tiene que estar Listo.</text>
+</svg>
