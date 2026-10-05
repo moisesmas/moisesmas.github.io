@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" width="760" height="300" role="img" aria-labelledby="t">
+<title id="t">MBR and GPT layouts. MBR keeps its table in sector 0 and has up to four primary partitions, one of which can be an extended partition holding logical partitions. GPT has a protective MBR, a header with the partition entries at the start and a backup copy at the end of the disk.</title>
+<rect width="760" height="300" fill="#ffffff"/>
+<style>
+text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;fill:#16201b;font-size:14px}
+.b{font-weight:700}.s{font-size:12px;fill:#56655d}.c{text-anchor:middle}.t{font-size:16px;font-weight:700}
+</style>
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1f5244"/></marker>
+</defs>
+<text x="20" y="26" class="t">MBR</text><text x="70" y="26" class="s">up to 4 primary partitions</text>
+<rect x="20" y="40" width="70" height="60" rx="8" fill="#fbeed8" stroke="#1f5244" stroke-width="2"/><text x="55" y="66" class="c b">MBR</text><text x="55" y="84" class="c s">sector 0</text>
+<rect x="94" y="40" width="150" height="60" rx="8" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/><text x="169" y="66" class="c b">Primary 1</text><text x="169" y="84" class="c s">NTFS</text>
+<rect x="248" y="40" width="150" height="60" rx="8" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/><text x="323" y="66" class="c b">Primary 2</text><text x="323" y="84" class="c s">ext4</text>
+<rect x="402" y="40" width="338" height="60" rx="8" fill="#ffffff" stroke="#b86e00" stroke-width="2" stroke-dasharray="6 4"/><text x="571" y="34" class="c s">Extended partition (a container)</text>
+<rect x="410" y="48" width="100" height="44" rx="8" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/><text x="460" y="66" class="c b">Logical 5</text><text x="460" y="84" class="c s">ext4</text>
+<rect x="516" y="48" width="100" height="44" rx="8" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/><text x="566" y="66" class="c b">Logical 6</text><text x="566" y="84" class="c s">swap</text>
+<rect x="622" y="48" width="110" height="44" rx="8" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/><text x="677" y="66" class="c b">Logical 7</text><text x="677" y="84" class="c s">FAT32</text>
+<text x="20" y="124" class="s">The table is in the first sector (512 bytes). It has 4 entries; an extended partition lets you add more logical ones.</text>
+<text x="20" y="176" class="t">GPT</text><text x="70" y="176" class="s">128 entries by default in Windows</text>
+<rect x="20" y="190" width="70" height="60" rx="8" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="55" y="216" class="c b">Prot. MBR</text><text x="55" y="234" class="c s">LBA 0</text>
+<rect x="94" y="190" width="90" height="60" rx="8" fill="#fbeed8" stroke="#1f5244" stroke-width="2"/><text x="139" y="216" class="c b">GPT header</text><text x="139" y="234" class="c s">LBA 1-33</text>
+<rect x="188" y="190" width="120" height="60" rx="8" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/><text x="248" y="216" class="c b">EFI System</text><text x="248" y="234" class="c s">FAT32</text>
+<rect x="312" y="190" width="160" height="60" rx="8" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/><text x="392" y="216" class="c b">Partition 2</text><text x="392" y="234" class="c s">NTFS</text>
+<rect x="476" y="190" width="140" height="60" rx="8" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/><text x="546" y="216" class="c b">Partition 3</text><text x="546" y="234" class="c s">ext4</text>
+<rect x="620" y="190" width="120" height="60" rx="8" fill="#fbeed8" stroke="#1f5244" stroke-width="2"/><text x="680" y="216" class="c b">Backup</text><text x="680" y="234" class="c s">header + entries</text>
+<text x="20" y="274" class="s">The partition table is copied at the end of the disk. The protective MBR stops old tools from seeing the disk as empty.</text>
+</svg>
