@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="ca-valencia" data-lab="particions-i-arrencada" data-idioma-original="ca-valencia">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="/comun/lab.js"></script>
+<title>Particions i arrancada</title>
+<meta name="description" content="Triar el sistema d'arxius, construir taules de particions MBR i GPT, entendre els noms dels discos, dissenyar un esquema Linux, planificar un dual boot i recórrer la cadena d'arrancada, amb una pràctica final de disseny de particions.">
+<meta name="keywords" content="particions, MBR, GPT, sistema d'arxius, FAT32, NTFS, ext4, dual boot, GRUB, arrancada, UEFI">
+<meta name="lab:titulo:es" content="Particiones y arranque">
+<meta name="lab:descripcion:es" content="Elegir el sistema de archivos, construir tablas de particiones MBR y GPT, entender los nombres de los discos, diseñar un esquema Linux, planificar un dual boot y recorrer la cadena de arranque, con una práctica final de diseño de particiones.">
+<meta name="lab:etiquetas:es" content="particiones, MBR, GPT, sistema de archivos, FAT32, NTFS, ext4, dual boot, GRUB, arranque, UEFI">
+<link rel="icon" href="/comun/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/comun/fuentes.css">
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f2f4ef;--surface:#ffffff;--surface2:#e9ede6;--ink:#16201b;--muted:#56655d;--line:#d3dbd4;
+  --accent:#b86e00;--accent-soft:#fbeed8;--pcb:#1f5244;
+  --blue-soft:#e2ebfa;--blue:#2764c9;--green-soft:#dcf2ed;--good:#1f6f33;--bad:#b3261e;--bad-soft:#fbe4e1;--warn-soft:#fff3cf;
+  --f-display:"Chakra Petch",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0e1411;--surface:#161f1b;--surface2:#1d2823;--ink:#e4ebe6;--muted:#95a69d;--line:#2b3832;
+  --accent:#f3aa3c;--accent-soft:#33260f;--pcb:#1a463a;
+  --blue-soft:#16294a;--blue:#8fb4f5;--green-soft:#12342c;--good:#7fd498;--bad:#ff8f86;--bad-soft:#40201d;--warn-soft:#3a3010;
+}}
+*{box-sizing:border-box}
+html,body{margin:0}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:1rem/1.55 var(--f-body)}
+h1,h2,h3{font-family:var(--f-display);line-height:1.2;margin:0 0 .5rem}
+h1{font-size:1.25rem}
+h2{font-size:1.5rem}
+h3{font-size:1.05rem}
+p{margin:.5rem 0}
+code,.mono{font-family:var(--f-mono);font-size:.92em}
+button,input,select{font:inherit;color:inherit}
+button,select,input[type=number]{border:1px solid var(--muted);background:var(--surface);border-radius:.4rem;padding:.35rem .8rem}
+button{cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+input[type=number]{width:6rem}
+input[type=text]{width:100%;max-width:18rem;border:1px solid var(--muted);background:var(--surface);border-radius:.4rem;padding:.35rem .6rem}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cabecera{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;padding:.6rem 1rem;background:var(--pcb);color:#fff}
+.cabecera h1{flex:1 1 12rem;margin:0}
+.cabecera a{color:#fff}
+.cabecera button{background:transparent;border-color:#fff;color:#fff}
+.cabecera [aria-pressed="true"]{background:#fff;color:var(--pcb)}
+main{max-width:62rem;margin:0 auto;padding:1rem}
+.pestanas{display:flex;gap:.25rem;overflow-x:auto;border-bottom:1px solid var(--muted)}
+[role="tab"]{display:flex;gap:.5rem;align-items:baseline;white-space:nowrap;border:0;border-bottom:3px solid transparent;border-radius:.4rem .4rem 0 0;background:var(--surface2);font:600 1rem var(--f-display)}
+[role="tab"][aria-selected="true"]{background:var(--accent-soft);border-bottom-color:var(--accent)}
+.n{font:600 .8rem var(--f-mono);color:var(--muted)}
+[role="tabpanel"]{background:var(--surface);border:1px solid var(--line);border-top:0;padding:1rem 1.25rem}
+.fila{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;margin:.5rem 0}
+.primario{background:var(--pcb);border-color:var(--pcb);color:#fff}
+fieldset{border:1px solid var(--line);border-radius:.5rem;margin:.5rem 0;padding:.5rem .75rem}
+legend{font-weight:700;padding:0 .35rem}
+.opt{display:flex;gap:.5rem;align-items:flex-start;margin:.25rem 0}
+.opt input{margin-top:.35rem}
+.estat{margin:.75rem 0;padding:.5rem .75rem;border-left:4px solid var(--accent);background:var(--surface2)}
+.estat:empty{display:none}
+.estat.mal{border-left-color:var(--bad);background:var(--bad-soft)}
+.estat.be{border-left-color:var(--good);background:var(--green-soft)}
+.tw{overflow-x:auto;margin:.5rem 0}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left;vertical-align:top}
+th{background:var(--surface2)}
+.targetes{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.75rem;margin:.75rem 0}
+.targeta{border:2px solid var(--line);border-radius:.5rem;padding:.6rem .75rem;background:var(--surface)}
+.targeta ul{margin:.25rem 0 0;padding-left:1.1rem}
+.targeta.v-ok{border-color:var(--good);background:var(--green-soft)}
+.targeta.v-res{border-color:var(--accent);background:var(--warn-soft)}
+.targeta.v-no{border-color:var(--bad);background:var(--bad-soft)}
+.insignia{font-weight:700}
+.disc{display:flex;gap:2px;min-height:4.5rem;border:2px solid var(--muted);border-radius:.4rem;padding:2px;background:var(--surface2);margin:.75rem 0}
+.seg{flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden;border:2px solid var(--muted);border-radius:.3rem;padding:.15rem;font-size:.85rem;line-height:1.25}
+.seg .sl{font-weight:700;overflow-wrap:anywhere}
+.seg .ss{font-family:var(--f-mono);font-size:.8rem}
+.k-prim,.k-gpt{background:var(--accent-soft);border-color:var(--accent)}
+.k-ext{background:var(--surface);border-style:dashed;justify-content:flex-start}
+.k-ext .inner{display:flex;gap:2px;flex:1;width:100%;margin-top:.15rem}
+.k-ext .inner .seg{border-color:var(--blue);background:var(--blue-soft)}
+.k-lliure{background:var(--surface);border-style:dotted;color:var(--muted)}
+.k-no{background:repeating-linear-gradient(45deg,var(--surface2) 0 6px,var(--line) 6px 12px);border-color:var(--bad)}
+.k-efi{background:var(--green-soft);border-color:var(--pcb)}
+.k-swap{background:var(--blue-soft);border-color:var(--blue)}
+.k-win{background:var(--blue-soft);border-color:var(--blue)}
+.k-lin{background:var(--green-soft);border-color:var(--pcb)}
+.k-home{background:var(--accent-soft);border-color:var(--accent)}
+.passos{list-style:none;margin:.75rem 0;padding:0;display:flex;flex-wrap:wrap;gap:.4rem}
+.passos li{border:2px solid var(--line);border-radius:.4rem;padding:.3rem .6rem;background:var(--surface2);font-size:.9rem}
+.passos li.fet{border-color:var(--good);background:var(--green-soft)}
+.passos li.ara{border-color:var(--accent);background:var(--accent-soft);font-weight:700}
+.detall{border:1px solid var(--line);border-radius:.5rem;padding:.6rem .85rem;margin:.5rem 0;background:var(--surface)}
+.fallada{border-left:4px solid var(--bad);padding:.3rem .75rem;background:var(--bad-soft);margin:.5rem 0}
+.menu{font-family:var(--f-mono);font-size:.9rem;background:#111;color:#e9e9e9;border-radius:.4rem;padding:.6rem .8rem;margin:.5rem 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.cua{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
+.ordre{margin:.5rem 0;padding-left:1.4rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<script type="application/json" id="lab-textos">
+{
+  "es": {
+    "volver-aria": "Volver a la unidad",
+    "volver": "Unidad",
+    "titulo": "Particiones y arranque",
+    "zoom-aria": "Tamaño del texto",
+    "zoom-menos": "Reducir texto",
+    "zoom-mas": "Aumentar texto",
+    "idioma-aria": "Idioma",
+    "pestanas-aria": "Secciones del laboratorio",
+    "tab-fs": "¿Qué sistema de archivos?",
+    "tab-mbr": "Constructor MBR/GPT",
+    "tab-noms": "Nombres de discos",
+    "tab-linux": "Esquema Linux",
+    "tab-dual": "Dual boot",
+    "tab-boot": "Cadena de arranque",
+    "tab-pra": "Práctica",
+    "t-fs": "¿Qué sistema de archivos?",
+    "i-fs": "Marca los requisitos de tu caso y mira qué sistemas de archivos los cumplen. Cada ✖ o ⚠ te explica el límite que descarta la opción.",
+    "t-mbr": "Constructor de tablas MBR y GPT",
+    "i-mbr": "Construye la tabla de particiones de un disco con MBR o con GPT. Añade particiones y comprueba los límites: 4 entradas, una sola extendida, lógicas dentro de la extendida y los 2 TiB del MBR.",
+    "t-noms": "Nombres de discos y particiones",
+    "i-noms": "Mira cómo se llaman tus particiones en Linux (<code>/dev/sdX#</code>) y en Windows (letras de unidad), según el tipo de disco.",
+    "t-linux": "Esquema de particiones para Linux",
+    "i-linux": "Indica las características del equipo y obtén un esquema de particiones para Linux con EFI, raíz, <code>/home</code> y swap.",
+    "t-dual": "Arranque dual: Windows y Linux",
+    "i-dual": "Descubre qué pasa según el orden de instalación de Windows y Linux, y ordena los pasos de un dual boot.",
+    "t-boot": "La cadena de arranque del sistema operativo",
+    "i-boot": "Recorre paso a paso lo que pasa desde que el firmware acaba el POST hasta la pantalla de inicio de sesión, y qué falla en cada paso.",
+    "t-pra": "Práctica de diseño de particiones",
+    "i-pra": "Ejercicios de tipo examen con corrección inmediata: nombres de dispositivos, esquema de particionado, sistema de archivos, preguntas y diseño de particiones."
+  }
+}
+</script>
+</head>
+<body>
+<header class="cabecera">
+  <a href="../../" data-lab-volver data-t-attr="aria-label:volver-aria" aria-label="Torna a la unitat">← <span data-t="volver">Unitat</span></a>
+  <h1 data-t="titulo">Particions i arrancada</h1>
+  <div role="group" data-t-attr="aria-label:zoom-aria" aria-label="Grandària del text">
+    <button type="button" data-lab-zoom="-" data-t-attr="aria-label:zoom-menos" aria-label="Reduïx el text">A−</button>
+    <button type="button" data-lab-zoom="+" data-t-attr="aria-label:zoom-mas" aria-label="Augmenta el text">A+</button>
+  </div>
+  <div role="group" data-t-attr="aria-label:idioma-aria" aria-label="Idioma">
+    <button type="button" data-lab-idioma="ca-valencia"></button>
+    <button type="button" data-lab-idioma="es"></button>
+  </div>
+</header>
+<main>
+  <div class="pestanas" role="tablist" data-t-attr="aria-label:pestanas-aria" aria-label="Seccions del laboratori">
+    <button type="button" role="tab" id="tab-sistema-arxius" data-tab="sistema-arxius" aria-controls="panel-sistema-arxius" aria-selected="true"><span class="n">1</span><span data-t="tab-fs">Quin sistema d'arxius?</span></button>
+    <button type="button" role="tab" id="tab-mbr-gpt" data-tab="mbr-gpt" aria-controls="panel-mbr-gpt" aria-selected="false" tabindex="-1"><span class="n">2</span><span data-t="tab-mbr">Constructor MBR/GPT</span></button>
+    <button type="button" role="tab" id="tab-noms-discos" data-tab="noms-discos" aria-controls="panel-noms-discos" aria-selected="false" tabindex="-1"><span class="n">3</span><span data-t="tab-noms">Noms de discos</span></button>
+    <button type="button" role="tab" id="tab-esquema-linux" data-tab="esquema-linux" aria-controls="panel-esquema-linux" aria-selected="false" tabindex="-1"><span class="n">4</span><span data-t="tab-linux">Esquema Linux</span></button>
+    <button type="button" role="tab" id="tab-dual-boot" data-tab="dual-boot" aria-controls="panel-dual-boot" aria-selected="false" tabindex="-1"><span class="n">5</span><span data-t="tab-dual">Dual boot</span></button>
+    <button type="button" role="tab" id="tab-arrencada" data-tab="arrencada" aria-controls="panel-arrencada" aria-selected="false" tabindex="-1"><span class="n">6</span><span data-t="tab-boot">Cadena d'arrancada</span></button>
+    <button type="button" role="tab" id="tab-practica" data-tab="practica" aria-controls="panel-practica" aria-selected="false" tabindex="-1"><span class="n">7</span><span data-t="tab-pra">Pràctica</span></button>
+  </div>
+
+  <section role="tabpanel" id="panel-sistema-arxius" aria-labelledby="tab-sistema-arxius" tabindex="0">
+    <h2 data-t="t-fs">Quin sistema d'arxius?</h2>
+    <p data-t="i-fs">Marca els requisits del teu cas i mira quins sistemes d'arxius els compleixen. Cada ✖ o ⚠ t'explica el límit que descarta l'opció.</p>
+    <div id="fs-casos" class="cua"></div>
+    <fieldset id="fs-reqs"></fieldset>
+    <p class="estat" id="fs-estat" role="status"></p>
+    <div class="targetes" id="fs-targetes"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-mbr-gpt" aria-labelledby="tab-mbr-gpt" tabindex="0" hidden>
+    <h2 data-t="t-mbr">Constructor de taules MBR i GPT</h2>
+    <p data-t="i-mbr">Construïx la taula de particions d'un disc amb MBR o amb GPT. Afig particions i comprova els límits: 4 entrades, una sola estesa, lògiques dins de l'estesa i els 2 TiB de l'MBR.</p>
+    <div class="fila" id="mb-controls"></div>
+    <div class="fila" id="mb-afegir"></div>
+    <div id="mb-disc" role="img"></div>
+    <p class="estat" id="mb-estat" role="status"></p>
+    <p id="mb-resum"></p>
+  </section>
+
+  <section role="tabpanel" id="panel-noms-discos" aria-labelledby="tab-noms-discos" tabindex="0" hidden>
+    <h2 data-t="t-noms">Noms de discos i particions</h2>
+    <p data-t-html="i-noms">Mira com es diuen les teues particions en Linux (<code>/dev/sdX#</code>) i en Windows (lletres d'unitat), segons el tipus de disc.</p>
+    <div class="fila" id="nd-controls"></div>
+    <div class="tw" id="nd-taula"></div>
+    <p id="nd-nota"></p>
+  </section>
+
+  <section role="tabpanel" id="panel-esquema-linux" aria-labelledby="tab-esquema-linux" tabindex="0" hidden>
+    <h2 data-t="t-linux">Esquema de particions per a Linux</h2>
+    <p data-t-html="i-linux">Indica les característiques de l'equip i obtín un esquema de particions per a Linux amb EFI, arrel, <code>/home</code> i swap.</p>
+    <div class="fila" id="el-controls"></div>
+    <div id="el-disc" role="img"></div>
+    <div class="tw" id="el-taula"></div>
+    <p class="estat" id="el-avisos" role="status"></p>
+  </section>
+
+  <section role="tabpanel" id="panel-dual-boot" aria-labelledby="tab-dual-boot" tabindex="0" hidden>
+    <h2 data-t="t-dual">Arrancada dual: Windows i Linux</h2>
+    <p data-t="i-dual">Descobrix què passa segons l'ordre d'instal·lació de Windows i Linux, i ordena els passos d'un dual boot.</p>
+    <div id="db-controls"></div>
+    <div id="db-eixida"></div>
+    <div id="db-joc"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-arrencada" aria-labelledby="tab-arrencada" tabindex="0" hidden>
+    <h2 data-t="t-boot">La cadena d'arrancada del sistema operatiu</h2>
+    <p data-t="i-boot">Recorre pas a pas el que passa des que el firmware acaba el POST fins a la pantalla d'inici de sessió, i què falla en cada pas.</p>
+    <div class="fila" id="ca-controls"></div>
+    <ol class="passos" id="ca-passos"></ol>
+    <div id="ca-detall"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-practica" aria-labelledby="tab-practica" tabindex="0" hidden>
+    <h2 data-t="t-pra">Pràctica de disseny de particions</h2>
+    <p data-t="i-pra">Exercicis de tipus examen amb correcció immediata: noms de dispositius, esquema de particionat, sistema d'arxius, preguntes i disseny de particions.</p>
+    <form id="pr-form" autocomplete="off">
+      <p id="pr-enunciat"></p>
+      <div id="pr-opcions"></div>
+      <div class="fila" id="pr-botons"></div>
+    </form>
+    <p class="estat" id="pr-correccio" role="status"></p>
+    <p id="pr-marcador"></p>
+  </section>
+</main>
+
+<script>
+(function () {
+'use strict';
+const T = (ca, es) => Lab.t({ 'ca-valencia': ca, es: es });
+const $ = (s, r) => (r || document).querySelector(s);
+function h(tag, props) {
+  const e = document.createElement(tag);
+  const p = props || {};
+  Object.keys(p).forEach((k) => {
+    const v = p[k];
+    if (v === false || v === null || v === undefined) return;
+    if (k === 'class') e.className = v;
+    else if (k === 'text') e.textContent = v;
+    else if (k.slice(0, 2) === 'on') e.addEventListener(k.slice(2), v);
+    else if (v === true) e.setAttribute(k, '');
+    else e.setAttribute(k, String(v));
+  });
+  for (let i = 2; i < arguments.length; i++) {
+    [].concat(arguments[i]).forEach((c) => {
+      if (c === null || c === undefined || c === false) return;
+      e.append(typeof c === 'object' ? c : document.createTextNode(String(c)));
+    });
+  }
+  return e;
+}
+function buida(el) { while (el.firstChild) el.removeChild(el.firstChild); }
+function fmt(gb) {
+  if (gb >= 1000) return (gb / 1000).toFixed(gb % 1000 === 0 ? 0 : 1).replace('.', ',') + ' TB';
+  if (gb < 1) return Math.round(gb * 1000) + ' MB';
+  return gb + ' GB';
+}
+let idSeq = 0;
+function uid(p) { idSeq += 1; return p + idSeq; }
+
+/* ---------- Pestanyes (patró WAI-ARIA) ---------- */
+const pestanes = [...document.querySelectorAll('[role="tab"]')];
+const alMostrar = {};
+function mostrar(id) {
+  const activa = pestanes.find((p) => p.dataset.tab === id) || pestanes[0];
+  for (const p of pestanes) {
+    const es = p === activa;
+    p.setAttribute('aria-selected', String(es));
+    p.tabIndex = es ? 0 : -1;
+    document.getElementById(p.getAttribute('aria-controls')).hidden = !es;
+  }
+  activa.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  if (alMostrar[activa.dataset.tab]) alMostrar[activa.dataset.tab]();
+  return activa;
+}
+function elegir(id, enfocar) {
+  const activa = mostrar(id);
+  Lab.guardar('pestana', activa.dataset.tab);
+  history.replaceState(null, '', '#' + activa.dataset.tab);
+  if (enfocar) activa.focus();
+}
+pestanes.forEach((p) => p.addEventListener('click', () => elegir(p.dataset.tab)));
+$('[role="tablist"]').addEventListener('keydown', (e) => {
+  const i = pestanes.indexOf(document.activeElement);
+  const desti = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: pestanes.length - 1 }[e.key];
+  if (i < 0 || desti === undefined) return;
+  e.preventDefault();
+  elegir(pestanes[(desti + pestanes.length) % pestanes.length].dataset.tab, true);
+});
+window.addEventListener('hashchange', () => mostrar(location.hash.slice(1)));
+
+/* ---------- 1. Quin sistema d'arxius? ---------- */
+const FSN = ['FAT32', 'exFAT', 'NTFS', 'ext4'];
+const REQS = [
+  ['gran', 'Arxius de més de 4 GiB', 'Archivos de más de 4 GiB'],
+  ['win', 'Lectura i escriptura en Windows', 'Lectura y escritura en Windows'],
+  ['lin', 'Lectura i escriptura en Linux', 'Lectura y escritura en Linux'],
+  ['mac', 'Lectura i escriptura en macOS', 'Lectura y escritura en macOS'],
+  ['tv', 'Televisor, càmera o consola', 'Televisor, cámara o consola'],
+  ['perm', 'Permisos per usuari', 'Permisos por usuario'],
+  ['jour', 'Journaling (resistència a apagades)', 'Journaling (resistencia a apagones)']
+];
+const MATRIU = {
+  FAT32: {
+    gran: [0, 'Un arxiu no pot passar de 4 GiB.', 'Un archivo no puede pasar de 4 GiB.'],
+    perm: [0, 'No guarda permisos.', 'No guarda permisos.'],
+    jour: [0, 'No té journaling.', 'No tiene journaling.']
+  },
+  exFAT: {
+    tv: [1, 'Molts dispositius la llegixen; comprova el manual.', 'Muchos dispositivos la leen; comprueba el manual.'],
+    perm: [0, 'No guarda permisos.', 'No guarda permisos.'],
+    jour: [0, 'No té journaling.', 'No tiene journaling.']
+  },
+  NTFS: {
+    lin: [1, 'Cal un controlador (ntfs-3g o ntfs3).', 'Hace falta un controlador (ntfs-3g o ntfs3).'],
+    mac: [1, 'macOS només el llig per defecte.', 'macOS solo lo lee por defecto.'],
+    tv: [1, 'Molts dispositius només el lligen.', 'Muchos dispositivos solo lo leen.']
+  },
+  ext4: {
+    win: [0, 'Windows no el reconeix sense programari extra.', 'Windows no lo reconoce sin software extra.'],
+    mac: [0, 'macOS no el reconeix per defecte.', 'macOS no lo reconoce por defecto.'],
+    tv: [0, 'Televisors i consoles no el reconeixen.', 'Televisores y consolas no lo reconocen.']
+  }
+};
+const CASOS_FS = [
+  ['Pendrive per a Windows, Linux i televisor, amb vídeos de 6 GB', 'Pendrive para Windows, Linux y televisor, con vídeos de 6 GB', ['gran', 'win', 'lin', 'tv']],
+  ['Disc de sistema de Windows', 'Disco de sistema de Windows', ['win', 'perm', 'jour']],
+  ['Arrel d\'un servidor Linux', 'Raíz de un servidor Linux', ['lin', 'perm', 'jour']],
+  ['Disc extern per a còpies de Windows i Linux', 'Disco externo para copias de Windows y Linux', ['gran', 'win', 'lin', 'perm']]
+];
+const fsMarcats = {};
+function pintarFs() {
+  const marcats = REQS.filter((r) => fsMarcats[r[0]]).map((r) => r[0]);
+  const cont = $('#fs-targetes');
+  const estat = $('#fs-estat');
+  buida(cont);
+  estat.className = 'estat';
+  if (!marcats.length) {
+    estat.textContent = T('Marca almenys un requisit per a veure els resultats.', 'Marca al menos un requisito para ver los resultados.');
+    return;
+  }
+  const ok = []; const res = [];
+  FSN.forEach((nom) => {
+    const motius = [];
+    let pitjor = 2;
+    marcats.forEach((id) => {
+      const c = MATRIU[nom][id];
+      if (c) {
+        pitjor = Math.min(pitjor, c[0]);
+        motius.push([c[0], T(c[1], c[2]), id]);
+      }
+    });
+    const cls = pitjor === 2 ? 'v-ok' : pitjor === 1 ? 'v-res' : 'v-no';
+    const etiqueta = pitjor === 2 ? T('✔ Ho complix tot', '✔ Lo cumple todo') : pitjor === 1 ? T('⚠ Amb reserves', '⚠ Con reservas') : T('✖ Descartat', '✖ Descartado');
+    if (pitjor === 2) ok.push(nom);
+    if (pitjor === 1) res.push(nom);
+    cont.append(h('div', { class: 'targeta ' + cls },
+      h('h3', { text: nom }),
+      h('p', { class: 'insignia', text: etiqueta }),
+      motius.length ? h('ul', null, motius.map((m) => h('li', { text: (m[0] === 0 ? '✖ ' : '⚠ ') + m[1] }))) : null));
+  });
+  if (ok.length) {
+    estat.classList.add('be');
+    estat.textContent = T('Compleixen tots els requisits: ', 'Cumplen todos los requisitos: ') + ok.join(', ') + (res.length ? T('. Amb reserves: ', '. Con reservas: ') + res.join(', ') + '.' : '.');
+  } else if (res.length) {
+    estat.textContent = T('Cap ho complix del tot. Amb reserves (cal comprovar el dispositiu o instal·lar un controlador): ', 'Ninguno lo cumple del todo. Con reservas (hay que comprobar el dispositivo o instalar un controlador): ') + res.join(', ') + '.';
+  } else {
+    estat.classList.add('mal');
+    estat.textContent = T('Cap sistema complix tots els requisits: caldrà renunciar a algun o usar dos volums diferents.', 'Ningún sistema cumple todos los requisitos: habrá que renunciar a alguno o usar dos volúmenes distintos.');
+  }
+}
+(function initFs() {
+  const fs = $('#fs-reqs');
+  fs.append(h('legend', { text: T('Requisits', 'Requisitos') }));
+  REQS.forEach((r) => {
+    const id = uid('rq');
+    const cb = h('input', { type: 'checkbox', id: id, 'data-req': r[0] });
+    cb.addEventListener('change', () => { fsMarcats[r[0]] = cb.checked; pintarFs(); });
+    fs.append(h('div', { class: 'opt' }, cb, h('label', { for: id, text: T(r[1], r[2]) })));
+  });
+  const cas = $('#fs-casos');
+  cas.append(h('span', { text: T('Casos d\'exemple:', 'Casos de ejemplo:') }));
+  CASOS_FS.forEach((c) => {
+    cas.append(h('button', { type: 'button', text: T(c[0], c[1]), onclick: () => {
+      REQS.forEach((r) => { fsMarcats[r[0]] = c[2].indexOf(r[0]) >= 0; });
+      fs.querySelectorAll('input').forEach((i) => { i.checked = !!fsMarcats[i.getAttribute('data-req')]; });
+      pintarFs();
+    } }));
+  });
+  pintarFs();
+})();
+
+/* ---------- 2. Constructor MBR/GPT ---------- */
+const MBR_MAX = 2199; // 2 TiB expressats en GB
+const lay = { esquema: 'mbr', disc: 1000, parts: [] };
+const mbMis = $('#mb-estat');
+function usable() { return lay.esquema === 'mbr' ? Math.min(lay.disc, MBR_MAX) : lay.disc; }
+function usat() { return lay.parts.filter((p) => p.k !== 'log').reduce((a, p) => a + p.s, 0); }
+function nombre(k) { return lay.parts.filter((p) => p.k === k).length; }
+function afegirPartI(k, s) {
+  s = Math.round(s);
+  if (!(s > 0)) return { ok: false, msg: T('Escriu una grandària major que 0.', 'Escribe un tamaño mayor que 0.') };
+  if (lay.esquema === 'gpt') {
+    if (lay.parts.length >= 128) return { ok: false, msg: T('GPT admet 128 particions per defecte.', 'GPT admite 128 particiones por defecto.') };
+    const lliure = usable() - usat();
+    if (s > lliure) return { ok: false, msg: T('Només queden ' + fmt(lliure) + ' lliures.', 'Solo quedan ' + fmt(lliure) + ' libres.') };
+    lay.parts.push({ k: 'gpt', s: s });
+    return { ok: true, msg: T('Partició afegida. En GPT totes són iguals.', 'Partición añadida. En GPT todas son iguales.') };
+  }
+  if (k === 'log') {
+    const ext = lay.parts.find((p) => p.k === 'ext');
+    if (!ext) return { ok: false, msg: T('Una lògica només pot viure dins d\'una partició estesa: crea primer l\'estesa.', 'Una lógica solo puede vivir dentro de una partición extendida: crea primero la extendida.') };
+    const lliure = ext.s - lay.parts.filter((p) => p.k === 'log').reduce((a, p) => a + p.s, 0);
+    if (s > lliure) return { ok: false, msg: T('L\'estesa només té ' + fmt(lliure) + ' lliures per a lògiques.', 'La extendida solo tiene ' + fmt(lliure) + ' libres para lógicas.') };
+    lay.parts.push({ k: 'log', s: s });
+    return { ok: true, msg: T('Lògica afegida dins de l\'estesa.', 'Lógica añadida dentro de la extendida.') };
+  }
+  if (nombre('prim') + nombre('ext') >= 4) return { ok: false, msg: T('L\'MBR només té 4 entrades: no hi caben més primàries ni estesa.', 'El MBR solo tiene 4 entradas: no caben más primarias ni extendida.') };
+  if (k === 'ext' && nombre('ext') >= 1) return { ok: false, msg: T('Només pot haver-hi una partició estesa per disc.', 'Solo puede haber una partición extendida por disco.') };
+  const lliure = usable() - usat();
+  if (s > lliure) {
+    let msg = T('Només queden ' + fmt(lliure) + ' lliures.', 'Solo quedan ' + fmt(lliure) + ' libres.');
+    if (lay.disc > MBR_MAX) msg += T(' (L\'MBR només adreça 2 TiB ≈ 2,2 TB: la resta no es pot usar.)', ' (El MBR solo direcciona 2 TiB ≈ 2,2 TB: el resto no se puede usar.)');
+    return { ok: false, msg: msg };
+  }
+  lay.parts.push({ k: k, s: s });
+  return { ok: true, msg: k === 'ext' ? T('Estesa creada: ara pots afegir-hi lògiques.', 'Extendida creada: ahora puedes añadir lógicas.') : T('Primària afegida.', 'Primaria añadida.') };
+}
+function segment(label, mida, cls) {
+  const e = h('div', { class: 'seg ' + cls }, h('span', { class: 'sl', text: label }), h('span', { class: 'ss', text: fmt(mida) }));
+  e.style.flexGrow = String(Math.max(mida, 1));
+  return e;
+}
+function etiquetaPart(p, idx) {
+  if (p.k === 'prim') return T('Primària ', 'Primaria ') + idx;
+  if (p.k === 'ext') return T('Estesa', 'Extendida');
+  if (p.k === 'log') return T('Lògica ', 'Lógica ') + idx;
+  return T('Partició ', 'Partición ') + idx;
+}
+function pintarMb() {
+  const disc = $('#mb-disc');
+  buida(disc);
+  const barra = h('div', { class: 'disc' });
+  let ip = 0; let il = 0;
+  const logs = lay.parts.filter((p) => p.k === 'log');
+  lay.parts.forEach((p) => {
+    if (p.k === 'log') return;
+    ip += 1;
+    if (p.k === 'ext') {
+      const dins = h('div', { class: 'inner' });
+      let usatLog = 0;
+      logs.forEach((l) => { il += 1; usatLog += l.s; dins.append(segment(etiquetaPart(l, il), l.s, 'k-prim')); });
+      if (p.s - usatLog > 0) dins.append(segment(T('Lliure', 'Libre'), p.s - usatLog, 'k-lliure'));
+      const e = h('div', { class: 'seg k-ext' }, h('span', { class: 'sl', text: etiquetaPart(p, ip) + ' · ' + fmt(p.s) }), dins);
+      e.style.flexGrow = String(Math.max(p.s, 1));
+      barra.append(e);
+    } else {
+      barra.append(segment(etiquetaPart(p, ip), p.s, p.k === 'gpt' ? 'k-gpt' : 'k-prim'));
+    }
+  });
+  const lliure = usable() - usat();
+  if (lliure > 0) barra.append(segment(T('Lliure', 'Libre'), lliure, 'k-lliure'));
+  if (lay.disc > usable()) barra.append(segment(T('No adreçable', 'No direccionable'), lay.disc - usable(), 'k-no'));
+  disc.append(barra);
+  disc.setAttribute('aria-label', T('Disc de ' + fmt(lay.disc) + ' amb ' + lay.parts.length + ' particions', 'Disco de ' + fmt(lay.disc) + ' con ' + lay.parts.length + ' particiones'));
+  const resum = $('#mb-resum');
+  if (lay.esquema === 'mbr') {
+    resum.textContent = T('Primàries: ' + nombre('prim') + ' · Estesa: ' + (nombre('ext') ? 'sí' : 'no') + ' · Lògiques: ' + nombre('log') + ' · Entrades usades: ' + (nombre('prim') + nombre('ext')) + '/4 · Lliure: ' + fmt(Math.max(lliure, 0)) + (lay.disc > usable() ? ' · No adreçable: ' + fmt(lay.disc - usable()) : ''),
+      'Primarias: ' + nombre('prim') + ' · Extendida: ' + (nombre('ext') ? 'sí' : 'no') + ' · Lógicas: ' + nombre('log') + ' · Entradas usadas: ' + (nombre('prim') + nombre('ext')) + '/4 · Libre: ' + fmt(Math.max(lliure, 0)) + (lay.disc > usable() ? ' · No direccionable: ' + fmt(lay.disc - usable()) : ''));
+  } else {
+    resum.textContent = T('Particions: ' + lay.parts.length + ' de 128 · Lliure: ' + fmt(Math.max(lliure, 0)), 'Particiones: ' + lay.parts.length + ' de 128 · Libre: ' + fmt(Math.max(lliure, 0)));
+  }
+}
+function missatge(r) {
+  mbMis.className = 'estat ' + (r.ok ? 'be' : 'mal');
+  mbMis.textContent = r.msg;
+}
+function reiniciarMb(msg) {
+  lay.parts = [];
+  pintarMb();
+  mbMis.className = 'estat';
+  mbMis.textContent = msg || '';
+  refrescarTipus();
+}
+let selTipus = null;
+function refrescarTipus() {
+  if (!selTipus) return;
+  buida(selTipus);
+  if (lay.esquema === 'mbr') {
+    selTipus.append(h('option', { value: 'prim', text: T('Primària', 'Primaria') }), h('option', { value: 'ext', text: T('Estesa', 'Extendida') }), h('option', { value: 'log', text: T('Lògica (dins de l\'estesa)', 'Lógica (dentro de la extendida)') }));
+  } else {
+    selTipus.append(h('option', { value: 'gpt', text: T('Partició', 'Partición') }));
+  }
+}
+(function initMb() {
+  const c = $('#mb-controls');
+  const nEsq = uid('esq');
+  const rMbr = h('input', { type: 'radio', name: nEsq, id: uid('r'), checked: true });
+  const rGpt = h('input', { type: 'radio', name: nEsq, id: uid('r') });
+  rMbr.addEventListener('change', () => { if (rMbr.checked) { lay.esquema = 'mbr'; reiniciarMb(T('Esquema MBR: taula buida.', 'Esquema MBR: tabla vacía.')); } });
+  rGpt.addEventListener('change', () => { if (rGpt.checked) { lay.esquema = 'gpt'; reiniciarMb(T('Esquema GPT: taula buida.', 'Esquema GPT: tabla vacía.')); } });
+  c.append(h('span', { class: 'opt' }, rMbr, h('label', { for: rMbr.id, text: 'MBR' })), h('span', { class: 'opt' }, rGpt, h('label', { for: rGpt.id, text: 'GPT' })));
+  const idDisc = uid('dc');
+  const selDisc = h('select', { id: idDisc }, [500, 1000, 2000, 3000, 4000].map((g) => h('option', { value: String(g), selected: g === 1000, text: fmt(g) })));
+  selDisc.addEventListener('change', () => { lay.disc = Number(selDisc.value); reiniciarMb(T('Disc nou de ' + fmt(lay.disc) + ': taula buida.', 'Disco nuevo de ' + fmt(lay.disc) + ': tabla vacía.')); });
+  c.append(h('label', { for: idDisc, text: T('Disc:', 'Disco:') }), selDisc);
+  const a = $('#mb-afegir');
+  const idTip = uid('tp'); const idMida = uid('ms');
+  selTipus = h('select', { id: idTip });
+  const mida = h('input', { type: 'number', id: idMida, min: '1', max: '4000', value: '100', inputmode: 'numeric' });
+  a.append(h('label', { for: idTip, text: T('Tipus:', 'Tipo:') }), selTipus, h('label', { for: idMida, text: T('Grandària (GB):', 'Tamaño (GB):') }), mida,
+    h('button', { type: 'button', class: 'primario', text: T('Afig partició', 'Añadir partición'), onclick: () => {
+      const r = afegirPartI(selTipus.value, Number(mida.value));
+      missatge(r);
+      pintarMb();
+    } }),
+    h('button', { type: 'button', text: T('Lleva l\'última', 'Quita la última'), onclick: () => {
+      if (!lay.parts.length) { missatge({ ok: false, msg: T('No hi ha particions.', 'No hay particiones.') }); return; }
+      const ult = lay.parts[lay.parts.length - 1];
+      if (ult.k !== 'ext' || !lay.parts.some((p) => p.k === 'log')) lay.parts.pop();
+      else lay.parts = lay.parts.filter((p) => p.k !== 'log' && p !== ult);
+      missatge({ ok: true, msg: T('Partició llevada.', 'Partición quitada.') });
+      pintarMb();
+    } }),
+    h('button', { type: 'button', text: T('Reinicia', 'Reinicia'), onclick: () => reiniciarMb(T('Taula buida.', 'Tabla vacía.')) }));
+  refrescarTipus();
+  pintarMb();
+})();
+
+/* ---------- 3. Noms de discos i particions ---------- */
+const PRESETS = {
+  p1: { esq: 'mbr', t: ['MBR: 2 primàries + estesa amb 2 lògiques', 'MBR: 2 primarias + extendida con 2 lógicas'], parts: [
+    { k: 'prim', s: 100, fs: 'ntfs', l: 'Windows' }, { k: 'prim', s: 50, fs: 'ext4', l: 'Ubuntu /' },
+    { k: 'ext', s: 300, fs: '', l: '' }, { k: 'log', s: 100, fs: 'ntfs', l: 'Dades' }, { k: 'log', s: 200, fs: 'ext4', l: '/home' }] },
+  p2: { esq: 'gpt', t: ['GPT: EFI + Windows + Ubuntu', 'GPT: EFI + Windows + Ubuntu'], parts: [
+    { k: 'gpt', s: 1, fs: 'fat32', l: 'EFI' }, { k: 'gpt', s: 200, fs: 'ntfs', l: 'Windows' },
+    { k: 'gpt', s: 50, fs: 'ext4', l: 'Ubuntu /' }, { k: 'gpt', s: 200, fs: 'ext4', l: '/home' }, { k: 'gpt', s: 4, fs: 'swap', l: 'swap' }] },
+  p3: { esq: 'mbr', t: ['MBR: 1 primària + estesa amb 3 lògiques', 'MBR: 1 primaria + extendida con 3 lógicas'], parts: [
+    { k: 'prim', s: 100, fs: 'ntfs', l: 'Windows' }, { k: 'ext', s: 400, fs: '', l: '' },
+    { k: 'log', s: 100, fs: 'ntfs', l: 'Dades' }, { k: 'log', s: 100, fs: 'ntfs', l: 'Còpies' }, { k: 'log', s: 100, fs: 'ext4', l: 'Linux' }] }
+};
+const ndEst = { origen: 'tab2', tipus: 'sata', disc: '0' };
+function disposicio() {
+  if (ndEst.origen === 'tab2') {
+    return { esq: lay.esquema, parts: lay.parts.map((p) => ({ k: p.k, s: p.s, fs: 'ntfs', l: '' })) };
+  }
+  return PRESETS[ndEst.origen];
+}
+function nomDisc() {
+  const d = Number(ndEst.disc);
+  const lletra = String.fromCharCode(97 + d);
+  if (ndEst.tipus === 'nvme') return { disc: '/dev/nvme' + d + 'n1', part: (n) => '/dev/nvme' + d + 'n1p' + n };
+  if (ndEst.tipus === 'virtio') return { disc: '/dev/vd' + lletra, part: (n) => '/dev/vd' + lletra + n };
+  return { disc: '/dev/sd' + lletra, part: (n) => '/dev/sd' + lletra + n };
+}
+function pintarNoms() {
+  const cont = $('#nd-taula');
+  buida(cont);
+  const d = disposicio();
+  const nom = nomDisc();
+  if (!d.parts.length) {
+    cont.append(h('p', { class: 'estat', text: T('La teua disposició de la pestanya 2 està buida: afig-hi particions o tria un exemple.', 'Tu disposición de la pestaña 2 está vacía: añade particiones o elige un ejemplo.') }));
+    $('#nd-nota').textContent = '';
+    return;
+  }
+  const files = [];
+  let nPrim = 0; let nLog = 4;
+  d.parts.forEach((p) => {
+    if (d.esq === 'gpt') { nPrim += 1; files.push({ p: p, n: nPrim }); }
+    else if (p.k === 'log') { nLog += 1; files.push({ p: p, n: nLog }); }
+    else { nPrim += 1; files.push({ p: p, n: nPrim }); }
+  });
+  files.sort((a, b) => a.n - b.n);
+  let lletra = Number(ndEst.disc) === 0 ? 67 : 69;
+  const t = h('table', null, h('thead', null, h('tr', null,
+    ['#', T('Tipus', 'Tipo'), T('Grandària', 'Tamaño'), T('Contingut', 'Contenido'), 'Linux', 'Windows'].map((x) => h('th', { scope: 'col', text: x })))));
+  const tb = h('tbody');
+  files.forEach((f, i) => {
+    const p = f.p;
+    let win;
+    if (p.k === 'ext') win = T('— (contenidor, sense lletra)', '— (contenedor, sin letra)');
+    else if (p.l === 'EFI') win = T('— (sense lletra)', '— (sin letra)');
+    else if (p.fs === 'ntfs' || p.fs === 'fat32') { win = String.fromCharCode(lletra) + ':'; lletra += 1; }
+    else win = T('— (no el reconeix)', '— (no lo reconoce)');
+    const tipus = p.k === 'prim' ? T('Primària', 'Primaria') : p.k === 'ext' ? T('Estesa', 'Extendida') : p.k === 'log' ? T('Lògica', 'Lógica') : T('Partició', 'Partición');
+    tb.append(h('tr', null, h('td', { text: String(i + 1) }), h('td', { text: tipus }), h('td', { text: fmt(p.s) }),
+      h('td', { text: (p.l || '') + (p.fs ? ' (' + p.fs + ')' : '') }), h('td', { class: 'mono', text: nom.part(f.n) }), h('td', { class: 'mono', text: win })));
+  });
+  t.append(tb);
+  cont.append(t);
+  $('#nd-nota').textContent = T('Disc: ' + nom.disc + ' (Windows: Disc ' + ndEst.disc + '). ', 'Disco: ' + nom.disc + ' (Windows: Disco ' + ndEst.disc + '). ')
+    + (d.esq === 'mbr'
+      ? T('En MBR, els números 1 a 4 són per a primàries i estesa; les lògiques comencen sempre pel 5.', 'En MBR, los números 1 a 4 son para primarias y extendida; las lógicas empiezan siempre por el 5.')
+      : T('En GPT les particions es numeren per ordre, sense esteses ni lògiques.', 'En GPT las particiones se numeran por orden, sin extendidas ni lógicas.'))
+    + T(' Windows només dona lletra als volums amb un sistema d\'arxius que reconeix (NTFS, FAT32...).', ' Windows solo da letra a los volúmenes con un sistema de archivos que reconoce (NTFS, FAT32...).');
+}
+(function initNoms() {
+  const c = $('#nd-controls');
+  function sel(etq, clau, opts) {
+    const id = uid('nd');
+    const s = h('select', { id: id }, opts.map((o) => h('option', { value: o[0], text: o[1] })));
+    s.addEventListener('change', () => { ndEst[clau] = s.value; pintarNoms(); });
+    c.append(h('label', { for: id, text: etq }), s);
+  }
+  sel(T('Disposició:', 'Disposición:'), 'origen', [['tab2', T('La meua (pestanya 2)', 'La mía (pestaña 2)')], ['p1', T(PRESETS.p1.t[0], PRESETS.p1.t[1])], ['p2', T(PRESETS.p2.t[0], PRESETS.p2.t[1])], ['p3', T(PRESETS.p3.t[0], PRESETS.p3.t[1])]]);
+  sel(T('Tipus de disc:', 'Tipo de disco:'), 'tipus', [['sata', T('SATA / USB (sdX)', 'SATA / USB (sdX)')], ['nvme', 'NVMe'], ['virtio', T('Màquina virtual VirtIO (vdX)', 'Máquina virtual VirtIO (vdX)')]]);
+  sel(T('Disc:', 'Disco:'), 'disc', [['0', T('Primer disc', 'Primer disco')], ['1', T('Segon disc', 'Segundo disco')]]);
+})();
+alMostrar['noms-discos'] = pintarNoms;
+
+/* ---------- 4. Esquema Linux ---------- */
+const el = { disc: 512, ram: 16, fw: 'uefi', taula: 'gpt', home: true, hiber: false };
+function calcLinux() {
+  const parts = []; const avisos = [];
+  let resta = el.disc;
+  if (el.fw === 'uefi') {
+    parts.push({ n: 'EFI (ESP)', fs: 'FAT32', mnt: '/boot/efi', s: 1, cls: 'k-efi', per: T('Guarda els gestors d\'arrancada (≈ 512 MiB–1 GiB)', 'Guarda los gestores de arranque (≈ 512 MiB–1 GiB)') });
+    resta -= 1;
+    if (el.taula === 'mbr') avisos.push(T('Amb UEFI s\'usa GPT: Windows ho exigix i és el normal. Canvia l\'esquema a GPT.', 'Con UEFI se usa GPT: Windows lo exige y es lo normal. Cambia el esquema a GPT.'));
+  } else if (el.taula === 'gpt') {
+    parts.push({ n: 'bios_grub', fs: '—', mnt: '—', s: 0.001, cls: 'k-efi', per: T('1 MiB perquè GRUB càpiga amb BIOS + GPT', '1 MiB para que GRUB quepa con BIOS + GPT') });
+  }
+  const swap = el.hiber ? el.ram : (el.ram <= 4 ? 2 : 4);
+  const minArrel = 25;
+  if (resta - swap < minArrel) avisos.push(T('El disc és massa menut: l\'arrel necessita almenys ' + minArrel + ' GB després de la swap.', 'El disco es demasiado pequeño: la raíz necesita al menos ' + minArrel + ' GB tras la swap.'));
+  const lliure = Math.max(resta - swap, 0);
+  let arrel = lliure; let home = 0;
+  if (el.home) {
+    if (lliure >= 40) { arrel = Math.min(60, Math.max(minArrel, Math.round(lliure * 0.3))); home = lliure - arrel; }
+    else avisos.push(T('Amb tan poc espai no val la pena separar /home: tot va a l\'arrel.', 'Con tan poco espacio no merece la pena separar /home: todo va a la raíz.'));
+  }
+  parts.push({ n: T('Arrel', 'Raíz'), fs: 'ext4', mnt: '/', s: arrel, cls: 'k-lin', per: T('El sistema i els programes (mínim recomanat ≈ 25 GB)', 'El sistema y los programas (mínimo recomendado ≈ 25 GB)') });
+  if (home > 0) parts.push({ n: T('Dades d\'usuari', 'Datos de usuario'), fs: 'ext4', mnt: '/home', s: home, cls: 'k-home', per: T('Documents i configuració: reinstal·lar el sistema no els esborra', 'Documentos y configuración: reinstalar el sistema no los borra') });
+  parts.push({ n: 'Swap', fs: 'swap', mnt: '—', s: swap, cls: 'k-swap', per: el.hiber ? T('Com a mínim la RAM, perquè es puga hibernar', 'Como mínimo la RAM, para poder hibernar') : T('Intercanvi quan la RAM s\'ompli (a Ubuntu pot ser un fitxer)', 'Intercambio cuando la RAM se llena (en Ubuntu puede ser un archivo)') });
+  if (parts.length > 4 && el.taula === 'mbr') avisos.push(T('En MBR només hi ha 4 entrades: caldria una estesa amb lògiques.', 'En MBR solo hay 4 entradas: habría que usar una extendida con lógicas.'));
+  return { parts: parts, avisos: avisos };
+}
+function pintarLinux() {
+  const r = calcLinux();
+  const disc = $('#el-disc'); buida(disc);
+  const barra = h('div', { class: 'disc' });
+  r.parts.forEach((p) => {
+    const sg = segment((p.mnt !== '—' ? p.mnt : p.n), p.s < 1 ? 1 : p.s, p.cls);
+    if (p.s < 1) sg.querySelector('.ss').textContent = '1 MiB';
+    barra.append(sg);
+  });
+  disc.append(barra);
+  disc.setAttribute('aria-label', T('Esquema de ' + r.parts.length + ' particions en un disc de ' + el.disc + ' GB', 'Esquema de ' + r.parts.length + ' particiones en un disco de ' + el.disc + ' GB'));
+  const cont = $('#el-taula'); buida(cont);
+  const t = h('table', null, h('thead', null, h('tr', null,
+    [T('Partició', 'Partición'), T('Sistema d\'arxius', 'Sistema de archivos'), T('Punt de muntatge', 'Punto de montaje'), T('Grandària', 'Tamaño'), T('Per a què', 'Para qué')].map((x) => h('th', { scope: 'col', text: x })))));
+  const tb = h('tbody');
+  r.parts.forEach((p) => tb.append(h('tr', null, h('td', { text: p.n }), h('td', { text: p.fs }), h('td', { class: 'mono', text: p.mnt }), h('td', { text: p.s < 1 ? '1 MiB' : fmt(Math.round(p.s * 10) / 10) }), h('td', { text: p.per }))));
+  t.append(tb); cont.append(t);
+  const av = $('#el-avisos');
+  av.className = 'estat' + (r.avisos.length ? ' mal' : ' be');
+  av.textContent = r.avisos.length ? r.avisos.join(' ') : T('Esquema correcte: les particions sumen el disc i compleixen els mínims.', 'Esquema correcto: las particiones suman el disco y cumplen los mínimos.');
+}
+(function initLinux() {
+  const c = $('#el-controls');
+  function num(etq, clau, min, max) {
+    const id = uid('el');
+    const i = h('input', { type: 'number', id: id, min: String(min), max: String(max), value: String(el[clau]), inputmode: 'numeric' });
+    i.addEventListener('input', () => { const v = Number(i.value); if (v >= min && v <= max) { el[clau] = v; pintarLinux(); } });
+    c.append(h('label', { for: id, text: etq }), i);
+  }
+  function sel(etq, clau, opts, ini) {
+    const id = uid('el');
+    const s = h('select', { id: id }, opts.map((o) => h('option', { value: o[0], selected: o[0] === ini, text: o[1] })));
+    s.addEventListener('change', () => { el[clau] = clau === 'ram' ? Number(s.value) : s.value; pintarLinux(); });
+    c.append(h('label', { for: id, text: etq }), s);
+  }
+  function chk(etq, clau) {
+    const id = uid('el');
+    const i = h('input', { type: 'checkbox', id: id, checked: el[clau] });
+    i.addEventListener('change', () => { el[clau] = i.checked; pintarLinux(); });
+    c.append(h('span', { class: 'opt' }, i, h('label', { for: id, text: etq })));
+  }
+  num(T('Disc (GB):', 'Disco (GB):'), 'disc', 20, 4000);
+  sel(T('RAM (GB):', 'RAM (GB):'), 'ram', [['2', '2'], ['4', '4'], ['8', '8'], ['16', '16'], ['32', '32']], '16');
+  sel(T('Firmware:', 'Firmware:'), 'fw', [['uefi', 'UEFI'], ['bios', T('BIOS clàssica', 'BIOS clásica')]], 'uefi');
+  sel(T('Taula:', 'Tabla:'), 'taula', [['gpt', 'GPT'], ['mbr', 'MBR']], 'gpt');
+  chk(T('Separar /home', 'Separar /home'), 'home');
+  chk(T('Vull hibernar', 'Quiero hibernar'), 'hiber');
+  pintarLinux();
+})();
+
+/* ---------- 5. Dual boot ---------- */
+const db = { fw: 'uefi', ordre: 'wl' };
+function eixidaDual() {
+  const e = $('#db-eixida'); buida(e);
+  const uefi = db.fw === 'uefi';
+  let ok; let titol; let menu; let text; let repara;
+  if (db.ordre === 'wl') {
+    ok = true;
+    titol = T('Correcte: Windows primer i Linux després', 'Correcto: Windows primero y Linux después');
+    menu = uefi ? 'GNU GRUB\n> Ubuntu\n  Advanced options for Ubuntu\n  Windows Boot Manager (on /dev/nvme0n1p1)\n  UEFI Firmware Settings'
+      : 'GNU GRUB\n> Ubuntu\n  Advanced options for Ubuntu\n  Windows 10 (on /dev/sda1)';
+    text = uefi ? T('L\'instal·lador de Linux detecta Windows, reutilitza la partició EFI, afig GRUB i el posa en primer lloc en l\'ordre d\'arrancada. GRUB detecta Windows i l\'afig al seu menú.', 'El instalador de Linux detecta Windows, reutiliza la partición EFI, añade GRUB y lo pone en primer lugar en el orden de arranque. GRUB detecta Windows y lo añade a su menú.')
+      : T('L\'instal·lador de Linux escriu GRUB en el MBR del disc. GRUB detecta Windows i l\'afig al menú.', 'El instalador de Linux escribe GRUB en el MBR del disco. GRUB detecta Windows y lo añade al menú.');
+    repara = T('Res a reparar. Qui controla l\'arrancada: GRUB.', 'Nada que reparar. Quién controla el arranque: GRUB.');
+  } else {
+    ok = false;
+    titol = T('Problema: Linux primer i Windows després', 'Problema: Linux primero y Windows después');
+    menu = uefi ? 'Windows Boot Manager\n> Windows 11\n  (Linux no apareix: el seu gestor ja no és el primer)' : 'Starting Windows...\n(GRUB ja no és en el MBR)';
+    text = uefi ? T('L\'instal·lador de Windows no coneix Linux: crea o reutilitza la seua entrada EFI i la posa en primer lloc en l\'ordre d\'arrancada. En encendre, arranca Windows directament i no veus GRUB. Els fitxers de Linux continuen intactes.', 'El instalador de Windows no conoce Linux: crea o reutiliza su entrada EFI y la pone en primer lugar en el orden de arranque. Al encender, arranca Windows directamente y no ves GRUB. Los archivos de Linux siguen intactos.')
+      : T('L\'instal·lador de Windows sobreescriu el codi d\'arrancada del MBR amb el seu i marca la seua partició com a activa. GRUB desapareix, però Linux continua intacte al disc.', 'El instalador de Windows sobrescribe el código de arranque del MBR con el suyo y marca su partición como activa. GRUB desaparece, pero Linux sigue intacto en el disco.');
+    repara = uefi ? T('Reparació: arrenca amb un USB live d\'Ubuntu i restaura GRUB (grub-install i update-grub, o l\'eina Boot-Repair), o tria «ubuntu» en el menú d\'arrancada del firmware (F12/F2).', 'Reparación: arranca con un USB live de Ubuntu y restaura GRUB (grub-install y update-grub, o la herramienta Boot-Repair), o elige «ubuntu» en el menú de arranque del firmware (F12/F2).')
+      : T('Reparació: arrenca amb un USB live d\'Ubuntu i reinstal·la GRUB en el MBR (grub-install i update-grub).', 'Reparación: arranca con un USB live de Ubuntu y reinstala GRUB en el MBR (grub-install y update-grub).');
+  }
+  e.append(h('div', { class: 'estat ' + (ok ? 'be' : 'mal'), role: 'status' }, h('strong', { text: titol })),
+    h('p', { text: text }), h('p', { text: T('Què veus en encendre:', 'Qué ves al encender:') }), h('div', { class: 'menu', text: menu }), h('p', { text: repara }));
+}
+const PASSOS_DUAL = [
+  [1, 'Fer còpia de seguretat de les dades de Windows', 'Hacer copia de seguridad de los datos de Windows'],
+  [2, 'Desactivar l\'inici ràpid i comprovar BitLocker', 'Desactivar el inicio rápido y comprobar BitLocker'],
+  [3, 'Reduir el volum de Windows des de l\'Administrador de discos', 'Reducir el volumen de Windows desde el Administrador de discos'],
+  [3, 'Crear l\'USB arrancable d\'Ubuntu', 'Crear el USB arrancable de Ubuntu'],
+  [4, 'Arrancar l\'USB en el mateix mode (UEFI) i triar «instal·lar al costat de Windows» o el particionat manual en l\'espai lliure', 'Arrancar el USB en el mismo modo (UEFI) y elegir «instalar junto a Windows» o el particionado manual en el espacio libre'],
+  [5, 'Reiniciar, retirar l\'USB i comprovar el menú de GRUB', 'Reiniciar, retirar el USB y comprobar el menú de GRUB'],
+  [6, 'Provar que arrenquen els dos sistemes i actualitzar Ubuntu', 'Probar que arrancan los dos sistemas y actualizar Ubuntu']
+];
+function jocDual() {
+  const c = $('#db-joc'); buida(c);
+  c.append(h('h3', { text: T('Ordena els passos per a afegir Ubuntu a un equip UEFI amb Windows', 'Ordena los pasos para añadir Ubuntu a un equipo UEFI con Windows') }));
+  const triats = [];
+  const estat = h('p', { class: 'estat', role: 'status' });
+  const llista = h('ol', { class: 'ordre' });
+  const cua = h('div', { class: 'cua' });
+  function repinta() {
+    buida(llista); buida(cua);
+    triats.forEach((i) => llista.append(h('li', { text: T(PASSOS_DUAL[i][1], PASSOS_DUAL[i][2]) })));
+    PASSOS_DUAL.forEach((p, i) => {
+      if (triats.indexOf(i) >= 0) return;
+      cua.append(h('button', { type: 'button', text: T(p[1], p[2]), onclick: () => {
+        const restants = PASSOS_DUAL.filter((q, j) => triats.indexOf(j) < 0);
+        const minim = Math.min.apply(null, restants.map((q) => q[0]));
+        if (p[0] === minim) {
+          triats.push(i);
+          if (triats.length === PASSOS_DUAL.length) { estat.className = 'estat be'; estat.textContent = T('Ordre correcte! Cal protegir les dades i fer espai abans d\'instal·lar, i comprovar el resultat al final.', '¡Orden correcto! Hay que proteger los datos y hacer espacio antes de instalar, y comprobar el resultado al final.'); }
+          else { estat.className = 'estat be'; estat.textContent = T('Correcte. Tria el pas següent.', 'Correcto. Elige el paso siguiente.'); }
+        } else {
+          estat.className = 'estat mal';
+          estat.textContent = T('Encara no: abans d\'este pas cal fer-ne un altre (còpia, preparació del disc o del medi).', 'Todavía no: antes de este paso hay que hacer otro (copia, preparación del disco o del medio).');
+        }
+        repinta();
+      } }));
+    });
+  }
+  c.append(llista, cua, estat, h('button', { type: 'button', text: T('Reinicia l\'ordre', 'Reinicia el orden'), onclick: () => { triats.length = 0; estat.className = 'estat'; estat.textContent = ''; repinta(); } }));
+  repinta();
+}
+(function initDual() {
+  const c = $('#db-controls');
+  function radios(etq, clau, opts) {
+    const nm = uid('db');
+    const fs = h('fieldset', null, h('legend', { text: etq }));
+    opts.forEach((o, i) => {
+      const id = uid('r');
+      const r = h('input', { type: 'radio', name: nm, id: id, checked: db[clau] === o[0] });
+      r.addEventListener('change', () => { if (r.checked) { db[clau] = o[0]; eixidaDual(); } });
+      fs.append(h('div', { class: 'opt' }, r, h('label', { for: id, text: o[1] })));
+    });
+    c.append(fs);
+  }
+  radios(T('Firmware', 'Firmware'), 'fw', [['uefi', 'UEFI + GPT'], ['bios', T('BIOS clàssica + MBR', 'BIOS clásica + MBR')]]);
+  radios(T('Ordre d\'instal·lació', 'Orden de instalación'), 'ordre', [['wl', T('Primer Windows, després Linux', 'Primero Windows, después Linux')], ['lw', T('Primer Linux, després Windows', 'Primero Linux, después Windows')]]);
+  eixidaDual();
+  jocDual();
+})();
+
+/* ---------- 6. Cadena d'arrancada ---------- */
+const CAMINS = {
+  'linux-uefi': { t: ['Linux amb UEFI', 'Linux con UEFI'], passos: [
+    ['Firmware: POST', 'Firmware: POST', 'UEFI', 'El firmware inicialitza el maquinari bàsic (CPU, RAM, controladores) i fa el POST.', 'El firmware inicializa el hardware básico (CPU, RAM, controladoras) y hace el POST.', 'Si falla ací no hi ha imatge ni arrancada: és un problema de maquinari (unitat 1).', 'Si falla aquí no hay imagen ni arranque: es un problema de hardware (unidad 1).'],
+    ['Firmware: carrega la partició EFI', 'Firmware: carga la partición EFI', 'UEFI', 'El firmware consulta les entrades d\'arrancada guardades en la NVRAM i carrega el fitxer indicat de la partició EFI (FAT32), per exemple shimx64.efi.', 'El firmware consulta las entradas de arranque guardadas en la NVRAM y carga el archivo indicado de la partición EFI (FAT32), por ejemplo shimx64.efi.', 'Missatge «No bootable device» o torna al menú del firmware: l\'entrada no existix o la partició EFI està malmesa.', 'Mensaje «No bootable device» o vuelve al menú del firmware: la entrada no existe o la partición EFI está dañada.'],
+    ['Gestor: GRUB', 'Gestor: GRUB', 'GRUB', 'shim passa el control a GRUB, que llig grub.cfg i mostra el menú d\'arrancada (o arranca el sistema per defecte).', 'shim pasa el control a GRUB, que lee grub.cfg y muestra el menú de arranque (o arranca el sistema por defecto).', 'Apareix «grub>» o «grub rescue>»: GRUB no troba els seus fitxers (la partició ha canviat o s\'ha esborrat).', 'Aparece «grub>» o «grub rescue>»: GRUB no encuentra sus archivos (la partición ha cambiado o se ha borrado).'],
+    ['Gestor: carrega el nucli', 'Gestor: carga el núcleo', 'GRUB', 'GRUB carrega en RAM el nucli (vmlinuz) i el sistema de fitxers temporal (initramfs) i li passa el control.', 'GRUB carga en RAM el núcleo (vmlinuz) y el sistema de archivos temporal (initramfs) y le pasa el control.', 'Error «file ... not found»: falta el nucli o la ruta de /boot no és vàlida. Es pot triar un nucli anterior en les opcions avançades.', 'Error «file ... not found»: falta el núcleo o la ruta de /boot no es válida. Se puede elegir un núcleo anterior en las opciones avanzadas.'],
+    ['Nucli: maquinari i arrel', 'Núcleo: hardware y raíz', 'Nucli', 'El nucli inicia el maquinari amb els controladors, munta el sistema d\'arxius arrel (/) i llança el primer procés.', 'El núcleo inicia el hardware con los controladores, monta el sistema de archivos raíz (/) y lanza el primer proceso.', '«Kernel panic: Unable to mount root fs»: no troba l\'arrel (UUID incorrecta o falta el controlador del disc).', '«Kernel panic: Unable to mount root fs»: no encuentra la raíz (UUID incorrecta o falta el controlador del disco).'],
+    ['init: systemd (PID 1)', 'init: systemd (PID 1)', 'systemd', 'systemd arranca els servicis i munta les altres particions segons /etc/fstab.', 'systemd arranca los servicios y monta las otras particiones según /etc/fstab.', '«Emergency mode» o un «start job» que no acaba: sol ser una partició d\'/etc/fstab que no existix.', '«Emergency mode» o un «start job» que no acaba: suele ser una partición de /etc/fstab que no existe.'],
+    ['Inici de sessió', 'Inicio de sesión', 'GDM', 'S\'inicia el gestor d\'inici de sessió gràfic i apareix la pantalla per a escriure l\'usuari i la contrasenya.', 'Se inicia el gestor de inicio de sesión gráfico y aparece la pantalla para escribir usuario y contraseña.', 'Pantalla negra o bucle d\'inici de sessió: sol ser un controlador gràfic (vegeu la pàgina 3).', 'Pantalla negra o bucle de inicio de sesión: suele ser un controlador gráfico (véase la página 3).']
+  ] },
+  'windows-uefi': { t: ['Windows amb UEFI', 'Windows con UEFI'], passos: [
+    ['Firmware: POST', 'Firmware: POST', 'UEFI', 'El firmware inicialitza el maquinari bàsic i fa el POST.', 'El firmware inicializa el hardware básico y hace el POST.', 'Sense imatge ni arrancada: problema de maquinari.', 'Sin imagen ni arranque: problema de hardware.'],
+    ['Firmware: carrega la partició EFI', 'Firmware: carga la partición EFI', 'UEFI', 'El firmware carrega des de la partició EFI el Windows Boot Manager (bootmgfw.efi).', 'El firmware carga desde la partición EFI el Windows Boot Manager (bootmgfw.efi).', '«No bootable device»: l\'entrada o la partició EFI no existixen.', '«No bootable device»: la entrada o la partición EFI no existen.'],
+    ['Gestor: Windows Boot Manager', 'Gestor: Windows Boot Manager', 'bootmgr', 'El gestor llig el BCD (dades de configuració d\'arrancada) i mostra el menú si hi ha més d\'un sistema.', 'El gestor lee el BCD (datos de configuración de arranque) y muestra el menú si hay más de un sistema.', '«Boot Configuration Data ... 0xc000000f»: falta o està malmés el BCD. Es repara des de WinRE amb bootrec /rebuildbcd.', '«Boot Configuration Data ... 0xc000000f»: falta o está dañado el BCD. Se repara desde WinRE con bootrec /rebuildbcd.'],
+    ['Carregador: winload', 'Cargador: winload', 'winload', 'winload.efi carrega el nucli de Windows (ntoskrnl.exe) i els controladors d\'arrancada.', 'winload.efi carga el núcleo de Windows (ntoskrnl.exe) y los controladores de arranque.', 'Pantalla blava INACCESSIBLE_BOOT_DEVICE: el nucli no pot accedir al disc (controlador o canvi de mode de la controladora).', 'Pantalla azul INACCESSIBLE_BOOT_DEVICE: el núcleo no puede acceder al disco (controlador o cambio de modo de la controladora).'],
+    ['Nucli i servicis', 'Núcleo y servicios', 'Nucli', 'El nucli s\'inicia, carrega els controladors i arranquen els servicis del sistema.', 'El núcleo se inicia, carga los controladores y arrancan los servicios del sistema.', 'Reinicis en bucle o pantalla blava: una actualització o un controlador nou; es pot recuperar des de WinRE.', 'Reinicios en bucle o pantalla azul: una actualización o un controlador nuevo; se puede recuperar desde WinRE.'],
+    ['Inici de sessió', 'Inicio de sesión', 'Winlogon', 'Winlogon mostra la pantalla d\'inici de sessió.', 'Winlogon muestra la pantalla de inicio de sesión.', 'Pantalla negra: controlador gràfic o perfil d\'usuari.', 'Pantalla negra: controlador gráfico o perfil de usuario.']
+  ] },
+  'linux-bios': { t: ['Linux amb BIOS clàssica i MBR', 'Linux con BIOS clásica y MBR'], passos: [
+    ['Firmware: POST', 'Firmware: POST', 'BIOS', 'La BIOS inicialitza el maquinari i fa el POST.', 'La BIOS inicializa el hardware y hace el POST.', 'Sense imatge ni arrancada: problema de maquinari.', 'Sin imagen ni arranque: problema de hardware.'],
+    ['Firmware: llig el MBR', 'Firmware: lee el MBR', 'BIOS', 'La BIOS tria el disc d\'arrancada i llig el primer sector (512 bytes): 446 de codi, 64 de taula de particions i 2 de signatura.', 'La BIOS elige el disco de arranque y lee el primer sector (512 bytes): 446 de código, 64 de tabla de particiones y 2 de firma.', '«Operating system not found» o «No bootable device»: el MBR no té codi vàlid o el disc no és l\'elegit.', '«Operating system not found» o «No bootable device»: el MBR no tiene código válido o el disco no es el elegido.'],
+    ['Codi del MBR: carrega GRUB', 'Código del MBR: carga GRUB', 'MBR', 'El xicotet codi del MBR carrega la resta de GRUB des de l\'espai que hi ha darrere.', 'El pequeño código del MBR carga el resto de GRUB desde el espacio que hay detrás.', 'Es queda en una línia amb «GRUB» o en «grub rescue>»: falta part de GRUB.', 'Se queda en una línea con «GRUB» o en «grub rescue>»: falta parte de GRUB.'],
+    ['Gestor: GRUB carrega el nucli', 'Gestor: GRUB carga el núcleo', 'GRUB', 'GRUB mostra el menú i carrega el nucli i el initramfs en RAM.', 'GRUB muestra el menú y carga el núcleo y el initramfs en RAM.', 'Error «file ... not found»: falta el nucli o la ruta no és vàlida.', 'Error «file ... not found»: falta el núcleo o la ruta no es válida.'],
+    ['Nucli: maquinari i arrel', 'Núcleo: hardware y raíz', 'Nucli', 'El nucli inicia el maquinari i munta el sistema d\'arxius arrel.', 'El núcleo inicia el hardware y monta el sistema de archivos raíz.', '«Kernel panic: Unable to mount root fs».', '«Kernel panic: Unable to mount root fs».'],
+    ['init: systemd (PID 1)', 'init: systemd (PID 1)', 'systemd', 'systemd arranca els servicis i munta les altres particions.', 'systemd arranca los servicios y monta las otras particiones.', '«Emergency mode»: sol ser una partició d\'/etc/fstab inexistent.', '«Emergency mode»: suele ser una partición de /etc/fstab inexistente.'],
+    ['Inici de sessió', 'Inicio de sesión', 'GDM', 'Apareix la pantalla d\'inici de sessió.', 'Aparece la pantalla de inicio de sesión.', 'Pantalla negra: controlador gràfic.', 'Pantalla negra: controlador gráfico.']
+  ] }
+};
+const cad = { cami: 'linux-uefi', pas: 0 };
+function pintarCadena() {
+  const c = CAMINS[cad.cami];
+  const ol = $('#ca-passos'); buida(ol);
+  c.passos.forEach((p, i) => {
+    const li = h('li', { class: i < cad.pas ? 'fet' : i === cad.pas ? 'ara' : '' , text: (i + 1) + '. ' + T(p[0], p[1]) });
+    if (i === cad.pas) li.setAttribute('aria-current', 'step');
+    ol.append(li);
+  });
+  const p = c.passos[cad.pas];
+  const d = $('#ca-detall'); buida(d);
+  d.append(h('div', { class: 'detall' },
+    h('h3', { text: T('Pas ' + (cad.pas + 1) + ' de ' + c.passos.length + ' · ', 'Paso ' + (cad.pas + 1) + ' de ' + c.passos.length + ' · ') + T(p[0], p[1]) }),
+    h('p', null, h('strong', { text: T('Qui actua: ', 'Quién actúa: ') }), h('code', { text: p[2] })),
+    h('p', { text: T(p[3], p[4]) }),
+    h('div', { class: 'fallada' }, h('strong', { text: T('Si falla ací: ', 'Si falla aquí: ') }), T(p[5], p[6]))));
+  $('#ca-ant').disabled = cad.pas === 0;
+  $('#ca-seg').disabled = cad.pas === c.passos.length - 1;
+}
+(function initCadena() {
+  const c = $('#ca-controls');
+  const id = uid('ca');
+  const s = h('select', { id: id }, Object.keys(CAMINS).map((k) => h('option', { value: k, text: T(CAMINS[k].t[0], CAMINS[k].t[1]) })));
+  s.addEventListener('change', () => { cad.cami = s.value; cad.pas = 0; pintarCadena(); });
+  c.append(h('label', { for: id, text: T('Camí:', 'Camino:') }), s,
+    h('button', { type: 'button', id: 'ca-ant', text: T('← Pas anterior', '← Paso anterior'), onclick: () => { if (cad.pas > 0) { cad.pas -= 1; pintarCadena(); } } }),
+    h('button', { type: 'button', id: 'ca-seg', class: 'primario', text: T('Pas següent →', 'Paso siguiente →'), onclick: () => { if (cad.pas < CAMINS[cad.cami].passos.length - 1) { cad.pas += 1; pintarCadena(); } } }),
+    h('button', { type: 'button', text: T('Torna a l\'inici', 'Vuelve al inicio'), onclick: () => { cad.pas = 0; pintarCadena(); } }));
+  pintarCadena();
+})();
+
+/* ---------- 7. Pràctica ---------- */
+const pr = { ex: null, resposta: null, fet: false, aciertos: Number(Lab.leer('aciertos')) || 0, intents: Number(Lab.leer('intents')) || 0 };
+function barreja(a) { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = b[i]; b[i] = b[j]; b[j] = t; } return b; }
+function aleatori(a) { return a[Math.floor(Math.random() * a.length)]; }
+function exNom() {
+  const d = aleatori([1, 2, 3, 4]); const k = aleatori([1, 2, 3, 4]);
+  const lletra = String.fromCharCode(96 + d);
+  return { tipus: 'text',
+    q: T('Un disc MBR té 2 primàries i una estesa amb lògiques. Quin nom té en Linux la lògica número ' + k + ' del disc SATA número ' + d + '? (escriu la ruta completa)', 'Un disco MBR tiene 2 primarias y una extendida con lógicas. ¿Qué nombre tiene en Linux la lógica número ' + k + ' del disco SATA número ' + d + '? (escribe la ruta completa)'),
+    ok: ['/dev/sd' + lletra + (4 + k)],
+    exp: T('El disc ' + d + ' és sd' + lletra + '. En MBR les lògiques comencen sempre pel 5 (1 a 4 són primàries i estesa): la lògica ' + k + ' és la ' + (4 + k) + '. Resposta: /dev/sd' + lletra + (4 + k) + '.', 'El disco ' + d + ' es sd' + lletra + '. En MBR las lógicas empiezan siempre por el 5 (1 a 4 son primarias y extendida): la lógica ' + k + ' es la ' + (4 + k) + '. Respuesta: /dev/sd' + lletra + (4 + k) + '.') };
+}
+function exEsquema() {
+  const cas = aleatori([
+    { gb: 500, fw: 'UEFI', so: 'Windows 11', r: 'GPT' }, { gb: 4000, fw: 'UEFI', so: 'Ubuntu', r: 'GPT' },
+    { gb: 1000, fw: 'BIOS', so: 'Windows 10', r: 'MBR' }, { gb: 3000, fw: 'UEFI', so: 'Windows 10', r: 'GPT' }, { gb: 500, fw: 'BIOS', so: 'Windows 10', r: 'MBR' }]);
+  const exp = cas.r === 'GPT'
+    ? T('Amb UEFI s\'usa GPT' + (cas.gb > 2199 ? ', i a més el disc passa de 2 TiB, que l\'MBR no pot adreçar.' : '.'), 'Con UEFI se usa GPT' + (cas.gb > 2199 ? ', y además el disco pasa de 2 TiB, que el MBR no puede direccionar.' : '.'))
+    : T('Equip amb BIOS clàssica i disc de fins a 2 TiB: Windows s\'instal·la en MBR (no pot arrancar des de GPT amb BIOS).', 'Equipo con BIOS clásica y disco de hasta 2 TiB: Windows se instala en MBR (no puede arrancar desde GPT con BIOS).');
+  return { tipus: 'un',
+    q: T('Equip amb firmware ' + cas.fw + ', disc de ' + fmt(cas.gb) + ' i ' + cas.so + '. Quin esquema de particionat uses?', 'Equipo con firmware ' + cas.fw + ', disco de ' + fmt(cas.gb) + ' y ' + cas.so + '. ¿Qué esquema de particionado usas?'),
+    opts: [{ t: 'MBR', ok: cas.r === 'MBR' }, { t: 'GPT', ok: cas.r === 'GPT' }], exp: exp };
+}
+const CASOS_PR = [
+  ['Un pendrive de 64 GB per a vídeos de 6 GB entre Windows, Linux i un televisor', 'Un pendrive de 64 GB para vídeos de 6 GB entre Windows, Linux y un televisor', 'exFAT', 'FAT32 limita els arxius a 4 GiB i el televisor no llig ext4 (i NTFS sovint només en lectura): exFAT és el compromís.', 'FAT32 limita los archivos a 4 GiB y el televisor no lee ext4 (y NTFS a menudo solo en lectura): exFAT es el compromiso.'],
+  ['El disc on s\'instal·la Windows 11', 'El disco donde se instala Windows 11', 'NTFS', 'Windows s\'instal·la en NTFS (permisos, journaling...).', 'Windows se instala en NTFS (permisos, journaling...).'],
+  ['L\'arrel d\'un servidor Ubuntu', 'La raíz de un servidor Ubuntu', 'ext4', 'ext4 és el sistema natiu de Linux, amb journaling i permisos UGO.', 'ext4 es el sistema nativo de Linux, con journaling y permisos UGO.'],
+  ['La partició EFI d\'un equip UEFI', 'La partición EFI de un equipo UEFI', 'FAT32', 'El firmware UEFI només garanteix que llig FAT32.', 'El firmware UEFI solo garantiza que lee FAT32.'],
+  ['Un disc extern de 2 TB per a Windows i macOS amb arxius de 10 GB', 'Un disco externo de 2 TB para Windows y macOS con archivos de 10 GB', 'exFAT', 'Admet arxius grans i el llegixen i escriuen Windows i macOS; FAT32 limita a 4 GiB i NTFS és només lectura en macOS.', 'Admite archivos grandes y lo leen y escriben Windows y macOS; FAT32 limita a 4 GiB y NTFS es solo lectura en macOS.'],
+  ['Un disc de dades només per a Linux amb permisos per usuari', 'Un disco de datos solo para Linux con permisos por usuario', 'ext4', 'Té permisos propietari/grup/altres i journaling; no calen altres sistemes.', 'Tiene permisos propietario/grupo/otros y journaling; no hacen falta otros sistemas.']
+];
+function exFs() {
+  const c = aleatori(CASOS_PR);
+  return { tipus: 'un', q: T('Quin sistema d\'arxius tries per a: ' + c[0] + '?', '¿Qué sistema de archivos eliges para: ' + c[1] + '?'),
+    opts: FSN.map((n) => ({ t: n, ok: n === c[2] })), exp: T(c[3], c[4]) };
+}
+const BANC = [
+  ['Un disc de 3 TB amb MBR. Quant d\'espai es pot usar com a màxim?', 'Un disco de 3 TB con MBR. ¿Cuánto espacio se puede usar como máximo?', ['≈ 2,2 TB (2 TiB)', '3 TB', '1 TB', '4 particions de 750 GB'], 0, 'L\'MBR adreça amb 32 bits: 2 TiB amb sectors de 512 bytes. La resta és inutilitzable.', 'El MBR direcciona con 32 bits: 2 TiB con sectores de 512 bytes. El resto es inutilizable.'],
+  ['En MBR vols una partició estesa. Quantes primàries pots tindre com a màxim?', 'En MBR quieres una partición extendida. ¿Cuántas primarias puedes tener como máximo?', ['3', '4', '2', '128'], 0, 'L\'MBR té 4 entrades: 3 primàries + 1 estesa.', 'El MBR tiene 4 entradas: 3 primarias + 1 extendida.'],
+  ['Has instal·lat Ubuntu i després Windows, i només arranca Windows. Què ha passat?', 'Has instalado Ubuntu y después Windows, y solo arranca Windows. ¿Qué ha pasado?', ['Windows ha posat el seu gestor en primer lloc i Linux continua intacte', 'Windows ha esborrat Ubuntu', 'Ubuntu no és compatible amb UEFI', 'La partició EFI és de NTFS'], 0, 'Windows no coneix Linux: posa el seu gestor primer. Les dades de Linux continuen i es repara reinstal·lant GRUB.', 'Windows no conoce Linux: pone su gestor primero. Los datos de Linux siguen y se repara reinstalando GRUB.'],
+  ['On guarda GPT la còpia de seguretat de la taula de particions?', '¿Dónde guarda GPT la copia de seguridad de la tabla de particiones?', ['Al final del disc', 'Al principi del disc', 'En la RAM', 'No en guarda'], 0, 'GPT guarda una còpia al final del disc, per això resistix millor la corrupció que l\'MBR.', 'GPT guarda una copia al final del disco, por eso resiste mejor la corrupción que el MBR.'],
+  ['En un Linux amb UEFI, qui carrega el nucli?', 'En un Linux con UEFI, ¿quién carga el núcleo?', ['El gestor d\'arrancada (GRUB)', 'El firmware UEFI directament', 'systemd', 'L\'Administrador de discos'], 0, 'El firmware carrega el gestor des de la partició EFI i este carrega el nucli.', 'El firmware carga el gestor desde la partición EFI y este carga el núcleo.'],
+  ['Per a què serveix separar /home?', '¿Para qué sirve separar /home?', ['Reinstal·lar el sistema sense perdre les dades d\'usuari', 'Que Windows el llegisca', 'Fer l\'equip més ràpid', 'Evitar la swap'], 0, 'Si només es formata l\'arrel, /home conserva documents i configuració.', 'Si solo se formatea la raíz, /home conserva documentos y configuración.'],
+  ['Quina ordre de Linux mostra l\'arbre de discos i particions?', '¿Qué orden de Linux muestra el árbol de discos y particiones?', ['lsblk', 'lspci', 'apt list', 'sha256sum'], 0, 'lsblk llista dispositius de bloc i les seues particions; lspci mostra el maquinari PCI.', 'lsblk lista dispositivos de bloque y sus particiones; lspci muestra el hardware PCI.'],
+  ['Al arrancar apareix «grub rescue>». Què indica?', 'Al arrancar aparece «grub rescue>». ¿Qué indica?', ['GRUB no troba els seus fitxers', 'La RAM està espatllada', 'Windows s\'ha actualitzat', 'La swap és massa gran'], 0, 'Sol passar quan canvia o s\'esborra la partició on GRUB té els fitxers; es repara des d\'un USB live.', 'Suele pasar cuando cambia o se borra la partición donde GRUB tiene los archivos; se repara desde un USB live.'],
+  ['Què guarda la partició EFI?', '¿Qué guarda la partición EFI?', ['Els gestors d\'arrancada que carrega el firmware', 'Els documents de l\'usuari', 'La memòria d\'intercanvi', 'Les còpies de seguretat'], 0, 'És una partició FAT32 amb els fitxers .efi dels gestors (GRUB, Windows Boot Manager).', 'Es una partición FAT32 con los archivos .efi de los gestores (GRUB, Windows Boot Manager).'],
+  ['Windows 10 en un equip amb BIOS clàssica: quin esquema usa en el disc d\'arrancada?', 'Windows 10 en un equipo con BIOS clásica: ¿qué esquema usa en el disco de arranque?', ['MBR', 'GPT', 'Cap', 'Els dos alhora'], 0, 'Amb BIOS clàssica Windows arranca des de MBR; GPT va amb UEFI.', 'Con BIOS clásica Windows arranca desde MBR; GPT va con UEFI.'],
+  ['Quantes particions lògiques pots crear dins de l\'estesa?', '¿Cuántas particiones lógicas puedes crear dentro de la extendida?', ['Tantes com càpiguen en l\'espai de l\'estesa', 'Només 1', 'Només 4', 'Cap'], 0, 'No hi ha un límit fix d\'entrades: la limitació és l\'espai de l\'estesa.', 'No hay un límite fijo de entradas: la limitación es el espacio de la extendida.']
+];
+function exBanc() {
+  const b = aleatori(BANC);
+  return { tipus: 'un', q: T(b[0], b[1]), opts: b[2].map((t, i) => ({ t: T(t, t), ok: i === b[3] })), exp: T(b[4], b[5]) };
+}
+const DISSENYS = [
+  { q: ['Equip UEFI amb disc de 1 TB. Vols Windows 11 i Ubuntu, amb /home separat. Marca les particions que cal crear (les opcionals no compten).', 'Equipo UEFI con disco de 1 TB. Quieres Windows 11 y Ubuntu, con /home separado. Marca las particiones que hay que crear (las opcionales no cuentan).'], o: [
+    ['Partició EFI (FAT32, ≈ 512 MiB), compartida', 'Partición EFI (FAT32, ≈ 512 MiB), compartida', 'n', 'Cal una EFI: els dos gestors hi viuen; no cal una per sistema.', 'Hace falta una EFI: los dos gestores viven en ella; no hace falta una por sistema.'],
+    ['Partició de Windows (NTFS, C:)', 'Partición de Windows (NTFS, C:)', 'n', 'Windows necessita la seua partició NTFS.', 'Windows necesita su partición NTFS.'],
+    ['Arrel d\'Ubuntu (ext4, /)', 'Raíz de Ubuntu (ext4, /)', 'n', 'Ubuntu necessita una arrel.', 'Ubuntu necesita una raíz.'],
+    ['/home (ext4)', '/home (ext4)', 'n', 'L\'enunciat demana separar /home.', 'El enunciado pide separar /home.'],
+    ['Swap (partició o fitxer)', 'Swap (partición o archivo)', 'o', 'Opcional: Ubuntu pot usar un fitxer de swap.', 'Opcional: Ubuntu puede usar un archivo de swap.'],
+    ['Partició estesa amb lògiques', 'Partición extendida con lógicas', 'x', 'En GPT no hi ha esteses ni lògiques.', 'En GPT no hay extendidas ni lógicas.'],
+    ['Partició bios_grub', 'Partición bios_grub', 'x', 'Només cal amb BIOS + GPT, no amb UEFI.', 'Solo hace falta con BIOS + GPT, no con UEFI.'],
+    ['Arrel d\'Ubuntu en NTFS', 'Raíz de Ubuntu en NTFS', 'x', 'Linux no s\'instal·la en NTFS: l\'arrel és ext4.', 'Linux no se instala en NTFS: la raíz es ext4.']] },
+  { q: ['Equip amb BIOS clàssica i disc de 500 GB. Vols Windows 10 i Ubuntu (sense /home separat). Marca les particions o decisions correctes.', 'Equipo con BIOS clásica y disco de 500 GB. Quieres Windows 10 y Ubuntu (sin /home separado). Marca las particiones o decisiones correctas.'], o: [
+    ['Primària NTFS per a Windows (C:)', 'Primaria NTFS para Windows (C:)', 'n', 'Windows s\'instal·la en una primària NTFS.', 'Windows se instala en una primaria NTFS.'],
+    ['Partició per a l\'arrel d\'Ubuntu (ext4, primària o lògica)', 'Partición para la raíz de Ubuntu (ext4, primaria o lógica)', 'n', 'Ubuntu necessita arrel; pot ser primària o lògica.', 'Ubuntu necesita raíz; puede ser primaria o lógica.'],
+    ['Swap', 'Swap', 'o', 'Opcional: partició o fitxer.', 'Opcional: partición o archivo.'],
+    ['Una partició EFI', 'Una partición EFI', 'x', 'Amb BIOS clàssica no hi ha partició EFI.', 'Con BIOS clásica no hay partición EFI.'],
+    ['Convertir el disc a GPT', 'Convertir el disco a GPT', 'x', 'Windows no arranca des de GPT amb BIOS clàssica.', 'Windows no arranca desde GPT con BIOS clásica.'],
+    ['Cinc particions primàries', 'Cinco particiones primarias', 'x', 'L\'MBR només té 4 entrades.', 'El MBR solo tiene 4 entradas.']] },
+  { q: ['Equip UEFI amb disc de 4 TB només per a Ubuntu, amb /home separat. Marca les particions que cal crear.', 'Equipo UEFI con disco de 4 TB solo para Ubuntu, con /home separado. Marca las particiones que hay que crear.'], o: [
+    ['Partició EFI (FAT32)', 'Partición EFI (FAT32)', 'n', 'El firmware UEFI necessita la partició EFI per al gestor.', 'El firmware UEFI necesita la partición EFI para el gestor.'],
+    ['Arrel (ext4, /)', 'Raíz (ext4, /)', 'n', 'Imprescindible.', 'Imprescindible.'],
+    ['/home (ext4)', '/home (ext4)', 'n', 'L\'enunciat demana separar /home.', 'El enunciado pide separar /home.'],
+    ['Swap', 'Swap', 'o', 'Opcional.', 'Opcional.'],
+    ['Taula MBR', 'Tabla MBR', 'x', 'El disc passa de 2 TiB: l\'MBR no el pot adreçar sencer. Cal GPT.', 'El disco pasa de 2 TiB: el MBR no puede direccionarlo entero. Hace falta GPT.'],
+    ['Partició estesa', 'Partición extendida', 'x', 'No existix en GPT.', 'No existe en GPT.'],
+    ['bios_grub', 'bios_grub', 'x', 'Només amb BIOS + GPT.', 'Solo con BIOS + GPT.']] }
+];
+function exDisseny() {
+  const d = aleatori(DISSENYS);
+  return { tipus: 'multi', q: T(d.q[0], d.q[1]), opts: barreja(d.o).map((o) => ({ t: T(o[0], o[1]), rol: o[2], why: T(o[3], o[4]) })), exp: '' };
+}
+function nouEx() {
+  pr.ex = aleatori([exNom, exEsquema, exFs, exBanc, exBanc, exDisseny, exDisseny])();
+  if (pr.ex.tipus === 'un' && pr.ex.opts.length > 2) pr.ex.opts = barreja(pr.ex.opts);
+  pr.fet = false;
+  pintarEx();
+}
+function pintarMarcador() {
+  $('#pr-marcador').textContent = T('Encerts: ', 'Aciertos: ') + pr.aciertos + ' / ' + pr.intents;
+}
+function pintarEx() {
+  const ex = pr.ex;
+  $('#pr-enunciat').textContent = ex.q;
+  const op = $('#pr-opcions'); buida(op);
+  const nm = uid('pr');
+  if (ex.tipus === 'text') {
+    const id = uid('t');
+    op.append(h('label', { for: id, text: T('La teua resposta:', 'Tu respuesta:') }), h('input', { type: 'text', id: id, autocomplete: 'off', spellcheck: 'false' }));
+  } else {
+    ex.opts.forEach((o, i) => {
+      const id = uid('o');
+      op.append(h('div', { class: 'opt' }, h('input', { type: ex.tipus === 'multi' ? 'checkbox' : 'radio', name: nm, id: id, 'data-i': String(i) }), h('label', { for: id, text: o.t })));
+    });
+  }
+  const b = $('#pr-botons'); buida(b);
+  b.append(h('button', { type: 'submit', class: 'primario', text: T('Comprova', 'Comprueba') }), h('button', { type: 'button', text: T('Un altre exercici', 'Otro ejercicio'), onclick: () => { $('#pr-correccio').className = 'estat'; $('#pr-correccio').textContent = ''; nouEx(); } }));
+  const cor = $('#pr-correccio'); cor.className = 'estat'; cor.textContent = '';
+  pintarMarcador();
+}
+$('#pr-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const ex = pr.ex; if (!ex) return;
+  const cor = $('#pr-correccio');
+  let bo = false; let msg = '';
+  if (ex.tipus === 'text') {
+    const v = ($('#pr-opcions input[type=text]').value || '').trim().toLowerCase().replace(/\s+/g, '');
+    if (!v) { cor.className = 'estat mal'; cor.textContent = T('Escriu una resposta.', 'Escribe una respuesta.'); return; }
+    bo = ex.ok.indexOf(v) >= 0; msg = ex.exp;
+  } else if (ex.tipus === 'un') {
+    const marc = $('#pr-opcions input:checked');
+    if (!marc) { cor.className = 'estat mal'; cor.textContent = T('Tria una opció.', 'Elige una opción.'); return; }
+    bo = ex.opts[Number(marc.getAttribute('data-i'))].ok; msg = ex.exp;
+  } else {
+    const dolents = [];
+    ex.opts.forEach((o, i) => {
+      const cb = $('#pr-opcions input[data-i="' + i + '"]');
+      if (o.rol === 'o') return;
+      if (cb.checked !== (o.rol === 'n')) dolents.push((cb.checked ? T('Sobra: ', 'Sobra: ') : T('Falta: ', 'Falta: ')) + o.t + ' → ' + o.why);
+    });
+    bo = dolents.length === 0;
+    msg = bo ? T('Totes les particions necessàries i cap de sobrer. Les opcionals no compten.', 'Todas las particiones necesarias y ninguna de sobra. Las opcionales no cuentan.') : dolents.join(' ');
+  }
+  if (!pr.fet) { pr.intents += 1; if (bo) pr.aciertos += 1; pr.fet = true; Lab.guardar('aciertos', pr.aciertos); Lab.guardar('intents', pr.intents); }
+  cor.className = 'estat ' + (bo ? 'be' : 'mal');
+  cor.textContent = (bo ? T('Correcte! ', '¡Correcto! ') : T('No exactament. ', 'No exactamente. ')) + msg;
+  pintarMarcador();
+});
+nouEx();
+
+/* ---------- Inici ---------- */
+mostrar(location.hash.slice(1) || Lab.leer('pestana'));
+})();
+</script>
+</body>
+</html>
