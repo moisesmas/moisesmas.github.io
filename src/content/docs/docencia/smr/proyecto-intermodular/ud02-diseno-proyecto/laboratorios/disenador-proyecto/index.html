@@ -54,7 +54,7 @@ main{max-width:66rem;margin:0 auto;padding:1rem}
 .ayuda{color:var(--muted);font-size:.85rem}
 input,select,textarea{width:100%;border:1px solid var(--muted);border-radius:.4rem;padding:.35rem .6rem;background:var(--surface)}
 input[type="checkbox"],input[type="radio"]{width:auto}
-input[type="range"]{padding:0}
+input[type="range"]{padding:0;height:1.6rem;min-width:8rem;border:0;background:transparent;accent-color:var(--accent)}
 textarea{resize:vertical;min-height:4rem}
 .fila{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin:.5rem 0}
 .primario{background:var(--pcb);border-color:var(--pcb);color:#fff}
@@ -102,8 +102,6 @@ tfoot td,tr.total td{font-weight:700;background:var(--surface2)}
 pre{white-space:pre-wrap;background:var(--surface2);padding:.75rem;border-radius:.4rem;max-height:22rem;overflow:auto;font-size:.82rem}
 details.datos{margin:.75rem 0;border:1px solid var(--line);border-radius:.5rem;padding:.4rem .8rem;background:var(--surface)}
 details.datos summary{cursor:pointer;font-weight:700}
-.rango{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem}
-.rango input[type="range"]{flex:1 1 12rem;width:auto}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -724,7 +722,7 @@ function renderIdeas() {
       if (mn !== null) salida.append(el('p', null, 'La idea «' + (r[0].idea.nombre || '(sin nombre)') + '» sigue en cabeza (o empata) mientras el peso de este criterio esté entre el ' + mn + ' % y el ' + mx + ' %. Los demás pesos se reparten en la misma proporción.'));
     }
     deslizador.addEventListener('input', simular);
-    sens.append(el('div', { class: 'rango' }, campo('Criterio', selC), el('div', { class: 'campo' }, el('label', { for: 'sens-peso' }, 'Nuevo peso: ', val), deslizador)), salida);
+    sens.append(el('div', { class: 'campos' }, campo('Criterio', selC), el('div', { class: 'campo' }, el('label', { for: 'sens-peso' }, 'Nuevo peso: ', val), deslizador)), salida);
     deslizador.id = 'sens-peso';
     simular();
   }
