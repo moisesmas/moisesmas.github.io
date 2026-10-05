@@ -1,0 +1,1699 @@
+<!doctype html>
+<html lang="ca-valencia" data-lab="tracador-de-scripts" data-idioma-original="ca-valencia">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="/comun/lab.js"></script>
+<title>Traçador d'scripts</title>
+<meta name="description" content="Com s'executa un script de Bash o de PowerShell: shebang, permisos i política d'execució, cometes i expansió, condicions, traçador pas a pas de variables i codis d'eixida, paràmetres i read, errors típics i equivalències Bash-PowerShell.">
+<meta name="keywords" content="Bash, PowerShell, script, shebang, variables, cometes, codi d'eixida, condicionals, bucles, paràmetres, cron">
+<meta name="lab:titulo:es" content="Trazador de scripts">
+<meta name="lab:descripcion:es" content="Cómo se ejecuta un script de Bash o de PowerShell: shebang, permisos y política de ejecución, comillas y expansión, condiciones, trazador paso a paso de variables y códigos de salida, parámetros y read, errores típicos y equivalencias Bash-PowerShell.">
+<meta name="lab:etiquetas:es" content="Bash, PowerShell, script, shebang, variables, comillas, código de salida, condicionales, bucles, parámetros, cron">
+<link rel="icon" href="/comun/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/comun/fuentes.css">
+<style>
+html,body{margin:0}body{padding-top:env(safe-area-inset-top,0px)}[hidden]{display:none!important}
+:root{
+  --bg:#f2f4ef;--surface:#ffffff;--surface2:#e9ede6;--ink:#16201b;--muted:#56655d;--line:#d3dbd4;
+  --accent:#b86e00;--accent-soft:#fbeed8;--pcb:#1f5244;
+  --good:#1f7a36;--bad:#c4372c;--bad-soft:#fbe4e1;--good-soft:#dff2e3;
+  --term:#10201a;--term-ink:#d8f0e2;--term-err:#ffb4a8;--term-dim:#8fb3a0;
+  --f-display:"Chakra Petch","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1411;--surface:#161f1b;--surface2:#1d2823;--ink:#e4ebe6;--muted:#95a69d;--line:#2b3832;
+  --accent:#f3aa3c;--accent-soft:#33260f;--pcb:#1a463a;
+  --good:#5bd07a;--bad:#ff7b6e;--bad-soft:#3a1a17;--good-soft:#143020;
+  --term:#0a110e;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1411;--surface:#161f1b;--surface2:#1d2823;--ink:#e4ebe6;--muted:#95a69d;--line:#2b3832;
+  --accent:#f3aa3c;--accent-soft:#33260f;--pcb:#1a463a;
+  --good:#5bd07a;--bad:#ff7b6e;--bad-soft:#3a1a17;--good-soft:#143020;
+  --term:#0a110e;color-scheme:dark}
+html{font-size:16px}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1rem;line-height:1.55}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:1.3rem;letter-spacing:.02em}
+h2{font-size:1.65rem;font-weight:700}
+h3{font-size:1.1rem;font-weight:600}
+p{margin:0;max-width:70ch}
+code,.mono,pre{font-family:var(--f-mono)}
+pre{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible,[role="tabpanel"]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+.top-inner{max-width:1180px;margin:0 auto;padding:.8rem 16px .5rem;display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.brand a.home{font:600 .8rem var(--f-mono);color:var(--muted);text-decoration:none;border:1px solid var(--muted);border-radius:6px;padding:.2rem .5rem}
+.brand a.home:hover{color:var(--ink)}
+.prompt{font:700 1rem var(--f-mono);background:var(--pcb);color:#fff;border-radius:6px;padding:.1rem .5rem}
+.zoom{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;font-size:.8rem;color:var(--muted)}
+.zoom button{font:600 .85rem var(--f-mono);border:1px solid var(--muted);background:var(--surface);color:var(--ink);border-radius:6px;padding:.2rem .55rem;cursor:pointer}
+.zoom .idiomas{display:inline-flex;margin-left:.5rem;border:1px solid var(--muted);border-radius:99px;overflow:hidden}
+.zoom .idiomas button{border:0;border-radius:0;background:transparent;color:var(--muted);font:600 .75rem var(--f-mono);padding:.25rem .6rem}
+.zoom .idiomas button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+nav.tabs{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:.25rem;overflow-x:auto;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;font:600 .95rem var(--f-display);letter-spacing:.02em;background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);padding:.55rem .75rem;cursor:pointer;white-space:nowrap}
+nav.tabs button .n{font-family:var(--f-mono);font-size:.75rem;opacity:.8;margin-right:.35rem}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs button:hover{color:var(--ink)}
+
+main{max-width:1180px;margin:0 auto;padding-block:1.6rem 4rem;padding-inline:16px}
+section.tab{display:grid;gap:1.3rem}
+.intro{display:grid;gap:.6rem}
+.eyebrow{font:600 .75rem var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.lead{font-size:1.08rem;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:1.2rem}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.1rem;display:grid;gap:.8rem;align-content:start;min-width:0}
+.note{background:var(--surface2);border-radius:8px;padding:.7rem .9rem;font-size:.95rem}
+.key{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;padding:.7rem .9rem}
+.row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+.fld{display:grid;gap:.25rem;font-size:.85rem;color:var(--muted);min-width:0;max-width:100%}
+.chk{display:flex;gap:.5rem;align-items:center;font-size:.95rem}
+input[type=text],input[type=number],select,textarea{font:600 1rem var(--f-mono);background:var(--bg);color:var(--ink);border:1px solid var(--muted);border-radius:7px;padding:.4rem .55rem;min-width:0;max-width:100%}
+textarea{width:100%;resize:vertical}
+input[type=checkbox]{accent-color:var(--accent);width:1.1rem;height:1.1rem}
+.btn{font:600 .92rem var(--f-display);letter-spacing:.02em;border:1px solid var(--muted);background:var(--surface2);color:var(--ink);border-radius:7px;padding:.4rem .85rem;cursor:pointer}
+.btn.primary{background:var(--pcb);border-color:var(--pcb);color:#fff}
+.btn[aria-pressed="true"]{background:var(--accent-soft);border:2px solid var(--accent)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.seg{display:inline-flex;flex-wrap:wrap;gap:.3rem}
+.scroll{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse}
+table.t{width:100%;font-size:.92rem}
+table.t th,table.t td{padding:.35rem .55rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{font:600 .75rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+table.t td.mono,table.t td code{font-size:.88rem;overflow-wrap:anywhere}
+.fb{font:600 1rem var(--f-display);min-height:1.4em}
+.fb.ok{color:var(--good)}.fb.ko{color:var(--bad)}
+.pill{display:inline-block;font:600 .75rem var(--f-mono);padding:.1rem .5rem;border-radius:99px;background:var(--surface2);color:var(--ink)}
+.pill.ok{background:var(--good-soft);color:var(--good)}.pill.ko{background:var(--bad-soft);color:var(--bad)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Terminal y codi */
+.term{background:var(--term);color:var(--term-ink);border-radius:8px;padding:.7rem .9rem;font:.9rem/1.5 var(--f-mono);min-height:4.2rem;overflow-x:auto}
+.term .l{white-space:pre-wrap;overflow-wrap:anywhere}
+.term .cm{color:var(--term-dim)}
+.term .er{color:var(--term-err)}
+.term .er::before{content:"stderr · ";opacity:.7}
+.code{background:var(--surface2);border-radius:8px;padding:.7rem .9rem;font-size:.88rem;overflow-x:auto;white-space:pre}
+.code.small{font-size:.82rem}
+.tag{font:600 .72rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.exp{background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.6rem .8rem;font-size:.95rem;min-height:3rem}
+.exp.good{background:var(--good-soft);border-color:var(--good)}
+.exp.bad{background:var(--bad-soft);border-color:var(--bad)}
+
+/* Script amb línies */
+.src{background:var(--surface2);border-radius:8px;padding:.3rem 0;font:.88rem/1.5 var(--f-mono);overflow-x:auto}
+.src .sl{display:grid;grid-template-columns:2.4rem 1fr;border-left:4px solid transparent;padding:0 .6rem 0 0;white-space:pre}
+.src .sl .no{color:var(--muted);text-align:right;padding-right:.6rem;user-select:none}
+.src .sl.cur{background:var(--accent-soft);border-left-color:var(--accent)}
+.src button.sl{width:100%;text-align:left;background:none;border:0;border-left:4px solid transparent;border-radius:0;cursor:pointer;color:inherit;font:inherit}
+.src button.sl:hover{background:var(--accent-soft)}
+.src .sl.bad{background:var(--bad-soft);border-left-color:var(--bad)}
+.src .sl.good{background:var(--good-soft);border-left-color:var(--good)}
+
+/* Traçador */
+.vars{width:100%;font-size:.9rem}
+.vars td.nm{font-family:var(--f-mono);font-weight:700;width:34%}
+.vars td.vl{font-family:var(--f-mono);overflow-wrap:anywhere}
+.vars tr.chg td{background:var(--accent-soft)}
+.vars tr.sp td.nm{color:var(--muted);font-weight:600}
+.stepbar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.trace-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:1.2rem;align-items:start}
+@media (max-width:820px){.trace-grid{grid-template-columns:minmax(0,1fr)}}
+.words{display:flex;flex-wrap:wrap;gap:.4rem}
+.w{font:600 .92rem var(--f-mono);background:var(--surface2);border:2px solid var(--line);border-radius:7px;padding:.15rem .5rem;overflow-wrap:anywhere}
+.w.cmd{border-color:var(--pcb)}
+.w.v{border-color:var(--accent);background:var(--accent-soft)}
+.opts{display:flex;flex-wrap:wrap;gap:.4rem}
+.bx{background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:.5rem .7rem}
+
+/* Pràctica */
+.quiz{display:grid;gap:.9rem}
+.q-prompt{font:600 1.1rem var(--f-display);max-width:70ch}
+.score{display:flex;gap:1.2rem;font:600 1rem var(--f-mono)}
+.sol{font-size:.95rem;background:var(--surface2);border-radius:8px;padding:.7rem .9rem;overflow-wrap:anywhere}
+.optb{font:600 .95rem var(--f-mono);text-align:left;white-space:pre-wrap;overflow-wrap:anywhere}
+
+@media (max-width:560px){h2{font-size:1.35rem}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<script type="application/json" id="lab-textos">
+{
+  "es": {
+    "volver-a-la-unidad": "Volver a la unidad",
+    "tamano-de-letra-para": "Tamaño de letra para proyector",
+    "reduce-el-texto": "Reduce el texto",
+    "aumenta-el-texto": "Aumenta el texto",
+    "idioma": "Idioma",
+    "secciones-del-laboratorio": "Secciones del laboratorio",
+    "ejemplos": "Ejemplos",
+    "codigo-del-script": "Código del script",
+    "variables": "Variables",
+    "parametros": "Parámetros",
+    "lineas-del-script-elige": "Líneas del script: elige la que tiene el error",
+    "tema": "Tema",
+    "tabla-de-equivalencias": "Tabla de equivalencias",
+    "respuestas": "Respuestas",
+    "unidad": "Unidad",
+    "trazador-de-scripts": "Trazador de scripts",
+    "tamano": "Tamaño",
+    "ejecutar-un-script": "Ejecutar un script",
+    "comillas-y-expansion": "Comillas y expansión",
+    "condiciones": "Condiciones",
+    "trazador": "Trazador",
+    "parametros-y-read": "Parámetros y read",
+    "encuentra-el-error": "Encuentra el error",
+    "bash-powershell": "Bash ↔ PowerShell",
+    "practica": "Práctica",
+    "laboratorio-1-ejecutar-un": "Laboratorio 1 · Ejecutar un script",
+    "un-archivo-de-texto": "Un archivo de texto no es un programa hasta que el sistema lo permite",
+    "cambia-las-opciones-y": "Cambia las opciones y mira qué pasa cuando intentas ejecutar el mismo script. A la derecha, lo mismo en PowerShell.",
+    "el-archivo-tiene-la": "El archivo tiene la línea shebang (#!/bin/bash)",
+    "tiene-permiso-de-ejecucion": "Tiene permiso de ejecución (chmod +x)",
+    "como-lo-ejecutas": "Cómo lo ejecutas",
+    "el-archivo": "El archivo",
+    "politica-de-ejecucion-get": "Política de ejecución (Get-ExecutionPolicy)",
+    "de-donde-viene-el": "De dónde viene el script",
+    "lo-has-escrito-tu": "Lo has escrito tú en este equipo",
+    "descargado-de-internet-sin": "Descargado de Internet, sin firmar",
+    "para-cambiar-la-politica": "Para cambiar la política sin ser administrador: Set-ExecutionPolicy RemoteSigned -Scope CurrentUser. Sin -Scope afecta a todo el equipo y exige una consola de administrador.",
+    "laboratorio-2-comillas-y": "Laboratorio 2 · Comillas y expansión",
+    "que-ve-realmente-la": "¿Qué ve realmente la orden?",
+    "antes-de-ejecutar-una": "Antes de ejecutar una línea, Bash sustituye variables, ejecuta $( ), calcula $(( )) y parte el texto en palabras. Escribe una línea y mira qué recibe la orden.",
+    "la-linea": "La línea",
+    "linea-de-ordenes-prueba": "Línea de órdenes (prueba una tuya)",
+    "carpeta-simulada-a-txt": "Carpeta simulada: a.txt, b.txt y notes.md. Fechas simuladas: hoy es 2026-11-24.",
+    "que-recibe-la-orden": "Qué recibe la orden",
+    "regla-practica-pon-siempre": "Regla práctica: pon siempre las variables entre comillas dobles (\"$variable\"). Las comillas simples no expanden nada. PowerShell no parte las variables en palabras.",
+    "laboratorio-3-condiciones": "Laboratorio 3 · Condiciones",
+    "no-evalua-verdad-evalua": "[ ] no evalúa verdad: evalúa una orden",
+    "elige-los-valores-y": "Elige los valores y el operador. Verás qué ejecuta Bash tras expandir, el código de salida que devuelve (0 = cierto) y el equivalente en PowerShell.",
+    "construye-la-condicion": "Construye la condición",
+    "operador": "Operador",
+    "pon-las-variables-entre": "Pon las variables entre comillas dobles (\"$a\")",
+    "para-las-pruebas-de": "Para las pruebas de archivos, escribe en a uno de estos nombres: nota.txt (tiene texto), buit.txt (vacío), documents (carpeta) o inexistent.",
+    "resultado": "Resultado",
+    "escrito": "Escrito",
+    "tras-expandir-bash-ejecuta": "Tras expandir, Bash ejecuta",
+    "laboratorio-4-trazador-paso": "Laboratorio 4 · Trazador paso a paso",
+    "sigue-cada-linea-variables": "Sigue cada línea: variables, $? y salida",
+    "elige-un-script-ponle": "Elige un script, ponle parámetros y avanza paso a paso. Antes de pulsar «Paso siguiente», intenta predecir qué pasará: es exactamente lo que te pedirá un examen de «trazas de scripts».",
+    "script": "Script",
+    "parametros-script-sh": "Parámetros (./script.sh …)",
+    "respuestas-para-read-separalas": "Respuestas para read (sepáralas con |)",
+    "ocupacion-del-disco": "Ocupación del disco (%)",
+    "paso-anterior": "← Paso anterior",
+    "paso-siguiente": "Paso siguiente →",
+    "hasta-el-final": "Hasta el final",
+    "reinicia": "Reinicia",
+    "el-script": "El script",
+    "variable": "Variable",
+    "valor": "Valor",
+    "salida-por-pantalla": "Salida por pantalla",
+    "equivalente-en-powershell": "Equivalente en PowerShell",
+    "laboratorio-5-parametros-y": "Laboratorio 5 · Parámetros y read",
+    "como-llega-la-informacion": "Cómo llega la información a un script",
+    "simula-el-lanzamiento-de": "Simula el lanzamiento de un script con parámetros y la respuesta a un read. Mira qué valen $1, $#, \"$@\" y cómo cambia todo al hacer shift.",
+    "lanzamiento": "Lanzamiento",
+    "escribe-la-linea-con": "Escribe la línea (con comillas para parámetros con espacios)",
+    "con-cada-parametro-es": "Con \"$@\", cada parámetro es una sola palabra, aunque tenga espacios. Sin comillas, \"Maria Lopez\" se parte en dos.",
+    "orden": "Orden",
+    "lo-que-escribe-el": "Lo que escribe el usuario",
+    "laboratorio-6-encuentra-el": "Laboratorio 6 · Encuentra el error",
+    "que-linea-tiene-el": "¿Qué línea tiene el problema?",
+    "cada-script-falla-lee": "Cada script falla. Lee qué pasa cuando se ejecuta y haz clic en la línea culpable.",
+    "que-pasa-cuando-se": "Qué pasa cuando se ejecuta",
+    "otro-script": "Otro script",
+    "laboratorio-7-bash-powershell": "Laboratorio 7 · Bash ↔ PowerShell",
+    "la-misma-idea-en": "La misma idea en dos lenguajes",
+    "filtra-por-tema-y": "Filtra por tema y, si quieres estudiar, oculta una columna e intenta recordar la otra antes de descubrirla.",
+    "modo-de-estudio": "Modo de estudio",
+    "muestra-las-dos-columnas": "Muestra las dos columnas",
+    "oculta-powershell": "Oculta PowerShell",
+    "oculta-bash": "Oculta Bash",
+    "concepto": "Concepto",
+    "laboratorio-8-practica": "Laboratorio 8 · Práctica",
+    "pon-a-prueba-lo": "Pon a prueba lo que has aprendido",
+    "ejercicios-generados-al-azar": "Ejercicios generados al azar con corrección inmediata. Si fallas, la corrección te explica por qué.",
+    "tipo-de-ejercicio": "Tipo de ejercicio",
+    "otro-ejercicio": "Otro ejercicio"
+  }
+}
+</script>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><a class="home" href="../../" data-lab-volver aria-label="Torna a la unitat" data-t-attr="aria-label:volver-a-la-unidad">← <span data-t="unidad">Unitat</span></a>
+      <span class="prompt" aria-hidden="true">$ _</span>
+      <h1 data-t="trazador-de-scripts">Traçador d'scripts</h1>
+    </div>
+    <div class="zoom" role="group" aria-label="Mida de lletra per a projector" data-t-attr="aria-label:tamano-de-letra-para"><span data-t="tamano">Mida</span>
+      <button type="button" data-lab-zoom="-" aria-label="Redueix el text" data-t-attr="aria-label:reduce-el-texto">A−</button>
+      <button type="button" data-lab-zoom="+" aria-label="Augmenta el text" data-t-attr="aria-label:aumenta-el-texto">A+</button>
+      <span class="idiomas" role="group" aria-label="Idioma" data-t-attr="aria-label:idioma">
+        <button type="button" data-lab-idioma="ca-valencia"></button><button type="button" data-lab-idioma="es"></button>
+      </span>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Seccions del laboratori" data-t-attr="aria-label:secciones-del-laboratorio">
+    <button type="button" role="tab" id="tab-executar" data-tab="executar" aria-controls="panel-executar" aria-selected="true"><span class="n">1</span><span data-t="ejecutar-un-script">Executar un script</span></button>
+    <button type="button" role="tab" id="tab-cometes" data-tab="cometes" aria-controls="panel-cometes" aria-selected="false" tabindex="-1"><span class="n">2</span><span data-t="comillas-y-expansion">Cometes i expansió</span></button>
+    <button type="button" role="tab" id="tab-condicions" data-tab="condicions" aria-controls="panel-condicions" aria-selected="false" tabindex="-1"><span class="n">3</span><span data-t="condiciones">Condicions</span></button>
+    <button type="button" role="tab" id="tab-tracador" data-tab="tracador" aria-controls="panel-tracador" aria-selected="false" tabindex="-1"><span class="n">4</span><span data-t="trazador">Traçador</span></button>
+    <button type="button" role="tab" id="tab-parametres" data-tab="parametres" aria-controls="panel-parametres" aria-selected="false" tabindex="-1"><span class="n">5</span><span data-t="parametros-y-read">Paràmetres i read</span></button>
+    <button type="button" role="tab" id="tab-errors" data-tab="errors" aria-controls="panel-errors" aria-selected="false" tabindex="-1"><span class="n">6</span><span data-t="encuentra-el-error">Troba l'error</span></button>
+    <button type="button" role="tab" id="tab-bash-ps" data-tab="bash-ps" aria-controls="panel-bash-ps" aria-selected="false" tabindex="-1"><span class="n">7</span><span data-t="bash-powershell">Bash ↔ PowerShell</span></button>
+    <button type="button" role="tab" id="tab-practica" data-tab="practica" aria-controls="panel-practica" aria-selected="false" tabindex="-1"><span class="n">8</span><span data-t="practica">Pràctica</span></button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ 1. EXECUTAR ============ -->
+<section class="tab" role="tabpanel" id="panel-executar" aria-labelledby="tab-executar" tabindex="0">
+  <div class="intro">
+    <span class="eyebrow" data-t="laboratorio-1-ejecutar-un">Laboratori 1 · Executar un script</span>
+    <h2 data-t="un-archivo-de-texto">Un fitxer de text no és un programa fins que el sistema ho permet</h2>
+    <p class="lead" data-t="cambia-las-opciones-y">Canvia les opcions i mira què passa quan intentes executar el mateix script. A la dreta, el mateix en PowerShell.</p>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3>Bash</h3>
+      <label class="chk"><input type="checkbox" id="ex-sheb" checked><span data-t="el-archivo-tiene-la">El fitxer té la línia shebang (#!/bin/bash)</span></label>
+      <label class="chk"><input type="checkbox" id="ex-x"><span data-t="tiene-permiso-de-ejecucion">Té permís d'execució (chmod +x)</span></label>
+      <label class="fld"><span data-t="como-lo-ejecutas">Com l'executes</span>
+        <select id="ex-cmd">
+          <option value="dot">./primer_script.sh</option>
+          <option value="nodot">primer_script.sh</option>
+          <option value="bash">bash primer_script.sh</option>
+          <option value="sh">sh primer_script.sh</option>
+        </select></label>
+      <div class="term" id="ex-term" role="status" aria-live="polite"></div>
+      <div class="exp" id="ex-exp"></div>
+      <div><span class="tag" data-t="el-archivo">El fitxer</span><pre class="code small" id="ex-file"></pre></div>
+    </div>
+    <div class="panel">
+      <h3>PowerShell</h3>
+      <label class="fld"><span data-t="politica-de-ejecucion-get">Política d'execució (Get-ExecutionPolicy)</span>
+        <select id="px-pol">
+          <option value="Restricted">Restricted</option>
+          <option value="AllSigned">AllSigned</option>
+          <option value="RemoteSigned">RemoteSigned</option>
+          <option value="Bypass">Bypass</option>
+        </select></label>
+      <label class="fld"><span data-t="de-donde-viene-el">D'on ve el script</span>
+        <select id="px-org">
+          <option value="local" data-t="lo-has-escrito-tu">L'has escrit tu en este equip</option>
+          <option value="web" data-t="descargado-de-internet-sin">Descarregat d'Internet, sense signar</option>
+        </select></label>
+      <label class="fld"><span data-t="como-lo-ejecutas">Com l'executes</span>
+        <select id="px-cmd">
+          <option value="dot">.\primer_script.ps1</option>
+          <option value="nodot">primer_script.ps1</option>
+          <option value="bypass">powershell.exe -ExecutionPolicy Bypass -File .\primer_script.ps1</option>
+        </select></label>
+      <div class="term" id="px-term" role="status" aria-live="polite"></div>
+      <div class="exp" id="px-exp"></div>
+      <div class="note" data-t="para-cambiar-la-politica">Per a canviar la política sense ser administrador: Set-ExecutionPolicy RemoteSigned -Scope CurrentUser. Sense -Scope afecta tot l'equip i exigix una consola d'administrador.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. COMETES I EXPANSIÓ ============ -->
+<section class="tab" role="tabpanel" id="panel-cometes" aria-labelledby="tab-cometes" tabindex="0" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="laboratorio-2-comillas-y">Laboratori 2 · Cometes i expansió</span>
+    <h2 data-t="que-ve-realmente-la">Què veu realment l'ordre?</h2>
+    <p class="lead" data-t="antes-de-ejecutar-una">Abans d'executar una línia, Bash substituïx variables, executa $( ), calcula $(( )) i parteix el text en paraules. Escriu una línia i veges què rep l'ordre.</p>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t="la-linea">La línia</h3>
+      <div class="row">
+        <label class="fld"><span>nom=</span><input type="text" id="co-nom" value="Ana" size="10" spellcheck="false" autocomplete="off"></label>
+        <label class="fld"><span>fitxer=</span><input type="text" id="co-fit" value="Mi document.txt" size="16" spellcheck="false" autocomplete="off"></label>
+        <label class="fld"><span>n=</span><input type="text" id="co-n" value="3" size="4" spellcheck="false" autocomplete="off"></label>
+      </div>
+      <label class="fld"><span data-t="linea-de-ordenes-prueba">Línia d'ordres (prova-ne una de tu)</span>
+        <input type="text" id="co-line" value="" size="48" spellcheck="false" autocomplete="off"></label>
+      <div class="opts" id="co-ex" role="group" aria-label="Exemples" data-t-attr="aria-label:ejemplos"></div>
+      <p class="note" data-t="carpeta-simulada-a-txt">Carpeta simulada: a.txt, b.txt i notes.md. Dates simulades: avui és 2026-11-24.</p>
+    </div>
+    <div class="panel">
+      <h3 data-t="que-recibe-la-orden">Què rep l'ordre</h3>
+      <div id="co-out" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+  <div class="key" data-t="regla-practica-pon-siempre">Regla pràctica: posa sempre les variables entre cometes dobles ("$variable"). Les cometes simples no expandixen res. PowerShell no parteix les variables en paraules.</div>
+</section>
+
+<!-- ============ 3. CONDICIONS ============ -->
+<section class="tab" role="tabpanel" id="panel-condicions" aria-labelledby="tab-condicions" tabindex="0" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="laboratorio-3-condiciones">Laboratori 3 · Condicions</span>
+    <h2 data-t="no-evalua-verdad-evalua">[ ] no avalua veritat: avalua una ordre</h2>
+    <p class="lead" data-t="elige-los-valores-y">Tria els valors i l'operador. Veuràs què executa Bash després d'expandir, el codi d'eixida que torna (0 = cert) i l'equivalent en PowerShell.</p>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t="construye-la-condicion">Construeix la condició</h3>
+      <div class="row">
+        <label class="fld"><span>a=</span><input type="text" id="cd-a" value="10" size="12" spellcheck="false" autocomplete="off"></label>
+        <label class="fld"><span data-t="operador">Operador</span><select id="cd-op"></select></label>
+        <label class="fld"><span>b=</span><input type="text" id="cd-b" value="9" size="12" spellcheck="false" autocomplete="off"></label>
+      </div>
+      <label class="chk"><input type="checkbox" id="cd-q" checked><span data-t="pon-las-variables-entre">Posa les variables entre cometes dobles ("$a")</span></label>
+      <p class="note" data-t="para-las-pruebas-de">Per a les proves de fitxers, escriu en a un d'estos noms: nota.txt (té text), buit.txt (buit), documents (carpeta) o inexistent.</p>
+    </div>
+    <div class="panel">
+      <h3 data-t="resultado">Resultat</h3>
+      <div><span class="tag" data-t="escrito">Escrit</span><pre class="code" id="cd-w"></pre></div>
+      <div><span class="tag" data-t="tras-expandir-bash-ejecuta">Després d'expandir, Bash executa</span><pre class="code" id="cd-x"></pre></div>
+      <div class="row"><span id="cd-st" class="pill"></span></div>
+      <div class="exp" id="cd-e" role="status" aria-live="polite"></div>
+      <div><span class="tag">PowerShell</span><pre class="code" id="cd-ps"></pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. TRAÇADOR ============ -->
+<section class="tab" role="tabpanel" id="panel-tracador" aria-labelledby="tab-tracador" tabindex="0" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="laboratorio-4-trazador-paso">Laboratori 4 · Traçador pas a pas</span>
+    <h2 data-t="sigue-cada-linea-variables">Segueix cada línia: variables, $? i eixida</h2>
+    <p class="lead" data-t="elige-un-script-ponle">Tria un script, posa-li paràmetres i avança pas a pas. Abans de pulsar «Pas següent», intenta predir què passarà: és exactament el que et demanarà un examen d'«traces de scripts».</p>
+  </div>
+  <div class="panel">
+    <div class="row">
+      <label class="fld"><span data-t="script">Script</span><select id="tr-sel"></select></label>
+      <label class="fld"><span data-t="parametros-script-sh">Paràmetres (./script.sh …)</span><input type="text" id="tr-args" size="24" spellcheck="false" autocomplete="off"></label>
+      <label class="fld" id="tr-inw"><span data-t="respuestas-para-read-separalas">Respostes per a read (separa-les amb |)</span><input type="text" id="tr-in" size="16" spellcheck="false" autocomplete="off"></label>
+      <label class="fld" id="tr-dkw"><span data-t="ocupacion-del-disco">Ocupació del disc (%)</span><input type="number" id="tr-dk" min="0" max="100" value="62" style="width:6rem"></label>
+    </div>
+    <div class="stepbar">
+      <button type="button" class="btn" id="tr-prev" data-t="paso-anterior">← Pas anterior</button>
+      <button type="button" class="btn primary" id="tr-next" data-t="paso-siguiente">Pas següent →</button>
+      <button type="button" class="btn" id="tr-end" data-t="hasta-el-final">Fins al final</button>
+      <button type="button" class="btn" id="tr-reset" data-t="reinicia">Reinicia</button>
+      <span class="pill" id="tr-n"></span>
+    </div>
+  </div>
+  <div class="trace-grid">
+    <div class="panel"><h3 data-t="el-script">El script</h3><div class="src" id="tr-src" role="group" aria-label="Codi de l'script" data-t-attr="aria-label:codigo-del-script"></div></div>
+    <div class="panel">
+      <div class="exp" id="tr-note" role="status" aria-live="polite"></div>
+      <div class="scroll"><table class="t vars" aria-label="Variables" data-t-attr="aria-label:variables"><thead><tr><th data-t="variable">Variable</th><th data-t="valor">Valor</th></tr></thead><tbody id="tr-vars"></tbody></table></div>
+      <div><span class="tag" data-t="salida-por-pantalla">Eixida per pantalla</span><div class="term" id="tr-out"></div></div>
+    </div>
+  </div>
+  <details class="panel"><summary class="tag" style="cursor:pointer" data-t="equivalente-en-powershell">Equivalent en PowerShell</summary><pre class="code small" id="tr-ps"></pre></details>
+</section>
+
+<!-- ============ 5. PARÀMETRES I READ ============ -->
+<section class="tab" role="tabpanel" id="panel-parametres" aria-labelledby="tab-parametres" tabindex="0" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="laboratorio-5-parametros-y">Laboratori 5 · Paràmetres i read</span>
+    <h2 data-t="como-llega-la-informacion">Com arriba la informació a un script</h2>
+    <p class="lead" data-t="simula-el-lanzamiento-de">Simula el llançament d'un script amb paràmetres i la resposta a un read. Mira què valen $1, $#, "$@" i com canvia tot en fer shift.</p>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3 data-t="lanzamiento">Llançament</h3>
+      <label class="fld"><span data-t="escribe-la-linea-con">Escriu la línia (amb cometes per a paràmetres amb espais)</span>
+        <input type="text" id="pa-line" value="./saluda.sh Ana &quot;Maria Lopez&quot; 42" size="40" spellcheck="false" autocomplete="off"></label>
+      <div class="row"><button type="button" class="btn" id="pa-shift">shift</button><button type="button" class="btn" id="pa-reset" data-t="reinicia">Reinicia</button></div>
+      <div class="scroll"><table class="t" aria-label="Paràmetres" data-t-attr="aria-label:parametros"><thead><tr><th data-t="variable">Variable</th><th data-t="valor">Valor</th></tr></thead><tbody id="pa-tab"></tbody></table></div>
+    </div>
+    <div class="panel">
+      <h3>for p in "$@" / for p in $@</h3>
+      <div><span class="tag">for p in "$@"</span><div class="words" id="pa-at"></div></div>
+      <div><span class="tag">for p in $@</span><div class="words" id="pa-noat"></div></div>
+      <p class="note" data-t="con-cada-parametro-es">Amb "$@", cada paràmetre és una sola paraula, encara que tinga espais. Sense cometes, "Maria Lopez" es parteix en dos.</p>
+      <div><span class="tag">PowerShell (sense param)</span><pre class="code small" id="pa-ps"></pre></div>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>read</h3>
+    <div class="row">
+      <label class="fld"><span data-t="orden">Ordre</span><select id="rd-form">
+        <option value="nom">read nom</option>
+        <option value="r2">read -r nom cognoms</option>
+        <option value="p">read -p "Com et dius? " nom</option>
+        <option value="rep">read</option>
+      </select></label>
+      <label class="fld"><span data-t="lo-que-escribe-el">El que escriu l'usuari</span><input type="text" id="rd-in" value="Ana Maria Lopez" size="24" spellcheck="false" autocomplete="off"></label>
+    </div>
+    <div class="exp" id="rd-out" role="status" aria-live="polite"></div>
+    <div><span class="tag">PowerShell</span><pre class="code small" id="rd-ps"></pre></div>
+  </div>
+</section>
+
+<!-- ============ 6. TROBA L'ERROR ============ -->
+<section class="tab" role="tabpanel" id="panel-errors" aria-labelledby="tab-errors" tabindex="0" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="laboratorio-6-encuentra-el">Laboratori 6 · Troba l'error</span>
+    <h2 data-t="que-linea-tiene-el">Quina línia té el problema?</h2>
+    <p class="lead" data-t="cada-script-falla-lee">Cada script falla. Llig què passa quan s'executa i fes clic en la línia culpable.</p>
+  </div>
+  <div class="panel">
+    <div class="row"><span class="pill" id="er-lang"></span><span class="pill" id="er-n"></span></div>
+    <div><span class="tag" data-t="que-pasa-cuando-se">Què passa quan s'executa</span><div class="term" id="er-sym"></div></div>
+    <div class="src" id="er-src" role="group" aria-label="Línies de l'script: tria la que té l'error" data-t-attr="aria-label:lineas-del-script-elige"></div>
+    <div class="exp" id="er-fb" role="status" aria-live="polite"></div>
+    <div class="row"><button type="button" class="btn primary" id="er-next" data-t="otro-script">Un altre script</button>
+      <span class="score"><span>✓ <b id="er-ok">0</b></span><span>✗ <b id="er-ko">0</b></span></span></div>
+  </div>
+</section>
+
+<!-- ============ 7. BASH ↔ POWERSHELL ============ -->
+<section class="tab" role="tabpanel" id="panel-bash-ps" aria-labelledby="tab-bash-ps" tabindex="0" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="laboratorio-7-bash-powershell">Laboratori 7 · Bash ↔ PowerShell</span>
+    <h2 data-t="la-misma-idea-en">La mateixa idea en dos llenguatges</h2>
+    <p class="lead" data-t="filtra-por-tema-y">Filtra per tema i, si vols estudiar, amaga una columna i intenta recordar l'altra abans de descobrir-la.</p>
+  </div>
+  <div class="panel">
+    <div class="row">
+      <div class="opts" id="eq-cats" role="group" aria-label="Tema" data-t-attr="aria-label:tema"></div>
+      <label class="fld"><span data-t="modo-de-estudio">Mode d'estudi</span><select id="eq-mode">
+        <option value="both" data-t="muestra-las-dos-columnas">Mostra les dues columnes</option>
+        <option value="hideps" data-t="oculta-powershell">Amaga PowerShell</option>
+        <option value="hidebash" data-t="oculta-bash">Amaga Bash</option>
+      </select></label>
+    </div>
+    <p class="note" id="eq-hint"></p>
+    <div class="scroll"><table class="t" aria-label="Taula d'equivalències" data-t-attr="aria-label:tabla-de-equivalencias"><thead><tr><th data-t="concepto">Concepte</th><th>Bash</th><th>PowerShell</th></tr></thead><tbody id="eq-body"></tbody></table></div>
+  </div>
+</section>
+
+<!-- ============ 8. PRÀCTICA ============ -->
+<section class="tab" role="tabpanel" id="panel-practica" aria-labelledby="tab-practica" tabindex="0" hidden>
+  <div class="intro">
+    <span class="eyebrow" data-t="laboratorio-8-practica">Laboratori 8 · Pràctica</span>
+    <h2 data-t="pon-a-prueba-lo">Posa a prova el que has après</h2>
+    <p class="lead" data-t="ejercicios-generados-al-azar">Exercicis generats a l'atzar amb correcció immediata. Si fallen, la correcció t'explica per què.</p>
+  </div>
+  <div class="panel quiz">
+    <div class="row">
+      <label class="fld"><span data-t="tipo-de-ejercicio">Tipus d'exercici</span><select id="q-type"></select></label>
+      <span class="score"><span>✓ <b id="s-ok">0</b></span><span>✗ <b id="s-ko">0</b></span></span>
+    </div>
+    <p class="q-prompt" id="q-p"></p>
+    <pre class="code" id="q-code" hidden></pre>
+    <div class="opts" id="q-in" role="group" aria-label="Respostes" data-t-attr="aria-label:respuestas"></div>
+    <div class="fb" id="q-f" role="status" aria-live="polite"></div>
+    <div class="sol" id="q-s" hidden></div>
+    <div class="row"><button type="button" class="btn primary" id="q-next" data-t="otro-ejercicio">Un altre exercici</button></div>
+  </div>
+</section>
+
+</main>
+
+<script>
+'use strict';
+/* ====== Utilitats ====== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const T = (ca, es) => Lab.t({ 'ca-valencia': ca, es });
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = (arr) => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+/* ====== Pestanyes (patró WAI-ARIA) ====== */
+const pestanas = $$('[role="tab"]');
+function mostrar(id) {
+  const activa = pestanas.find((p) => p.dataset.tab === id) || pestanas[0];
+  for (const p of pestanas) {
+    const es = p === activa;
+    p.setAttribute('aria-selected', String(es));
+    p.tabIndex = es ? 0 : -1;
+    document.getElementById(p.getAttribute('aria-controls')).hidden = !es;
+  }
+  if (activa.scrollIntoView) activa.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  return activa;
+}
+function elegir(id, enfocar) {
+  const activa = mostrar(id);
+  Lab.guardar('pestana', activa.dataset.tab);
+  try { history.replaceState(null, '', '#' + activa.dataset.tab); } catch (e) { /* sense historial */ }
+  if (enfocar) activa.focus();
+}
+pestanas.forEach((p) => p.addEventListener('click', () => elegir(p.dataset.tab)));
+$('[role="tablist"]').addEventListener('keydown', (e) => {
+  const i = pestanas.indexOf(document.activeElement);
+  const destino = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: pestanas.length - 1 }[e.key];
+  if (i < 0 || destino === undefined) return;
+  e.preventDefault();
+  elegir(pestanas[(destino + pestanas.length) % pestanas.length].dataset.tab, true);
+});
+window.addEventListener('hashchange', () => mostrar(location.hash.slice(1)));
+mostrar(location.hash.slice(1) || Lab.leer('pestana') || 'executar');
+
+
+/*LOGIC-START*/
+/* ====== Intèrpret simulat de Bash: només cobrix els exemples del laboratori ====== */
+const DATE = { Y: 2026, m: 11, d: 24, H: 14, M: 30, S: 5 };
+const p2 = (n) => String(n).padStart(2, '0');
+function fmtDate(f) {
+  const t = { Y: DATE.Y, m: p2(DATE.m), d: p2(DATE.d), F: `${DATE.Y}-${p2(DATE.m)}-${p2(DATE.d)}`, H: p2(DATE.H), M: p2(DATE.M), S: p2(DATE.S), T: `${p2(DATE.H)}:${p2(DATE.M)}:${p2(DATE.S)}`, '%': '%' };
+  return f.replace(/%([YmdFHMST%])/g, (_, c) => String(t[c]));
+}
+const dirE = () => ({ t: 'd' });
+const fileE = (c) => ({ t: 'f', c });
+function makeFS(kind) {
+  const fs = {
+    '/': dirE(), '/etc': dirE(), '/home': dirE(), '/home/alumne': dirE(), '/tmp': dirE(), '/backups': dirE(), '/var': dirE(), '/var/log': dirE(),
+    '/etc/passwd': fileE('root:x:0:0:root:/root:/bin/bash\nalumne:x:1000:1000:alumne:/home/alumne:/bin/bash\nluis:x:1001:1001:luis:/home/luis:/bin/bash'),
+  };
+  if (kind === 'glob') {
+    for (const n of ['a.txt', 'b.txt', 'notes.md']) fs['/home/alumne/' + n] = fileE('x');
+  } else {
+    fs['/home/alumne/documents'] = dirE();
+    fs['/home/alumne/documents/nota.txt'] = fileE('tres\nlínies\nde text');
+    fs['/home/alumne/dades.txt'] = fileE('1\n2\n3');
+  }
+  return fs;
+}
+function resolvePath(p, cwd) {
+  const out = [];
+  for (const s of (p.startsWith('/') ? p : cwd + '/' + p).split('/')) {
+    if (!s || s === '.') continue;
+    if (s === '..') out.pop(); else out.push(s);
+  }
+  return '/' + out.join('/');
+}
+function listDir(fs, d) {
+  const pre = d === '/' ? '/' : d + '/';
+  const names = new Set();
+  for (const k of Object.keys(fs)) {
+    if (k !== d && k.startsWith(pre)) { const r = k.slice(pre.length); if (r && !r.includes('/')) names.add(r); }
+  }
+  return [...names].sort();
+}
+
+class ExitSignal { constructor(code) { this.code = code; } }
+class LoopSignal { constructor(kind) { this.kind = kind; } }
+class LimitSignal {}
+class ParseError { constructor(ln, text) { this.ln = ln; this.text = text; } }
+const MAXSTEPS = 400, MAXLOOP = 60;
+const ESC = '\u0001';
+
+function matchParen(s, i) {
+  let depth = 0;
+  for (let k = i; k < s.length; k++) {
+    if (s[k] === '(') depth++;
+    else if (s[k] === ')') { depth--; if (depth === 0) return k; }
+  }
+  return s.length - 1;
+}
+
+/* Trenca una línia en paraules (amb els seus trossos entre cometes) i operadors. */
+function tokenize(s) {
+  const toks = [];
+  let segs = [], cur = '', q = 'n', start = -1, i = 0;
+  const flush = () => { if (cur !== '') { segs.push({ s: cur, q: 'n' }); cur = ''; } };
+  const endWord = (end) => { flush(); if (segs.length) toks.push({ t: 'w', segs, raw: s.slice(start, end) }); segs = []; start = -1; };
+  const begin = () => { if (start < 0) start = i; };
+  while (i < s.length) {
+    const c = s[i];
+    if (q === 's') { if (c === "'") { segs.push({ s: cur, q: 's' }); cur = ''; q = 'n'; } else cur += c; i++; continue; }
+    if (q === 'd') {
+      if (c === '"') { segs.push({ s: cur, q: 'd' }); cur = ''; q = 'n'; i++; continue; }
+      if (c === '\\' && '$"\\`'.includes(s[i + 1] || ' ')) { cur += ESC + s[i + 1]; i += 2; continue; }
+      if (c === '$' && s[i + 1] === '(') { const e = matchParen(s, i + 1); cur += s.slice(i, e + 1); i = e + 1; continue; }
+      cur += c; i++; continue;
+    }
+    if (/\s/.test(c)) { endWord(i); i++; continue; }
+    if (c === '#' && start < 0) break;
+    if (c === "'") { begin(); flush(); q = 's'; i++; continue; }
+    if (c === '"') { begin(); flush(); q = 'd'; i++; continue; }
+    if (c === '\\') { begin(); cur += ESC + (s[i + 1] || ''); i += 2; continue; }
+    if (c === '$' && s[i + 1] === '(') { begin(); const e = matchParen(s, i + 1); cur += s.slice(i, e + 1); i = e + 1; continue; }
+    if (';|&<>'.includes(c)) {
+      let fd = '';
+      if (c === '>' && start >= 0 && segs.length === 0 && (cur === '1' || cur === '2')) { fd = cur; cur = ''; start = -1; } else endWord(i);
+      let op = c;
+      if (c === '>' && s[i + 1] === '>') { op = '>>'; i++; }
+      else if (c === '>' && s[i + 1] === '&') { op = '>&'; i++; }
+      else if (c === '|' && s[i + 1] === '|') { op = '||'; i++; }
+      else if (c === '&' && s[i + 1] === '&') { op = '&&'; i++; }
+      else if (c === '&' && s[i + 1] === '>') { op = '&>'; i++; }
+      i++;
+      if (op === '>&') { const m = /^\d/.exec(s.slice(i)); const tgt = m ? m[0] : ''; i += tgt.length; toks.push({ t: 'op', op, fd: fd || '1', tgt }); }
+      else toks.push({ t: 'op', op, fd });
+      continue;
+    }
+    begin(); cur += c; i++;
+  }
+  if (q !== 'n') segs.push({ s: cur, q }); else flush();
+  if (segs.length) toks.push({ t: 'w', segs, raw: s.slice(start) });
+  return toks;
+}
+
+function evalArith(expr, ctx) {
+  const e1 = expandParts(expr, ctx).map((p) => p.s).join('');
+  const e2 = e1.replace(/[A-Za-z_][A-Za-z0-9_]*/g, (n) => String(parseInt(ctx.vars.get(n) ?? '0', 10) || 0));
+  const t = e2.match(/\d+|[-+*/%()]/g) || [];
+  let i = 0;
+  const prim = () => { const x = t[i++]; if (x === '(') { const v = add(); i++; return v; } if (x === '-') return -prim(); if (x === '+') return prim(); return Number(x) || 0; };
+  const mul = () => {
+    let v = prim();
+    while (t[i] === '*' || t[i] === '/' || t[i] === '%') {
+      const o = t[i++]; const r = prim();
+      if ((o === '/' || o === '%') && r === 0) throw new Error('division by 0');
+      v = o === '*' ? v * r : o === '/' ? Math.trunc(v / r) : v % r;
+    }
+    return v;
+  };
+  const add = () => { let v = mul(); while (t[i] === '+' || t[i] === '-') { const o = t[i++]; const r = mul(); v = o === '+' ? v + r : v - r; } return v; };
+  return add();
+}
+
+const DF_RE = /^\s*df\s+(-P\s+)?\/\s*\|\s*tail\s+-1\s*\|\s*awk\s+'\{print \$5\}'\s*\|\s*tr\s+-d\s+'%'\s*$/;
+function cmdSubst(inner, ctx) {
+  if (DF_RE.test(inner)) { ctx.subst = 0; return String(ctx.disk); }
+  const sub = Object.assign({}, ctx, { vars: new Map(ctx.vars), pos: ctx.pos.slice(), out: [], steps: null });
+  try { runLine(inner, sub, 0, null); } catch (e) { if (!(e instanceof ExitSignal)) throw e; sub.st = e.code; }
+  for (const o of sub.out) if (o.k === 'e') ctx.out.push(o);
+  ctx.subst = sub.st;
+  ctx.cwd = sub.cwd === ctx.cwd ? ctx.cwd : ctx.cwd;
+  return sub.out.filter((o) => o.k === 'o').map((o) => o.s).join('\n').replace(/\n+$/, '');
+}
+
+/* Expansió d'un tros de text: torna trossos literals i trossos «expandits» (que després es poden partir). */
+function expandParts(str, ctx) {
+  const parts = [];
+  let lit = '', i = 0;
+  const flush = () => { if (lit) { parts.push({ s: lit, exp: false }); lit = ''; } };
+  const put = (s, extra) => { flush(); parts.push(Object.assign({ s, exp: true }, extra)); };
+  while (i < str.length) {
+    const c = str[i];
+    if (c === ESC) { lit += str[i + 1] || ''; i += 2; continue; }
+    if (c !== '$') { lit += c; i++; continue; }
+    const n = str[i + 1];
+    if (n === '(' && str[i + 2] === '(') { const e = matchParen(str, i + 1); put(String(evalArith(str.slice(i + 3, e - 1), ctx))); i = e + 1; continue; }
+    if (n === '(') { const e = matchParen(str, i + 1); put(cmdSubst(str.slice(i + 2, e), ctx)); i = e + 1; continue; }
+    if (n === '{') {
+      const e = str.indexOf('}', i);
+      const m = /^([A-Za-z_]\w*|\d+|[#?@*])(?::-(.*))?$/.exec(str.slice(i + 2, e < 0 ? str.length : e));
+      if (m) {
+        const nm = m[1];
+        let val = /^\d+$/.test(nm) ? (nm === '0' ? ctx.zero : (ctx.pos[Number(nm) - 1] ?? '')) : nm === '#' ? String(ctx.pos.length) : nm === '?' ? String(ctx.st) : /^[@*]$/.test(nm) ? ctx.pos.join(' ') : (ctx.vars.get(nm) ?? '');
+        if (val === '' && m[2] !== undefined) val = m[2];
+        put(val); i = e + 1; continue;
+      }
+    }
+    if (n === '@') { put(ctx.pos.join(' '), { at: true }); i += 2; continue; }
+    if (n === '*') { put(ctx.pos.join(' ')); i += 2; continue; }
+    if (n === '?') { put(String(ctx.st)); i += 2; continue; }
+    if (n === '#') { put(String(ctx.pos.length)); i += 2; continue; }
+    if (n !== undefined && /[0-9]/.test(n)) { put(n === '0' ? ctx.zero : (ctx.pos[Number(n) - 1] ?? '')); i += 2; continue; }
+    if (n !== undefined && /[A-Za-z_]/.test(n)) {
+      const m = /^[A-Za-z_][A-Za-z0-9_]*/.exec(str.slice(i + 1));
+      put(ctx.vars.get(m[0]) ?? ''); i += 1 + m[0].length; continue;
+    }
+    lit += '$'; i++;
+  }
+  flush();
+  return parts;
+}
+
+/* Una paraula del shell → llista de camps (partit de paraules i globs inclosos). */
+function expandToken(tok, ctx) {
+  const fields = [];
+  let cur = '', has = false, glob = false;
+  const close = () => { if (has) fields.push({ s: cur, glob }); cur = ''; has = false; glob = false; };
+  for (const seg of tok.segs) {
+    if (seg.q === 's') { cur += seg.s; has = true; continue; }
+    const parts = expandParts(seg.s, ctx);
+    if (seg.q === 'd') {
+      if (parts.length === 1 && parts[0].at && seg.s === '$@') { ctx.pos.forEach((p, k) => { if (k > 0) close(); cur += p; has = true; }); continue; }
+      for (const p of parts) cur += p.s;
+      has = true; continue;
+    }
+    for (const p of parts) {
+      if (!p.exp) { cur += p.s; has = true; if (/[*?]/.test(p.s)) glob = true; continue; }
+      for (const ch of p.s) {
+        if (/\s/.test(ch)) close(); else { cur += ch; has = true; if (ch === '*' || ch === '?') glob = true; }
+      }
+    }
+  }
+  close();
+  return fields.flatMap((f) => globExpand(f, ctx));
+}
+function globExpand(f, ctx) {
+  if (!f.glob) return [f.s];
+  const dirPart = f.s.includes('/') ? f.s.slice(0, f.s.lastIndexOf('/') + 1) : '';
+  const pat = f.s.slice(dirPart.length);
+  const base = dirPart ? resolvePath(dirPart, ctx.cwd) : ctx.cwd;
+  const re = new RegExp('^' + pat.replace(/[.+^${}()|\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\?/g, '.') + '$');
+  const res = listDir(ctx.fs, base).filter((n) => re.test(n) && (pat[0] === '.' || n[0] !== '.')).map((n) => dirPart + n);
+  return res.length ? res : [f.s];
+}
+function expandNoSplit(segs, ctx) {
+  let out = '';
+  for (const seg of segs) out += seg.q === 's' ? seg.s : expandParts(seg.s, ctx).map((p) => p.s).join('');
+  return out;
+}
+
+/* ---- Ordre test / [ ] ---- */
+const isInt = (s) => /^\s*[+-]?\d+\s*$/.test(s);
+function evalTest(a, ctx) {
+  const fsGet = (p) => ctx.fs[resolvePath(p, ctx.cwd)];
+  const un = { '-z': (s) => s === '', '-n': (s) => s !== '', '-e': (p) => !!fsGet(p), '-f': (p) => fsGet(p)?.t === 'f', '-d': (p) => fsGet(p)?.t === 'd', '-s': (p) => fsGet(p)?.t === 'f' && fsGet(p).c !== '', '-r': (p) => !!fsGet(p), '-w': (p) => !!fsGet(p), '-x': (p) => fsGet(p)?.t === 'd' };
+  const bin = { '-eq': (x, y) => x === y, '-ne': (x, y) => x !== y, '-gt': (x, y) => x > y, '-lt': (x, y) => x < y, '-ge': (x, y) => x >= y, '-le': (x, y) => x <= y };
+  if (a.length === 0) return { st: 1 };
+  if (a[0] === '!' && a.length > 1) { const r = evalTest(a.slice(1), ctx); return r.st === 2 ? r : { st: r.st === 0 ? 1 : 0 }; }
+  if (a.length === 1) return { st: a[0] !== '' ? 0 : 1 };
+  if (a.length === 2) {
+    if (un[a[0]]) return { st: un[a[0]](a[1]) ? 0 : 1 };
+    return { st: 2, err: `[: ${a[0]}: unary operator expected` };
+  }
+  if (a.length === 3) {
+    if (bin[a[1]]) {
+      const bad = [a[0], a[2]].find((x) => !isInt(x));
+      if (bad !== undefined) return { st: 2, err: `[: ${bad}: integer expression expected` };
+      return { st: bin[a[1]](parseInt(a[0], 10), parseInt(a[2], 10)) ? 0 : 1 };
+    }
+    if (a[1] === '=' || a[1] === '==') return { st: a[0] === a[2] ? 0 : 1 };
+    if (a[1] === '!=') return { st: a[0] !== a[2] ? 0 : 1 };
+    return { st: 2, err: `[: ${a[1]}: binary operator expected` };
+  }
+  return { st: 2, err: '[: too many arguments' };
+}
+
+/* ---- Ordres simulades ---- */
+function emitTo(ctx, k, s) { ctx.out.push({ k, s }); }
+const CMDS = {
+  echo(a, ctx, io) { const args = a[0] === '-n' ? a.slice(1) : a; io.out.push(args.join(' ')); return 0; },
+  true() { return 0; }, ':'() { return 0; }, false() { return 1; },
+  whoami(a, ctx, io) { io.out.push('alumne'); return 0; },
+  pwd(a, ctx, io) { io.out.push(ctx.cwd); return 0; },
+  id(a, ctx, io) { io.out.push('1000'); return 0; },
+  seq(a, ctx, io) { const [x, y] = a.length === 1 ? [1, Number(a[0])] : [Number(a[0]), Number(a[1])]; for (let k = x; k <= y && k - x < 200; k++) io.out.push(String(k)); return 0; },
+  date(a, ctx, io) { const f = a.find((x) => x[0] === '+'); io.out.push(f ? fmtDate(f.slice(1)) : 'dt 24 nov 2026 14:30:05 CET'); return 0; },
+  sleep() { return 0; },
+  cd(a, ctx, io, ln) { const t = resolvePath(a[0] || '/home/alumne', ctx.cwd); if (ctx.fs[t]?.t !== 'd') { io.err.push(`${ctx.zero}: line ${ln}: cd: ${a[0]}: No such file or directory`); return 1; } ctx.cwd = t; return 0; },
+  ls(a, ctx, io) {
+    const args = a.filter((x) => x[0] !== '-'); let st = 0;
+    for (const x of args.length ? args : ['.']) {
+      const e = ctx.fs[resolvePath(x, ctx.cwd)];
+      if (!e) { io.err.push(`ls: cannot access '${x}': No such file or directory`); st = 2; } else if (e.t === 'f') io.out.push(x); else listDir(ctx.fs, resolvePath(x, ctx.cwd)).forEach((n) => io.out.push(n));
+    }
+    return st;
+  },
+  mkdir(a, ctx, io) {
+    const p = a.includes('-p'); let st = 0;
+    for (const x of a.filter((y) => y[0] !== '-')) {
+      const t = resolvePath(x, ctx.cwd), par = t.slice(0, t.lastIndexOf('/')) || '/';
+      if (ctx.fs[t]) { if (!p) { io.err.push(`mkdir: cannot create directory '${x}': File exists`); st = 1; } } else if (!ctx.fs[par] && !p) { io.err.push(`mkdir: cannot create directory '${x}': No such file or directory`); st = 1; } else ctx.fs[t] = dirE();
+    }
+    return st;
+  },
+  touch(a, ctx) { for (const x of a.filter((y) => y[0] !== '-')) { const t = resolvePath(x, ctx.cwd); if (!ctx.fs[t]) ctx.fs[t] = fileE(''); } return 0; },
+  rm(a, ctx, io) {
+    const f = a.includes('-f'); let st = 0;
+    for (const x of a.filter((y) => y[0] !== '-')) { const t = resolvePath(x, ctx.cwd); if (!ctx.fs[t]) { if (!f) { io.err.push(`rm: cannot remove '${x}': No such file or directory`); st = 1; } } else delete ctx.fs[t]; }
+    return st;
+  },
+  cp(a, ctx, io) {
+    const x = a.filter((y) => y[0] !== '-'); const s = resolvePath(x[0] || '', ctx.cwd);
+    if (!ctx.fs[s]) { io.err.push(`cp: cannot stat '${x[0]}': No such file or directory`); return 1; }
+    let d = resolvePath(x[1] || '', ctx.cwd); if (ctx.fs[d]?.t === 'd') d += '/' + s.split('/').pop(); ctx.fs[d] = fileE(ctx.fs[s].c || ''); return 0;
+  },
+  grep(a, ctx, io) {
+    const opt = a.filter((x) => /^-[A-Za-z]+$/.test(x)).join(''), rest = a.filter((x) => !/^-[A-Za-z]+$/.test(x));
+    const e = ctx.fs[resolvePath(rest[1] || '', ctx.cwd)];
+    if (!e || e.t !== 'f') { io.err.push(`grep: ${rest[1]}: No such file or directory`); return 2; }
+    let re; try { re = new RegExp(rest[0], opt.includes('i') ? 'i' : ''); } catch (er) { io.err.push('grep: Invalid regular expression'); return 2; }
+    const hit = e.c.split('\n').filter((l) => re.test(l) !== opt.includes('v'));
+    if (opt.includes('c')) io.out.push(String(hit.length)); else if (!opt.includes('q')) hit.forEach((l) => io.out.push(l));
+    return hit.length ? 0 : 1;
+  },
+  tar(a, ctx, io) {
+    const fl = a[0] || '';
+    if (!/c/.test(fl) || !/f/.test(fl)) { io.err.push('tar: el simulador només admet «tar -czf arxiu origen»'); return 2; }
+    const dest = a[1], srcs = a.slice(2), dpath = resolvePath(dest, ctx.cwd), dpar = dpath.slice(0, dpath.lastIndexOf('/')) || '/';
+    if (ctx.fs[dpar]?.t !== 'd') { io.err.push(`tar (child): ${dest}: Cannot open: No such file or directory`); return 2; }
+    let abs = false, st = 0;
+    for (const s of srcs) { if (s.startsWith('/')) abs = true; if (!ctx.fs[resolvePath(s, ctx.cwd)]) { io.err.push(`tar: ${s}: Cannot stat: No such file or directory`); st = 2; } }
+    if (abs) io.err.unshift("tar: Removing leading `/' from member names");
+    if (st) { io.err.push('tar: Exiting with failure status due to previous errors'); return 2; }
+    ctx.fs[dpath] = fileE('tar.gz'); return 0;
+  },
+};
+function runBuiltin(name, a, ctx, io, ln) {
+  if (name === '[' || name === 'test') {
+    if (name === '[') { if (a[a.length - 1] !== ']') { io.err.push(`${ctx.zero}: line ${ln}: [: missing ']'`); return 2; } a = a.slice(0, -1); }
+    const r = evalTest(a, ctx);
+    if (r.err) io.err.push(`${ctx.zero}: line ${ln}: ${r.err}`);
+    return r.st;
+  }
+  if (name === 'exit') throw new ExitSignal(a.length ? (parseInt(a[0], 10) & 255) : ctx.st);
+  if (name === 'break') throw new LoopSignal('break');
+  if (name === 'continue') throw new LoopSignal('continue');
+  if (name === 'shift') { if (!ctx.pos.length) return 1; ctx.pos.shift(); return 0; }
+  if (name === 'read') {
+    let k = 0, prompt = null, silent = false;
+    while (k < a.length && /^-/.test(a[k])) { const o = a[k++]; if (o === '-p') prompt = a[k++] ?? ''; if (o === '-s') silent = true; }
+    const names = a.slice(k);
+    if (!ctx.stdin.length) { (names.length ? names : ['REPLY']).forEach((n) => ctx.vars.set(n, '')); if (prompt) io.out.push(prompt); return 1; }
+    const line = ctx.stdin.shift();
+    io.out.push((prompt || '') + (silent ? '' : line));
+    if (!names.length) ctx.vars.set('REPLY', line);
+    else {
+      let rest = line.trim();
+      names.forEach((n, idx) => {
+        if (idx === names.length - 1) { ctx.vars.set(n, rest); return; }
+        const m = /^(\S*)\s*([\s\S]*)$/.exec(rest); ctx.vars.set(n, m[1]); rest = m[2];
+      });
+    }
+    return 0;
+  }
+  if (CMDS[name]) return CMDS[name](a, ctx, io, ln);
+  io.err.push(`${ctx.zero}: line ${ln}: ${name}: command not found`);
+  return 127;
+}
+
+function execSimple(toks, ctx, ln) {
+  const redir = { o: 'term', e: 'term' };
+  const words = [];
+  for (let k = 0; k < toks.length; k++) {
+    const t = toks[k];
+    if (t.t === 'w') { words.push(t); continue; }
+    if (t.op === '>&') { if (t.fd === '2' && t.tgt === '1') redir.e = 'out'; else if (t.tgt === '2') redir.o = 'err'; continue; }
+    const tgt = toks[++k];
+    const name = tgt && tgt.t === 'w' ? expandNoSplit(tgt.segs, ctx) : '';
+    const dest = name === '/dev/null' ? 'null' : { file: resolvePath(name, ctx.cwd), append: t.op === '>>' || t.op === '2>>' };
+    if (t.op === '<') continue;
+    if (t.op === '&>') { redir.o = dest; redir.e = 'out'; } else if (t.fd === '2') redir.e = dest; else redir.o = dest;
+  }
+  const io = { out: [], err: [] };
+  let st;
+  const first = words[0];
+  const asg = first && /^[A-Za-z_][A-Za-z0-9_]*=/.exec(first.segs[0].q === 'n' ? first.segs[0].s : '');
+  if (asg) {
+    const segs = first.segs.map((s, idx) => (idx === 0 ? { s: s.s.slice(asg[0].length), q: 'n' } : s)).filter((s) => s.s !== '' || s.q !== 'n');
+    ctx.subst = 0;
+    const val = expandNoSplit(segs, ctx);
+    const name = asg[0].slice(0, -1);
+    ctx.vars.set(name, val);
+    st = ctx.subst || 0;
+    ctx.last = { kind: 'assign', name, val, st };
+  } else {
+    const argv = words.flatMap((w) => expandToken(w, ctx));
+    if (!argv.length) { st = 0; ctx.last = { kind: 'empty', st }; } else {
+      if (toks.some((t) => t.t === 'op' && t.op === '|')) { io.err.push('el simulador no admet canonades'); st = 1; }
+      else st = runBuiltin(argv[0], argv.slice(1), ctx, io, ln);
+      ctx.last = { kind: argv[0] === 'echo' ? 'echo' : argv[0] === 'read' ? 'read' : 'cmd', words: argv, st, io, toErr: redir.o === 'err', toFile: typeof redir.o === 'object' ? redir.o.file.split('/').pop() : null };
+    }
+  }
+  const route = (lines, k, to) => {
+    for (const s of lines) {
+      if (to === 'term') ctx.out.push({ k, s });
+      else if (to === 'err') ctx.out.push({ k: 'e', s });
+      else if (to === 'out') ctx.out.push({ k: redir.o === 'err' ? 'e' : 'o', s });
+      else if (to !== 'null') { const e = ctx.fs[to.file]; const add = s + '\n'; ctx.fs[to.file] = fileE(to.append && e ? e.c + add : add); }
+    }
+  };
+  route(io.out, 'o', redir.o);
+  route(io.err, 'e', redir.e);
+  ctx.st = st;
+  return st;
+}
+
+function runLine(text, ctx, ln, stepper) {
+  const toks = tokenize(text);
+  const items = [];
+  let cur = [], conn = ';';
+  for (const t of toks) {
+    if (t.t === 'op' && (t.op === ';' || t.op === '&&' || t.op === '||')) { items.push({ toks: cur, conn }); cur = []; conn = t.op; } else cur.push(t);
+  }
+  items.push({ toks: cur, conn });
+  for (const it of items) {
+    if (!it.toks.length) continue;
+    if (it.conn === '&&' && ctx.st !== 0) continue;
+    if (it.conn === '||' && ctx.st === 0) continue;
+    try {
+      execSimple(it.toks, ctx, ln);
+    } catch (e) {
+      if (e instanceof ExitSignal && stepper) { ctx.st = e.code; stepper(ctx, ln, 'exit', e.code); }
+      if (e instanceof Error) { ctx.out.push({ k: 'e', s: `${ctx.zero}: line ${ln}: ${e.message}` }); ctx.st = 1; } else throw e;
+    }
+    if (stepper) stepper(ctx, ln, 'cmd');
+  }
+}
+
+/* ---- Anàlisi del script: línies → arbre ---- */
+function parseScript(src) {
+  const lines = src.split('\n');
+  let i = 0;
+  function block(stops) {
+    const nodes = [];
+    while (i < lines.length) {
+      const t = lines[i].trim(), ln = i + 1;
+      if (!t || t[0] === '#') { i++; continue; }
+      const first = t.split(/[\s;]/)[0];
+      if (stops.includes(first)) break;
+      let m;
+      if (first === 'if') {
+        const node = { t: 'if', branches: [], els: null };
+        m = /^if\s+(.*?);\s*then\s*$/.exec(t);
+        if (!m) throw new ParseError(ln, t);
+        i++;
+        node.branches.push({ cond: m[1], ln, body: block(['elif', 'else', 'fi']) });
+        for (;;) {
+          const u = (lines[i] || '').trim(), l2 = i + 1;
+          if (u.startsWith('elif')) {
+            m = /^elif\s+(.*?);\s*then\s*$/.exec(u);
+            if (!m) throw new ParseError(l2, u);
+            i++; node.branches.push({ cond: m[1], ln: l2, body: block(['elif', 'else', 'fi']) });
+          } else if (u === 'else') { i++; node.els = { ln: l2, body: block(['fi']) }; } else if (u === 'fi') { i++; break; } else throw new ParseError(l2, u || 'fi');
+        }
+        nodes.push(node);
+      } else if (first === 'for') {
+        m = /^for\s+(\w+)\s+in\s+(.*?);\s*do\s*$/.exec(t);
+        if (!m) throw new ParseError(ln, t);
+        i++; const body = block(['done']);
+        if ((lines[i] || '').trim() !== 'done') throw new ParseError(i + 1, 'done');
+        i++; nodes.push({ t: 'for', name: m[1], list: m[2], ln, body });
+      } else if (first === 'while') {
+        m = /^while\s+(.*?);\s*do\s*$/.exec(t);
+        if (!m) throw new ParseError(ln, t);
+        i++; const body = block(['done']);
+        if ((lines[i] || '').trim() !== 'done') throw new ParseError(i + 1, 'done');
+        i++; nodes.push({ t: 'while', cond: m[1], ln, body });
+      } else if (first === 'case') {
+        m = /^case\s+(.*?)\s+in\s*$/.exec(t);
+        if (!m) throw new ParseError(ln, t);
+        i++; const arms = [];
+        while (i < lines.length && lines[i].trim() !== 'esac') {
+          const u = lines[i].trim(), l2 = i + 1;
+          if (!u) { i++; continue; }
+          const a = /^(.+?)\)\s*(.*?)\s*;;\s*$/.exec(u);
+          if (!a) throw new ParseError(l2, u);
+          arms.push({ pats: a[1].split('|').map((x) => x.trim()), body: a[2], ln: l2 }); i++;
+        }
+        if ((lines[i] || '').trim() !== 'esac') throw new ParseError(i + 1, 'esac');
+        i++; nodes.push({ t: 'case', word: m[1], ln, arms });
+      } else { i++; nodes.push({ t: 'cmd', text: t, ln }); }
+    }
+    return nodes;
+  }
+  const ast = block([]);
+  if (i < lines.length) throw new ParseError(i + 1, lines[i].trim());
+  return ast;
+}
+
+/* ---- Execució amb traça: un «pas» per cada línia que s'executa ---- */
+const tx = (ca, es) => T(ca, es);
+function snap(ctx, ln, note) {
+  if (ctx.steps.length >= MAXSTEPS) throw new LimitSignal();
+  ctx.steps.push({ ln, note, st: ctx.st, vars: [...ctx.vars], pos: ctx.pos.slice(), out: ctx.out.map((o) => Object.assign({}, o)) });
+}
+function cmdNote(ctx) {
+  const l = ctx.last || {};
+  if (l.kind === 'assign') return tx(`Guarda «${l.val}» en la variable ${l.name}.`, `Guarda «${l.val}» en la variable ${l.name}.`);
+  if (l.kind === 'echo' && l.toFile) return tx(`Afig «${l.words.slice(1).join(' ')}» al final del fitxer ${l.toFile} (no ix per pantalla).`, `Añade «${l.words.slice(1).join(' ')}» al final del archivo ${l.toFile} (no sale por pantalla).`);
+  if (l.kind === 'echo') return tx(`Escriu «${l.words.slice(1).join(' ')}»${l.toErr ? ' a l\'eixida d\'errors' : ' per pantalla'}.`, `Escribe «${l.words.slice(1).join(' ')}»${l.toErr ? ' en la salida de errores' : ' por pantalla'}.`);
+  if (l.kind === 'read') return tx(`Llig la resposta de l'usuari i la guarda (${l.words.slice(1).filter((w) => w[0] !== '-').pop() || 'REPLY'}).`, `Lee la respuesta del usuario y la guarda (${l.words.slice(1).filter((w) => w[0] !== '-').pop() || 'REPLY'}).`);
+  if (l.kind === 'cmd') return tx(`Executa «${l.words.join(' ')}». Torna el codi ${l.st}${l.st === 0 ? ' (ha anat bé)' : ''}.`, `Ejecuta «${l.words.join(' ')}». Devuelve el código ${l.st}${l.st === 0 ? ' (ha ido bien)' : ''}.`);
+  return tx('No fa res.', 'No hace nada.');
+}
+function condText(ctx) { const l = ctx.last; return l && l.words ? l.words.join(' ') : ''; }
+function stepper(ctx, ln, kind, code) {
+  if (kind === 'exit') { snap(ctx, ln, tx(`exit ${code}: l'script acaba ací amb el codi d'eixida ${code}.`, `exit ${code}: el script termina aquí con el código de salida ${code}.`)); return; }
+  snap(ctx, ln, cmdNote(ctx));
+}
+function runBlock(nodes, ctx) { for (const n of nodes) execNode(n, ctx); }
+function evalCond(text, ctx, ln) {
+  ctx.last = null;
+  runLine(text, ctx, ln, null);
+  return ctx.st;
+}
+function patRe(p) {
+  const raw = p.replace(/^["']|["']$/g, '');
+  return new RegExp('^' + raw.replace(/[.+^${}()|\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\?/g, '.') + '$');
+}
+function execNode(n, ctx) {
+  if (n.t === 'cmd') { ctx.last = null; runLine(n.text, ctx, n.ln, stepper); return; }
+  if (n.t === 'if') {
+    for (const b of n.branches) {
+      const st = evalCond(b.cond, ctx, b.ln);
+      const ok = st === 0;
+      snap(ctx, b.ln, tx(`Condició «${condText(ctx)}» → ${ok ? 'certa' : 'falsa'} (codi ${st}). ${ok ? 'Executa este bloc.' : 'Salta a la branca següent.'}`, `Condición «${condText(ctx)}» → ${ok ? 'cierta' : 'falsa'} (código ${st}). ${ok ? 'Ejecuta este bloque.' : 'Salta a la rama siguiente.'}`));
+      if (ok) { runBlock(b.body, ctx); return; }
+    }
+    if (n.els) runBlock(n.els.body, ctx); else ctx.st = 0;
+    return;
+  }
+  if (n.t === 'for') {
+    const toks = tokenize(n.list);
+    const items = toks.filter((t) => t.t === 'w').flatMap((t) => expandToken(t, ctx));
+    let k = 0;
+    for (const v of items) {
+      if (++k > MAXLOOP) throw new LimitSignal();
+      ctx.vars.set(n.name, v);
+      snap(ctx, n.ln, tx(`Volta ${k} de ${items.length}: ${n.name} val «${v}».`, `Vuelta ${k} de ${items.length}: ${n.name} vale «${v}».`));
+      try { runBlock(n.body, ctx); } catch (e) { if (e instanceof LoopSignal) { if (e.kind === 'break') break; } else throw e; }
+    }
+    if (!items.length) snap(ctx, n.ln, tx('La llista està buida: el bucle no s\'executa cap vegada.', 'La lista está vacía: el bucle no se ejecuta ninguna vez.'));
+    else snap(ctx, n.ln, tx('No queden elements: se surt del bucle.', 'No quedan elementos: se sale del bucle.'));
+    return;
+  }
+  if (n.t === 'while') {
+    let k = 0;
+    for (;;) {
+      const st = evalCond(n.cond, ctx, n.ln);
+      const ok = st === 0;
+      snap(ctx, n.ln, tx(`Condició «${condText(ctx)}» → ${ok ? 'certa' : 'falsa'} (codi ${st}). ${ok ? `Entra al bloc (volta ${k + 1}).` : 'Se surt del bucle.'}`, `Condición «${condText(ctx)}» → ${ok ? 'cierta' : 'falsa'} (código ${st}). ${ok ? `Entra en el bloque (vuelta ${k + 1}).` : 'Se sale del bucle.'}`));
+      if (!ok) break;
+      if (++k > MAXLOOP) throw new LimitSignal();
+      try { runBlock(n.body, ctx); } catch (e) { if (e instanceof LoopSignal) { if (e.kind === 'break') break; } else throw e; }
+    }
+    return;
+  }
+  if (n.t === 'case') {
+    const val = expandNoSplit(tokenize(n.word)[0].segs, ctx);
+    const arm = n.arms.find((a) => a.pats.some((p) => patRe(p).test(val)));
+    snap(ctx, n.ln, arm ? tx(`El valor és «${val}» i coincidix amb el patró ${arm.pats.join(' | ')}.`, `El valor es «${val}» y coincide con el patrón ${arm.pats.join(' | ')}.`) : tx(`El valor és «${val}» i no coincidix amb cap patró.`, `El valor es «${val}» y no coincide con ningún patrón.`));
+    if (arm) { ctx.last = null; runLine(arm.body, ctx, arm.ln, stepper); } else ctx.st = 0;
+  }
+}
+
+function traceScript(src, opts) {
+  const ast = parseScript(src);
+  const ctx = { vars: new Map(), pos: opts.args.slice(), zero: opts.zero, st: 0, fs: makeFS(), cwd: '/home/alumne', disk: opts.disk, stdin: opts.stdin.slice(), out: [], steps: [], last: null, subst: 0 };
+  snap(ctx, 0, tx('Estat inicial: l\'script encara no ha executat cap línia. Les variables estan buides i $? val 0.', 'Estado inicial: el script aún no ha ejecutado ninguna línea. Las variables están vacías y $? vale 0.'));
+  let end = '';
+  try {
+    runBlock(ast, ctx);
+    snap(ctx, 0, tx(`Fi de l'script. Si no hi ha exit, el codi d'eixida és el de l'última ordre: ${ctx.st}.`, `Fin del script. Si no hay exit, el código de salida es el de la última orden: ${ctx.st}.`));
+  } catch (e) {
+    if (e instanceof ExitSignal) end = 'exit';
+    else if (e instanceof LimitSignal) { ctx.steps.push(Object.assign({}, ctx.steps[ctx.steps.length - 1], { ln: 0, note: tx('El simulador s\'atura per no fer-te esperar: hi ha massa passos (potser un bucle infinit).', 'El simulador se detiene para no hacerte esperar: hay demasiados pasos (quizá un bucle infinito).') })); end = 'limit'; }
+    else if (e instanceof LoopSignal) { /* break/continue fora de bucle: s'ignora */ } else throw e;
+  }
+  return { steps: ctx.steps, end, code: ctx.st };
+}
+/*LOGIC-END*/
+
+
+/* ====== 1. Executar un script ====== */
+function termLines(box, lines) {
+  box.textContent = '';
+  for (const [k, s] of lines) { const d = el('div', 'l ' + k, s); box.append(d); }
+}
+function pintaBash() {
+  const sheb = $('#ex-sheb').checked, x = $('#ex-x').checked, cmd = $('#ex-cmd').value;
+  const lines = [];
+  const file = (sheb ? '#!/bin/bash\n' : '') + 'echo "' + T('Hola, açò és un script en Bash', 'Hola, esto es un script en Bash') + '"';
+  $('#ex-file').textContent = `$ ls -l primer_script.sh\n${x ? '-rwxr-xr-x' : '-rw-r--r--'} 1 alumne alumne ${file.length} primer_script.sh\n\n${file}`;
+  const run = { dot: './primer_script.sh', nodot: 'primer_script.sh', bash: 'bash primer_script.sh', sh: 'sh primer_script.sh' }[cmd];
+  lines.push(['cm', '$ ' + run]);
+  let ok = false, why = '';
+  const hola = T('Hola, açò és un script en Bash', 'Hola, esto es un script en Bash');
+  if (cmd === 'nodot') { lines.push(['er', 'bash: primer_script.sh: command not found']); why = T('Sense «./» el shell només busca en les carpetes del PATH, i la carpeta actual no hi és. Escriu ./primer_script.sh.', 'Sin «./» el shell solo busca en las carpetas del PATH, y la carpeta actual no está. Escribe ./primer_script.sh.'); }
+  else if (cmd === 'dot' && !x) { lines.push(['er', 'bash: ./primer_script.sh: Permission denied']); why = T('El fitxer és text sense permís x. Dóna-li permís amb chmod +x primer_script.sh.', 'El archivo es texto sin permiso x. Dale permiso con chmod +x primer_script.sh.'); }
+  else if (cmd === 'dot') { lines.push(['o', hola]); ok = true; why = sheb ? T('Correcte: té permís d\'execució i el shebang diu quin intèrpret ha d\'usar.', 'Correcto: tiene permiso de ejecución y el shebang dice qué intérprete debe usar.') : T('Funciona perquè el llances des de Bash, que l\'executa ell mateix. Sense shebang no pots estar segur de quin intèrpret l\'executarà un altre programa (cron, un altre shell). Posa-hi sempre el shebang.', 'Funciona porque lo lanzas desde Bash, que lo ejecuta él mismo. Sin shebang no puedes estar seguro de qué intérprete lo ejecutará otro programa (cron, otro shell). Ponle siempre el shebang.'); }
+  else { lines.push(['o', hola]); ok = true; why = cmd === 'bash' ? T('«bash fitxer» passa el fitxer a l\'intèrpret: no necessita permís x ni shebang.', '«bash archivo» pasa el archivo al intérprete: no necesita permiso x ni shebang.') : T('«sh fitxer» també l\'executa sense permís x, però sh pot ser un altre shell (dash en Debian i Ubuntu): vigila amb les funcions pròpies de Bash.', '«sh archivo» también lo ejecuta sin permiso x, pero sh puede ser otro shell (dash en Debian y Ubuntu): cuidado con las funciones propias de Bash.'); }
+  termLines($('#ex-term'), lines);
+  const e = $('#ex-exp'); e.textContent = why; e.className = 'exp ' + (ok ? 'good' : 'bad');
+}
+function pintaPS() {
+  const pol = $('#px-pol').value, org = $('#px-org').value, cmd = $('#px-cmd').value;
+  const run = { dot: '.\\primer_script.ps1', nodot: 'primer_script.ps1', bypass: 'powershell.exe -ExecutionPolicy Bypass -File .\\primer_script.ps1' }[cmd];
+  const lines = [['cm', 'PS C:\\Scripts> ' + run]];
+  let ok = false, why = '';
+  const hola = T('Hola, açò és un script en PowerShell', 'Hola, esto es un script en PowerShell');
+  if (cmd === 'nodot') { lines.push(['er', "primer_script.ps1 : The term 'primer_script.ps1' is not recognized as the name of a cmdlet, function, script file, or operable program."]); why = T('PowerShell tampoc busca en la carpeta actual. Escriu .\\primer_script.ps1.', 'PowerShell tampoco busca en la carpeta actual. Escribe .\\primer_script.ps1.'); }
+  else if (cmd === 'bypass') { lines.push(['o', hola]); ok = true; why = T('-ExecutionPolicy Bypass val només per a este procés. Recorda: la política no és una barrera de seguretat, és una protecció contra descuits. És el que posarem en les tasques programades.', '-ExecutionPolicy Bypass vale solo para este proceso. Recuerda: la política no es una barrera de seguridad, es una protección contra descuidos. Es lo que pondremos en las tareas programadas.'); }
+  else if (pol === 'Restricted') { lines.push(['er', 'File C:\\Scripts\\primer_script.ps1 cannot be loaded because running scripts is disabled on this system.']); why = T('Restricted bloqueja tots els scripts (és la política per defecte als Windows de client). Solució sense ser administrador: Set-ExecutionPolicy RemoteSigned -Scope CurrentUser.', 'Restricted bloquea todos los scripts (es la política por defecto en los Windows de cliente). Solución sin ser administrador: Set-ExecutionPolicy RemoteSigned -Scope CurrentUser.'); }
+  else if (pol === 'AllSigned' || (pol === 'RemoteSigned' && org === 'web')) {
+    lines.push(['er', 'File C:\\Scripts\\primer_script.ps1 cannot be loaded. The file C:\\Scripts\\primer_script.ps1 is not digitally signed. You cannot run this script on the current system.']);
+    why = pol === 'AllSigned' ? T('AllSigned només deixa executar scripts signats digitalment. El teu script propi no ho està.', 'AllSigned solo deja ejecutar scripts firmados digitalmente. Tu script propio no lo está.') : T('RemoteSigned deixa els scripts locals, però un script descarregat d\'Internet ha d\'anar signat. Si te\'n fies, desbloqueja\'l amb Unblock-File .\\primer_script.ps1.', 'RemoteSigned deja los scripts locales, pero un script descargado de Internet debe ir firmado. Si te fías, desbloquéalo con Unblock-File .\\primer_script.ps1.');
+  } else { lines.push(['o', hola]); ok = true; why = pol === 'Bypass' ? T('Bypass no bloqueja res: és útil en proves, però perillós com a política permanent.', 'Bypass no bloquea nada: es útil en pruebas, pero peligroso como política permanente.') : T('RemoteSigned deixa executar scripts escrits en l\'equip sense signar. És la política recomanada per a treballar.', 'RemoteSigned deja ejecutar scripts escritos en el equipo sin firmar. Es la política recomendada para trabajar.'); }
+  termLines($('#px-term'), lines);
+  const e = $('#px-exp'); e.textContent = why; e.className = 'exp ' + (ok ? 'good' : 'bad');
+}
+['#ex-sheb', '#ex-x', '#ex-cmd'].forEach((s) => $(s).addEventListener('change', pintaBash));
+['#px-pol', '#px-org', '#px-cmd'].forEach((s) => $(s).addEventListener('change', pintaPS));
+pintaBash(); pintaPS();
+
+/* ====== 2. Cometes i expansió ====== */
+const CO_EX = [
+  ['"Hola $nom" \'$nom\'', 'echo "Hola $nom" \'$nom\''],
+  ['$fitxer / "$fitxer"', 'ls $fitxer "$fitxer"'],
+  ['$( ) i $(( ))', 'echo "Avui: $(date +%F) · doble de n: $((n * 2))"'],
+  ['*.txt', 'echo *.txt "*.txt"'],
+  ['\\$', 'echo "Costa 5\\$" \\$nom'],
+];
+function coCtx() {
+  const vars = new Map([['nom', $('#co-nom').value], ['fitxer', $('#co-fit').value], ['n', $('#co-n').value]]);
+  return { vars, pos: [], zero: './script.sh', st: 0, fs: makeFS('glob'), cwd: '/home/alumne', disk: 62, stdin: [], out: [], steps: null, last: null, subst: 0 };
+}
+function pintaCo() {
+  const out = $('#co-out'); out.textContent = '';
+  let toks;
+  try { toks = tokenize($('#co-line').value).filter((t) => t.t === 'w'); } catch (e) { toks = []; }
+  if (!toks.length) { out.append(el('p', null, T('Escriu una línia o tria un exemple.', 'Escribe una línea o elige un ejemplo.'))); return; }
+  const ctx = coCtx();
+  const rows = toks.map((t) => ({ raw: t.raw, q: [...new Set(t.segs.map((s) => s.q))], f: expandToken(t, ctx) }));
+  const qn = { n: T('sense cometes', 'sin comillas'), d: T('cometes dobles', 'comillas dobles'), s: T('cometes simples', 'comillas simples') };
+  const wrap = el('div', 'scroll'); const tb = el('table', 't');
+  const hd = el('tr'); [T('Escrit', 'Escrito'), T('Cometes', 'Comillas'), T('Es convertix en…', 'Se convierte en…')].forEach((h) => hd.append(el('th', null, h))); tb.append(el('thead')); tb.firstChild.append(hd);
+  const body = el('tbody');
+  rows.forEach((r, i) => {
+    const tr = el('tr'); tr.append(el('td', 'mono', r.raw), el('td', null, r.q.map((x) => qn[x]).join(' + ')));
+    const td = el('td'); const w = el('div', 'words');
+    if (!r.f.length) w.append(el('span', null, T('(res: la paraula desapareix)', '(nada: la palabra desaparece)')));
+    r.f.forEach((f) => w.append(el('span', 'w' + (i === 0 ? ' cmd' : ' v'), '[' + f + ']')));
+    td.append(w); tr.append(td); body.append(tr);
+  });
+  tb.append(body); wrap.append(tb); out.append(wrap);
+  const argv = rows.flatMap((r) => r.f); const cmd = argv[0];
+  const n = argv.length - 1;
+  out.append(el('p', 'key', T(`L'ordre «${cmd ?? ''}» rep ${n} ${n === 1 ? 'argument' : 'arguments'}${n ? ': ' + argv.slice(1).map((a) => '[' + a + ']').join(' ') : ''}.`, `La orden «${cmd ?? ''}» recibe ${n} ${n === 1 ? 'argumento' : 'argumentos'}${n ? ': ' + argv.slice(1).map((a) => '[' + a + ']').join(' ') : ''}.`)));
+  const run = el('div', 'term'); const cx = coCtx(); cx.out = [];
+  try { runLine($('#co-line').value, cx, 1, null); } catch (e) { /* res */ }
+  if (['echo', 'ls'].includes(cmd)) { cx.out.forEach((o) => run.append(el('div', 'l ' + (o.k === 'e' ? 'er' : 'o'), o.s))); out.append(el('span', 'tag', T('Eixida', 'Salida')), run); }
+}
+const coEx = $('#co-ex');
+CO_EX.forEach(([t, line]) => { const b = el('button', 'btn', t); b.type = 'button'; b.addEventListener('click', () => { $('#co-line').value = line; pintaCo(); }); coEx.append(b); });
+['#co-nom', '#co-fit', '#co-n', '#co-line'].forEach((s) => $(s).addEventListener('input', pintaCo));
+$('#co-line').value = CO_EX[1][1];
+pintaCo();
+
+/* ====== 3. Condicions ====== */
+const CD_OPS = [
+  [T('Números', 'Números'), [['-eq', 'a -eq b'], ['-ne', 'a -ne b'], ['-gt', 'a -gt b'], ['-lt', 'a -lt b'], ['-ge', 'a -ge b'], ['-le', 'a -le b']]],
+  [T('Text', 'Texto'), [['=', 'a = b'], ['!=', 'a != b'], ['-z', '-z a'], ['-n', '-n a']]],
+  [T('Fitxers', 'Archivos'), [['-e', '-e a'], ['-f', '-f a'], ['-d', '-d a'], ['-s', '-s a']]],
+];
+CD_OPS.forEach(([g, ops]) => { const og = document.createElement('optgroup'); og.label = g; ops.forEach(([v, t]) => { const o = el('option', null, t); o.value = v; og.append(o); }); $('#cd-op').append(og); });
+$('#cd-op').value = '-gt';
+function cdFS() {
+  const fs = makeFS(); fs['/home/alumne/nota.txt'] = fileE('hola'); fs['/home/alumne/buit.txt'] = fileE(''); return fs;
+}
+function pintaCd() {
+  const a = $('#cd-a').value, b = $('#cd-b').value, op = $('#cd-op').value, q = $('#cd-q').checked;
+  const A = q ? '"$a"' : '$a', B = q ? '"$b"' : '$b', un = ['-z', '-n', '-e', '-f', '-d', '-s'].includes(op);
+  const written = un ? `[ ${op} ${A} ]` : `[ ${A} ${op} ${B} ]`;
+  $('#cd-w').textContent = written;
+  const ctx = { vars: new Map([['a', a], ['b', b]]), pos: [], zero: './prova.sh', st: 0, fs: cdFS(), cwd: '/home/alumne', out: [], last: null };
+  const words = tokenize(written).filter((t) => t.t === 'w').flatMap((t) => expandToken(t, ctx));
+  $('#cd-x').textContent = words.map((w) => (w === '' ? "''" : w)).join(' ');
+  const r = evalTest(words.slice(1, -1), ctx);
+  const pill = $('#cd-st'); pill.textContent = '$? = ' + r.st + ' · ' + (r.st === 0 ? T('cert', 'cierto') : r.st === 1 ? T('fals', 'falso') : T('error', 'error'));
+  pill.className = 'pill ' + (r.st === 0 ? 'ok' : 'ko');
+  let why = '';
+  if (r.err) why = T(`Bash no pot avaluar la condició: «${r.err}». El codi 2 vol dir error de sintaxi, no «fals». Pista: ${r.err.includes('unary') ? 'una variable buida sense cometes desapareix i l\'operador es queda sense operand.' : r.err.includes('integer') ? 'els operadors -eq, -gt… només valen per a números; per a text usa = i !=.' : 'revisa els espais i els operadors.'}`, `Bash no puede evaluar la condición: «${r.err}». El código 2 significa error de sintaxis, no «falso». Pista: ${r.err.includes('unary') ? 'una variable vacía sin comillas desaparece y el operador se queda sin operando.' : r.err.includes('integer') ? 'los operadores -eq, -gt… solo valen para números; para texto usa = y !=.' : 'revisa los espacios y los operadores.'}`);
+  else if (['-gt', '-lt', '-ge', '-le', '-eq', '-ne'].includes(op)) {
+    const x = parseInt(a, 10), y = parseInt(b, 10), tx2 = a < b ? '<' : a > b ? '>' : '=';
+    why = T(`Com a números: ${x} ${op.slice(1)} ${y} és ${r.st === 0 ? 'cert' : 'fals'}. Si es comparaguera com a text, «${a}» ${tx2} «${b}» (ordre alfabètic caràcter a caràcter).`, `Como números: ${x} ${op.slice(1)} ${y} es ${r.st === 0 ? 'cierto' : 'falso'}. Si se comparara como texto, «${a}» ${tx2} «${b}» (orden alfabético carácter a carácter).`);
+  } else if (op === '=' || op === '!=') why = T('Compara els dos textos caràcter a caràcter: «5» i «05» són números iguals, però text diferent.', 'Compara los dos textos carácter a carácter: «5» y «05» son números iguales, pero texto distinto.');
+  else if (op === '-z' || op === '-n') why = T('-z és cert si el text és buit; -n si NO és buit. Prova a buidar a i a treure les cometes.', '-z es cierto si el texto está vacío; -n si NO está vacío. Prueba a vaciar a y a quitar las comillas.');
+  else why = T('Prova amb nota.txt (fitxer amb text), buit.txt (fitxer buit), documents (carpeta) i inexistent.', 'Prueba con nota.txt (archivo con texto), buit.txt (archivo vacío), documents (carpeta) e inexistent.');
+  const e = $('#cd-e'); e.textContent = why; e.className = 'exp ' + (r.st === 0 ? 'good' : r.st === 2 ? 'bad' : '');
+  const num = isInt(a) && isInt(b);
+  let ps;
+  if (['-eq', '-ne', '-gt', '-lt', '-ge', '-le'].includes(op)) ps = `$a ${op} $b`;
+  else if (op === '=') ps = '$a -eq $b'; else if (op === '!=') ps = '$a -ne $b';
+  else if (op === '-z') ps = '[string]::IsNullOrEmpty($a)'; else if (op === '-n') ps = '-not [string]::IsNullOrEmpty($a)';
+  else if (op === '-e') ps = 'Test-Path $a'; else if (op === '-f') ps = 'Test-Path $a -PathType Leaf'; else if (op === '-d') ps = 'Test-Path $a -PathType Container'; else ps = '(Get-Item $a).Length -gt 0';
+  let res = '';
+  if (r.st < 2) {
+    if (['-eq', '-ne', '-gt', '-lt', '-ge', '-le', '=', '!='].includes(op) && (num || op === '=' || op === '!=')) res = r.st === 0 ? 'True' : 'False';
+    else if (!['-eq', '-ne', '-gt', '-lt', '-ge', '-le', '=', '!='].includes(op)) res = r.st === 0 ? 'True' : 'False';
+  }
+  $('#cd-ps').textContent = `if (${ps}) { … }` + (res ? `   # → ${res}` : '') + (op === '=' || op === '!=' ? '\n# -eq / -ne ' + T('no distingixen majúscules (usa -ceq per a distingir-les)', 'no distinguen mayúsculas (usa -ceq para distinguirlas)') : '');
+}
+['#cd-a', '#cd-b'].forEach((s) => $(s).addEventListener('input', pintaCd));
+['#cd-op', '#cd-q'].forEach((s) => $(s).addEventListener('change', pintaCd));
+pintaCd();
+
+/* ====== 4. Traçador ====== */
+const PRE = [
+  { id: 'salutacio', name: T('Salutació', 'Saludo'), zero: './salutacio.sh', args: '', hint: T('Fixa\'t en la diferència entre les cometes dobles i les simples, i en com $(( )) fa el càlcul.', 'Fíjate en la diferencia entre las comillas dobles y las simples, y en cómo $(( )) hace el cálculo.'),
+    src: `#!/bin/bash
+nom="Ana"
+edat=17
+anys=$((edat + 1))
+echo "${T('Hola', 'Hola')} $nom, ${T("l'any que ve tindràs", 'el año que viene tendrás')} $anys"
+echo '${T('Eixida literal', 'Salida literal')}: $nom'`,
+    ps: `$nom = "Ana"
+$edat = 17
+$anys = $edat + 1
+Write-Host "${T('Hola', 'Hola')} $nom, ${T("l'any que ve tindràs", 'el año que viene tendrás')} $anys"
+Write-Host '${T('Eixida literal', 'Salida literal')}: $nom'` },
+  { id: 'nota', name: T('Nota', 'Nota'), zero: './nota.sh', args: '7', hint: T('Prova amb 10, 7, 3 i també sense paràmetre: què passa quan $1 està buit?', 'Prueba con 10, 7, 3 y también sin parámetro: ¿qué pasa cuando $1 está vacío?'),
+    src: `#!/bin/bash
+nota=$1
+if [ "$nota" -ge 9 ]; then
+  echo "${T('Excel·lent', 'Sobresaliente')}"
+elif [ "$nota" -ge 5 ]; then
+  echo "${T('Aprovat', 'Aprobado')}"
+else
+  echo "${T('Suspés', 'Suspenso')}"
+fi`,
+    ps: `param([int]$nota)
+if ($nota -ge 9) {
+    Write-Host "${T('Excel·lent', 'Sobresaliente')}"
+} elseif ($nota -ge 5) {
+    Write-Host "${T('Aprovat', 'Aprobado')}"
+} else {
+    Write-Host "${T('Suspés', 'Suspenso')}"
+}` },
+  { id: 'suma', name: T('Suma', 'Suma'), zero: './suma.sh', args: '4', hint: T('Segueix i i suma volta a volta. Quan val i en acabar el bucle?', 'Sigue i y suma vuelta a vuelta. ¿Cuánto vale i al acabar el bucle?'),
+    src: `#!/bin/bash
+limit=\${1:-4}
+i=1
+suma=0
+while [ $i -le $limit ]; do
+  suma=$((suma + i))
+  echo "i=$i suma=$suma"
+  i=$((i + 1))
+done
+echo "Total: $suma"`,
+    ps: `param([int]$Limit = 4)
+$i = 1
+$suma = 0
+while ($i -le $Limit) {
+    $suma = $suma + $i
+    Write-Host "i=$i suma=$suma"
+    $i++
+}
+Write-Host "Total: $suma"` },
+  { id: 'parametres', name: T('Paràmetres', 'Parámetros'), zero: './crear.sh', args: 'ana luis "Maria Lopez"', hint: T('Prova amb i sense paràmetres. Mira $# i com "$@" respecta «Maria Lopez».', 'Prueba con y sin parámetros. Mira $# y cómo "$@" respeta «Maria Lopez».'),
+    src: `#!/bin/bash
+if [ $# -eq 0 ]; then
+  echo "${T('Ús', 'Uso')}: $0 ${T('nom', 'nombre')}..." >&2
+  exit 1
+fi
+for usuari in "$@"; do
+  echo "${T('Creant', 'Creando')} $usuari"
+done
+echo "${T('Fet', 'Hecho')}: $# ${T('usuaris', 'usuarios')}"`,
+    ps: `if ($args.Count -eq 0) {
+    Write-Error "${T('Ús', 'Uso')}: .\\Crear.ps1 ${T('nom', 'nombre')}..."
+    exit 1
+}
+foreach ($usuari in $args) {
+    Write-Host "${T('Creant', 'Creando')} $usuari"
+}
+Write-Host "${T('Fet', 'Hecho')}: $($args.Count) ${T('usuaris', 'usuarios')}"` },
+  { id: 'eixida', name: T('Codi d\'eixida', 'Código de salida'), zero: './eixida.sh', args: '', hint: T('Mira què val $? després de cada línia. Quin codi té l\'script en acabar? Per què no és 1?', 'Mira cuánto vale $? después de cada línea. ¿Qué código tiene el script al acabar? ¿Por qué no es 1?'),
+    src: `#!/bin/bash
+usuari=\${1:-alumne}
+grep -q "^$usuari:" /etc/passwd
+if [ $? -eq 0 ]; then
+  echo "$usuari ${T('existeix', 'existe')}"
+else
+  echo "$usuari ${T('no existeix', 'no existe')}"
+fi
+mkdir /tmp/proves
+echo "${T('mkdir ha tornat', 'mkdir ha devuelto')} $?"
+mkdir /tmp/proves
+echo "${T('mkdir ha tornat', 'mkdir ha devuelto')} $?"
+exit $?`,
+    ps: `# $? ${T('és True/False; $LASTEXITCODE és el número del darrer programa extern', 'es True/False; $LASTEXITCODE es el número del último programa externo')}
+ping -n 1 localhost | Out-Null
+Write-Host "ping ${T('ha tornat', 'ha devuelto')} $LASTEXITCODE"
+ping -n 1 host-que-no-existeix | Out-Null
+Write-Host "ping ${T('ha tornat', 'ha devuelto')} $LASTEXITCODE"
+exit $LASTEXITCODE   # ${T('Write-Host no el canvia: acaba amb el codi del ping', 'Write-Host no lo cambia: acaba con el código del ping')}` },
+  { id: 'menu', name: T('Menú', 'Menú'), zero: './menu.sh', args: '', stdin: '1', hint: T('Canvia la resposta a 2, 3 i 9. Fixa\'t en quin patró del case coincidix i en el codi d\'eixida.', 'Cambia la respuesta a 2, 3 y 9. Fíjate en qué patrón del case coincide y en el código de salida.'),
+    src: `#!/bin/bash
+echo "1) ${T('Data', 'Fecha')}   2) ${T('Usuari', 'Usuario')}   3) ${T('Eixir', 'Salir')}"
+read -p "${T('Opció', 'Opción')}: " op
+case "$op" in
+  1) date +%F ;;
+  2) whoami ;;
+  3) echo "${T('Adéu', 'Adiós')}"; exit 0 ;;
+  *) echo "${T('Opció no vàlida', 'Opción no válida')}" >&2; exit 2 ;;
+esac
+echo "${T('Fi del menú', 'Fin del menú')}"`,
+    ps: `Write-Host "1) ${T('Data', 'Fecha')}   2) ${T('Usuari', 'Usuario')}   3) ${T('Eixir', 'Salir')}"
+$op = Read-Host "${T('Opció', 'Opción')}"
+switch ($op) {
+    "1" { Get-Date -Format "yyyy-MM-dd" }
+    "2" { whoami }
+    "3" { Write-Host "${T('Adéu', 'Adiós')}"; exit 0 }
+    default { Write-Error "${T('Opció no vàlida', 'Opción no válida')}"; exit 2 }
+}
+Write-Host "${T('Fi del menú', 'Fin del menú')}"` },
+  { id: 'copia', name: T('Còpia', 'Copia'), zero: './backup.sh', args: '/home/alumne/documents', hint: T('Prova també amb /carpeta_que_no_existix. Observa l\'avís de tar sobre la barra inicial (va a l\'eixida d\'errors).', 'Prueba también con /carpeta_que_no_existe. Observa el aviso de tar sobre la barra inicial (va a la salida de errores).'),
+    src: `#!/bin/bash
+origen=$1
+data=$(date +%Y-%m-%d)
+if [ ! -d "$origen" ]; then
+  echo "${T('No existeix', 'No existe')} $origen" >&2
+  exit 1
+fi
+tar -czf "/backups/backup_$data.tar.gz" "$origen"
+echo "${T('Còpia creada', 'Copia creada')}: backup_$data.tar.gz"`,
+    ps: `param([Parameter(Mandatory)][string]$Origen)
+$data = Get-Date -Format "yyyy-MM-dd"
+if (-not (Test-Path $Origen -PathType Container)) {
+    Write-Error "${T('No existeix', 'No existe')} $Origen"
+    exit 1
+}
+Compress-Archive -Path $Origen -DestinationPath "D:\\Backups\\backup_$data.zip"
+Write-Host "${T('Còpia creada', 'Copia creada')}: backup_$data.zip"` },
+  { id: 'disc', name: T('Comprovar disc', 'Comprobar disco'), zero: './comprovar_disc.sh', args: '', disk: 62, hint: T('Canvia l\'ocupació del disc a 85 i torna a traçar. Mira com la línia del df|tail|awk|tr es convertix en un número.', 'Cambia la ocupación del disco a 85 y vuelve a trazar. Mira cómo la línea del df|tail|awk|tr se convierte en un número.'),
+    src: `#!/bin/bash
+llindar=\${1:-80}
+us=$(df -P / | tail -1 | awk '{print $5}' | tr -d '%')
+data=$(date '+%Y-%m-%d %H:%M')
+echo "$data · ${T('disc al', 'disco al')} $us%" >> disc.log
+if [ "$us" -gt "$llindar" ]; then
+  echo "${T('AVÍS: el disc supera el', 'AVISO: el disco supera el')} $llindar%"
+fi`,
+    ps: `param([int]$Llindar = 80)
+$disc = Get-PSDrive C
+$us = [math]::Round($disc.Used / ($disc.Used + $disc.Free) * 100)
+$data = Get-Date -Format "yyyy-MM-dd HH:mm"
+Add-Content -Path disc.log -Value "$data · ${T('disc al', 'disco al')} $us%"
+if ($us -gt $Llindar) {
+    Write-Host "${T('AVÍS: el disc supera el', 'AVISO: el disco supera el')} $Llindar%"
+}` },
+];
+const trSel = $('#tr-sel');
+PRE.forEach((p, i) => { const o = el('option', null, p.name); o.value = String(i); trSel.append(o); });
+let trSteps = [], trK = 0, trP = null;
+function splitArgs(s) {
+  const c = { vars: new Map(), pos: [], zero: '', st: 0, fs: {}, cwd: '/', out: [], last: null };
+  return tokenize(s).filter((t) => t.t === 'w').map((t) => expandNoSplit(t.segs, c));
+}
+function trLoad() {
+  trP = PRE[Number(trSel.value)];
+  $('#tr-args').value = trP.args || '';
+  $('#tr-in').value = trP.stdin || '';
+  $('#tr-dk').value = String(trP.disk ?? 62);
+  $('#tr-inw').hidden = !/read /.test(trP.src);
+  $('#tr-dkw').hidden = !/df -P/.test(trP.src);
+  $('#tr-ps').textContent = trP.ps;
+  trRun();
+}
+function trRun() {
+  try {
+    const r = traceScript(trP.src, { args: splitArgs($('#tr-args').value), stdin: $('#tr-in').value === '' ? [] : $('#tr-in').value.split('|'), disk: Number($('#tr-dk').value) || 0, zero: trP.zero });
+    trSteps = r.steps;
+  } catch (e) {
+    trSteps = [{ ln: 0, note: e instanceof ParseError ? T(`El simulador no entén la línia ${e.ln}: ${e.text}`, `El simulador no entiende la línea ${e.ln}: ${e.text}`) : String(e && e.message), st: 0, vars: [], pos: [], out: [] }];
+  }
+  trK = 0; trPaint();
+}
+function trPaint() {
+  const s = trSteps[trK];
+  const src = $('#tr-src'); src.textContent = '';
+  trP.src.split('\n').forEach((l, i) => {
+    const d = el('div', 'sl' + (s.ln === i + 1 ? ' cur' : '')); d.append(el('span', 'no', String(i + 1)), el('span', null, l));
+    if (s.ln === i + 1) d.setAttribute('aria-current', 'step');
+    src.append(d);
+  });
+  const prev = trK > 0 ? trSteps[trK - 1] : null;
+  const pv = prev ? new Map(prev.vars) : new Map();
+  const tb = $('#tr-vars'); tb.textContent = '';
+  const row = (n, v, chg, sp) => { const tr = el('tr', (chg ? 'chg ' : '') + (sp ? 'sp' : '')); tr.append(el('td', 'nm', n), el('td', 'vl', v)); tb.append(tr); };
+  row('$?', String(s.st), prev && prev.st !== s.st, true);
+  row('$#', String(s.pos.length), false, true);
+  s.pos.forEach((p, i) => row('$' + (i + 1), p, false, true));
+  s.vars.forEach(([k, v]) => row(k, v === '' ? '""' : v, pv.get(k) !== v));
+  $('#tr-note').textContent = s.note;
+  const o = $('#tr-out'); o.textContent = '';
+  if (!s.out.length) o.append(el('div', 'l cm', T('(encara res)', '(todavía nada)')));
+  s.out.forEach((x) => o.append(el('div', 'l ' + (x.k === 'e' ? 'er' : 'o'), x.s)));
+  $('#tr-n').textContent = T(`Pas ${trK} de ${trSteps.length - 1}`, `Paso ${trK} de ${trSteps.length - 1}`);
+  $('#tr-prev').disabled = trK === 0; $('#tr-next').disabled = trK >= trSteps.length - 1; $('#tr-end').disabled = trK >= trSteps.length - 1;
+}
+trSel.addEventListener('change', trLoad);
+['#tr-args', '#tr-in', '#tr-dk'].forEach((x) => $(x).addEventListener('change', trRun));
+$('#tr-prev').addEventListener('click', () => { if (trK > 0) { trK--; trPaint(); } });
+$('#tr-next').addEventListener('click', () => { if (trK < trSteps.length - 1) { trK++; trPaint(); } });
+$('#tr-end').addEventListener('click', () => { trK = trSteps.length - 1; trPaint(); });
+$('#tr-reset').addEventListener('click', () => { trK = 0; trPaint(); });
+trLoad();
+
+/* ====== 5. Paràmetres i read ====== */
+let paArgs = [], paZero = './saluda.sh';
+function paParse() {
+  const w = splitArgs($('#pa-line').value);
+  paZero = w[0] || './script.sh'; paArgs = w.slice(1); paPaint();
+}
+function paPaint() {
+  const tb = $('#pa-tab'); tb.textContent = '';
+  const row = (a, b) => { const tr = el('tr'); tr.append(el('td', 'mono', a), el('td', 'mono', b)); tb.append(tr); };
+  row('$0', paZero); row('$#', String(paArgs.length));
+  for (let i = 0; i < Math.max(3, paArgs.length); i++) row('$' + (i + 1), i < paArgs.length ? '[' + paArgs[i] + ']' : T('(buit)', '(vacío)'));
+  row('"$@"', paArgs.map((a) => '[' + a + ']').join(' ')); row('"$*"', '[' + paArgs.join(' ') + ']');
+  const fill = (box, arr) => { box.textContent = ''; arr.forEach((a) => box.append(el('span', 'w v', '[' + a + ']'))); if (!arr.length) box.append(el('span', null, T('(cap volta)', '(ninguna vuelta)'))); };
+  fill($('#pa-at'), paArgs); fill($('#pa-noat'), paArgs.flatMap((a) => a.split(/\s+/).filter(Boolean)));
+  $('#pa-ps').textContent = `$args.Count   # ${paArgs.length}\n` + paArgs.slice(0, 3).map((a, i) => `$args[${i}]      # ${a}`).join('\n');
+}
+$('#pa-line').addEventListener('input', paParse);
+$('#pa-shift').addEventListener('click', () => { if (paArgs.length) { paArgs.shift(); paPaint(); } });
+$('#pa-reset').addEventListener('click', paParse);
+paParse();
+function rdPaint() {
+  const f = $('#rd-form').value, inp = $('#rd-in').value;
+  const ctx = { vars: new Map(), pos: [], zero: '', st: 0, fs: {}, cwd: '/', out: [], stdin: [inp], last: null };
+  const io = { out: [], err: [] };
+  const args = { nom: ['nom'], r2: ['-r', 'nom', 'cognoms'], p: ['-p', T('Com et dius? ', '¿Cómo te llamas? '), 'nom'], rep: [] }[f];
+  runBuiltin('read', args, ctx, io, 1);
+  const parts = [...ctx.vars].map(([k, v]) => `${k} = «${v}»`);
+  $('#rd-out').textContent = (io.out[0] ? T('Es veu: ', 'Se ve: ') + io.out[0] + ' · ' : '') + parts.join(' · ') + (f === 'nom' ? T('. Amb una sola variable, nom rep tota la línia.', '. Con una sola variable, nom recibe toda la línea.') : f === 'r2' ? T('. Amb dues variables, la primera paraula va a nom i la resta a cognoms.', '. Con dos variables, la primera palabra va a nom y el resto a cognoms.') : f === 'rep' ? T('. Sense nom de variable, la resposta va a REPLY.', '. Sin nombre de variable, la respuesta va a REPLY.') : T('. -p mostra un missatge abans de llegir.', '. -p muestra un mensaje antes de leer.'));
+  $('#rd-ps').textContent = { nom: '$nom = Read-Host', r2: '$resposta = Read-Host\n$nom, $cognoms = $resposta -split " ", 2', p: '$nom = Read-Host "' + T('Com et dius?', '¿Cómo te llamas?') + '"', rep: '$resposta = Read-Host' }[f];
+}
+$('#rd-form').addEventListener('change', rdPaint); $('#rd-in').addEventListener('input', rdPaint);
+rdPaint();
+
+/* ====== 6. Troba l'error ====== */
+const ERR = [
+  { lang: 'Bash', code: ['#!/bin/bash', 'edat = 20', 'echo "Tens $edat anys"'], bad: 2, sym: './edat.sh: line 2: edat: command not found',
+    why: T('En Bash no pot haver-hi espais al voltant del = d\'una assignació: el shell intenta executar una ordre anomenada «edat». Correcció: edat=20.', 'En Bash no puede haber espacios alrededor del = de una asignación: el shell intenta ejecutar una orden llamada «edat». Corrección: edat=20.') },
+  { lang: 'Bash', code: ['#!/bin/bash', 'n=5', 'if [ "$n" -gt 0 ]; then', '  echo "Positiu"', 'echo "Acabat"'], bad: 3, sym: './n.sh: line 6: syntax error: unexpected end of file',
+    why: T('L\'if de la línia 3 no es tanca mai: falta el fi. Bash ho nota al final del fitxer, però la causa és l\'if sense tancar. Correcció: afegir «fi» després de la línia 4.', 'El if de la línea 3 no se cierra nunca: falta el fi. Bash lo nota al final del archivo, pero la causa es el if sin cerrar. Corrección: añadir «fi» después de la línea 4.') },
+  { lang: 'Bash', code: ['#!/bin/bash', 'read -p "Continuar (si/no)? " resposta', 'if [ "$resposta" -eq "si" ]; then', '  echo "Continuem"', 'fi'], bad: 3, sym: './pregunta.sh: line 3: [: si: integer expression expected',
+    why: T('-eq compara números, no text. Per a comparar text s\'usa =. Correcció: [ "$resposta" = "si" ].', '-eq compara números, no texto. Para comparar texto se usa =. Corrección: [ "$resposta" = "si" ].') },
+  { lang: 'Bash', code: ['#!/bin/bash', 'n=5', 'if [$n -gt 3]; then', '  echo "Gran"', 'fi'], bad: 3, sym: './gran.sh: line 3: [5: command not found',
+    why: T('[ és una ordre i necessita un espai després (i abans de ]). Correcció: if [ "$n" -gt 3 ]; then.', '[ es una orden y necesita un espacio después (y antes de ]). Corrección: if [ "$n" -gt 3 ]; then.') },
+  { lang: 'Bash', code: ['#!/bin/bash', 'fitxer="Mi document.txt"', 'rm $fitxer', 'echo "Esborrat"'], bad: 3, sym: "rm: cannot remove 'Mi': No such file or directory\nrm: cannot remove 'document.txt': No such file or directory",
+    why: T('Sense cometes, la variable es parteix en dues paraules i rm rep dos arguments. Correcció: rm "$fitxer".', 'Sin comillas, la variable se parte en dos palabras y rm recibe dos argumentos. Corrección: rm "$fitxer".') },
+  { lang: 'Bash', code: ['#!/bin/bash', 'for i in 1 2 3 do', '  echo "Volta $i"', 'done'], bad: 2, sym: "./voltes.sh: line 4: syntax error near unexpected token `done'",
+    why: T('Falta el ; (o un canvi de línia) abans de do. Correcció: for i in 1 2 3; do.', 'Falta el ; (o un salto de línea) antes de do. Corrección: for i in 1 2 3; do.') },
+  { lang: 'Bash', code: ['#!/bin/bash', 'cp dades.txt /backups/', 'echo "Còpia acabada"', 'exit $?'], bad: 4, sym: T('Encara que cp falle, l\'script acaba amb codi 0 i Aules (o cron) pensa que ha anat bé.', 'Aunque cp falle, el script termina con código 0 y Aules (o cron) piensa que ha ido bien.'),
+    why: T('$? conté el codi de l\'última ordre, que ja és l\'echo (0). Cal guardar el codi de cp just després: codi=$? i acabar amb exit $codi.', '$? contiene el código de la última orden, que ya es el echo (0). Hay que guardar el código de cp justo después: codi=$? y terminar con exit $codi.') },
+  { lang: 'PowerShell', code: ['$nota = 7', 'if ($nota > 5) {', '    Write-Host "Aprovat"', '}'], bad: 2, sym: T('No mostra mai «Aprovat» (ni amb nota 10) i crea un fitxer anomenat 5 en la carpeta.', 'No muestra nunca «Aprobado» (ni con nota 10) y crea un archivo llamado 5 en la carpeta.'),
+    why: T('En PowerShell > no compara: redirigix el valor a un fitxer. La comparació és -gt. Correcció: if ($nota -gt 5).', 'En PowerShell > no compara: redirige el valor a un archivo. La comparación es -gt. Corrección: if ($nota -gt 5).') },
+  { lang: 'PowerShell', code: ['$nom = "Ana"', 'Write-Host "Hola, " + $nom'], bad: 2, sym: 'Hola,  + Ana',
+    why: T('Write-Host rep tres arguments separats («Hola, », «+» i Ana) i els escriu amb espais. Correcció: Write-Host "Hola, $nom".', 'Write-Host recibe tres argumentos separados («Hola, », «+» y Ana) y los escribe con espacios. Corrección: Write-Host "Hola, $nom".') },
+];
+let erOrder = shuffle(ERR.map((_, i) => i)), erI = -1, erOk = 0, erKo = 0, erDone = false;
+function erNext() {
+  erI = (erI + 1) % erOrder.length; if (erI === 0) erOrder = shuffle(erOrder);
+  const c = ERR[erOrder[erI]]; erDone = false;
+  $('#er-lang').textContent = c.lang; $('#er-n').textContent = `${erI + 1}/${ERR.length}`;
+  termLines($('#er-sym'), c.sym.split('\n').map((s) => ['er', s]));
+  const src = $('#er-src'); src.textContent = '';
+  c.code.forEach((l, i) => {
+    const b = el('button', 'sl'); b.type = 'button'; b.append(el('span', 'no', String(i + 1)), el('span', null, l));
+    b.addEventListener('click', () => {
+      if (erDone) return; erDone = true;
+      const good = i + 1 === c.bad;
+      if (good) erOk++; else erKo++;
+      $('#er-ok').textContent = String(erOk); $('#er-ko').textContent = String(erKo);
+      $$('button', src).forEach((x, k) => { if (k + 1 === c.bad) x.classList.add('good'); else if (k === i) x.classList.add('bad'); });
+      const fb = $('#er-fb'); fb.className = 'exp ' + (good ? 'good' : 'bad');
+      fb.textContent = (good ? T('Correcte! ', '¡Correcto! ') : T(`No: l'error és en la línia ${c.bad}. `, `No: el error está en la línea ${c.bad}. `)) + c.why;
+    });
+    src.append(b);
+  });
+  $('#er-fb').textContent = ''; $('#er-fb').className = 'exp';
+}
+$('#er-next').addEventListener('click', erNext);
+erNext();
+
+/* ====== 7. Bash ↔ PowerShell ====== */
+const EQ_CATS = [['all', T('Tot', 'Todo')], ['vars', T('Variables', 'Variables')], ['cond', T('Condicions', 'Condiciones')], ['loops', T('Bucles', 'Bucles')], ['input', T('Entrada', 'Entrada')], ['files', T('Fitxers i text', 'Archivos y texto')], ['out', T('Eixida i execució', 'Salida y ejecución')]];
+const EQ = [
+  ['vars', T('Assignar', 'Asignar'), 'nom="Ana"', '$nom = "Ana"'],
+  ['vars', T('Llegir el valor', 'Leer el valor'), 'echo "$nom"', 'Write-Host $nom'],
+  ['vars', T('Aritmètica', 'Aritmética'), 'r=$((5 + 3))', '$r = 5 + 3'],
+  ['vars', T('Resultat d\'una ordre', 'Resultado de una orden'), 'data=$(date +%F)', '$data = Get-Date -Format "yyyy-MM-dd"'],
+  ['vars', T('Variable d\'entorn', 'Variable de entorno'), 'echo "$HOME"', '$env:USERPROFILE'],
+  ['cond', T('Comparar nombres', 'Comparar números'), '[ "$a" -gt "$b" ]', '$a -gt $b'],
+  ['cond', T('Comparar text', 'Comparar texto'), '[ "$a" = "$b" ]', '$a -eq $b'],
+  ['cond', T('Existix el fitxer', 'Existe el archivo'), '[ -f "$x" ]', 'Test-Path $x -PathType Leaf'],
+  ['cond', T('Existix la carpeta', 'Existe la carpeta'), '[ -d "$x" ]', 'Test-Path $x -PathType Container'],
+  ['cond', 'if', 'if [ "$n" -gt 0 ]; then … fi', 'if ($n -gt 0) { … }'],
+  ['cond', T('«I» lògica', '«Y» lógica'), '[ "$a" -gt 1 ] && [ "$b" -gt 1 ]', '($a -gt 1) -and ($b -gt 1)'],
+  ['cond', 'case / switch', 'case "$op" in 1) … ;; esac', 'switch ($op) { "1" { … } }'],
+  ['loops', 'for', 'for x in a b c; do … done', 'foreach ($x in "a","b","c") { … }'],
+  ['loops', 'while', 'while [ "$i" -le 3 ]; do … done', 'while ($i -le 3) { … }'],
+  ['loops', T('Línies d\'un fitxer', 'Líneas de un archivo'), 'while read -r l; do … done < f.txt', 'Get-Content f.txt | ForEach-Object { … }'],
+  ['input', T('Paràmetres', 'Parámetros'), '$1   $#   "$@"', '$args[0]   $args.Count   $args'],
+  ['input', T('Preguntar', 'Preguntar'), 'read -p "Nom: " nom', '$nom = Read-Host "Nom"'],
+  ['input', T('Contrasenya', 'Contraseña'), 'read -s clau', '$clau = Read-Host -AsSecureString'],
+  ['files', T('Llistar', 'Listar'), 'ls -l', 'Get-ChildItem'],
+  ['files', T('Copiar', 'Copiar'), 'cp a b', 'Copy-Item a b'],
+  ['files', T('Esborrar', 'Borrar'), 'rm f', 'Remove-Item f'],
+  ['files', T('Buscar text', 'Buscar texto'), 'grep "ERROR" log', 'Select-String "ERROR" log -CaseSensitive', T('grep distingix majúscules; Select-String no (per això -CaseSensitive).', 'grep distingue mayúsculas; Select-String no (por eso -CaseSensitive).')],
+  ['files', T('Comptar línies', 'Contar líneas'), 'wc -l f', '(Get-Content f).Count'],
+  ['files', T('Substituir text', 'Sustituir texto'), "sed 's/vell/nou/g' f", "(Get-Content f) -replace 'vell','nou'"],
+  ['out', T('Eixida a un fitxer', 'Salida a un archivo'), 'ordre >> f.log 2>&1', 'ordre *>> f.log'],
+  ['out', T('Codi de l\'última ordre', 'Código de la última orden'), '$?', '$LASTEXITCODE', T('En PowerShell $? és True/False i $LASTEXITCODE el número d\'un programa extern.', 'En PowerShell $? es True/False y $LASTEXITCODE el número de un programa externo.')],
+  ['out', T('Executar l\'script', 'Ejecutar el script'), './script.sh', '.\\script.ps1'],
+  ['out', T('Privilegis', 'Privilegios'), 'sudo ordre', T('Consola «com a administrador»', 'Consola «como administrador»')],
+  ['out', T('Programar tasca', 'Programar tarea'), 'crontab -e', 'schtasks /create …'],
+];
+let eqCat = 'all';
+const eqC = $('#eq-cats');
+EQ_CATS.forEach(([k, t]) => { const b = el('button', 'btn', t); b.type = 'button'; b.setAttribute('aria-pressed', String(k === 'all')); b.addEventListener('click', () => { eqCat = k; $$('button', eqC).forEach((x) => x.setAttribute('aria-pressed', String(x === b))); eqPaint(); }); eqC.append(b); });
+function eqPaint() {
+  const mode = $('#eq-mode').value, body = $('#eq-body'); body.textContent = '';
+  EQ.filter((r) => eqCat === 'all' || r[0] === eqCat).forEach((r) => {
+    const tr = el('tr'); tr.append(el('td', null, r[1]));
+    [['bash', r[2]], ['ps', r[3]]].forEach(([k, v]) => {
+      const td = el('td', 'mono');
+      if ((mode === 'hideps' && k === 'ps') || (mode === 'hidebash' && k === 'bash')) {
+        const b = el('button', 'btn', T('Mostra', 'Muestra')); b.type = 'button'; b.addEventListener('click', () => { td.textContent = v; });
+        td.append(b);
+      } else td.textContent = v;
+      tr.append(td);
+    });
+    body.append(tr);
+  });
+  const notes = EQ.filter((r) => (eqCat === 'all' || r[0] === eqCat) && r[4]).map((r) => r[4]);
+  $('#eq-hint').textContent = notes.length ? T('Compte: ', 'Ojo: ') + notes.join(' ') : T('Les ordres no es tradueixen: són les mateixes en tots els idiomes.', 'Las órdenes no se traducen: son las mismas en todos los idiomas.');
+}
+$('#eq-mode').addEventListener('change', eqPaint);
+eqPaint();
+
+/* ====== 8. Pràctica ====== */
+const mono = (s) => s;
+const GEN = {
+  expansio() {
+    const nom = pick(['Ana', 'Luis', 'Marta']), f = pick(['Mi document.txt', 'dades 2026.csv', 'notes finals.md']);
+    const setup = `nom="${nom}"\nfitxer="${f}"\n`;
+    const L = pick([
+      { l: 'ls $fitxer', q: T('Quants arguments rep ls?', '¿Cuántos argumentos recibe ls?'), a: '2', o: ['1', '2', '3', '0'], w: T('Sense cometes, el valor es parteix pels espais: ls rep «' + f.split(' ')[0] + '» i «' + f.split(' ')[1] + '».', 'Sin comillas, el valor se parte por los espacios: ls recibe «' + f.split(' ')[0] + '» y «' + f.split(' ')[1] + '».') },
+      { l: 'ls "$fitxer"', q: T('Quants arguments rep ls?', '¿Cuántos argumentos recibe ls?'), a: '1', o: ['1', '2', '3', '0'], w: T('Les cometes dobles mantenen el valor sencer com un únic argument.', 'Las comillas dobles mantienen el valor entero como un único argumento.') },
+      { l: "echo '$nom'", q: T('Què mostra?', '¿Qué muestra?'), a: '$nom', o: ['$nom', nom, 'nom', T('(res)', '(nada)')], w: T('Les cometes simples no expandixen res.', 'Las comillas simples no expanden nada.') },
+      { l: 'echo "Hola $nom"', q: T('Què mostra?', '¿Qué muestra?'), a: 'Hola ' + nom, o: ['Hola ' + nom, 'Hola $nom', 'Hola nom', 'Hola'], w: T('Les cometes dobles substituïxen la variable pel seu valor.', 'Las comillas dobles sustituyen la variable por su valor.') },
+      { l: 'echo "Total: $((2 + 3 * 4))"', q: T('Què mostra?', '¿Qué muestra?'), a: 'Total: 14', o: ['Total: 14', 'Total: 20', 'Total: 2 + 3 * 4', 'Total: 9'], w: T('$(( )) calcula amb la precedència normal: primer 3 * 4 = 12 i després 2 + 12 = 14.', '$(( )) calcula con la precedencia normal: primero 3 * 4 = 12 y después 2 + 12 = 14.') },
+      { l: 'echo "Avui: $(date +%F)"', q: T('Si avui és el 24 de novembre de 2026, què mostra?', 'Si hoy es el 24 de noviembre de 2026, ¿qué muestra?'), a: 'Avui: 2026-11-24', o: ['Avui: 2026-11-24', 'Avui: $(date +%F)', 'Avui: date +%F', 'Avui: 24/11/2026'], w: T('$( ) executa l\'ordre de dins i posa la seua eixida; date +%F dóna ISO: any-mes-dia.', '$( ) ejecuta la orden de dentro y pone su salida; date +%F da ISO: año-mes-día.') },
+    ]);
+    return { p: L.q, code: setup + L.l, a: L.a, o: L.o, w: L.w };
+  },
+  traça() {
+    const a = rnd(1, 3), b = rnd(4, 7);
+    let s = 0; for (let k = a; k <= b; k++) s += k;
+    const askI = Math.random() < 0.3;
+    const ans = askI ? b + 1 : s;
+    const opts = [...new Set([ans, ans + 1, ans - 1, askI ? b : s - a, askI ? a : s + b + 1].map(String))].slice(0, 4);
+    if (!opts.includes(String(ans))) opts[0] = String(ans);
+    return { p: askI ? T('Quin valor té la variable i quan acaba el bucle?', '¿Qué valor tiene la variable i cuando acaba el bucle?') : T('Què mostra l\'últim echo?', '¿Qué muestra el último echo?'), code: `i=${a}\nsuma=0\nwhile [ $i -le ${b} ]; do\n  suma=$((suma + i))\n  i=$((i + 1))\ndone\necho $${askI ? 'i' : 'suma'}`, a: String(ans), o: opts, w: askI ? T(`El bucle continua mentre i ≤ ${b}; en acabar, i ha pujat una vegada més: ${b + 1}.`, `El bucle continúa mientras i ≤ ${b}; al acabar, i ha subido una vez más: ${b + 1}.`) : T(`Suma els valors de ${a} a ${b}: ${s}.`, `Suma los valores de ${a} a ${b}: ${s}.`) };
+  },
+  eixida() {
+    const B = [
+      ['ls /etc > /dev/null\nls /carpeta_inexistent 2> /dev/null\necho $?', '2', T('ls torna 2 quan no troba l\'argument (en Linux amb GNU).', 'ls devuelve 2 cuando no encuentra el argumento (en Linux con GNU).')],
+      ['grep -q root /etc/passwd\necho $?', '0', T('grep torna 0 si troba coincidències.', 'grep devuelve 0 si encuentra coincidencias.')],
+      ['grep -q usuari_inventat /etc/passwd\necho $?', '1', T('grep torna 1 si no troba res (no és un error: és «no hi és»).', 'grep devuelve 1 si no encuentra nada (no es un error: es «no está»).')],
+      ['false\ntrue\necho $?', '0', T('$? és el codi de l\'última ordre: true (0).', '$? es el código de la última orden: true (0).')],
+      ['true\nfalse\necho $?', '1', T('$? és el codi de l\'última ordre: false (1).', '$? es el código de la última orden: false (1).')],
+      ['ls /carpeta_inexistent 2> /dev/null\necho "fet"\necho $?', '0', T('L\'echo "fet" va bé i sobreescriu $?: el codi de ls es perd.', 'El echo "fet" va bien y sobrescribe $?: el código de ls se pierde.')],
+      ['# /tmp/x no existix al principi\nmkdir /tmp/x\nmkdir /tmp/x 2> /dev/null\necho $?', '1', T('El segon mkdir falla perquè la carpeta ja existix: codi 1.', 'El segundo mkdir falla porque la carpeta ya existe: código 1.')],
+      ['ordre_inventada 2> /dev/null\necho $?', '127', T('127 és el codi de «command not found».', '127 es el código de «command not found».')],
+    ];
+    const [c, a, w] = pick(B);
+    return { p: T('Què mostra l\'últim echo $? (Linux)?', '¿Qué muestra el último echo $? (Linux)?'), code: c, a, o: ['0', '1', '2', '127'], w, fixed: true };
+  },
+  condicio() {
+    const A = rnd(1, 20), Bn = rnd(1, 20);
+    const F = [
+      [`[ ${A} -gt ${Bn} ]`, A > Bn ? 0 : 1, T(`${A} > ${Bn}? ${A > Bn ? 'Sí' : 'No'}: el codi és ${A > Bn ? 0 : 1}.`, `¿${A} > ${Bn}? ${A > Bn ? 'Sí' : 'No'}: el código es ${A > Bn ? 0 : 1}.`)],
+      ['[ 5 -eq 05 ]', 0, T('-eq compara com a números: 5 i 05 són iguals.', '-eq compara como números: 5 y 05 son iguales.')],
+      ['[ "5" = "05" ]', 1, T('= compara com a text: «5» i «05» són diferents.', '= compara como texto: «5» y «05» son distintos.')],
+      ['[ -z "" ]', 0, T('-z és cert si el text és buit.', '-z es cierto si el texto está vacío.')],
+      ['[ -n "" ]', 1, T('-n és cert si el text NO és buit.', '-n es cierto si el texto NO está vacío.')],
+      ['[ "abc" -eq "abc" ]', 2, T('-eq només admet números: Bash dona l\'error «integer expression expected» i el codi 2.', '-eq solo admite números: Bash da el error «integer expression expected» y el código 2.')],
+      ['[ ! -d /etc ]', 1, T('/etc és una carpeta, -d és cert i la ! ho nega: fals.', '/etc es una carpeta, -d es cierto y la ! lo niega: falso.')],
+    ];
+    const [c, a, w] = pick(F);
+    return { p: T('Quin codi d\'eixida ($?) torna esta condició?', '¿Qué código de salida ($?) devuelve esta condición?'), code: c, a: String(a), o: ['0', '1', '2'], w, fixed: true, lab: { 0: T('0 · cert', '0 · cierto'), 1: T('1 · fals', '1 · falso'), 2: T('2 · error', '2 · error') } };
+  },
+  cron() {
+    const H = rnd(0, 23), M = pick([0, 15, 30, 45]), N = pick([5, 10, 15, 20]), hh = p2(H), mm = p2(M);
+    const K = pick([
+      { t: T(`Cada dia a les ${hh}:${mm}`, `Cada día a las ${hh}:${mm}`), a: `${M} ${H} * * *`, d: [`${H} ${M} * * *`, `${M} ${H} * * 1`, `${M} ${H} 1 * *`] },
+      { t: T(`Cada ${N} minuts`, `Cada ${N} minutos`), a: `*/${N} * * * *`, d: [`${N} * * * *`, `* */${N} * * *`, `*/${N} */${N} * * *`] },
+      { t: T(`De dilluns a divendres a les ${H}:00`, `De lunes a viernes a las ${H}:00`), a: `0 ${H} * * 1-5`, d: [`${H} 0 * * 1-5`, `0 ${H} 1-5 * *`, `0 ${H} * * 1`] },
+      { t: T(`El dia 1 de cada mes a les ${H}:30`, `El día 1 de cada mes a las ${H}:30`), a: `30 ${H} 1 * *`, d: [`30 ${H} * * 1`, `${H} 30 1 * *`, `1 ${H} 30 * *`] },
+    ]);
+    return { p: T(`Quina línia de crontab vol dir «${K.t}»?`, `¿Qué línea de crontab significa «${K.t}»?`), a: K.a, o: [...new Set([K.a, ...K.d])], w: T('Els cinc camps són: minut, hora, dia del mes, mes i dia de la setmana. * vol dir «qualsevol valor» i */N «cada N».', 'Los cinco campos son: minuto, hora, día del mes, mes y día de la semana. * significa «cualquier valor» y */N «cada N».') };
+  },
+  equivalent() {
+    const R = EQ.filter((r) => r[2] !== r[3] && !/…/.test(r[2] + r[3]));
+    const r = pick(R);
+    const others = shuffle(R.filter((x) => x[3] !== r[3])).slice(0, 3).map((x) => x[3]);
+    return { p: T('Quin és l\'equivalent en PowerShell de…?', '¿Cuál es el equivalente en PowerShell de…?'), code: r[2], a: r[3], o: [r[3], ...others], w: T(`${r[1]}: en PowerShell s'escriu ${r[3]}.`, `${r[1]}: en PowerShell se escribe ${r[3]}.`) };
+  },
+  privilegis() {
+    const B = [
+      [T('Quina ordre et deixa executar els teus scripts .ps1 sense ser administrador?', '¿Qué orden te deja ejecutar tus scripts .ps1 sin ser administrador?'), 'Set-ExecutionPolicy RemoteSigned -Scope CurrentUser', ['Set-ExecutionPolicy RemoteSigned', 'chmod +x script.ps1', 'Set-ExecutionPolicy Restricted -Scope CurrentUser'], T('Amb -Scope CurrentUser només afecta el teu usuari i no cal ser administrador.', 'Con -Scope CurrentUser solo afecta a tu usuario y no hace falta ser administrador.')],
+      [T('Per què no fa res la tasca de schtasks /tr "C:\\Scripts\\Backup.ps1"?', '¿Por qué no hace nada la tarea de schtasks /tr "C:\\Scripts\\Backup.ps1"?'), T('Windows obri el .ps1 amb l\'aplicació associada en lloc d\'executar-lo', 'Windows abre el .ps1 con la aplicación asociada en lugar de ejecutarlo'), [T('Perquè schtasks no admet scripts', 'Porque schtasks no admite scripts'), T('Perquè falta /sc daily', 'Porque falta /sc daily'), T('Perquè cal escriure-ho en majúscules', 'Porque hay que escribirlo en mayúsculas')], T('Cal /tr "powershell.exe -ExecutionPolicy Bypass -File C:\\Scripts\\Backup.ps1".', 'Hay que usar /tr "powershell.exe -ExecutionPolicy Bypass -File C:\\Scripts\\Backup.ps1".')],
+      [T('Un bucle fa New-LocalUser -Name $u i es queda esperant. Què falta?', 'Un bucle hace New-LocalUser -Name $u y se queda esperando. ¿Qué falta?'), T('-Password (amb un SecureString) o -NoPassword', '-Password (con un SecureString) o -NoPassword'), ['-Force', '-Enabled', T('sudo davant', 'sudo delante')], T('Sense contrasenya ni -NoPassword, el cmdlet la demana per teclat. A més cal una consola d\'administrador.', 'Sin contraseña ni -NoPassword, el cmdlet la pide por teclado. Además hace falta una consola de administrador.')],
+      [T('useradd -m ana dona «Permission denied» (o similar) a un usuari normal. Què s\'ha de fer?', 'useradd -m ana da «Permission denied» (o similar) a un usuario normal. ¿Qué hay que hacer?'), 'sudo useradd -m ana', ['chmod +x useradd', 'useradd -m ana &', 'su ana'], T('Crear comptes exigix privilegis d\'administrador: sudo.', 'Crear cuentas exige privilegios de administrador: sudo.')],
+      [T('Què fa crontab -r?', '¿Qué hace crontab -r?'), T('Esborra tot el crontab de l\'usuari sense preguntar', 'Borra todo el crontab del usuario sin preguntar'), [T('Recarrega el crontab', 'Recarga el crontab'), T('Mostra el crontab', 'Muestra el crontab'), T('Executa totes les tasques ara', 'Ejecuta todas las tareas ahora')], T('Per a llevar una sola tasca, edita amb crontab -e i esborra eixa línia.', 'Para quitar una sola tarea, edita con crontab -e y borra esa línea.')],
+      [T('En una línia de crontab vols usar date +%F. Què cal fer?', 'En una línea de crontab quieres usar date +%F. ¿Qué hay que hacer?'), T('Escapar el % com \\% (o posar-ho dins d\'un script)', 'Escapar el % como \\% (o ponerlo dentro de un script)'), [T('Res: funciona igual', 'Nada: funciona igual'), T('Posar-ho entre cometes simples', 'Ponerlo entre comillas simples'), T('Usar $% en lloc de %', 'Usar $% en lugar de %')], T('En crontab el % té un significat especial.', 'En crontab el % tiene un significado especial.')],
+      [T('Un script en Bash arrenca amb «#!/bin/bash». Per què es posa?', 'Un script en Bash empieza con «#!/bin/bash». ¿Por qué se pone?'), T('Perquè el sistema sàpiga quin intèrpret ha d\'executar-lo', 'Para que el sistema sepa qué intérprete debe ejecutarlo'), [T('Per donar-li permís d\'execució', 'Para darle permiso de ejecución'), T('Per comentar tot el fitxer', 'Para comentar todo el archivo'), T('Perquè Bash és un comentari', 'Porque Bash es un comentario')], T('Es diu shebang; el permís és cosa de chmod +x.', 'Se llama shebang; el permiso es cosa de chmod +x.')],
+    ];
+    const [p, a, d, w] = pick(B);
+    return { p, a, o: [a, ...d], w };
+  },
+};
+const QT = [['mix', T('Barrejat', 'Mezclado')], ['expansio', T('Cometes i expansió', 'Comillas y expansión')], ['traça', T('Traça d\'un bucle', 'Traza de un bucle')], ['eixida', T('Codis d\'eixida', 'Códigos de salida')], ['condicio', T('Condicions', 'Condiciones')], ['cron', 'cron'], ['equivalent', T('Bash → PowerShell', 'Bash → PowerShell')], ['privilegis', T('Privilegis i polítiques', 'Privilegios y políticas')]];
+QT.forEach(([v, t]) => { const o = el('option', null, t); o.value = v; $('#q-type').append(o); });
+let Q = null, okN = Number(Lab.leer('ok')) || 0, koN = Number(Lab.leer('ko')) || 0, answered = false;
+function scoreUpd() { $('#s-ok').textContent = String(okN); $('#s-ko').textContent = String(koN); Lab.guardar('ok', okN); Lab.guardar('ko', koN); }
+function newQ() {
+  let t = $('#q-type').value;
+  if (t === 'mix') t = pick(Object.keys(GEN));
+  Q = GEN[t](); answered = false;
+  $('#q-p').textContent = Q.p;
+  const code = $('#q-code'); code.hidden = !Q.code; code.textContent = Q.code || '';
+  const inp = $('#q-in'); inp.textContent = '';
+  $('#q-f').textContent = ''; $('#q-f').className = 'fb'; $('#q-s').hidden = true;
+  const opts = Q.fixed ? Q.o : shuffle(Q.o);
+  opts.forEach((o) => {
+    const b = el('button', 'btn optb', Q.lab ? Q.lab[o] : o); b.type = 'button';
+    b.addEventListener('click', () => {
+      if (answered) return; answered = true;
+      const good = o === Q.a;
+      if (good) okN++; else koN++;
+      scoreUpd();
+      $$('button', inp).forEach((x) => { x.disabled = true; });
+      $('#q-f').className = 'fb ' + (good ? 'ok' : 'ko');
+      $('#q-f').textContent = good ? T('Correcte! ✓', '¡Correcto! ✓') : T('No és correcte ✗. La resposta bona és: ', 'No es correcto ✗. La respuesta buena es: ') + (Q.lab ? Q.lab[Q.a] : Q.a);
+      $('#q-s').textContent = Q.w; $('#q-s').hidden = false;
+    });
+    inp.append(b);
+  });
+}
+$('#q-type').addEventListener('change', newQ);
+$('#q-next').addEventListener('click', newQ);
+scoreUpd();
+newQ();
+</script>
+</body>
+</html>

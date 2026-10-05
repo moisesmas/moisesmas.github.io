@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" width="760" height="400" role="img" aria-labelledby="t">
+<title id="t">Paginación. Un proceso de cuatro páginas se carga en marcos no contiguos de la RAM. La tabla de páginas dice que la página 0 está en el marco 2, la 1 en el 6, la 2 en el 0 y la 3 en el 4.</title>
+<rect width="760" height="400" fill="#ffffff"/>
+<style>
+text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;fill:#16201b;font-size:14px}
+.b{font-weight:700}.s{font-size:12px;fill:#56655d}.c{text-anchor:middle}.t{font-size:16px;font-weight:700}
+</style>
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1f5244"/></marker>
+</defs>
+<text x="90" y="26" class="c t">Proceso</text><text x="90" y="44" class="c s">direcciones lógicas</text>
+<rect x="30" y="58" width="120" height="52" rx="8" fill="#fbeed8" stroke="#1f5244" stroke-width="2"/><text x="90" y="80" class="c b">Página 0</text><text x="90" y="98" class="c s">4 KiB</text>
+<rect x="30" y="124" width="120" height="52" rx="8" fill="#fbeed8" stroke="#1f5244" stroke-width="2"/><text x="90" y="146" class="c b">Página 1</text><text x="90" y="164" class="c s">4 KiB</text>
+<rect x="30" y="190" width="120" height="52" rx="8" fill="#fbeed8" stroke="#1f5244" stroke-width="2"/><text x="90" y="212" class="c b">Página 2</text><text x="90" y="230" class="c s">4 KiB</text>
+<rect x="30" y="256" width="120" height="52" rx="8" fill="#fbeed8" stroke="#1f5244" stroke-width="2"/><text x="90" y="278" class="c b">Página 3</text><text x="90" y="296" class="c s">4 KiB</text>
+<text x="350" y="26" class="c t">Tabla de páginas</text><text x="350" y="44" class="c s">una por proceso</text>
+<rect x="270" y="58" width="160" height="30" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/><text x="310" y="78" class="c b">Página</text><text x="390" y="78" class="c b">Marco</text>
+<rect x="270" y="88" width="160" height="40" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="310" y="113" class="c">0</text><text x="390" y="113" class="c">2</text>
+<rect x="270" y="128" width="160" height="40" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="310" y="153" class="c">1</text><text x="390" y="153" class="c">6</text>
+<rect x="270" y="168" width="160" height="40" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="310" y="193" class="c">2</text><text x="390" y="193" class="c">0</text>
+<rect x="270" y="208" width="160" height="40" fill="#ffffff" stroke="#1f5244" stroke-width="2"/><text x="310" y="233" class="c">3</text><text x="390" y="233" class="c">4</text>
+<text x="620" y="26" class="c t">RAM</text><text x="620" y="44" class="c s">direcciones físicas</text>
+<rect x="540" y="58" width="160" height="38" fill="#fbeed8" stroke="#1f5244" stroke-width="2"/><text x="560" y="82" class="s">0</text><text x="630" y="82" class="c">Página 2</text>
+<rect x="540" y="96" width="160" height="38" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/><text x="560" y="120" class="s">1</text><text x="630" y="120" class="c">otros / libre</text>
+<rect x="540" y="134" width="160" height="38" fill="#fbeed8" stroke="#1f5244" stroke-width="2"/><text x="560" y="158" class="s">2</text><text x="630" y="158" class="c">Página 0</text>
+<rect x="540" y="172" width="160" height="38" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/><text x="560" y="196" class="s">3</text><text x="630" y="196" class="c">otros / libre</text>
+<rect x="540" y="210" width="160" height="38" fill="#fbeed8" stroke="#1f5244" stroke-width="2"/><text x="560" y="234" class="s">4</text><text x="630" y="234" class="c">Página 3</text>
+<rect x="540" y="248" width="160" height="38" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/><text x="560" y="272" class="s">5</text><text x="630" y="272" class="c">otros / libre</text>
+<rect x="540" y="286" width="160" height="38" fill="#fbeed8" stroke="#1f5244" stroke-width="2"/><text x="560" y="310" class="s">6</text><text x="630" y="310" class="c">Página 1</text>
+<rect x="540" y="324" width="160" height="38" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/><text x="560" y="348" class="s">7</text><text x="630" y="348" class="c">otros / libre</text>
+<path d="M150 84 C 210 84, 215 108, 268 108" fill="none" stroke="#1f5244" stroke-width="1.5" marker-end="url(#ar)"/>
+<path d="M430 108 C 480 108, 490 153, 538 153" fill="none" stroke="#b86e00" stroke-width="1.5" marker-end="url(#ar)"/>
+<path d="M150 150 C 210 150, 215 148, 268 148" fill="none" stroke="#1f5244" stroke-width="1.5" marker-end="url(#ar)"/>
+<path d="M430 148 C 480 148, 490 305, 538 305" fill="none" stroke="#b86e00" stroke-width="1.5" marker-end="url(#ar)"/>
+<path d="M150 216 C 210 216, 215 188, 268 188" fill="none" stroke="#1f5244" stroke-width="1.5" marker-end="url(#ar)"/>
+<path d="M430 188 C 480 188, 490 77, 538 77" fill="none" stroke="#b86e00" stroke-width="1.5" marker-end="url(#ar)"/>
+<path d="M150 282 C 210 282, 215 228, 268 228" fill="none" stroke="#1f5244" stroke-width="1.5" marker-end="url(#ar)"/>
+<path d="M430 228 C 480 228, 490 229, 538 229" fill="none" stroke="#b86e00" stroke-width="1.5" marker-end="url(#ar)"/>
+<text x="30" y="372" class="b">Dirección lógica 9000 = página 2 (9000 div 4096), desplazamiento 808 (9000 mod 4096).</text><text x="30" y="392" class="s">La página 2 está en el marco 0, así que la dirección física es 0 x 4096 + 808 = 808.</text>
+</svg>
