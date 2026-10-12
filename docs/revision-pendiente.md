@@ -28,4 +28,4 @@ Equipos de 2–3 personas; el alumnado propone proyectos a partir de necesidades
 
 - Portadas de módulo completas (evaluación, temporalización) y esqueleto de las unidades del 2.º y 3.er trimestre.
 - Enlaces reales de los cursos de Aules en `src/config/modulos.ts`.
-- Publicación (fase B): repositorio en GitHub, dominio `moisesmas.com` en DonDominio y HTTPS.
+- Verificar el dominio en la cuenta de GitHub (github.com/settings/pages → «Add a domain»; añade un registro TXT en DonDominio): protege `moisesmas.com` frente a usos ajenos.

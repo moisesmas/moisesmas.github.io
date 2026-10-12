@@ -37,3 +37,8 @@ Diseño: `docs/superpowers/specs/2026-09-30-web-docencia-design.md`. Guía del t
 7. Añadirlo a `::artefacto{src="<nombre>"}` en la página del tema.
 8. `npm test && npm run verificar` y revisión en el navegador.
 9. Consulta `docs/guia-laboratorios.md` para más detalles.
+
+## Publicación
+
+- Repositorio público `moisesmas/moisesmas.github.io` (nombre de «sitio de usuario» para servir en la raíz). Dominio `moisesmas.com` con HTTPS (DNS en DonDominio apuntando a GitHub Pages).
+- Cada push a `main` ejecuta `.github/workflows/desplegar.yml`: `npm test`, `npm run verificar` y despliegue. Si algo falla no se publica y sigue la versión anterior.
