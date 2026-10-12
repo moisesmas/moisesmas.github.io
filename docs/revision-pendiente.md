@@ -26,6 +26,6 @@ Equipos de 2–3 personas; el alumnado propone proyectos a partir de necesidades
 
 ## Pendiente de hacer
 
-- Portadas de módulo completas (evaluación, temporalización) y esqueleto de las unidades del 2.º y 3.er trimestre.
+- **Portadas de módulo** (`index.md` y `index.es.md` de SOM, Sistemas Informáticos y Proyecto Intermodular): presentación del módulo, cómo se evalúa (pesos por unidad de la programación), temporalización por trimestres con horas, enlace al curso de Aules y, en SI, el calendario de sesiones presenciales y exámenes. Ahora solo tienen un texto breve y la lista de laboratorios.
+- Esqueleto de las unidades del 2.º y 3.er trimestre.
 - Enlaces reales de los cursos de Aules en `src/config/modulos.ts`.
-- Verificar el dominio en la cuenta de GitHub (github.com/settings/pages → «Add a domain»; añade un registro TXT en DonDominio): protege `moisesmas.com` frente a usos ajenos.
