@@ -88,6 +88,13 @@ describe('::laboratorio', () => {
     expect(html).toContain('Laboratorio de virtualización');
     expect(html).toContain('Abrir laboratorio');
   });
+  it('la etiqueta dice a qué pestaña lleva (para distinguir varias tarjetas del mismo laboratorio)', () => {
+    const html = convertir(docs, D, '::laboratorio[Hypervisor stack builder]{src="virtualizacion" pestana="stack"}');
+    expect(html).toContain('<span class="diapositiva-laboratorio__pestana">Hypervisor stack builder</span>');
+  });
+  it('sin etiqueta, sin línea de pestaña', () => {
+    expect(convertir(docs, D, '::laboratorio{src="virtualizacion" pestana="stack"}')).not.toContain('diapositiva-laboratorio__pestana');
+  });
   it('sin pestaña: sin #', () => {
     expect(convertir(docs, D, '::laboratorio{src="virtualizacion"}')).toContain(`href="/${U}/laboratorios/virtualizacion/"`);
   });

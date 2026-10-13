@@ -42,6 +42,11 @@ export function trocear(html: string): string[] {
     .filter(Boolean);
 }
 
+/** Quita los enlaces de ancla que Starlight añade a los títulos: en una presentación sobran y el # es de reveal.js. */
+export function quitarAnclas(html: string): string {
+  return html.replace(/<a class="sl-anchor-link"[^>]*>[\s\S]*?<\/a>/g, '');
+}
+
 const VALLA = /^\s*(`{3,}|~{3,})/;
 
 /** Recorre las líneas indicando si cada una está dentro de un bloque de código. */

@@ -8,6 +8,7 @@ import {
   idUnidad,
   listaMasLarga,
   paginasDeTeoria,
+  quitarAnclas,
   TEXTOS_PRESENTACION,
   trocear,
 } from '../../src/lib/diapositivas';
@@ -44,6 +45,14 @@ describe('trocear', () => {
   });
   it('sin <hr>, una sola diapositiva', () => {
     expect(trocear('<p>Solo</p>')).toEqual(['<p>Solo</p>']);
+  });
+});
+
+describe('quitarAnclas', () => {
+  it('quita los enlaces de ancla que Starlight añade a los títulos (en una presentación sobran y rompen el #)', () => {
+    const html =
+      '<div class="sl-heading-wrapper level-h2"><h2 id="a">A</h2><a class="sl-anchor-link" href="#a"><span aria-hidden="true" class="sl-anchor-icon"><svg><path d="m1"/></svg></span><span class="sr-only">Sección titulada «A»</span></a></div><p><a href="/x/">enlace</a></p>';
+    expect(quitarAnclas(html)).toBe('<div class="sl-heading-wrapper level-h2"><h2 id="a">A</h2></div><p><a href="/x/">enlace</a></p>');
   });
 });
 

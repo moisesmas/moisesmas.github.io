@@ -53,7 +53,7 @@ Solo funcionan dentro de `diapositivas/`. En los apuntes dan error.
 |---|---|
 | `:::pasos` … `:::` | Lo de dentro aparece al pulsar, paso a paso. En una lista, cada viñeta es un paso; cualquier otro bloque aparece entero. |
 | `::::columnas` … `::::` | Dos columnas: el primer bloque a la izquierda y el resto a la derecha. Lleva **cuatro** dos puntos para que pueda contener un `:::pasos`. |
-| `::laboratorio{src="<nombre>" pestana="<id>"}` | Tarjeta grande que abre el laboratorio de la unidad en otra pestaña, en el idioma de la presentación. `pestana` es opcional: es el `data-tab` del laboratorio, el mismo que aparece tras `#` en la dirección al cambiar de pestaña. |
+| `::laboratorio[Nombre de la pestaña]{src="<nombre>" pestana="<id>"}` | Tarjeta grande que abre el laboratorio de la unidad en otra pestaña, en el idioma de la presentación. `pestana` es opcional: es el `data-tab` del laboratorio, el mismo que aparece tras `#` en la dirección al cambiar de pestaña. La etiqueta `[…]` (opcional) muestra en la tarjeta el nombre de esa pestaña, tal como lo ve el alumnado en el laboratorio; úsala siempre que pongas varias tarjetas del mismo laboratorio. |
 
 Ejemplo con los tres bloques:
 
@@ -83,7 +83,7 @@ Ejemplo con los tres bloques:
 
 ## Try it yourself
 
-::laboratorio{src="virtualizacion" pestana="stack"}
+::laboratorio[Hypervisor stack builder]{src="virtualizacion" pestana="stack"}
 ```
 
 ## 4. Pautas de redacción

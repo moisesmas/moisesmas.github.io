@@ -304,3 +304,37 @@ html.reveal-print .pizarra-puntero {
     display: none !important;
   }
 }
+/* Número de diapositiva arriba a la derecha (abajo están las flechas y la barra de la pizarra). */
+.reveal .slide-number {
+  top: 0.6rem;
+  right: 0.8rem;
+  bottom: auto;
+}
+/* La portada, centrada en vertical. */
+.reveal .slides > section.portada {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+html.reveal-print .reveal .slides > section.portada {
+  display: flex !important;
+}
+/* Expressive Code usa variables de Starlight que aquí no existen: tamaño y fuente del código, en proporción a la diapositiva. */
+.reveal {
+  --sl-text-code: 1em;
+  --__sl-font-mono: var(--mono);
+}
+.reveal .expressive-code {
+  font-size: inherit;
+}
+.reveal .expressive-code pre {
+  font-size: 0.75em; /* 24 px en el lienzo de 1280 × 720 */
+}
+.diapositiva-laboratorio__pestana {
+  font: 600 0.85em var(--titulos);
+  color: var(--pcb);
+}
+.reveal table {
+  font-size: 0.8em; /* ≥ 24 px en el lienzo */
+}

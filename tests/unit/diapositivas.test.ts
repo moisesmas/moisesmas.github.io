@@ -70,7 +70,7 @@ for (const archivo of archivos) {
       expect(malas).toEqual([]);
     });
     it('los laboratorios y sus pestañas existen', () => {
-      const malos = [...md.matchAll(/::laboratorio\{([^}]*)\}/g)].flatMap(([, attrs]) => {
+      const malos = [...md.matchAll(/::laboratorio(?:\[[^\]]*\])?\{([^}]*)\}/g)].flatMap(([, attrs]) => {
         const src = attrs.match(/src="([^"]+)"/)?.[1] ?? '';
         const pestana = attrs.match(/pestana="([^"]+)"/)?.[1];
         const indice = path.join(dirUnidad, 'laboratorios', src, 'index.html');

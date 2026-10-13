@@ -47,6 +47,10 @@ describe('presentación de una página', () => {
     expect(en()).toMatch(/src="\/_astro\/[^"]+\.js"/);
     expect(en()).not.toMatch(/fonts\.googleapis|cdn\.jsdelivr|unpkg\.com/);
   });
+  it('sin los enlaces de ancla de Starlight en los títulos', () => {
+    expect(en()).not.toContain('sl-anchor-link');
+    expect(es()).not.toContain('sl-anchor-link');
+  });
   it('no se publican las diapositivas como páginas normales', () => {
     expect(existe('docencia/smr/som/ud02-virtualizacion/diapositivas/02-hypervisors/index.html')).toBe(false);
   });

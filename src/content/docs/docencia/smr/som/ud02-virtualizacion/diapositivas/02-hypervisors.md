@@ -160,9 +160,9 @@ grep -Ec '(vmx|svm)' /proc/cpuinfo
 
 ## Try it yourself
 
-::laboratorio{src="virtualizacion" pestana="stack"}
+::laboratorio[Hypervisor stack builder]{src="virtualizacion" pestana="stack"}
 
-::laboratorio{src="virtualizacion" pestana="vtx"}
+::laboratorio[VT-x on/off]{src="virtualizacion" pestana="vtx"}
 
 ---
 

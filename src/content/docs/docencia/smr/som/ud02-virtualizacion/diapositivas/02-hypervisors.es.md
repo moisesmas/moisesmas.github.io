@@ -160,9 +160,9 @@ grep -Ec '(vmx|svm)' /proc/cpuinfo
 
 ## Pruébalo
 
-::laboratorio{src="virtualizacion" pestana="stack"}
+::laboratorio[Constructor de pilas]{src="virtualizacion" pestana="stack"}
 
-::laboratorio{src="virtualizacion" pestana="vtx"}
+::laboratorio[VT-x activado y desactivado]{src="virtualizacion" pestana="vtx"}
 
 ---
 

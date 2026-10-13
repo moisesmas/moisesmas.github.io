@@ -4,10 +4,13 @@ import { TEXTOS_PRESENTACION } from '../diapositivas';
 import { idiomaContenido } from '../idiomas';
 import { leerFicha } from '../laboratorios';
 import { hrefLaboratorio } from './artefacto';
-import { atributo, escapar, fallo, html, type Manejador } from './comun';
+import { atributo, escapar, fallo, html, textoDe, type Manejador } from './comun';
 import { soloDiapositivas } from './pasos';
 
-/** ::laboratorio{src="nombre" pestana="id"} — tarjeta que abre el laboratorio de la unidad en otra pestaña. */
+/**
+ * ::laboratorio[Nombre de la pestaña]{src="nombre" pestana="id"} — tarjeta que abre el laboratorio de la unidad
+ * en otra pestaña. La etiqueta (opcional) dice a qué pestaña lleva.
+ */
 export const laboratorio: Manejador = (nodo, archivo) => {
   soloDiapositivas('laboratorio', archivo);
   const nombre = atributo(nodo, 'src');
@@ -22,12 +25,14 @@ export const laboratorio: Manejador = (nodo, archivo) => {
     fallo('laboratorio', archivo, `El laboratorio ${nombre} no tiene la pestaña «${pestana}» (data-tab)`);
   }
   const ficha = leerFicha(codigo, archivo.traduccion);
+  const etiqueta = textoDe(nodo.children).trim();
   const textos = TEXTOS_PRESENTACION[idiomaContenido(archivo.id, archivo.modulo)];
   const href = hrefLaboratorio(archivo.hrefDir, nombre, archivo.traduccion) + (pestana ? `#${pestana}` : '');
   return html(
     `<a class="diapositiva-laboratorio" href="${escapar(href)}" target="_blank" rel="noopener">` +
       `<span class="diapositiva-laboratorio__marca">${escapar(textos.laboratorio)}</span>` +
       `<strong class="diapositiva-laboratorio__titulo">${escapar(ficha.titulo)}</strong>` +
+      (etiqueta ? `<span class="diapositiva-laboratorio__pestana">${escapar(etiqueta)}</span>` : '') +
       (ficha.descripcion ? `<span class="diapositiva-laboratorio__descripcion">${escapar(ficha.descripcion)}</span>` : '') +
       `<span class="diapositiva-laboratorio__abrir">${escapar(textos.abrirLab)} ↗</span></a>`,
   );
