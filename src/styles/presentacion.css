@@ -338,3 +338,8 @@ html.reveal-print .reveal .slides > section.portada {
 .reveal table {
   font-size: 0.8em; /* ≥ 24 px en el lienzo */
 }
+/* reveal.css da fondo blanco a .reveal-viewport (el body): el fondo es el del tema. */
+html body.reveal-viewport {
+  background: var(--fondo);
+  --r-background-color: var(--fondo);
+}

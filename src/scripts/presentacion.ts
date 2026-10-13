@@ -1,5 +1,6 @@
 import Reveal from 'reveal.js';
 import 'reveal.js/reveal.css';
+import { ocultarSinActividad } from './barras';
 import { crearPizarra } from './pizarra';
 
 const CLAVE_TEMA = 'presentacion-tema';
@@ -85,15 +86,4 @@ for (const b of document.querySelectorAll<HTMLButtonElement>('[data-grosor]')) {
   });
 }
 
-// Las barras se ocultan tras 3 s sin mover el ratón.
-const barras = document.querySelectorAll('[data-barra]');
-let temporizador: ReturnType<typeof setTimeout> | undefined;
-function mostrarBarras(): void {
-  for (const b of barras) b.classList.remove('oculta');
-  clearTimeout(temporizador);
-  temporizador = setTimeout(() => {
-    for (const b of barras) b.classList.add('oculta');
-  }, 3000);
-}
-document.addEventListener('pointermove', mostrarBarras);
-mostrarBarras();
+ocultarSinActividad(document.querySelectorAll('[data-barra]'), 3000);
