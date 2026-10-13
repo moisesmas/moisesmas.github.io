@@ -14,6 +14,7 @@ Diseño: `docs/superpowers/specs/2026-09-30-web-docencia-design.md`. Guía del t
 - Módulos definidos solo en `src/config/modulos.ts`.
 - Traducción de `x.md` → `x.es.md` (publicada en `…/x/es/`). Todo el contenido de SOM (inglés) y Sistemas Informáticos (valenciano) lleva versión en castellano.
 - Bloques: `src/lib/directivas/` (plugin Sätteri). Laboratorios: `<tema>/laboratorios/<nombre>/index.html`, contrato en la cabecera de `public/comun/lab.js`.
+- Diapositivas: toda página de teoría lleva su presentación en `<unidad>/diapositivas/<pagina>.md` (y `.es.md` si la página tiene traducción), según `docs/guia-diapositivas.md`. Lo comprueba `tests/unit/diapositivas.test.ts`; `src/config/diapositivas.ts` es una lista temporal que solo se vacía.
 - Nada de soluciones ni exámenes en el repo: `privado/`.
 
 ## Trampas conocidas
@@ -25,6 +26,8 @@ Diseño: `docs/superpowers/specs/2026-09-30-web-docencia-design.md`. Guía del t
 - Al renombrar un tema ya publicado, añadir `redirects` en `astro.config.mjs` para no romper enlaces de Aules.
 - El validador de enlaces de Starlight solo acepta enlaces a archivos; los enlaces a la carpeta de un laboratorio los excluye `carpetaConIndiceExiste` (`src/lib/enlaces.ts`) solo cuando la carpeta tiene un `index.html`.
 - Happy-dom nunca dispara `DOMContentLoaded` tras `document.write`, y el comentario de cabecera de `public/comun/lab.js` contiene un `</script>` literal: `tests/unit/laboratorios-humo.test.ts` resuelve ambos casos.
+- Las presentaciones no son páginas de Starlight: las genera `src/pages/docencia/[...presentacion].astro` con reveal.js. No uses temas de `reveal.js/theme/` (importan Google Fonts); los estilos van en `src/styles/presentacion.css`.
+- En las diapositivas, `---` necesita una línea en blanco antes, y un `:::pasos` dentro de columnas obliga a abrir y cerrar con `::::columnas`.
 
 ## Integrar un laboratorio nuevo
 
@@ -37,6 +40,13 @@ Diseño: `docs/superpowers/specs/2026-09-30-web-docencia-design.md`. Guía del t
 7. Añadirlo a `::artefacto{src="<nombre>"}` en la página del tema.
 8. `npm test && npm run verificar` y revisión en el navegador.
 9. Consulta `docs/guia-laboratorios.md` para más detalles.
+
+## Integrar una presentación nueva
+
+1. Crear `<unidad>/diapositivas/<pagina>.md` (y `.es.md`) siguiendo `docs/guia-diapositivas.md`.
+2. Gráficos nuevos en SVG en la carpeta de la unidad (con `-es.svg`).
+3. Si la unidad ya tiene todas sus presentaciones, quitarla de `src/config/diapositivas.ts`.
+4. `npm test && npm run verificar` y revisión en el navegador (`…/<pagina>/presentacion/`).
 
 ## Publicación
 

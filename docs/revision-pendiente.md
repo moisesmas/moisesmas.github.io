@@ -26,6 +26,7 @@ Equipos de 2–3 personas; el alumnado propone proyectos a partir de necesidades
 
 ## Pendiente de hacer
 
+- **Presentaciones** (modo presentación, diseño en `docs/superpowers/specs/2026-10-13-modo-presentacion-design.md`): revisar la muestra de SOM UD2 · 2 Hypervisors y, tras el piloto (SOM UD2, SI UD2, PI UD0), probarlas en clase. Unidades pendientes: `src/config/diapositivas.ts`.
 - **Portadas de módulo** (`index.md` y `index.es.md` de SOM, Sistemas Informáticos y Proyecto Intermodular): presentación del módulo, cómo se evalúa (pesos por unidad de la programación), temporalización por trimestres con horas, enlace al curso de Aules y, en SI, el calendario de sesiones presenciales y exámenes. Ahora solo tienen un texto breve y la lista de laboratorios.
 - Esqueleto de las unidades del 2.º y 3.er trimestre.
 - Enlaces reales de los cursos de Aules en `src/config/modulos.ts`.

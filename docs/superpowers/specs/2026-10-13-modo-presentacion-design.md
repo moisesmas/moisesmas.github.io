@@ -66,7 +66,7 @@ Solo son válidos dentro de `diapositivas/`. Fuera dan error de compilación.
 | Bloque | Qué hace |
 |---|---|
 | `:::pasos` … `:::` | Cada hijo directo (elemento de lista, párrafo, imagen) aparece al pulsar, uno a uno (*fragments* de reveal.js). Si el hijo es una lista, se escalona cada elemento. |
-| `:::columnas` … `:::` | Dos columnas: el primer hijo a la izquierda y el resto a la derecha. Se usa para imagen + texto. Puede contener un `:::pasos`. |
+| `::::columnas` … `::::` | Dos columnas: el primer hijo a la izquierda y el resto a la derecha. Se usa para imagen + texto. Lleva cuatro dos puntos: dentro puede ir un `:::pasos`. |
 | `::laboratorio{src="<nombre>" pestana="<id>"}` | Tarjeta grande «Abrir laboratorio» (con el título del laboratorio). Abre el laboratorio de la unidad en una pestaña nueva, en el idioma de la presentación y en la pestaña indicada (`?lang=es#<id>`, como los enlaces de los apuntes). `pestana` es opcional. Al cerrar esa pestaña se vuelve a la presentación, en la misma diapositiva. |
 
 Ejemplo:
@@ -74,7 +74,7 @@ Ejemplo:
 ```markdown
 ## Type 1 vs type 2 hypervisors
 
-:::columnas
+::::columnas
 ![Two stacks: bare metal vs hosted](../hypervisor-types.svg)
 
 :::pasos
@@ -82,7 +82,7 @@ Ejemplo:
 - **Type 2**: runs on a host OS (VirtualBox)
 - Type 1 → servers · Type 2 → classroom & desktop
 :::
-:::
+::::
 
 ---
 

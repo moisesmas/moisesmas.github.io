@@ -32,6 +32,29 @@ Minúsculas, sin acentos ni espacios, con guiones: `02-instalacion-windows.md`, 
 | Material en Aules | `:::aules` + texto + `:::` |
 | Avisos | `:::note`, `:::tip`, `:::caution`, `:::danger` + texto + `:::` |
 
+## Presentaciones para clase
+
+Cada página de teoría tiene su presentación para proyectar: se abre con el botón **«Presentar»** que hay bajo el título de la página (en inglés, *Present*).
+
+- Se edita en la carpeta `diapositivas/` de la unidad, en un archivo con el mismo nombre que la página (`diapositivas/02-hypervisors.md` y `diapositivas/02-hypervisors.es.md`).
+- Es Markdown normal: cada diapositiva empieza con `##` y se separa de la siguiente con una línea `---` (con una línea en blanco antes).
+
+  ```
+  ## Qué aprenderás
+
+  - Qué hace un hipervisor
+  - Tipo 1 y tipo 2
+
+  ---
+
+  ## Tipo 1 frente a tipo 2
+
+  ![Dos pilas de capas](../hypervisor-types-es.svg)
+  ```
+
+- Pasos, columnas, tarjetas de laboratorio, pautas de redacción y teclas para usarla en clase: `docs/guia-diapositivas.md`.
+- Si añades una página de teoría nueva, añade también su presentación: si falta, la publicación se detiene.
+
 ## Editar desde github.com (retoques)
 
 1. Abre el archivo en el repositorio y pulsa el lápiz.
