@@ -1,0 +1,1544 @@
+<!doctype html>
+<html lang="es" data-lab="simulador-git" data-idioma-original="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="/comun/lab.js"></script>
+<title>Simulador de Git: terminal, ramas, conflictos y comunicación de equipo</title>
+<meta name="description" content="Practica Git sin instalar nada: terminal simulada, grafo de commits, retos guiados con comprobación, resolución de conflictos, mensajes de commit con claves de incidencia, correo profesional y ejercicios con corrección.">
+<meta name="keywords" content="git, control de versiones, commit, rama, merge, conflicto, restore, gitignore, jira, correo profesional, proyecto intermodular">
+<link rel="icon" href="/comun/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/comun/fuentes.css">
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f2f4ef;--surface:#ffffff;--surface2:#e9ede6;--ink:#16201b;--muted:#56655d;--line:#d3dbd4;
+  --accent:#b86e00;--accent-soft:#fbeed8;--pcb:#1f5244;
+  --ok:#1b6b3f;--ko:#a8281f;
+  --c0:#1f5244;--c1:#b86e00;--c2:#1d5fa8;--c3:#a8281f;--c4:#6a3d9a;--c5:#00757a;
+  --f-display:"Chakra Petch",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0e1411;--surface:#161f1b;--surface2:#1d2823;--ink:#e4ebe6;--muted:#95a69d;--line:#2b3832;
+  --accent:#f3aa3c;--accent-soft:#33260f;--pcb:#1a463a;
+  --ok:#6fd49a;--ko:#ff9d94;
+  --c0:#6fd49a;--c1:#f3aa3c;--c2:#7db4ff;--c3:#ff9d94;--c4:#c6a3ff;--c5:#5fd6d9;
+}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--f-body)}
+h1,h2,h3{font-family:var(--f-display);line-height:1.2;margin:0 0 .5rem}
+h1{font-size:1.25rem}
+h2{font-size:1.5rem}
+h3{font-size:1.1rem;margin-top:1.25rem}
+code,pre,kbd{font-family:var(--f-mono)}
+code{font-size:.92em}
+button,input,select,textarea{font:inherit;color:inherit}
+button{border:1px solid var(--muted);background:var(--surface);border-radius:.4rem;padding:.35rem .8rem;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cabecera{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;padding:.6rem 1rem;background:var(--pcb);color:#fff}
+.cabecera h1{flex:1 1 12rem;margin:0}
+.cabecera a{color:#fff}
+.cabecera button{background:transparent;border-color:#fff;color:#fff}
+main{max-width:66rem;margin:0 auto;padding:1rem}
+.pestanas{display:flex;gap:.25rem;overflow-x:auto;border-bottom:1px solid var(--muted)}
+[role="tab"]{display:flex;gap:.5rem;align-items:baseline;white-space:nowrap;border:0;border-bottom:3px solid transparent;border-radius:.4rem .4rem 0 0;background:var(--surface2);font:600 1rem var(--f-display)}
+[role="tab"][aria-selected="true"]{background:var(--accent-soft);border-bottom-color:var(--accent)}
+.n{font:600 .8rem var(--f-mono);color:var(--muted)}
+[role="tabpanel"]{background:var(--surface);border:1px solid var(--line);border-top:0;padding:1rem 1.25rem}
+.intro{margin:.25rem 0 1rem;color:var(--muted)}
+.fila{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin:.5rem 0}
+.primario{background:var(--pcb);border-color:var(--pcb);color:#fff}
+input,select,textarea{border:1px solid var(--muted);border-radius:.4rem;padding:.35rem .6rem;background:var(--surface);max-width:100%}
+input[type="checkbox"],input[type="radio"]{width:auto}
+textarea{width:100%;resize:vertical;min-height:6rem;font-family:var(--f-mono);font-size:.9rem}
+.campos{display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:.6rem .8rem;margin:.5rem 0}
+.campo{display:flex;flex-direction:column;gap:.2rem;min-width:0}
+.campo label{font-weight:700;font-size:.9rem}
+.campo input,.campo select,.campo textarea{width:100%}
+.campo.ancho{grid-column:1/-1}
+.msg{margin:.5rem 0;min-height:1.4rem}
+.msg:empty{min-height:0;margin:0}
+.aviso{margin:.75rem 0;padding:.5rem .75rem;border-left:4px solid var(--accent);background:var(--accent-soft)}
+.correccion{margin:.75rem 0;padding:.4rem .75rem;border-left:4px solid var(--accent);background:var(--surface2)}
+.correccion:empty{display:none}
+.ok{color:var(--ok);font-weight:700}
+.ko{color:var(--ko);font-weight:700}
+.lista-ver{list-style:none;padding:0;margin:.5rem 0}
+.lista-ver li{padding:.3rem .6rem;border-left:4px solid var(--muted);background:var(--surface2);margin:.25rem 0}
+.lista-ver li.si{border-left-color:var(--ok)}
+.lista-ver li.no{border-left-color:var(--ko)}
+.lista-ver li.av{border-left-color:var(--accent)}
+details.datos{margin:.75rem 0;border:1px solid var(--line);border-radius:.5rem;padding:.4rem .8rem;background:var(--surface)}
+details.datos summary{cursor:pointer;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
+.chips button{font:.85rem var(--f-mono);padding:.2rem .55rem}
+.term{background:#0e1411;color:#e4ebe6;border:1px solid var(--muted);border-radius:.5rem;font:.9rem/1.45 var(--f-mono)}
+.term-sal{max-height:24rem;min-height:9rem;overflow:auto;padding:.6rem .8rem}
+.term-l{margin-top:.4rem;word-break:break-all}
+.term-p{color:#6fd49a;margin-right:.5rem}
+.term-o{margin:0;white-space:pre-wrap;word-break:break-word;font:inherit;color:#e4ebe6}
+.term-o.err{color:#ff9d94}
+.term-form{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;padding:.4rem .8rem .6rem;border-top:1px solid #2b3832}
+.term-form label{color:#6fd49a;white-space:nowrap}
+.term-form input{flex:1 1 12rem;background:#0e1411;color:#e4ebe6;border:1px solid #95a69d;font-family:var(--f-mono)}
+.editor{margin:.6rem 0;padding:.6rem;border:2px solid var(--accent);border-radius:.5rem;background:var(--accent-soft)}
+.grafo{overflow-x:auto;border:1px solid var(--line);border-radius:.5rem;background:var(--surface);padding:.3rem;margin:.5rem 0}
+.grafo svg{display:block}
+.grafo text{fill:var(--ink)}
+.grafo .t-h{font:10px var(--f-mono)}
+.grafo .t-r{font:700 11px var(--f-body)}
+.grafo .ln{fill:none;stroke-width:3}
+.grafo .nd{stroke-width:3}
+.grafo .nd.mg{fill:var(--surface);stroke-width:5}
+.l0{stroke:var(--c0);fill:var(--c0)}.l1{stroke:var(--c1);fill:var(--c1)}.l2{stroke:var(--c2);fill:var(--c2)}
+.l3{stroke:var(--c3);fill:var(--c3)}.l4{stroke:var(--c4);fill:var(--c4)}.l5{stroke:var(--c5);fill:var(--c5)}
+.grafo .ln.l0,.grafo .ln.l1,.grafo .ln.l2,.grafo .ln.l3,.grafo .ln.l4,.grafo .ln.l5{fill:none}
+.grafo .nd.mg.l0,.grafo .nd.mg.l1,.grafo .nd.mg.l2,.grafo .nd.mg.l3,.grafo .nd.mg.l4,.grafo .nd.mg.l5{fill:var(--surface)}
+.retos{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
+.retos [aria-pressed="true"]{background:var(--accent-soft);border:2px solid var(--accent)}
+.tarjeta{border:1px solid var(--line);border-radius:.5rem;padding:.6rem .9rem;margin:.6rem 0;background:var(--surface)}
+.dos{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:1rem;align-items:start}
+.borrador{border:1px solid var(--muted);border-radius:.5rem;padding:.5rem .8rem;background:var(--surface2);margin:.5rem 0}
+.borrador p{margin:.2rem 0}
+.borrador pre{white-space:pre-wrap;margin:.4rem 0 0;font-family:var(--f-body)}
+.preg fieldset{border:1px solid var(--line);border-radius:.5rem;margin:.5rem 0;padding:.5rem .8rem}
+.preg legend{font-weight:700;padding:0 .3rem}
+.opc{display:block;margin:.25rem 0}
+pre.cmd{background:var(--surface2);padding:.6rem;border-radius:.4rem;overflow:auto;white-space:pre-wrap;font-size:.88rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="cabecera">
+  <a href="../../" data-lab-volver aria-label="Volver a la unidad">← <span>Unidad</span></a>
+  <h1>Simulador de Git</h1>
+  <div role="group" aria-label="Tamaño del texto">
+    <button type="button" data-lab-zoom="-" aria-label="Reducir texto">A−</button>
+    <button type="button" data-lab-zoom="+" aria-label="Aumentar texto">A+</button>
+  </div>
+</header>
+<main>
+  <details class="datos">
+    <summary>Tus datos: progreso y copia</summary>
+    <p class="intro">Todo se guarda solo en este navegador. Puedes descargar tu progreso para llevarlo a Aules; la sesión de terminal se descarga desde la pestaña «Terminal». Este simulador no usa Git real ni se conecta a ningún servidor.</p>
+    <div class="fila">
+      <button type="button" id="bt-progreso">Descargar mi progreso (.json)</button>
+      <button type="button" id="bt-borrar">Borrar mis datos</button>
+    </div>
+    <p class="msg" id="msg-datos" role="status"></p>
+  </details>
+
+  <div class="pestanas" role="tablist" aria-label="Secciones del laboratorio">
+    <button type="button" role="tab" id="tab-terminal" data-tab="terminal" aria-controls="panel-terminal" aria-selected="true"><span class="n">1</span><span>Terminal</span></button>
+    <button type="button" role="tab" id="tab-grafo" data-tab="grafo" aria-controls="panel-grafo" aria-selected="false" tabindex="-1"><span class="n">2</span><span>Grafo de commits</span></button>
+    <button type="button" role="tab" id="tab-retos" data-tab="retos" aria-controls="panel-retos" aria-selected="false" tabindex="-1"><span class="n">3</span><span>Retos guiados</span></button>
+    <button type="button" role="tab" id="tab-conflictos" data-tab="conflictos" aria-controls="panel-conflictos" aria-selected="false" tabindex="-1"><span class="n">4</span><span>Conflictos</span></button>
+    <button type="button" role="tab" id="tab-mensajes" data-tab="mensajes" aria-controls="panel-mensajes" aria-selected="false" tabindex="-1"><span class="n">5</span><span>Mensajes y claves</span></button>
+    <button type="button" role="tab" id="tab-correo" data-tab="correo" aria-controls="panel-correo" aria-selected="false" tabindex="-1"><span class="n">6</span><span>Correo profesional</span></button>
+    <button type="button" role="tab" id="tab-practica" data-tab="practica" aria-controls="panel-practica" aria-selected="false" tabindex="-1"><span class="n">7</span><span>Práctica</span></button>
+  </div>
+
+  <section role="tabpanel" id="panel-terminal" aria-labelledby="tab-terminal" tabindex="0">
+    <h2>Terminal simulada</h2>
+    <p class="intro">Escribe órdenes de Git sobre un repositorio que vive solo en la memoria de esta página. Empieza con <code>git init -b main</code>. Usa las flechas arriba y abajo para recuperar órdenes anteriores y <code>help</code> para ver lo que entiende el simulador.</p>
+    <div class="chips" id="chips" role="group" aria-label="Órdenes de ejemplo (rellenan la línea, no la ejecutan)"></div>
+    <div id="term-libre"></div>
+    <div class="fila">
+      <button type="button" id="bt-reiniciar">Empezar de cero</button>
+      <button type="button" id="bt-sesion">Descargar mi sesión (.md)</button>
+    </div>
+    <p class="msg" id="msg-term" role="status"></p>
+    <details class="datos">
+      <summary>Qué entiende el simulador (y qué no)</summary>
+      <ul>
+        <li><b>Git:</b> <code>init</code>, <code>config</code>, <code>status</code>, <code>add</code>, <code>commit</code> (con <code>-m</code>, <code>-a</code>), <code>log</code> (<code>--oneline</code>, <code>--graph</code>, <code>--all</code>), <code>diff</code> (<code>--staged</code>), <code>branch</code>, <code>switch</code>, <code>checkout</code>, <code>merge</code> (<code>--no-ff</code>, <code>--abort</code>), <code>restore</code> (<code>--staged</code>) y <code>rm</code>.</li>
+        <li><b>Archivos:</b> <code>ls</code>, <code>cat</code>, <code>echo "texto" &gt; archivo</code> (también <code>&gt;&gt;</code> y <code>-e</code> para saltos de línea con <code>\n</code>), <code>touch</code>, <code>rm</code> y <code>nano archivo</code> (abre un editor de texto sencillo).</li>
+        <li><b>No existe:</b> <code>push</code>, <code>pull</code>, <code>fetch</code>, <code>clone</code>, <code>remote</code> (no hay servidor), ni <code>reset</code>, <code>rebase</code>, <code>stash</code>, <code>tag</code>. El simulador avisa cuando se la pides.</li>
+        <li>Los textos de salida están en inglés, como en la mayoría de instalaciones de Git; en tu ordenador pueden salir en castellano según la configuración. Los archivos son planos (sin carpetas reales) y los conflictos se calculan por líneas cuando el número de líneas no cambia; si cambió en ambas ramas, el simulador marca el archivo entero como un solo bloque en conflicto.</li>
+      </ul>
+    </details>
+  </section>
+
+  <section role="tabpanel" id="panel-grafo" aria-labelledby="tab-grafo" tabindex="0" hidden>
+    <h2>Grafo de commits</h2>
+    <p class="intro">Este es el historial del repositorio de la pestaña «Terminal», dibujado tras cada orden. Cada círculo es un commit; cada color, una rama; los commits de fusión tienen el centro vacío y dos líneas hacia atrás. Ejecuta aquí órdenes sin cambiar de pestaña.</p>
+    <form class="fila" id="form-grafo" autocomplete="off">
+      <label for="orden-grafo"><code>$</code></label>
+      <input id="orden-grafo" type="text" spellcheck="false" autocapitalize="off" style="flex:1 1 16rem" placeholder="git commit -m &quot;Mensaje&quot;">
+      <button type="submit" class="primario">Ejecutar</button>
+    </form>
+    <pre class="cmd" id="salida-grafo" role="status">Aún no has ejecutado nada desde aquí.</pre>
+    <div class="grafo" id="grafo-libre"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-retos" aria-labelledby="tab-retos" tabindex="0" hidden>
+    <h2>Retos guiados</h2>
+    <p class="intro">Cada reto te da un repositorio ya preparado y un objetivo. Escribe las órdenes en la terminal y pulsa «Comprobar»: el simulador mira el estado del repositorio, no lo que has escrito. Puedes pedir pistas y reiniciar el reto.</p>
+    <div class="retos" id="lista-retos" role="group" aria-label="Elige un reto"></div>
+    <div id="reto-cuerpo"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-conflictos" aria-labelledby="tab-conflictos" tabindex="0" hidden>
+    <h2>Resolución de conflictos</h2>
+    <p class="intro">Un conflicto aparece cuando dos ramas cambian las mismas líneas. Git deja marcas en el archivo: lo que hay entre <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> y <code>=======</code> es <b>tu</b> versión (la rama en la que estás) y lo que hay entre <code>=======</code> y <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> es la de la <b>otra</b> rama. Tu trabajo es dejar el texto final y borrar las marcas.</p>
+    <div class="retos" id="lista-conf" role="group" aria-label="Elige un escenario"></div>
+    <div id="conf-cuerpo"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-mensajes" aria-labelledby="tab-mensajes" tabindex="0" hidden>
+    <h2>Mensajes de commit y claves de incidencia</h2>
+    <p class="intro">Un buen mensaje explica el cambio y lleva la clave de la incidencia (por ejemplo <code>PORT-12</code>) para enlazar el código con el tablero. Primero entrena el ojo; después construye los tuyos.</p>
+    <h3>A. ¿Buen mensaje o mal mensaje?</h3>
+    <div class="tarjeta" id="clasif"></div>
+    <h3>B. Construye la rama y el mensaje de tu incidencia</h3>
+    <div class="campos">
+      <div class="campo"><label for="k-clave">Clave del proyecto</label><input id="k-clave" type="text" value="PORT" maxlength="10" spellcheck="false"></div>
+      <div class="campo"><label for="k-num">Número</label><input id="k-num" type="number" min="1" value="12"></div>
+      <div class="campo"><label for="k-tipo">Tipo de trabajo</label>
+        <select id="k-tipo"><option value="feature">feature (funcionalidad)</option><option value="fix">fix (corrección)</option><option value="docs">docs (documentación)</option><option value="chore">chore (tarea técnica)</option></select></div>
+      <div class="campo ancho"><label for="k-resumen">Resumen del cambio (verbo en presente: Añade, Corrige…)</label><input id="k-resumen" type="text" value="Añade el formulario de alta de avería"></div>
+    </div>
+    <ul class="lista-ver" id="k-chequeos"></ul>
+    <p><b>Rama:</b> <code id="k-rama"></code></p>
+    <p><b>Mensaje de commit:</b> <code id="k-msg"></code></p>
+    <pre class="cmd" id="k-ordenes"></pre>
+  </section>
+
+  <section role="tabpanel" id="panel-correo" aria-labelledby="tab-correo" tabindex="0" hidden>
+    <h2>Correo profesional</h2>
+    <p class="intro">Corrige dos borradores marcando sus problemas y, después, analiza un correo tuyo con una lista de comprobación. Es un análisis orientativo: no sustituye a releer el mensaje.</p>
+    <h3>A. Corrige el borrador</h3>
+    <div class="retos" id="lista-borr" role="group" aria-label="Elige un borrador"></div>
+    <div id="borr-cuerpo"></div>
+    <h3>B. Analiza un correo tuyo</h3>
+    <div class="campos">
+      <div class="campo"><label for="m-para">Para</label><input id="m-para" type="text" placeholder="marta@ejemplo.test" spellcheck="false"></div>
+      <div class="campo"><label for="m-cc">Cc</label><input id="m-cc" type="text" spellcheck="false"></div>
+      <div class="campo"><label for="m-cco">Cco</label><input id="m-cco" type="text" spellcheck="false"></div>
+      <div class="campo ancho"><label for="m-asunto">Asunto</label><input id="m-asunto" type="text"></div>
+      <div class="campo ancho"><label for="m-cuerpo">Cuerpo del mensaje</label><textarea id="m-cuerpo" rows="8"></textarea></div>
+    </div>
+    <div class="fila">
+      <label><input type="checkbox" id="m-adj"> Lleva archivo adjunto</label>
+      <button type="button" class="primario" id="m-analizar">Analizar</button>
+      <button type="button" id="m-ejemplo">Cargar un ejemplo</button>
+    </div>
+    <p id="m-resumen" role="status"></p>
+    <ul class="lista-ver" id="m-resultados"></ul>
+  </section>
+
+  <section role="tabpanel" id="panel-practica" aria-labelledby="tab-practica" tabindex="0" hidden>
+    <h2>Práctica</h2>
+    <p class="intro">Preguntas sobre Git, tableros, correo y herramientas de equipo. Cada respuesta se corrige al momento y explica la solución. El marcador se guarda en este navegador.</p>
+    <div class="preg" id="preg"></div>
+    <div class="fila">
+      <button type="button" class="primario" id="p-comprobar">Comprobar</button>
+      <button type="button" id="p-otra">Otra pregunta</button>
+    </div>
+    <p class="correccion" id="p-correccion" role="status"></p>
+    <p>Aciertos: <b id="p-aciertos">0</b> de <b id="p-intentos">0</b></p>
+  </section>
+</main>
+
+<script>
+'use strict';
+// ==NUCLEO-INICIO==
+// Núcleo: repositorio simulado en memoria e intérprete de órdenes. No usa el DOM.
+const NOREPO = 'fatal: not a git repository (or any of the parent directories): .git';
+const CONOCIDAS_NO = ['push','pull','fetch','clone','remote','stash','reset','rebase','tag','cherry-pick','revert','show','blame','bisect','submodule','clean','mv','reflog','archive','grep'];
+
+function lineas(t) { if (t === undefined || t === '') return []; const s = t.endsWith('\n') ? t.slice(0, -1) : t; return s.split('\n'); }
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function hash40(s) {
+  let h = 2166136261 >>> 0, out = '';
+  for (let ronda = 0; ronda < 5; ronda++) {
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+    h ^= (ronda * 2654435761) >>> 0; h = Math.imul(h, 16777619) >>> 0;
+    out += h.toString(16).padStart(8, '0');
+  }
+  return out;
+}
+function corto(id) { return id.slice(0, 7); }
+function nuevoRepo() {
+  return { iniciado: false, fs: {}, indice: {}, commits: {}, orden: [], ramas: {}, ordenRamas: [], cabeza: 'main', fusion: null, reloj: 0, config: {} };
+}
+function idCabeza(r) { return r.ramas[r.cabeza] || null; }
+function arbolDe(r, id) { return id ? r.commits[id].arbol : {}; }
+function arbolCabeza(r) { return arbolDe(r, idCabeza(r)); }
+function ancestros(r, id) {
+  const v = new Set(), p = [id];
+  while (p.length) { const x = p.pop(); if (!x || v.has(x)) continue; v.add(x); p.push(...r.commits[x].padres); }
+  return v;
+}
+function fechaDe(seq) {
+  const d = new Date(Date.UTC(2026, 9, 5, 9, 0, 0) + seq * 7 * 60000);
+  const dias = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], meses = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dos = (n) => String(n).padStart(2, '0');
+  return `${dias[d.getUTCDay()]} ${meses[d.getUTCMonth()]} ${d.getUTCDate()} ${dos(d.getUTCHours())}:${dos(d.getUTCMinutes())}:00 ${d.getUTCFullYear()} +0200`;
+}
+function crearRama(r, nombre, id) { r.ramas[nombre] = id; if (!r.ordenRamas.includes(nombre)) r.ordenRamas.push(nombre); }
+function nombreRamaValido(n) { return !!n && /^[A-Za-z0-9._\/-]+$/.test(n) && !n.startsWith('-') && !n.startsWith('/') && !n.endsWith('/') && !n.endsWith('.lock') && !n.includes('..') && !n.includes('//'); }
+
+// --- .gitignore
+function globARegex(p) { return p.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '[^/]*').replace(/\?/g, '[^/]'); }
+function ignorado(r, ruta) {
+  const t = r.fs['.gitignore'];
+  if (t === undefined) return false;
+  const pats = lineas(t).map((l) => l.trim()).filter((l) => l && !l.startsWith('#') && !l.startsWith('!'));
+  const partes = ruta.split('/');
+  for (let p of pats) {
+    let dir = false, anc = false;
+    if (p.endsWith('/')) { dir = true; p = p.slice(0, -1); }
+    if (p.startsWith('/')) { anc = true; p = p.slice(1); }
+    const re = globARegex(p);
+    if (dir) { for (let i = 0; i < partes.length - 1; i++) if (new RegExp('^' + re + '$').test(partes[i]) && (!anc || i === 0)) return true; }
+    else if (anc || p.includes('/')) { if (new RegExp('^' + re + '(/.*)?$').test(ruta)) return true; }
+    else { for (const parte of partes) if (new RegExp('^' + re + '$').test(parte)) return true; }
+  }
+  return false;
+}
+function coincide(spec, nombre) {
+  if (spec === '.' || spec === './') return true;
+  const s = spec.replace(/\/$/, '');
+  return nombre === s || nombre.startsWith(s + '/');
+}
+
+// --- diferencias
+function opsDiff(A, B) {
+  const n = A.length, m = B.length, L = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i][j] = A[i] === B[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+  const ops = []; let i = 0, j = 0;
+  while (i < n && j < m) {
+    if (A[i] === B[j]) { ops.push([' ', A[i]]); i++; j++; }
+    else if (L[i + 1][j] >= L[i][j + 1]) { ops.push(['-', A[i]]); i++; }
+    else { ops.push(['+', B[j]]); j++; }
+  }
+  while (i < n) ops.push(['-', A[i++]]);
+  while (j < m) ops.push(['+', B[j++]]);
+  return ops;
+}
+function estadisticas(a, b) {
+  let ins = 0, del = 0, arch = 0; const creados = [], borrados = [];
+  for (const f of new Set([...Object.keys(a), ...Object.keys(b)])) {
+    if (a[f] === b[f]) continue;
+    arch++;
+    if (a[f] === undefined) creados.push(f);
+    if (b[f] === undefined) borrados.push(f);
+    for (const op of opsDiff(lineas(a[f]), lineas(b[f]))) { if (op[0] === '+') ins++; else if (op[0] === '-') del++; }
+  }
+  return { arch, ins, del, creados: creados.sort(), borrados: borrados.sort() };
+}
+function textoStats(s) {
+  if (!s.arch) return '';
+  const p = [`${s.arch} file${s.arch > 1 ? 's' : ''} changed`];
+  if (s.ins) p.push(`${s.ins} insertion${s.ins > 1 ? 's' : ''}(+)`);
+  if (s.del) p.push(`${s.del} deletion${s.del > 1 ? 's' : ''}(-)`);
+  let out = ' ' + p.join(', ');
+  for (const f of s.creados) out += `\n create mode 100644 ${f}`;
+  for (const f of s.borrados) out += `\n delete mode 100644 ${f}`;
+  return out;
+}
+function textoDiff(ruta, a, b) {
+  const A = lineas(a), B = lineas(b), L = [`diff --git a/${ruta} b/${ruta}`];
+  if (a === undefined) L.push('new file mode 100644'); else if (b === undefined) L.push('deleted file mode 100644');
+  L.push(`index ${hash40(a || '').slice(0, 7)}..${hash40(b || '').slice(0, 7)}${a !== undefined && b !== undefined ? ' 100644' : ''}`);
+  L.push(`--- ${a === undefined ? '/dev/null' : 'a/' + ruta}`, `+++ ${b === undefined ? '/dev/null' : 'b/' + ruta}`);
+  L.push(`@@ -${A.length ? 1 : 0},${A.length} +${B.length ? 1 : 0},${B.length} @@`);
+  for (const op of opsDiff(A, B)) L.push(op[0] + op[1]);
+  return L.join('\n');
+}
+
+// --- estado
+function estado(r) {
+  const head = arbolCabeza(r), staged = [], unst = [], untr = [];
+  const conf = r.fusion ? r.fusion.conflictos : new Set();
+  for (const f of [...new Set([...Object.keys(head), ...Object.keys(r.indice)])].sort()) {
+    if (conf.has(f)) continue;
+    const h = head[f], i = r.indice[f];
+    if (h === undefined && i !== undefined) staged.push({ f, t: 'new file' });
+    else if (h !== undefined && i === undefined) staged.push({ f, t: 'deleted' });
+    else if (h !== i) staged.push({ f, t: 'modified' });
+  }
+  for (const f of Object.keys(r.indice).sort()) {
+    if (conf.has(f)) continue;
+    if (r.fs[f] === undefined) unst.push({ f, t: 'deleted' });
+    else if (r.fs[f] !== r.indice[f]) unst.push({ f, t: 'modified' });
+  }
+  for (const f of Object.keys(r.fs).sort()) if (r.indice[f] === undefined && !ignorado(r, f)) untr.push(f);
+  return { staged, unst, untr, sinCambios: !staged.length && !unst.length && !untr.length && !conf.size };
+}
+function salidaStatus(r) {
+  if (!r.iniciado) return NOREPO;
+  const e = estado(r), L = [`On branch ${r.cabeza}`], conf = r.fusion ? [...r.fusion.conflictos].sort() : [];
+  if (!idCabeza(r)) L.push('', 'No commits yet');
+  if (r.fusion) {
+    if (conf.length) L.push('You have unmerged paths.', '  (fix conflicts and run "git commit")', '  (use "git merge --abort" to abort the merge)');
+    else L.push('All conflicts fixed but you are still merging.', '  (use "git commit" to conclude merge)');
+  }
+  L.push('');
+  if (conf.length) { L.push('Unmerged paths:', '  (use "git add <file>..." to mark resolution)'); for (const f of conf) L.push(`\tboth modified:   ${f}`); L.push(''); }
+  if (e.staged.length) {
+    L.push('Changes to be committed:', idCabeza(r) ? '  (use "git restore --staged <file>..." to unstage)' : '  (use "git rm --cached <file>..." to unstage)');
+    for (const x of e.staged) L.push(`\t${x.t === 'deleted' ? 'deleted:    ' : x.t === 'new file' ? 'new file:   ' : 'modified:   '}${x.f}`);
+    L.push('');
+  }
+  if (e.unst.length) {
+    L.push('Changes not staged for commit:', '  (use "git add <file>..." to update what will be committed)', '  (use "git restore <file>..." to discard changes in working directory)');
+    for (const x of e.unst) L.push(`\t${x.t === 'deleted' ? 'deleted:    ' : 'modified:   '}${x.f}`);
+    L.push('');
+  }
+  if (e.untr.length) { L.push('Untracked files:', '  (use "git add <file>..." to include in what will be committed)'); for (const f of e.untr) L.push(`\t${f}`); L.push(''); }
+  if (!conf.length) {
+    if (e.staged.length || r.fusion) { /* sin línea final */ }
+    else if (e.unst.length) L.push('no changes added to commit (use "git add" and/or "git commit -a")');
+    else if (e.untr.length) L.push('nothing added to commit but untracked files present (use "git add" to track)');
+    else if (!idCabeza(r)) L.push('nothing to commit (create/copy files and use "git add" to track)');
+    else L.push('nothing to commit, working tree clean');
+  }
+  return L.join('\n').replace(/\n+$/, '');
+}
+
+// --- commits
+function hacerCommit(r, msg, padres) {
+  const arbol = Object.assign({}, r.indice);
+  r.reloj++;
+  const id = hash40(JSON.stringify([arbol, msg, padres, r.reloj]));
+  r.commits[id] = { id, msg, padres, arbol, seq: r.reloj };
+  r.orden.push(id);
+  crearRama(r, r.cabeza, id);
+  return id;
+}
+function cmdCommit(r, args) {
+  if (!r.iniciado) return NOREPO;
+  const msgs = []; let todo = false;
+  for (let i = 0; i < args.length; i++) {
+    const x = args[i];
+    if (x === '-m' || x === '--message') { if (i + 1 >= args.length) return "error: switch `m' requires a value"; msgs.push(args[++i]); }
+    else if (x === '-a' || x === '--all') todo = true;
+    else if (x === '-am') { todo = true; if (i + 1 >= args.length) return "error: switch `m' requires a value"; msgs.push(args[++i]); }
+    else if (x.startsWith('--message=')) msgs.push(x.slice(10));
+    else if (x === '--amend') return 'error: --amend no está soportado en este simulador (reescribe el historial).';
+    else return "error: unknown option `" + x + "'";
+  }
+  if (todo) { for (const f of Object.keys(r.indice)) { if (r.fusion && r.fusion.conflictos.has(f)) continue; if (r.fs[f] === undefined) delete r.indice[f]; else r.indice[f] = r.fs[f]; } }
+  const cur = idCabeza(r);
+  if (r.fusion) {
+    if (r.fusion.conflictos.size) return 'error: Committing is not possible because you have unmerged files.\nhint: Fix them up in the work tree, and then use \'git add/rm <file>\'\nhint: as appropriate to mark resolution and make a commit.\nfatal: Exiting because of an unresolved conflict.';
+    const msg = msgs.length ? msgs.join('\n\n') : r.fusion.msg;
+    const antes = arbolCabeza(r), otro = r.fusion.otro;
+    const id = hacerCommit(r, msg, [cur, otro]);
+    r.fusion = null;
+    return `[${r.cabeza} ${corto(id)}] ${msg.split('\n')[0]}`;
+  }
+  const e = estado(r);
+  if (!e.staged.length) return salidaStatus(r);
+  if (!msgs.length) return 'error: este simulador necesita -m "mensaje" (Git real abriría un editor de texto).';
+  const msg = msgs.join('\n\n');
+  if (!msg.trim()) return 'Aborting commit due to empty commit message.';
+  const antes = arbolCabeza(r);
+  const id = hacerCommit(r, msg, cur ? [cur] : []);
+  const st = textoStats(estadisticas(antes, r.commits[id].arbol));
+  return `[${r.cabeza}${cur ? '' : ' (root-commit)'} ${corto(id)}] ${msg.split('\n')[0]}\n${st}`;
+}
+
+// --- add / rm / restore
+function cmdAdd(r, args) {
+  if (!r.iniciado) return NOREPO;
+  let todo = false, soloSeguidos = false; const specs = [];
+  for (const x of args) { if (x === '-A' || x === '--all') todo = true; else if (x === '-u' || x === '--update') soloSeguidos = true; else if (x === '-f') {} else if (x.startsWith('-')) return `error: opción no soportada: ${x}`; else specs.push(x); }
+  if (todo || soloSeguidos) specs.push('.');
+  if (!specs.length) return "Nothing specified, nothing added.\nhint: Maybe you wanted to say 'git add .'?";
+  const nombres = [...new Set([...Object.keys(r.fs), ...Object.keys(r.indice)])];
+  for (const spec of specs) {
+    const hit = nombres.filter((n) => coincide(spec, n));
+    if (!hit.length) return `fatal: pathspec '${spec}' did not match any files`;
+    for (const f of hit) {
+      if (r.fs[f] !== undefined) {
+        if (r.indice[f] === undefined) {
+          if (soloSeguidos) continue;
+          if (ignorado(r, f)) { if (spec === '.' || spec === './' || spec.replace(/\/$/, '') !== f) continue; return `The following paths are ignored by one of your .gitignore files:\n${f}\nhint: Use -f if you really want to add them.`; }
+        }
+        r.indice[f] = r.fs[f];
+      } else delete r.indice[f];
+      if (r.fusion) r.fusion.conflictos.delete(f);
+    }
+  }
+  return '';
+}
+function cmdRm(r, args) {
+  if (!r.iniciado) return NOREPO;
+  let cached = false; const fich = [];
+  for (const x of args) { if (x === '--cached') cached = true; else if (x === '-f' || x === '-r') {} else if (x.startsWith('-')) return `error: opción no soportada: ${x}`; else fich.push(x); }
+  if (!fich.length) return 'usage: git rm [--cached] <file>...';
+  const out = [];
+  for (const f of fich) {
+    if (r.indice[f] === undefined && !(r.fusion && r.fusion.conflictos.has(f))) return `fatal: pathspec '${f}' did not match any files`;
+    delete r.indice[f]; if (!cached) delete r.fs[f];
+    if (r.fusion) r.fusion.conflictos.delete(f);
+    out.push(`rm '${f}'`);
+  }
+  return out.join('\n');
+}
+function cmdRestore(r, args) {
+  if (!r.iniciado) return NOREPO;
+  let staged = false, work = false; const specs = [];
+  for (const x of args) {
+    if (x === '--staged' || x === '-S') staged = true; else if (x === '--worktree' || x === '-W') work = true;
+    else if (x.startsWith('--source')) return 'error: --source no está soportado en este simulador.';
+    else if (x.startsWith('-')) return `error: opción no soportada: ${x}`; else specs.push(x);
+  }
+  if (!specs.length) return 'fatal: you must specify path(s) to restore';
+  if (!staged) work = true;
+  const head = arbolCabeza(r);
+  for (const spec of specs) {
+    const cand = [...new Set([...Object.keys(head), ...Object.keys(r.indice)])].filter((n) => coincide(spec, n));
+    if (!cand.length) return `error: pathspec '${spec}' did not match any file(s) known to git`;
+    for (const f of cand) {
+      if (r.fusion && r.fusion.conflictos.has(f)) return `error: path '${f}' is unmerged`;
+      if (staged) { if (head[f] !== undefined) r.indice[f] = head[f]; else delete r.indice[f]; }
+      if (work) { if (r.indice[f] !== undefined) r.fs[f] = r.indice[f]; else if (!staged) delete r.fs[f]; }
+    }
+  }
+  return '';
+}
+
+// --- ramas
+function cmdBranch(r, args) {
+  if (!r.iniciado) return NOREPO;
+  let borrar = false, forzar = false, mover = false, verb = false; const pos = [];
+  for (const x of args) {
+    if (x === '-d' || x === '--delete') borrar = true; else if (x === '-D') { borrar = true; forzar = true; }
+    else if (x === '-m' || x === '-M' || x === '--move') mover = true; else if (x === '-v' || x === '-vv') verb = true;
+    else if (x === '-a' || x === '--list' || x === '-l') {} else if (x.startsWith('-')) return `error: opción no soportada: ${x}`; else pos.push(x);
+  }
+  if (borrar) {
+    if (!pos.length) return 'fatal: branch name required';
+    const out = [];
+    for (const n of pos) {
+      if (r.ramas[n] === undefined) return `error: branch '${n}' not found.`;
+      if (n === r.cabeza) return `error: Cannot delete branch '${n}' checked out at '/proyecto'`;
+      if (!forzar && !ancestros(r, idCabeza(r)).has(r.ramas[n])) return `error: the branch '${n}' is not fully merged.\nIf you are sure you want to delete it, run 'git branch -D ${n}'.`;
+      out.push(`Deleted branch ${n} (was ${corto(r.ramas[n])}).`);
+      delete r.ramas[n]; r.ordenRamas = r.ordenRamas.filter((x) => x !== n);
+    }
+    return out.join('\n');
+  }
+  if (mover) {
+    const [a, b] = pos.length === 1 ? [r.cabeza, pos[0]] : pos;
+    if (!b) return 'fatal: branch name required';
+    if (!nombreRamaValido(b)) return `fatal: '${b}' is not a valid branch name`;
+    if (a !== r.cabeza && r.ramas[a] === undefined) return `error: refname refs/heads/${a} not found\nfatal: Branch rename failed`;
+    if (r.ramas[b] !== undefined) return `fatal: a branch named '${b}' already exists`;
+    if (r.ramas[a] !== undefined) { r.ramas[b] = r.ramas[a]; delete r.ramas[a]; r.ordenRamas = r.ordenRamas.map((x) => (x === a ? b : x)); }
+    if (a === r.cabeza) r.cabeza = b;
+    return '';
+  }
+  if (pos.length) {
+    const n = pos[0];
+    if (!nombreRamaValido(n)) return `fatal: '${n}' is not a valid branch name`;
+    if (r.ramas[n] !== undefined) return `fatal: a branch named '${n}' already exists`;
+    const inicio = pos[1] ? r.ramas[pos[1]] : idCabeza(r);
+    if (!inicio) return `fatal: not a valid object name: '${pos[1] || r.cabeza}'`;
+    crearRama(r, n, inicio);
+    return '';
+  }
+  return [...r.ordenRamas].sort().map((n) => (n === r.cabeza ? '* ' : '  ') + n + (verb ? ` ${corto(r.ramas[n])} ${r.commits[r.ramas[n]].msg.split('\n')[0]}` : '')).join('\n');
+}
+function irA(r, idDestino, nombreRama) {
+  const cur = arbolCabeza(r), tgt = arbolDe(r, idDestino), malos = [];
+  const nombres = new Set([...Object.keys(cur), ...Object.keys(tgt)]);
+  for (const f of nombres) {
+    if (cur[f] === tgt[f]) continue;
+    if (r.fs[f] !== cur[f] || r.indice[f] !== cur[f]) malos.push(f);
+  }
+  if (malos.length) {
+    const untr = malos.every((f) => cur[f] === undefined && r.indice[f] === undefined);
+    return untr ? `error: The following untracked working tree files would be overwritten by checkout:\n\t${malos.sort().join('\n\t')}\nPlease move or remove them before you switch branches.\nAborting`
+      : `error: Your local changes to the following files would be overwritten by checkout:\n\t${malos.sort().join('\n\t')}\nPlease commit your changes or stash them before you switch branches.\nAborting`;
+  }
+  for (const f of nombres) {
+    if (cur[f] === tgt[f]) continue;
+    if (tgt[f] === undefined) { delete r.fs[f]; delete r.indice[f]; } else { r.fs[f] = tgt[f]; r.indice[f] = tgt[f]; }
+  }
+  r.cabeza = nombreRama;
+  return '';
+}
+function cmdSwitch(r, args, esCheckout) {
+  if (!r.iniciado) return NOREPO;
+  let crear = false, nombre = null, inicio = null;
+  for (let i = 0; i < args.length; i++) {
+    const x = args[i];
+    if (x === '-c' || x === '-b' || x === '--create') { crear = true; nombre = args[++i]; if (!nombre) return `fatal: missing branch name; try -c`; }
+    else if (x === '--') return 'error: este simulador no soporta «--»; usa git restore <archivo>.';
+    else if (x.startsWith('-')) return `error: opción no soportada: ${x}`;
+    else if (nombre === null) nombre = x; else inicio = x;
+  }
+  if (!nombre) return esCheckout ? 'error: indica una rama (o un archivo para restaurarlo).' : 'fatal: missing branch or commit argument';
+  if (r.fusion) return 'error: you need to resolve your current index first';
+  if (esCheckout && !crear && r.ramas[nombre] === undefined && r.indice[nombre] !== undefined) return cmdRestore(r, [nombre]);
+  if (crear) {
+    if (!nombreRamaValido(nombre)) return `fatal: '${nombre}' is not a valid branch name`;
+    if (r.ramas[nombre] !== undefined) return `fatal: a branch named '${nombre}' already exists`;
+    if (!idCabeza(r) && !inicio) { r.cabeza = nombre; return `Switched to a new branch '${nombre}'`; }
+    const base = inicio ? r.ramas[inicio] : idCabeza(r);
+    if (!base) return `fatal: invalid reference: ${inicio}`;
+    const antes = r.cabeza, res = irA(r, base, nombre);
+    if (res) return res;
+    crearRama(r, nombre, base);
+    return `Switched to a new branch '${nombre}'`;
+  }
+  if (r.ramas[nombre] === undefined) return esCheckout ? `error: pathspec '${nombre}' did not match any file(s) known to git` : `fatal: invalid reference: ${nombre}`;
+  if (nombre === r.cabeza) return `Already on '${nombre}'`;
+  const res = irA(r, r.ramas[nombre], nombre);
+  return res || `Switched to branch '${nombre}'`;
+}
+
+// --- fusión
+function fusion3(base, ours, theirs, nombre) {
+  if (ours === theirs) return { texto: ours, conf: false };
+  if (ours === base) return { texto: theirs, conf: false };
+  if (theirs === base) return { texto: ours, conf: false };
+  const B = lineas(base), O = lineas(ours), T = lineas(theirs);
+  if (base !== undefined && B.length === O.length && B.length === T.length) {
+    const out = []; let conf = false, i = 0;
+    while (i < B.length) {
+      if (O[i] === T[i] || T[i] === B[i]) { out.push(O[i]); i++; }
+      else if (O[i] === B[i]) { out.push(T[i]); i++; }
+      else {
+        const ho = [], ht = [];
+        while (i < B.length && O[i] !== T[i] && O[i] !== B[i] && T[i] !== B[i]) { ho.push(O[i]); ht.push(T[i]); i++; }
+        out.push('<<<<<<< HEAD', ...ho, '=======', ...ht, '>>>>>>> ' + nombre); conf = true;
+      }
+    }
+    return { texto: out.join('\n') + '\n', conf };
+  }
+  return { texto: ['<<<<<<< HEAD', ...O, '=======', ...T, '>>>>>>> ' + nombre].join('\n') + '\n', conf: true };
+}
+function cmdMerge(r, args) {
+  if (!r.iniciado) return NOREPO;
+  let noff = false, abort = false, nombre = null;
+  for (const x of args) { if (x === '--no-ff') noff = true; else if (x === '--abort') abort = true; else if (x === '--ff' || x === '--no-edit') {} else if (x.startsWith('-')) return `error: opción no soportada: ${x}`; else nombre = x; }
+  if (abort) {
+    if (!r.fusion) return 'fatal: There is no merge to abort (MERGE_HEAD missing).';
+    const head = arbolCabeza(r);
+    for (const f of Object.keys(r.indice)) if (head[f] === undefined) { delete r.indice[f]; delete r.fs[f]; }
+    for (const f of Object.keys(head)) { r.indice[f] = head[f]; r.fs[f] = head[f]; }
+    r.fusion = null;
+    return '';
+  }
+  if (!nombre) return 'fatal: no hay nada que fusionar: indica una rama (git merge <rama>).';
+  const cur = idCabeza(r);
+  if (!cur) return 'fatal: no hay commits todavía en la rama actual.';
+  if (r.fusion) return "error: Merging is not possible because you have unmerged files.\nhint: Fix them up in the work tree, and then use 'git add/rm <file>'\nhint: as appropriate to mark resolution and make a commit.\nfatal: Exiting because of an unresolved conflict.";
+  const otro = r.ramas[nombre];
+  if (otro === undefined) return `merge: ${nombre} - not something we can merge`;
+  const aC = ancestros(r, cur), aT = ancestros(r, otro);
+  if (aC.has(otro)) return 'Already up to date.';
+  const oursT = arbolDe(r, cur), theirsT = arbolDe(r, otro);
+  const ff = aT.has(cur) && !noff;
+  const comunes = [...aC].filter((x) => aT.has(x));
+  const baseId = comunes.length ? comunes.reduce((a, b) => (r.commits[a].seq > r.commits[b].seq ? a : b)) : null;
+  const baseT = arbolDe(r, baseId);
+  const todos = [...new Set([...Object.keys(baseT), ...Object.keys(oursT), ...Object.keys(theirsT)])].sort();
+  const tocados = todos.filter((f) => theirsT[f] !== baseT[f]);
+  const sucios = tocados.filter((f) => r.fs[f] !== oursT[f] || r.indice[f] !== oursT[f]);
+  if (sucios.length) return `error: Your local changes to the following files would be overwritten by merge:\n\t${sucios.join('\n\t')}\nPlease commit your changes or stash them before you merge.\nAborting`;
+  if (ff) {
+    const st = textoStats(estadisticas(oursT, theirsT));
+    for (const f of todos) { if (oursT[f] === theirsT[f]) continue; if (theirsT[f] === undefined) { delete r.fs[f]; delete r.indice[f]; } else { r.fs[f] = theirsT[f]; r.indice[f] = theirsT[f]; } }
+    r.ramas[r.cabeza] = otro;
+    return `Updating ${corto(cur)}..${corto(otro)}\nFast-forward\n${st}`.trimEnd();
+  }
+  const conflictos = new Set(), avisos = [];
+  for (const f of todos) {
+    const b = baseT[f], o = oursT[f], t = theirsT[f];
+    if (o === t) continue;
+    if (o === b) { if (t === undefined) { delete r.fs[f]; delete r.indice[f]; } else { r.fs[f] = t; r.indice[f] = t; } continue; }
+    if (t === b) continue;
+    avisos.push(`Auto-merging ${f}`);
+    if (o === undefined || t === undefined) {
+      avisos.push(`CONFLICT (modify/delete): ${f} deleted in ${o === undefined ? 'HEAD' : nombre} and modified in ${o === undefined ? nombre : 'HEAD'}.  Version ${o === undefined ? nombre : 'HEAD'} of ${f} left in tree.`);
+      const queda = o === undefined ? t : o;
+      r.fs[f] = queda; r.indice[f] = queda; conflictos.add(f);
+      continue;
+    }
+    const res = fusion3(b, o, t, nombre);
+    r.fs[f] = res.texto;
+    if (res.conf) { r.indice[f] = o; conflictos.add(f); avisos.push(`CONFLICT (content): Merge conflict in ${f}`); }
+    else r.indice[f] = res.texto;
+  }
+  const msg = (r.cabeza === 'main' || r.cabeza === 'master') ? `Merge branch '${nombre}'` : `Merge branch '${nombre}' into ${r.cabeza}`;
+  if (conflictos.size) {
+    r.fusion = { otro, nombre, conflictos, msg };
+    return avisos.concat('Automatic merge failed; fix conflicts and then commit the result.').join('\n');
+  }
+  const id = hacerCommit(r, msg, [cur, otro]);
+  const st = textoStats(estadisticas(oursT, r.commits[id].arbol));
+  return avisos.concat(["Merge made by the 'ort' strategy.", st]).filter(Boolean).join('\n');
+}
+
+// --- historial
+function carriles(r) {
+  const lane = {};
+  r.ordenRamas.forEach((n, i) => { let id = r.ramas[n]; while (id && lane[id] === undefined) { lane[id] = i; id = r.commits[id].padres[0]; } });
+  let extra = r.ordenRamas.length;
+  for (const id of [...r.orden].reverse()) {
+    if (lane[id] !== undefined) continue;
+    const alc = r.ordenRamas.some((n) => ancestros(r, r.ramas[n]).has(id));
+    if (!alc) continue;
+    let x = id; const l = extra++;
+    while (x && lane[x] === undefined) { lane[x] = l; x = r.commits[x].padres[0]; }
+  }
+  return lane;
+}
+function decoracion(r, id) {
+  const nombres = r.ordenRamas.filter((n) => r.ramas[n] === id);
+  if (!nombres.length) return '';
+  const lista = [];
+  if (r.ramas[r.cabeza] === id && nombres.includes(r.cabeza)) lista.push('HEAD -> ' + r.cabeza);
+  for (const n of nombres) if (!(n === r.cabeza && r.ramas[r.cabeza] === id)) lista.push(n);
+  return ` (${lista.join(', ')})`;
+}
+function cmdLog(r, args) {
+  if (!r.iniciado) return NOREPO;
+  let uno = false, graf = false, todas = false, max = Infinity, ref = null;
+  for (let i = 0; i < args.length; i++) {
+    const x = args[i];
+    if (x === '--oneline') uno = true; else if (x === '--graph') graf = true; else if (x === '--all') todas = true;
+    else if (x === '-n') max = parseInt(args[++i], 10); else if (/^-\d+$/.test(x)) max = parseInt(x.slice(1), 10);
+    else if (x === '--decorate') {} else if (x.startsWith('-')) return `fatal: opción no soportada: ${x}`; else ref = x;
+  }
+  if (!(max >= 0)) return 'fatal: número de commits no válido';
+  let raices;
+  if (todas) raices = r.ordenRamas.map((n) => r.ramas[n]);
+  else if (ref) { if (r.ramas[ref] === undefined) return `fatal: ambiguous argument '${ref}': unknown revision or path not in the working tree.`; raices = [r.ramas[ref]]; }
+  else { const h = idCabeza(r); if (!h) return `fatal: your current branch '${r.cabeza}' does not have any commits yet`; raices = [h]; }
+  const alc = new Set(); raices.forEach((x) => ancestros(r, x).forEach((y) => alc.add(y)));
+  const lista = r.orden.filter((x) => alc.has(x)).reverse().slice(0, max);
+  const lane = graf ? carriles(r) : null;
+  let nl = 0; const span = {};
+  if (graf) for (const id of lista) { const l = lane[id]; nl = Math.max(nl, l + 1); const s = r.commits[id].seq; span[l] = span[l] ? [Math.min(span[l][0], s), Math.max(span[l][1], s)] : [s, s]; }
+  const pref = (id, cont) => {
+    if (!graf) return '';
+    const s = r.commits[id].seq, cols = [];
+    for (let l = 0; l < nl; l++) cols.push(l === lane[id] ? (cont ? '|' : '*') : (span[l] && span[l][0] < s && span[l][1] > s ? '|' : ' '));
+    return cols.join(' ').trimEnd() + ' ';
+  };
+  const out = [];
+  for (const id of lista) {
+    const c = r.commits[id];
+    if (uno) out.push(`${pref(id, false)}${corto(id)}${decoracion(r, id)} ${c.msg.split('\n')[0]}`);
+    else {
+      out.push(`${pref(id, false)}commit ${id}${decoracion(r, id)}`);
+      if (c.padres.length > 1) out.push(`${pref(id, true)}Merge: ${c.padres.map(corto).join(' ')}`);
+      out.push(`${pref(id, true)}Author: Alumno <alumno@ejemplo.test>`, `${pref(id, true)}Date:   ${fechaDe(c.seq)}`, pref(id, true).trimEnd());
+      for (const l of c.msg.split('\n')) out.push(`${pref(id, true)}    ${l}`);
+      out.push(pref(id, true).trimEnd());
+    }
+  }
+  return out.join('\n').replace(/\n+$/, '');
+}
+function cmdDiff(r, args) {
+  if (!r.iniciado) return NOREPO;
+  let staged = false; const specs = [];
+  for (const x of args) { if (x === '--staged' || x === '--cached') staged = true; else if (x.startsWith('-')) return `error: opción no soportada: ${x}`; else specs.push(x); }
+  const head = arbolCabeza(r), out = [];
+  const A = staged ? head : r.indice, B = staged ? r.indice : r.fs;
+  const claves = staged ? [...new Set([...Object.keys(A), ...Object.keys(B)])] : Object.keys(r.indice);
+  for (const f of claves.sort()) {
+    if (specs.length && !specs.some((s) => coincide(s, f))) continue;
+    if (r.fusion && r.fusion.conflictos.has(f)) continue;
+    if (A[f] !== B[f]) out.push(textoDiff(f, A[f], B[f]));
+  }
+  return out.join('\n');
+}
+function cmdConfig(r, args) {
+  const a = args.filter((x) => x !== '--global' && x !== '--local' && x !== '--system');
+  if (a[0] === '--list' || a[0] === '-l') return Object.keys(r.config).sort().map((k) => `${k}=${r.config[k]}`).join('\n');
+  if (a.length === 1) return r.config[a[0]] !== undefined ? r.config[a[0]] : '';
+  if (a.length === 2) { r.config[a[0]] = a[1]; return ''; }
+  return 'usage: git config [--global] <clave> [<valor>]';
+}
+const USO = {
+  init: 'git init [-b <rama>]  -  crea un repositorio vacío',
+  config: 'git config [--global] <clave> [<valor>]  -  guarda o lee un ajuste (user.name, user.email)',
+  status: 'git status  -  estado de los archivos',
+  add: 'git add <ruta>... | . | -A  -  prepara cambios para el próximo commit',
+  commit: 'git commit -m "mensaje" [-a]  -  guarda una instantánea',
+  log: 'git log [--oneline] [--graph] [--all] [-n N] [<rama>]  -  historial',
+  diff: 'git diff [--staged] [<ruta>]  -  cambios línea a línea',
+  branch: 'git branch [<nombre>] | -d <nombre> | -D <nombre> | -m <nuevo>  -  ramas',
+  switch: 'git switch [-c] <rama>  -  cambia de rama (o la crea con -c)',
+  checkout: 'git checkout [-b] <rama>  -  como switch; con un archivo, lo restaura',
+  merge: 'git merge [--no-ff] <rama> | --abort  -  fusiona una rama en la actual',
+  restore: 'git restore [--staged] <ruta>...  -  deshace cambios',
+  rm: 'git rm [--cached] <archivo>...  -  borra archivos del repositorio',
+};
+function ayuda() {
+  return ['Órdenes de Git:', ...Object.values(USO).map((u) => '  ' + u), '',
+    'Órdenes de archivos: ls [-a], cat <f>, echo [-e] "texto" > <f> (o >>), touch <f>, rm <f>, nano <f> (editor), pwd, clear',
+    'No disponibles (no hay servidor ni se reescribe el historial): ' + CONOCIDAS_NO.slice(0, 9).join(', ') + '...',
+    'Flechas arriba/abajo: órdenes anteriores.'].join('\n');
+}
+function cmdGit(r, args) {
+  const sub = args[0], resto = args.slice(1);
+  if (!sub || sub === 'help' || sub === '--help' || sub === '-h') return ayuda();
+  if (resto.includes('-h') || resto.includes('--help')) return USO[sub] ? 'uso: ' + USO[sub] : ayuda();
+  if (sub === 'init') {
+    let rama = 'main';
+    for (let i = 0; i < resto.length; i++) { if (resto[i] === '-b' || resto[i] === '--initial-branch') rama = resto[++i]; else if (resto[i].startsWith('--initial-branch=')) rama = resto[i].slice(17); }
+    if (!nombreRamaValido(rama)) return `fatal: invalid initial branch name: '${rama}'`;
+    if (r.iniciado) return 'Reinitialized existing Git repository in /proyecto/.git/';
+    r.iniciado = true; r.cabeza = rama;
+    return 'Initialized empty Git repository in /proyecto/.git/';
+  }
+  if (sub === 'config') return cmdConfig(r, resto);
+  if (sub === 'status') return salidaStatus(r);
+  if (sub === 'add') return cmdAdd(r, resto);
+  if (sub === 'commit') return cmdCommit(r, resto);
+  if (sub === 'log') return cmdLog(r, resto);
+  if (sub === 'diff') return cmdDiff(r, resto);
+  if (sub === 'branch') return cmdBranch(r, resto);
+  if (sub === 'switch') return cmdSwitch(r, resto, false);
+  if (sub === 'checkout') return cmdSwitch(r, resto, true);
+  if (sub === 'merge') return cmdMerge(r, resto);
+  if (sub === 'restore') return cmdRestore(r, resto);
+  if (sub === 'rm') return cmdRm(r, resto);
+  if (CONOCIDAS_NO.includes(sub)) return `git ${sub}: este simulador no soporta «${sub}». Existe en Git real, pero aquí no hay servidor remoto ni se reescribe el historial. Escribe help para ver lo disponible.`;
+  return `git: '${sub}' is not a git command. See 'git --help'.`;
+}
+
+// --- shell
+function tokens(l) {
+  const t = []; let cur = '', activo = false, q = null;
+  const cerrar = () => { if (activo) { t.push({ v: cur }); cur = ''; activo = false; } };
+  for (let i = 0; i < l.length; i++) {
+    const c = l[i];
+    if (q) { if (c === q) q = null; else cur += c; }
+    else if (c === '"' || c === "'") { q = c; activo = true; }
+    else if (/\s/.test(c)) cerrar();
+    else if (c === '>') { cerrar(); if (l[i + 1] === '>') { t.push({ v: '>>', op: true }); i++; } else t.push({ v: '>', op: true }); }
+    else { cur += c; activo = true; }
+  }
+  if (q) return null;
+  cerrar();
+  return t;
+}
+function nombreArchivoValido(f) { return !!f && !f.startsWith('/') && !f.startsWith('-') && !f.includes('..') && f !== '.git' && !f.startsWith('.git/'); }
+function ejecutarLinea(r, linea) {
+  const l = linea.trim();
+  if (!l) return { out: '' };
+  const tk = tokens(l);
+  if (!tk) return { out: 'error: comillas sin cerrar', err: true };
+  const a = tk.map((x) => x.v), cmd = a[0];
+  try {
+    if (cmd === 'git') { const out = cmdGit(r, a.slice(1)); return { out, err: /^(fatal|error)/.test(out) }; }
+    if (cmd === 'help' || cmd === 'ayuda') return { out: ayuda() };
+    if (cmd === 'clear') return { out: '', limpiar: true };
+    if (cmd === 'pwd') return { out: '/proyecto' };
+    if (cmd === 'ls') {
+      const todo = a.includes('-a');
+      const n = Object.keys(r.fs).filter((f) => todo || !f.startsWith('.')).sort();
+      if (todo && r.iniciado) n.unshift('.git');
+      return { out: n.join('  ') };
+    }
+    if (cmd === 'cat') {
+      if (!a[1]) return { out: 'cat: indica un archivo', err: true };
+      if (r.fs[a[1]] === undefined) return { out: `cat: ${a[1]}: No such file or directory`, err: true };
+      return { out: r.fs[a[1]].replace(/\n$/, '') };
+    }
+    if (cmd === 'touch') {
+      for (const f of a.slice(1)) { if (!nombreArchivoValido(f)) return { out: `touch: nombre no válido: ${f}`, err: true }; if (r.fs[f] === undefined) r.fs[f] = ''; }
+      return { out: '' };
+    }
+    if (cmd === 'rm') {
+      for (const f of a.slice(1)) { if (f.startsWith('-')) continue; if (r.fs[f] === undefined) return { out: `rm: cannot remove '${f}': No such file or directory`, err: true }; delete r.fs[f]; }
+      return { out: '' };
+    }
+    if (cmd === 'nano' || cmd === 'edit') {
+      if (!nombreArchivoValido(a[1])) return { out: `${cmd}: indica un nombre de archivo válido`, err: true };
+      return { out: '', editar: a[1] };
+    }
+    if (cmd === 'echo') {
+      let i = 1, e = false;
+      if (a[1] === '-e') { e = true; i = 2; }
+      const k = tk.findIndex((x) => x.op);
+      const texto = a.slice(i, k < 0 ? undefined : k).join(' ');
+      const t = e ? texto.replace(/\\n/g, '\n').replace(/\\t/g, '\t') : texto;
+      if (k < 0) return { out: t };
+      const f = a[k + 1];
+      if (!nombreArchivoValido(f)) return { out: 'echo: indica un archivo válido después de > o >>', err: true };
+      if (a[k] === '>>' && r.fs[f]) r.fs[f] = (r.fs[f].endsWith('\n') ? r.fs[f] : r.fs[f] + '\n') + t + '\n';
+      else r.fs[f] = t + '\n';
+      return { out: '' };
+    }
+    return { out: `${cmd}: orden no disponible en este simulador (escribe help)`, err: true };
+  } catch (ex) {
+    return { out: 'error interno del simulador: prueba otra orden o pulsa «Empezar de cero».', err: true };
+  }
+}
+// ==NUCLEO-FIN==
+
+// ==UI==
+// Pestañas (patrón WAI-ARIA)
+const pestanas = [...document.querySelectorAll('[role="tab"]')];
+function mostrar(id) {
+  const activa = pestanas.find((p) => p.dataset.tab === id) || pestanas[0];
+  for (const p of pestanas) {
+    const es = p === activa;
+    p.setAttribute('aria-selected', String(es));
+    p.tabIndex = es ? 0 : -1;
+    document.getElementById(p.getAttribute('aria-controls')).hidden = !es;
+  }
+  activa.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  if (activa.dataset.tab === 'grafo') pintarGrafoLibre();
+  return activa;
+}
+function elegir(id, enfocar) {
+  const activa = mostrar(id);
+  Lab.guardar('pestana', activa.dataset.tab);
+  history.replaceState(null, '', '#' + activa.dataset.tab);
+  if (enfocar) activa.focus();
+}
+pestanas.forEach((p) => p.addEventListener('click', () => elegir(p.dataset.tab)));
+document.querySelector('[role="tablist"]').addEventListener('keydown', (e) => {
+  const i = pestanas.indexOf(document.activeElement);
+  const destino = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: pestanas.length - 1 }[e.key];
+  if (i < 0 || destino === undefined) return;
+  e.preventDefault();
+  elegir(pestanas[(destino + pestanas.length) % pestanas.length].dataset.tab, true);
+});
+window.addEventListener('hashchange', () => mostrar(location.hash.slice(1)));
+
+// Utilidades
+function el(tag, props, ...hijos) {
+  const e = document.createElement(tag);
+  if (props) for (const k of Object.keys(props)) { if (k === 'class') e.className = props[k]; else if (k === 'texto') e.textContent = props[k]; else e.setAttribute(k, props[k]); }
+  for (const h of hijos) if (h) e.append(h);
+  return e;
+}
+function mezclar(a) { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; }
+function leerJSON(clave, defecto) { try { const v = Lab.leer(clave); return v ? JSON.parse(v) : defecto; } catch (ex) { return defecto; } }
+function guardarJSON(clave, valor) { try { Lab.guardar(clave, JSON.stringify(valor)); } catch (ex) { /* sin memoria local */ } }
+function descargar(nombre, texto, tipo) {
+  try {
+    const blob = new Blob([texto], { type: tipo + ';charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = nombre; document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    return true;
+  } catch (ex) { return false; }
+}
+
+// --- Grafo
+function pintarGrafo(r, host) {
+  host.textContent = '';
+  if (!r.iniciado || !r.orden.length) { host.append(el('p', { class: 'intro', texto: 'Todavía no hay commits. Haz el primero con git commit y aparecerá aquí.' })); return; }
+  const alc = new Set();
+  r.ordenRamas.forEach((n) => ancestros(r, r.ramas[n]).forEach((x) => alc.add(x)));
+  const ids = r.orden.filter((x) => alc.has(x));
+  const lane = carriles(r);
+  const nl = Math.max(...ids.map((x) => lane[x])) + 1;
+  const dx = 76, dy = 56, x0 = 46, y0 = 58;
+  const X = {}, Y = {};
+  ids.forEach((id, i) => { X[id] = x0 + i * dx; Y[id] = y0 + lane[id] * dy; });
+  const ancho = Math.max(320, x0 * 2 + (ids.length - 1) * dx + 120), alto = y0 + (nl - 1) * dy + 54;
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${ancho} ${alto}" width="${ancho}" height="${alto}" role="img" aria-label="Grafo de ${ids.length} commits en ${r.ordenRamas.length} rama(s)">`;
+  for (const id of ids) for (const p of r.commits[id].padres) {
+    if (X[p] === undefined) continue;
+    const l = lane[id] === lane[p] ? lane[id] : lane[id] > lane[p] ? lane[id] : lane[p];
+    const x1 = X[p], y1 = Y[p], x2 = X[id], y2 = Y[id];
+    s += y1 === y2 ? `<path class="ln l${l % 6}" d="M${x1} ${y1}L${x2} ${y2}"/>` : `<path class="ln l${l % 6}" d="M${x1} ${y1}C${x1 + 36} ${y1} ${x2 - 36} ${y2} ${x2} ${y2}"/>`;
+  }
+  for (const id of ids) {
+    const c = r.commits[id], mg = c.padres.length > 1;
+    s += `<circle class="nd l${lane[id] % 6}${mg ? ' mg' : ''}" cx="${X[id]}" cy="${Y[id]}" r="${mg ? 9 : 10}"><title>${esc(corto(id) + ' · ' + c.msg.split('\n')[0])}</title></circle>`;
+    s += `<text class="t-h" x="${X[id]}" y="${Y[id] + 28}" text-anchor="middle">${corto(id)}</text>`;
+    const nombres = r.ordenRamas.filter((n) => r.ramas[n] === id);
+    nombres.forEach((n, k) => {
+      const largo = n.length > 20 ? n.slice(0, 19) + '…' : n;
+      const etq = (n === r.cabeza ? 'HEAD → ' : '') + largo;
+      s += `<text class="t-r" x="${X[id] - 10}" y="${Y[id] - 16 - k * 13}"><title>${esc(n)}</title>${esc(etq)}</text>`;
+    });
+  }
+  s += '</svg>';
+  host.innerHTML = s;
+  const det = el('details', { class: 'datos' }, el('summary', { texto: 'Lista de commits (texto)' }));
+  const ol = el('ol');
+  for (const id of ids.slice().reverse()) { const c = r.commits[id]; ol.append(el('li', { texto: `${corto(id)} · ${c.msg.split('\n')[0]}${c.padres.length > 1 ? ' (fusión)' : ''}${decoracion(r, id)}` })); }
+  det.append(ol);
+  host.append(det);
+}
+
+// --- Terminal
+let contadorTerm = 0;
+function montarTerminal(host, repo, opc) {
+  const idn = ++contadorTerm;
+  const cmds = [], transc = [];
+  let hIdx = -1, editando = null;
+  const sal = el('div', { class: 'term-sal', role: 'log', 'aria-live': 'polite', tabindex: '0', 'aria-label': 'Salida de la terminal' });
+  const entrada = el('input', { id: 'term-in-' + idn, type: 'text', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', 'aria-label': 'Orden' });
+  const prompt = el('label', { for: 'term-in-' + idn });
+  const form = el('form', { class: 'term-form' }, prompt, entrada);
+  const ed = el('div', { class: 'editor', hidden: '' });
+  const edTit = el('b');
+  const edTxt = el('textarea', { rows: '8', 'aria-label': 'Contenido del archivo', spellcheck: 'false' });
+  const bGuardar = el('button', { type: 'button', class: 'primario', texto: 'Guardar archivo' });
+  const bCancelar = el('button', { type: 'button', texto: 'Cancelar' });
+  ed.append(el('p', null, 'Editando ', edTit), edTxt, el('div', { class: 'fila' }, bGuardar, bCancelar));
+  host.append(el('div', { class: 'term' }, sal, form), ed);
+  const txtPrompt = () => `proyecto${repo.iniciado ? ' (' + repo.cabeza + (repo.fusion ? ' | MERGING' : '') + ')' : ''} $`;
+  function pintarPrompt() { prompt.textContent = txtPrompt(); }
+  function añadir(cmd, out, err, pr) {
+    const l = el('div', { class: 'term-l' }, el('span', { class: 'term-p', texto: pr }), document.createTextNode(cmd));
+    sal.append(l);
+    if (out) sal.append(el('pre', { class: 'term-o' + (err ? ' err' : ''), texto: out }));
+    while (sal.children.length > 400) sal.firstChild.remove();
+    sal.scrollTop = sal.scrollHeight;
+  }
+  function bienvenida() { sal.append(el('pre', { class: 'term-o', texto: 'Simulador de Git. El repositorio vive solo en esta página. Escribe help para ver las órdenes.' })); }
+  function ejecutar(linea, silencioso) {
+    const pr = txtPrompt();
+    const res = ejecutarLinea(repo, linea);
+    if (linea.trim()) { cmds.push(linea); if (cmds.length > 300) cmds.shift(); }
+    if (res.limpiar) { sal.textContent = ''; transc.length = 0; }
+    else { transc.push({ pr, cmd: linea, out: res.out }); añadir(linea, res.out, res.err, pr); }
+    if (res.editar) abrirEditor(res.editar);
+    pintarPrompt();
+    if (opc && opc.onChange && !silencioso) opc.onChange(res);
+    return res;
+  }
+  function abrirEditor(f) { editando = f; edTit.textContent = f; edTxt.value = repo.fs[f] || ''; ed.hidden = false; edTxt.focus(); }
+  function cerrarEditor() { editando = null; ed.hidden = true; entrada.focus(); }
+  bGuardar.addEventListener('click', () => {
+    if (editando === null) return;
+    let t = edTxt.value;
+    if (t && !t.endsWith('\n')) t += '\n';
+    repo.fs[editando] = t;
+    añadir('', 'Archivo «' + editando + '» guardado.', false, '');
+    cerrarEditor();
+    pintarPrompt();
+    if (opc && opc.onChange) opc.onChange({});
+  });
+  bCancelar.addEventListener('click', cerrarEditor);
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const linea = entrada.value;
+    entrada.value = '';
+    hIdx = -1;
+    ejecutar(linea);
+  });
+  entrada.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp' && cmds.length) { e.preventDefault(); hIdx = hIdx < 0 ? cmds.length - 1 : Math.max(0, hIdx - 1); entrada.value = cmds[hIdx]; }
+    else if (e.key === 'ArrowDown' && hIdx >= 0) { e.preventDefault(); hIdx++; if (hIdx >= cmds.length) { hIdx = -1; entrada.value = ''; } else entrada.value = cmds[hIdx]; }
+  });
+  bienvenida();
+  pintarPrompt();
+  return {
+    ejecutar,
+    comandos: () => cmds.slice(),
+    transcripcion: () => transc.slice(),
+    rellenar: (t) => { entrada.value = t; entrada.focus(); },
+    reiniciar: () => { Object.assign(repo, nuevoRepo()); cmds.length = 0; transc.length = 0; sal.textContent = ''; bienvenida(); pintarPrompt(); cerrarEditor(); if (opc && opc.onChange) opc.onChange({}); },
+  };
+}
+function sesionMarkdown(t, titulo) {
+  const L = [`# ${titulo}`, '', 'Sesión del Simulador de Git (repositorio simulado en memoria).', ''];
+  const tr = t.transcripcion();
+  if (!tr.length) L.push('_Todavía no se ha ejecutado ninguna orden._');
+  else { L.push('```text'); for (const x of tr) { L.push(`${x.pr} ${x.cmd}`); if (x.out) L.push(x.out); } L.push('```'); }
+  return L.join('\n') + '\n';
+}
+
+// --- Terminal libre + grafo
+const repoLibre = nuevoRepo();
+let termLibre = null;
+function pintarGrafoLibre() { pintarGrafo(repoLibre, document.getElementById('grafo-libre')); }
+function guardarLibre() { guardarJSON('libre', termLibre.comandos()); }
+termLibre = montarTerminal(document.getElementById('term-libre'), repoLibre, { onChange: () => { guardarLibre(); if (!document.getElementById('panel-grafo').hidden) pintarGrafoLibre(); } });
+for (const c of leerJSON('libre', [])) if (typeof c === 'string') termLibre.ejecutar(c, true);
+pintarGrafoLibre();
+const msgTerm = document.getElementById('msg-term');
+document.getElementById('bt-reiniciar').addEventListener('click', () => { termLibre.reiniciar(); msgTerm.textContent = 'Repositorio vacío: puedes empezar con git init -b main.'; });
+document.getElementById('bt-sesion').addEventListener('click', () => { msgTerm.textContent = descargar('sesion-git.md', sesionMarkdown(termLibre, 'Mi sesión de Git'), 'text/markdown') ? 'Sesión descargada.' : 'No se ha podido descargar desde este navegador.'; });
+const chips = document.getElementById('chips');
+for (const c of ['git init -b main', 'echo "# Portal" > README.md', 'git status', 'git add .', 'git commit -m "Primer commit"', 'git log --oneline', 'git switch -c feature/PORT-1-prueba', 'git switch main', 'git merge feature/PORT-1-prueba']) {
+  chips.append(el('button', { type: 'button', texto: c }));
+}
+chips.addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON') termLibre.rellenar(e.target.textContent); });
+document.getElementById('form-grafo').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const inp = document.getElementById('orden-grafo');
+  const res = termLibre.ejecutar(inp.value);
+  document.getElementById('salida-grafo').textContent = res.out || '(sin salida)';
+  inp.value = '';
+  pintarGrafoLibre();
+});
+
+// --- Retos guiados
+const L2 = (s) => s;
+const RETOS = [
+  {
+    id: 'primer-commit', titulo: 'Primer commit y .gitignore',
+    objetivo: 'La carpeta tiene index.html y app.log, que es un registro que no debe subirse. Crea el repositorio, ignora los archivos .log y haz el primer commit con el resto. Al final, git status debe decir que no hay nada pendiente.',
+    pistas: ['Empieza con git init -b main y mira qué ve Git con git status.', 'Crea el archivo de exclusiones: echo "*.log" > .gitignore', 'Prepara y confirma: git add . y git commit -m "Crea la página inicial"', 'Comprueba con git status: no debe aparecer app.log.'],
+    setup: ['echo "<h1>Reparaciones Byte Alacant</h1>" > index.html', 'echo "traza de depuración" > app.log'],
+    comprobar(r) {
+      const h = arbolCabeza(r), e = estado(r);
+      return [
+        [r.iniciado, 'El repositorio está iniciado.'],
+        [r.fs['.gitignore'] !== undefined && ignorado(r, 'app.log'), 'Existe un .gitignore que ignora app.log.'],
+        [h['index.html'] !== undefined && h['.gitignore'] !== undefined, 'index.html y .gitignore están en el último commit.'],
+        [r.iniciado && idCabeza(r) !== null && h['app.log'] === undefined, 'app.log no está en el commit.'],
+        [r.iniciado && idCabeza(r) !== null && e.sinCambios, 'git status no muestra nada pendiente.'],
+      ];
+    },
+  },
+  {
+    id: 'rama-funcionalidad', titulo: 'Rama de funcionalidad',
+    objetivo: 'Parte de un repositorio con dos commits en main. Crea una rama llamada feature/PORT-12- seguida de una descripción (por ejemplo feature/PORT-12-formulario), crea en ella el archivo formulario.html y confírmalo con un mensaje que empiece por «PORT-12: ». main no debe cambiar.',
+    pistas: ['Crea la rama y cámbiate a ella de una vez: git switch -c feature/PORT-12-formulario', 'Crea el archivo: echo "<form></form>" > formulario.html', 'git add formulario.html y git commit -m "PORT-12: Añade el formulario de alta"', 'Comprueba con git log --oneline --graph --all y mira la pestaña del grafo.'],
+    setup: ['git init -b main', 'echo "<h1>Portal</h1>" > index.html', 'git add .', 'git commit -m "Crea la página inicial"', 'echo "body{margin:0}" > estilos.css', 'git add .', 'git commit -m "Añade los estilos"'],
+    comprobar(r) {
+      const f = r.ordenRamas.find((n) => /^feature\/PORT-12-.+/.test(n));
+      const tip = f ? r.commits[r.ramas[f]] : null, main = r.ramas.main ? r.commits[r.ramas.main] : null;
+      return [
+        [!!f, 'Existe una rama feature/PORT-12-… .'],
+        [!!f && r.cabeza === f, 'Estás situado en esa rama.'],
+        [!!tip && tip.arbol['formulario.html'] !== undefined, 'La rama contiene formulario.html confirmado.'],
+        [!!tip && /^PORT-12: ./.test(tip.msg), 'El último commit de la rama empieza por «PORT-12: ».'],
+        [!!main && main.arbol['formulario.html'] === undefined && main.msg === 'Añade los estilos', 'main no ha cambiado (no tiene formulario.html).'],
+      ];
+    },
+  },
+  {
+    id: 'fusion', titulo: 'Fusión',
+    objetivo: 'La rama feature/contacto añade contacto.html y main ha avanzado por su cuenta (cambia estilos.css). Sitúate en main, fusiona feature/contacto y borra la rama ya fusionada. Habrá un commit de fusión con dos padres.',
+    pistas: ['Mira primero el panorama: git log --oneline --graph --all', 'Estás en main (compruébalo con git branch). Fusiona: git merge feature/contacto', 'Si ya has fusionado, borra la rama con git branch -d feature/contacto'],
+    setup: ['git init -b main', 'echo "<h1>Portal</h1>" > index.html', 'echo "body{margin:0}" > estilos.css', 'git add .', 'git commit -m "Crea el portal"', 'git switch -c feature/contacto', 'echo "<p>Teléfono de contacto</p>" > contacto.html', 'git add .', 'git commit -m "PORT-20: Añade la página de contacto"', 'git switch main', 'echo "p{color:#333}" >> estilos.css', 'git add .', 'git commit -m "PORT-21: Ajusta el color del texto"'],
+    comprobar(r) {
+      const h = idCabeza(r) ? r.commits[idCabeza(r)] : null;
+      return [
+        [r.cabeza === 'main', 'Estás en main.'],
+        [!!h && h.padres.length === 2, 'El último commit de main es una fusión (tiene dos padres).'],
+        [!!h && h.arbol['contacto.html'] !== undefined && /color/.test(h.arbol['estilos.css'] || ''), 'main contiene contacto.html y el cambio de estilos.css.'],
+        [r.ramas['feature/contacto'] === undefined, 'La rama feature/contacto ya está borrada.'],
+        [!r.fusion && estado(r).sinCambios, 'No queda ninguna fusión a medias ni cambios pendientes.'],
+      ];
+    },
+  },
+  {
+    id: 'conflicto', titulo: 'Conflicto sencillo',
+    objetivo: 'Dos ramas cambiaron el título de index.html. Fusiona feature/PORT-30-titulo en main, resuelve el conflicto dejando un título que contenga «Byte Alacant» y «citas», conserva el teléfono nuevo (965 000 111) y completa la fusión.',
+    pistas: ['git merge feature/PORT-30-titulo y verás CONFLICT. Mira el archivo con cat index.html.', 'Abre el editor con nano index.html, borra las tres marcas (<<<<<<<, ======= y >>>>>>>) y deja un único h1 con ambos textos. Guarda.', 'Marca como resuelto y confirma: git add index.html y git commit -m "PORT-30: Fusiona el nuevo título"', 'Si te lías: git merge --abort y vuelta a empezar.'],
+    setup: ['git init -b main', 'echo -e "<h1>Reparaciones</h1>\\n<p>Bienvenido</p>\\n<p>Teléfono: 965 000 000</p>" > index.html', 'git add .', 'git commit -m "Crea la página inicial"', 'git switch -c feature/PORT-30-titulo', 'echo -e "<h1>Reparaciones y citas</h1>\\n<p>Bienvenido</p>\\n<p>Teléfono: 965 000 111</p>" > index.html', 'git add .', 'git commit -m "PORT-30: Cambia el título y el teléfono"', 'git switch main', 'echo -e "<h1>Reparaciones Byte Alacant</h1>\\n<p>Bienvenido</p>\\n<p>Teléfono: 965 000 000</p>" > index.html', 'git add .', 'git commit -m "Pone el nombre de la empresa en el título"'],
+    comprobar(r) {
+      const h = idCabeza(r) ? r.commits[idCabeza(r)] : null, t = (h && h.arbol['index.html']) || '', primera = lineas(t)[0] || '';
+      return [
+        [!r.fusion && !!h && h.padres.length === 2, 'La fusión está completada (commit con dos padres).'],
+        [!/^(<<<<<<<|=======|>>>>>>>)/m.test(t) && t !== '', 'index.html confirmado no tiene marcas de conflicto.'],
+        [/Byte Alacant/.test(primera) && /citas/.test(primera), 'El título contiene «Byte Alacant» y «citas».'],
+        [/965 000 111/.test(t), 'Conserva el teléfono nuevo.'],
+        [r.cabeza === 'main', 'Estás en main.'],
+      ];
+    },
+  },
+  {
+    id: 'restore', titulo: 'Deshacer con restore',
+    objetivo: 'Has modificado notas.txt (cambio que quieres descartar) y has preparado app.js con git add (cambio que quieres conservar, pero sin prepararlo todavía). Descarta lo primero y saca app.js del área de preparación sin perder su cambio.',
+    pistas: ['Mira el estado: git status y git diff.', 'Descarta el borrador: git restore notas.txt', 'Saca app.js del área de preparación: git restore --staged app.js', 'git status debe mostrar app.js como modificado sin preparar.'],
+    setup: ['git init -b main', 'echo "versión buena" > notas.txt', 'echo "console.log(1)" > app.js', 'git add .', 'git commit -m "Crea notas y app"', 'echo "borrador sin valor" > notas.txt', 'echo "console.log(2)" > app.js', 'git add app.js'],
+    comprobar(r) {
+      const h = arbolCabeza(r), e = estado(r);
+      return [
+        [r.fs['notas.txt'] === 'versión buena\n', 'notas.txt vuelve a la versión confirmada.'],
+        [r.fs['app.js'] === 'console.log(2)\n', 'app.js conserva tu cambio en el directorio de trabajo.'],
+        [r.indice['app.js'] === h['app.js'], 'app.js ya no está en el área de preparación.'],
+        [e.staged.length === 0 && e.unst.length === 1 && e.unst[0].f === 'app.js', 'git status solo muestra app.js sin preparar.'],
+      ];
+    },
+  },
+];
+const hechos = new Set(leerJSON('retos', []));
+const listaRetos = document.getElementById('lista-retos'), cuerpoReto = document.getElementById('reto-cuerpo');
+let retoSel = 0, termReto = null, repoReto = null;
+function pintarBotonesRetos() {
+  listaRetos.textContent = '';
+  RETOS.forEach((rt, i) => {
+    const b = el('button', { type: 'button', 'aria-pressed': String(i === retoSel), texto: `${i + 1}. ${rt.titulo}${hechos.has(rt.id) ? ' (completado)' : ''}` });
+    b.addEventListener('click', () => { retoSel = i; cargarReto(); });
+    listaRetos.append(b);
+  });
+}
+function cargarReto() {
+  pintarBotonesRetos();
+  const rt = RETOS[retoSel];
+  repoReto = nuevoRepo();
+  for (const l of rt.setup) ejecutarLinea(repoReto, l);
+  cuerpoReto.textContent = '';
+  const hostGrafo = el('div', { class: 'grafo' });
+  const resultados = el('ul', { class: 'lista-ver' });
+  const resumen = el('p', { role: 'status' });
+  const pista = el('p', { class: 'aviso', hidden: '', role: 'status' });
+  let verPistas = 0;
+  const hostTerm = el('div');
+  const bComp = el('button', { type: 'button', class: 'primario', texto: 'Comprobar' });
+  const bPista = el('button', { type: 'button', texto: 'Pedir una pista' });
+  const bReiniciar = el('button', { type: 'button', texto: 'Reiniciar el reto' });
+  cuerpoReto.append(el('div', { class: 'tarjeta' }, el('h3', { texto: `Reto ${retoSel + 1}: ${rt.titulo}` }), el('p', { texto: rt.objetivo }),
+    el('div', { class: 'fila' }, bComp, bPista, bReiniciar), pista, resumen, resultados), hostTerm, el('h3', { texto: 'Grafo del reto' }), hostGrafo);
+  termReto = montarTerminal(hostTerm, repoReto, { onChange: () => pintarGrafo(repoReto, hostGrafo) });
+  pintarGrafo(repoReto, hostGrafo);
+  bPista.addEventListener('click', () => {
+    pista.hidden = false;
+    pista.textContent = `Pista ${Math.min(verPistas + 1, rt.pistas.length)} de ${rt.pistas.length}: ${rt.pistas[Math.min(verPistas, rt.pistas.length - 1)]}`;
+    verPistas++;
+  });
+  bReiniciar.addEventListener('click', cargarReto);
+  bComp.addEventListener('click', () => {
+    const res = rt.comprobar(repoReto);
+    resultados.textContent = '';
+    for (const x of res) resultados.append(el('li', { class: x[0] ? 'si' : 'no', texto: (x[0] ? 'Cumple: ' : 'Falta: ') + x[1] }));
+    const todo = res.every((x) => x[0]);
+    resumen.textContent = todo ? 'Reto superado.' : `Te faltan ${res.filter((x) => !x[0]).length} comprobaciones. Usa git status y git log --oneline --graph --all para ver dónde estás.`;
+    if (todo && !hechos.has(rt.id)) { hechos.add(rt.id); guardarJSON('retos', [...hechos]); pintarBotonesRetos(); }
+  });
+}
+cargarReto();
+
+// --- Conflictos
+const CONF = [
+  {
+    titulo: 'El título de la web', meta: 'Combina las dos versiones.',
+    objetivo: 'La rama principal puso el nombre de la empresa y la otra rama puso «y citas». Deja un solo título que contenga «Byte Alacant» y «citas».',
+    texto: '<<<<<<< HEAD\n<h1>Reparaciones Byte Alacant</h1>\n=======\n<h1>Reparaciones y citas</h1>\n>>>>>>> feature/PORT-30-titulo\n<p>Bienvenido al portal de incidencias</p>\n',
+    pide: [[(t) => /Byte Alacant/.test(t) && /citas/.test(t), 'Contiene «Byte Alacant» y «citas».'], [(t) => (t.match(/<h1>/g) || []).length === 1, 'Hay un único título h1.']],
+    pista: 'Usa «Quedarme con las dos» y después edita las dos líneas para formar una sola, o escribe el título final a mano.',
+  },
+  {
+    titulo: 'El precio de la revisión', meta: 'Elige una de las dos versiones.',
+    objetivo: 'El cliente ha confirmado por escrito que la revisión cuesta 30 EUR (versión de la rama que se fusiona). Debe quedar solo el precio de 30 EUR.',
+    texto: 'Lista de precios\n<<<<<<< HEAD\nRevisión de equipo: 25 EUR\n=======\nRevisión de equipo: 30 EUR\n>>>>>>> feature/PORT-33-precios\nLimpieza interna: 20 EUR\n',
+    pide: [[(t) => /30 EUR/.test(t) && !/25 EUR/.test(t), 'Queda 30 EUR y desaparece 25 EUR.'], [(t) => /Limpieza interna: 20 EUR/.test(t) && /Lista de precios/.test(t), 'No has borrado el resto del archivo.']],
+    pista: 'Aquí no hay que combinar: «Quedarme con la suya» deja la versión de la otra rama.',
+  },
+  {
+    titulo: 'Dos conflictos en un archivo', meta: 'Cada conflicto se resuelve por separado.',
+    objetivo: 'En config.ini hay dos conflictos. En el primero, mantén tu versión (timeout=30). En el segundo, necesitas los dos servidores (servidor=A y servidor=B).',
+    texto: '[red]\n<<<<<<< HEAD\ntimeout=30\n=======\ntimeout=60\n>>>>>>> feature/PORT-35-red\n[respaldo]\n<<<<<<< HEAD\nservidor=A\n=======\nservidor=B\n>>>>>>> feature/PORT-35-red\n',
+    pide: [[(t) => /timeout=30/.test(t) && !/timeout=60/.test(t), 'Queda timeout=30 y no timeout=60.'], [(t) => /servidor=A/.test(t) && /servidor=B/.test(t), 'Están servidor=A y servidor=B.'], [(t) => /\[red\]/.test(t) && /\[respaldo\]/.test(t), 'Se conservan las secciones [red] y [respaldo].']],
+    pista: 'Cada botón actúa sobre el primer conflicto que quede en el texto. Resuelve el primero y luego el segundo.',
+  },
+];
+const MARCAS = /^(<<<<<<<|=======|>>>>>>>)/m;
+const RE_HUNK = /<<<<<<< [^\n]*\n([\s\S]*?)=======\n([\s\S]*?)>>>>>>> [^\n]*(\n|$)/;
+const hechosConf = new Set(leerJSON('conflictos', []));
+const listaConf = document.getElementById('lista-conf'), cuerpoConf = document.getElementById('conf-cuerpo');
+let confSel = 0;
+function pintarBotonesConf() {
+  listaConf.textContent = '';
+  CONF.forEach((c, i) => {
+    const b = el('button', { type: 'button', 'aria-pressed': String(i === confSel), texto: `${i + 1}. ${c.titulo}${hechosConf.has(i) ? ' (resuelto)' : ''}` });
+    b.addEventListener('click', () => { confSel = i; cargarConf(); });
+    listaConf.append(b);
+  });
+}
+function cargarConf() {
+  pintarBotonesConf();
+  const c = CONF[confSel];
+  cuerpoConf.textContent = '';
+  const ta = el('textarea', { rows: '10', 'aria-label': 'Archivo en conflicto', spellcheck: 'false' });
+  ta.value = c.texto;
+  const nota = el('p', { role: 'status', class: 'correccion' });
+  const res = el('ul', { class: 'lista-ver' });
+  const mk = (txt, fn, cls) => { const b = el('button', { type: 'button', texto: txt, class: cls || '' }); b.addEventListener('click', fn); return b; };
+  const hunk = (modo) => {
+    const m = RE_HUNK.exec(ta.value);
+    if (!m) { nota.textContent = 'Ya no quedan conflictos marcados en el texto.'; return; }
+    const mia = m[1], suya = m[2], rep = modo === 'mia' ? mia : modo === 'suya' ? suya : mia + suya;
+    ta.value = ta.value.slice(0, m.index) + rep + ta.value.slice(m.index + m[0].length);
+    nota.textContent = 'Conflicto aplicado. Revisa el resultado antes de comprobar.';
+  };
+  const comprobar = mk('Comprobar resolución', () => {
+    const t = ta.value;
+    const lista = [[!MARCAS.test(t), 'No quedan marcas <<<<<<<, ======= ni >>>>>>>.']].concat(c.pide.map((p) => [p[0](t), p[1]]));
+    res.textContent = '';
+    for (const x of lista) res.append(el('li', { class: x[0] ? 'si' : 'no', texto: (x[0] ? 'Cumple: ' : 'Falta: ') + x[1] }));
+    const todo = lista.every((x) => x[0]);
+    nota.textContent = todo ? 'Conflicto resuelto. En Git real ahora harías git add del archivo y git commit.' : 'Aún no está resuelto: revisa lo que falta.';
+    if (todo && !hechosConf.has(confSel)) { hechosConf.add(confSel); guardarJSON('conflictos', [...hechosConf]); pintarBotonesConf(); }
+  }, 'primario');
+  cuerpoConf.append(el('div', { class: 'tarjeta' }, el('h3', { texto: c.titulo }), el('p', { texto: c.objetivo }),
+    el('p', { class: 'ayuda', texto: 'Editor del archivo (puedes escribir directamente):' }), ta,
+    el('div', { class: 'fila' }, mk('Quedarme con la mía (HEAD)', () => hunk('mia')), mk('Quedarme con la suya', () => hunk('suya')), mk('Quedarme con las dos', () => hunk('dos')),
+      mk('Ver pista', () => { nota.textContent = c.pista; }), mk('Restaurar el conflicto', () => { ta.value = c.texto; res.textContent = ''; nota.textContent = ''; })),
+    el('div', { class: 'fila' }, comprobar), nota, res));
+}
+cargarConf();
+
+// --- Mensajes y claves
+const MSGS = [
+  { m: 'PORT-12: Añade el formulario de alta de avería', ok: true, why: 'Lleva la clave, dice qué hace el cambio, está en presente y es breve.' },
+  { m: 'PORT-31: Corrige la búsqueda con caracteres acentuados', ok: true, why: 'Clave correcta y un mensaje concreto: se entiende sin abrir el commit.' },
+  { m: 'PORT-40: Documenta la instalación del servidor de pruebas', ok: true, why: 'Clave, verbo en presente y asunto claro.' },
+  { m: 'PORT-18: Elimina la tabla de clientes duplicada', ok: true, why: 'Un solo cambio lógico, descrito con precisión.' },
+  { m: 'PORT-22: Valida el formato del teléfono en el alta', ok: true, why: 'Concreto y con clave: la historia se lee sola.' },
+  { m: 'PORT-27: Mueve las contraseñas de prueba a un archivo ignorado', ok: true, why: 'Explica el cambio y la clave permite enlazarlo con la tarea.' },
+  { m: 'arreglos', ok: false, why: 'No dice qué se arregla ni lleva clave de incidencia.' },
+  { m: 'wip', ok: false, why: 'Significa «trabajo en curso»: no describe el cambio. Mejor un commit con sentido.' },
+  { m: 'asdf', ok: false, why: 'No comunica nada; parece una prueba de teclado.' },
+  { m: 'port-12: añade formulario', ok: false, why: 'La clave debe ir en mayúsculas (PORT-12) para que las herramientas la reconozcan, y conviene empezar con mayúscula.' },
+  { m: 'PORT12: Añade el formulario', ok: false, why: 'Falta el guion de la clave: debe ser PORT-12.' },
+  { m: 'PORT-12: ARREGLADO TODO!!!', ok: false, why: 'Mayúsculas y exclamaciones, y «todo» no dice nada concreto.' },
+  { m: 'PORT-15: Añade el formulario de alta y corrige el buscador y actualiza el manual y cambia los estilos', ok: false, why: 'Mezcla cuatro cambios y es demasiado largo: deberían ser commits separados.' },
+  { m: 'Valida el formato del teléfono en el alta', ok: false, why: 'El mensaje es bueno, pero en un equipo que usa gestor de incidencias falta la clave.' },
+  { m: 'PORT-15: Se ha añadido la tabla de clientes.', ok: false, why: 'Mejor en presente («Añade la tabla de clientes») y sin punto final.' },
+  { m: 'Merge cosas', ok: false, why: 'No indica qué se fusiona ni qué rama; deja el mensaje por defecto de Git: «Merge branch …».' },
+];
+const clasif = document.getElementById('clasif');
+let cOrden = [], cPos = 0, cActual = null, racha = 0, mejor = Number(Lab.leer('mejor-racha')) || 0;
+function pintarClasif(feedback) {
+  clasif.textContent = '';
+  const fb = el('p', { class: 'correccion', role: 'status' });
+  if (feedback) fb.textContent = feedback;
+  const bs = el('button', { type: 'button', texto: 'Mal mensaje' }), bb = el('button', { type: 'button', texto: 'Buen mensaje' });
+  const bn = el('button', { type: 'button', class: 'primario', texto: 'Siguiente', hidden: '' });
+  const decidir = (diceBueno) => {
+    const acierto = diceBueno === cActual.ok;
+    racha = acierto ? racha + 1 : 0;
+    if (racha > mejor) { mejor = racha; Lab.guardar('mejor-racha', mejor); }
+    pintarClasif((acierto ? 'Correcto. ' : 'Casi. ') + (cActual.ok ? 'Es un buen mensaje: ' : 'Es un mal mensaje: ') + cActual.why);
+    clasif.querySelectorAll('button').forEach((b) => { if (b.dataset.rol === 'dec') b.disabled = true; });
+    clasif.querySelector('[data-rol="sig"]').hidden = false;
+  };
+  bs.dataset.rol = 'dec'; bb.dataset.rol = 'dec'; bn.dataset.rol = 'sig';
+  bb.addEventListener('click', () => decidir(true));
+  bs.addEventListener('click', () => decidir(false));
+  bn.addEventListener('click', () => { siguienteMsg(); });
+  clasif.append(el('p', null, 'Mensaje de commit: ', el('code', { texto: cActual.m })), el('div', { class: 'fila' }, bb, bs, bn), fb,
+    el('p', { texto: `Racha de aciertos: ${racha} (objetivo: 6). Mejor racha guardada: ${mejor}.` }));
+  if (feedback) { bb.disabled = true; bs.disabled = true; bn.hidden = false; }
+}
+function siguienteMsg() { if (cPos >= cOrden.length) { cOrden = mezclar(MSGS.map((_, i) => i)); cPos = 0; } cActual = MSGS[cOrden[cPos++]]; pintarClasif(''); }
+siguienteMsg();
+
+const kClave = document.getElementById('k-clave'), kNum = document.getElementById('k-num'), kTipo = document.getElementById('k-tipo'), kRes = document.getElementById('k-resumen');
+function slug(t) { return t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40).replace(/-+$/, ''); }
+function pintarConstructor() {
+  const clave = kClave.value.trim(), num = kNum.value.trim(), res = kRes.value.trim(), tipo = kTipo.value;
+  const id = `${clave}-${num}`, msg = `${id}: ${res}`;
+  const checks = [
+    [/^[A-Z][A-Z0-9]{1,9}$/.test(clave), 'La clave del proyecto va en mayúsculas (2 a 10 caracteres, sin espacios).'],
+    [/^[1-9][0-9]*$/.test(num), 'El número es un entero positivo.'],
+    [res.length > 0 && msg.length <= 72, 'La primera línea cabe en 72 caracteres (ahora: ' + msg.length + ').'],
+    [res.length > 0 && !/[.!]$/.test(res), 'No termina con punto ni exclamación.'],
+    [/^[A-ZÁÉÍÓÚÑ]/.test(res), 'Empieza por mayúscula.'],
+    [res.length > 0 && !/^(arreglos?|cambios?|cosas?|varios|wip|fix|update|test|asdf)\b/i.test(res) && res.split(/\s+/).length >= 3, 'Describe el cambio con al menos tres palabras y sin comodines como «cambios» o «arreglos».'],
+    [res.length > 0 && res !== res.toUpperCase(), 'No está escrito todo en mayúsculas.'],
+  ];
+  const ul = document.getElementById('k-chequeos');
+  ul.textContent = '';
+  for (const c of checks) ul.append(el('li', { class: c[0] ? 'si' : 'no', texto: (c[0] ? 'Cumple: ' : 'Falta: ') + c[1] }));
+  const rama = `${tipo}/${id}-${slug(res)}`.replace(/-+$/, '');
+  document.getElementById('k-rama').textContent = rama;
+  document.getElementById('k-msg').textContent = msg;
+  document.getElementById('k-ordenes').textContent = `git switch -c ${rama}\n# ... trabajas y preparas los cambios ...\ngit add .\ngit commit -m "${msg.replace(/"/g, "'")}"`;
+}
+[kClave, kNum, kTipo, kRes].forEach((x) => x.addEventListener('input', pintarConstructor));
+pintarConstructor();
+
+// --- Correo profesional
+const BORR = [
+  {
+    titulo: 'Borrador 1: «Hola»',
+    para: 'marta@ejemplo.test', cc: '', asunto: 'Hola', adj: false,
+    cuerpo: 'te mando lo de ayer pero no se si esta bien. MIRALO URGENTE!!! y me dices algo cuando puedas',
+    opciones: [
+      [true, 'El asunto no informa de qué trata el correo ni de qué se espera.'],
+      [true, 'Faltan saludo y despedida con firma.'],
+      [true, 'Abusa de mayúsculas y de signos de exclamación.'],
+      [true, 'La petición es imprecisa: no dice qué hay que mirar ni para cuándo.'],
+      [true, 'Dice que envía algo, pero el correo no lleva ningún archivo adjunto.'],
+      [false, 'Hay demasiadas personas en copia.'],
+      [false, 'Debería enviarse con copia oculta.'],
+      [false, 'Es demasiado largo.'],
+    ],
+    exp: 'Un buen asunto sería «Revisión del plan de pruebas antes del jueves»; el cuerpo, con saludo, qué archivo (adjunto), qué revisar, para cuándo y una despedida con nombre. No hay copias ni es largo: el problema es que es demasiado vago.',
+  },
+  {
+    titulo: 'Borrador 2: aviso a clientes',
+    para: 'ana@ejemplo.test, luis@ejemplo.test, pedro@ejemplo.test, sara@ejemplo.test, rosa@ejemplo.test, hugo@ejemplo.test', cc: 'direccion@ejemplo.test', asunto: 'Re: Re: Re: Fwd: presupuesto', adj: false,
+    cuerpo: 'Buenos días. Os informo de que el taller cerrará el viernes 16. Además, os recuerdo que hay que revisar el presupuesto, y por cierto, ¿alguien sabe quién se queda con el portátil de repuesto? También quería comentar lo del manual de usuario, la reunión del lunes y el color del logo. Un saludo.',
+    opciones: [
+      [true, 'Las direcciones de clientes que no se conocen entre sí deberían ir en copia oculta.'],
+      [true, 'El asunto es una cadena de Re/Fwd que no refleja el tema del mensaje.'],
+      [true, 'Mezcla demasiados temas en un solo correo.'],
+      [true, 'Plantea una duda interna (el portátil de repuesto) a destinatarios externos.'],
+      [false, 'Falta el saludo.'],
+      [false, 'No incluye ninguna fecha.'],
+      [false, 'Debería llevar un archivo adjunto.'],
+      [false, 'El tono es demasiado informal para el cliente.'],
+    ],
+    exp: 'Para un aviso a clientes: asunto «Cierre del taller el viernes 16 de octubre», direcciones en Cco, un solo tema y nada de asuntos internos. Tiene saludo, despedida y fecha; el tono es correcto.',
+  },
+];
+const listaBorr = document.getElementById('lista-borr'), cuerpoBorr = document.getElementById('borr-cuerpo');
+let borrSel = 0;
+function cargarBorr() {
+  listaBorr.textContent = '';
+  BORR.forEach((b, i) => { const bt = el('button', { type: 'button', 'aria-pressed': String(i === borrSel), texto: b.titulo }); bt.addEventListener('click', () => { borrSel = i; cargarBorr(); }); listaBorr.append(bt); });
+  const b = BORR[borrSel];
+  cuerpoBorr.textContent = '';
+  const orden = mezclar(b.opciones.map((_, i) => i));
+  const fs = el('fieldset', null, el('legend', { texto: 'Marca los problemas que tiene este correo:' }));
+  const inputs = orden.map((i) => { const cb = el('input', { type: 'checkbox' }); fs.append(el('label', { class: 'opc' }, cb, document.createTextNode(' ' + b.opciones[i][1]))); return cb; });
+  const res = el('ul', { class: 'lista-ver' }), nota = el('p', { class: 'correccion', role: 'status' });
+  const bc = el('button', { type: 'button', class: 'primario', texto: 'Comprobar' });
+  bc.addEventListener('click', () => {
+    res.textContent = '';
+    let fallos = 0;
+    orden.forEach((i, k) => {
+      const marcado = inputs[k].checked, real = b.opciones[i][0];
+      if (marcado !== real) fallos++;
+      if (real || marcado) res.append(el('li', { class: marcado === real ? 'si' : 'no', texto: (real ? (marcado ? 'Bien: ' : 'Te faltó marcar: ') : 'No era un problema: ') + b.opciones[i][1] }));
+    });
+    nota.textContent = (fallos === 0 ? 'Correcto: has localizado todos los problemas. ' : `Tienes ${fallos} fallo(s). `) + b.exp;
+  });
+  const cab = el('div', { class: 'borrador' }, el('p', null, el('b', { texto: 'Para: ' }), b.para), b.cc ? el('p', null, el('b', { texto: 'Cc: ' }), b.cc) : null,
+    el('p', null, el('b', { texto: 'Asunto: ' }), b.asunto), el('p', null, el('b', { texto: 'Adjuntos: ' }), b.adj ? 'sí' : 'ninguno'), el('pre', { texto: b.cuerpo }));
+  cuerpoBorr.append(cab, fs, el('div', { class: 'fila' }, bc), nota, res);
+}
+cargarBorr();
+
+function analizarCorreo() {
+  const v = (id) => document.getElementById(id).value;
+  const para = v('m-para'), cc = v('m-cc'), cco = v('m-cco'), asunto = v('m-asunto').trim(), cuerpo = v('m-cuerpo'), adj = document.getElementById('m-adj').checked;
+  const dirs = (s) => s.split(/[,;]/).map((x) => x.trim()).filter(Boolean);
+  const dPara = dirs(para), dCc = dirs(cc), dCco = dirs(cco), todas = dPara.concat(dCc, dCco);
+  const palabras = cuerpo.trim() ? cuerpo.trim().split(/\s+/) : [];
+  const grandes = palabras.filter((w) => w.replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ]/g, '').length >= 4 && w === w.toUpperCase() && /[A-ZÁÉÍÓÚÑ]/.test(w));
+  const lineasCuerpo = cuerpo.trim().split('\n').map((x) => x.trim()).filter(Boolean);
+  const ultima = lineasCuerpo[lineasCuerpo.length - 1] || '';
+  const items = [
+    [dPara.length > 0 ? 'si' : 'no', dPara.length > 0 ? 'Hay al menos un destinatario en «Para».' : 'Falta el destinatario principal en «Para».'],
+    [todas.every((d) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d)) && todas.length > 0 ? 'si' : 'no', 'Las direcciones tienen forma válida (nombre@dominio.ext).'],
+    [asunto.split(/\s+/).filter(Boolean).length >= 3 ? 'si' : 'no', 'El asunto tiene al menos tres palabras (dice de qué trata).'],
+    [asunto.length > 0 && asunto.length <= 80 ? 'si' : 'no', 'El asunto cabe en 80 caracteres y no está vacío.'],
+    [asunto && asunto !== asunto.toUpperCase() && !/^(re:\s*){2,}/i.test(asunto) ? 'si' : 'no', 'El asunto no está en mayúsculas ni es una cadena de «Re: Re:».'],
+    [/^\s*(hola|buenos|buenas|buen día|estimad|querid|saludos)/i.test(cuerpo) ? 'si' : 'no', 'Empieza con un saludo.'],
+    [/(un saludo|saludos|atentamente|cordialmente|gracias|un abrazo|quedo a la espera|hasta pronto)/i.test(cuerpo.slice(-220)) ? 'si' : 'no', 'Termina con una despedida.'],
+    [ultima && ultima.split(/\s+/).length <= 4 && !/[.?!]$/.test(ultima) ? 'si' : 'av', 'La última línea parece tu nombre (firma).'],
+    [/\?|antes del|para el|hasta el|plazo|fecha|lunes|martes|miércoles|jueves|viernes|\d{1,2}\/\d{1,2}/i.test(cuerpo) ? 'si' : 'av', 'Deja claro qué esperas o para cuándo.'],
+    [grandes.length < 2 ? 'si' : 'no', 'Sin palabras en mayúsculas que parezcan gritos.'],
+    [(cuerpo.match(/!/g) || []).length <= 2 ? 'si' : 'av', 'Pocos signos de exclamación.'],
+    [/adjunt/i.test(cuerpo) && !adj ? 'no' : 'si', 'Si hablas de un adjunto, lo has marcado como incluido.'],
+    [palabras.length > 0 && palabras.length <= 200 ? 'si' : 'av', 'El cuerpo es breve (hasta unas 200 palabras).'],
+    [palabras.length <= 60 || /\n\s*\n/.test(cuerpo) ? 'si' : 'av', 'Los textos largos se dividen en párrafos.'],
+    [dPara.length + dCc.length >= 4 && dCco.length === 0 ? 'av' : 'si', 'Con muchas direcciones visibles, ¿deberían ir en copia oculta (Cco)?'],
+  ];
+  const ul = document.getElementById('m-resultados');
+  ul.textContent = '';
+  for (const it of items) ul.append(el('li', { class: it[0], texto: (it[0] === 'si' ? 'Cumple: ' : it[0] === 'no' ? 'Falta: ' : 'Revisa: ') + it[1] }));
+  const bien = items.filter((x) => x[0] === 'si').length;
+  document.getElementById('m-resumen').textContent = `${bien} de ${items.length} comprobaciones superadas.`;
+}
+document.getElementById('m-analizar').addEventListener('click', analizarCorreo);
+document.getElementById('m-ejemplo').addEventListener('click', () => {
+  const set = (id, t) => { document.getElementById(id).value = t; };
+  set('m-para', 'marta@ejemplo.test'); set('m-cc', ''); set('m-cco', '');
+  set('m-asunto', 'Revisión de la guía de instalación antes del jueves');
+  set('m-cuerpo', 'Hola, Marta:\n\nTe paso la guía de instalación del servidor de pruebas. ¿Puedes revisarla antes del jueves 15 por la tarde? Me interesa sobre todo que compruebes los pasos 4 y 5.\n\nGracias y un saludo,\nLuis');
+  document.getElementById('m-adj').checked = false;
+  analizarCorreo();
+});
+
+// --- Práctica
+const BANCO = [
+  { q: '¿Qué hace git add . ?', o: ['Prepara todos los cambios de la carpeta actual para el próximo commit', 'Guarda una instantánea en la historia', 'Sube los cambios al servidor', 'Descarta todos los cambios'], c: 0, e: 'git add . lleva los cambios al área de preparación; el commit es otro paso.' },
+  { q: 'Has modificado app.js y quieres volver a la última versión confirmada. ¿Qué orden usas?', o: ['git restore app.js', 'git restore --staged app.js', 'git merge app.js', 'git commit app.js'], c: 0, e: 'git restore archivo descarta los cambios sin preparar (no se pueden recuperar).' },
+  { q: 'Ejecutaste git add app.js por error. ¿Cómo lo sacas del área de preparación sin perder los cambios?', o: ['git restore --staged app.js', 'git restore app.js', 'git branch -d app.js', 'git rm app.js'], c: 0, e: '--staged actúa sobre el área de preparación y conserva el directorio de trabajo.' },
+  { q: '¿Qué mensaje de commit es mejor?', o: ['PORT-12: Corrige el cálculo del IVA en el presupuesto', 'arreglos', 'wip', 'cambios varios'], c: 0, e: 'Lleva clave, verbo en presente y dice exactamente qué cambia.' },
+  { q: 'En un conflicto, ¿qué hay entre <<<<<<< HEAD y =======?', o: ['La versión de la rama en la que estás', 'La versión de la otra rama', 'El texto original antes de los cambios', 'Un comentario de Git'], c: 0, e: 'Entre HEAD y ======= está tu versión; entre ======= y >>>>>>> la de la otra rama.' },
+  { q: '¿Qué orden crea una rama y te cambia a ella?', o: ['git switch -c feature/PORT-5-login', 'git branch feature/PORT-5-login', 'git merge feature/PORT-5-login', 'git init feature/PORT-5-login'], c: 0, e: 'git branch solo crea; con switch -c se crea y se cambia a la vez.' },
+  { q: 'Quieres traer a main el trabajo de feature/x. ¿Cuál es la secuencia correcta?', o: ['git switch main y después git merge feature/x', 'git switch feature/x y después git merge main', 'git branch -d main', 'git restore feature/x'], c: 0, e: 'Te sitúas en la rama que recibe (main) y nombras la que se incorpora.' },
+  { q: '¿Cuándo una fusión es de avance rápido (fast-forward)?', o: ['Cuando main no ha avanzado desde que se creó la rama', 'Cuando hay un conflicto', 'Cuando se usa git merge --abort', 'Siempre que se fusiona'], c: 0, e: 'Solo hay que mover el puntero de main; no hace falta commit de fusión.' },
+  { q: 'Subiste .env con una contraseña y ahora lo añades a .gitignore. ¿Qué ocurre con lo ya confirmado?', o: ['Sigue en la historia: hay que cambiar la contraseña', 'Desaparece de la historia automáticamente', 'Se borra del servidor', 'Git avisa y lo impide'], c: 0, e: '.gitignore no afecta a archivos ya seguidos ni a la historia.' },
+  { q: '¿Para qué sirve limitar el trabajo en curso (WIP) en un tablero Kanban?', o: ['Para terminar lo empezado antes de empezar más, y que cada tarea tarde menos', 'Para que haya menos tarjetas en total', 'Para dar menos trabajo a cada persona', 'Para no tener que usar etiquetas'], c: 0, e: 'Hacer menos cosas a la vez reduce el tiempo de ciclo y deja ver los cuellos de botella.' },
+  { q: '¿Qué es PORT-12?', o: ['La clave única de una incidencia del proyecto PORT', 'El nombre de una rama obligatoria', 'Un puerto de red', 'La versión del proyecto'], c: 0, e: 'Es la clave del proyecto más el número de la incidencia; no cambia.' },
+  { q: 'Envías un aviso a veinte clientes que no se conocen entre sí. ¿Dónde pones sus direcciones?', o: ['En Cco (copia oculta)', 'En Para', 'En Cc', 'En el asunto'], c: 0, e: 'La copia oculta protege las direcciones de los demás.' },
+  { q: '¿Cuándo es adecuado usar @channel en un canal de equipo?', o: ['Casi nunca: solo para avisos que afectan a todos', 'Para saludar cada mañana', 'Para cualquier duda', 'Siempre que haya un archivo nuevo'], c: 0, e: 'Avisa a todo el mundo; usado a menudo, la gente silencia el canal.' },
+  { q: 'Quieres corregir el texto de un compañero en un documento compartido sin machacarlo. ¿Qué modo usas?', o: ['Sugerencias (el propietario las acepta o rechaza)', 'Borrar y reescribir', 'Crear una copia con otro nombre', 'Enviarlo por correo'], c: 0, e: 'Las sugerencias dejan visible el original y se pueden aceptar o rechazar una a una.' },
+  { q: 'Una fusión se ha complicado y quieres volver al punto de partida. ¿Qué orden usas?', o: ['git merge --abort', 'git restore --staged', 'git branch -D main', 'git init'], c: 0, e: 'git merge --abort cancela la fusión en curso.' },
+  { q: 'git status muestra «Untracked files: notas.txt». ¿Qué significa?', o: ['Git todavía no sigue ese archivo', 'El archivo tiene conflictos', 'El archivo está confirmado', 'El archivo está ignorado'], c: 0, e: 'Hay que hacer git add para que empiece a formar parte del repositorio.' },
+  { q: 'Para la incidencia PORT-31 «El buscador falla con tildes», ¿qué rama sigue mejor la convención del curso?', o: ['fix/PORT-31-buscador-tildes', 'arreglo buscador', 'PORT31', 'main2'], c: 0, e: 'tipo/CLAVE-descripción-corta, en minúsculas y con guiones.' },
+  { q: '¿Dónde se guardan realmente los archivos que subes a un canal de Teams?', o: ['En el almacenamiento del equipo (SharePoint)', 'Dentro de los mensajes del chat', 'En tu disco duro', 'En el correo'], c: 0, e: 'Por eso permanecen aunque cambien las personas del equipo.' },
+  { q: '¿Qué es un commit de fusión?', o: ['Un commit con dos padres que une dos ramas', 'Un commit sin mensaje', 'Un commit que borra una rama', 'Un commit en el servidor'], c: 0, e: 'Aparece en el grafo con dos líneas hacia atrás.' },
+  { q: 'Tienes 8 tarjetas en «En revisión» y 1 en «En curso». ¿Qué haces?', o: ['Dedicar tiempo a revisar antes de abrir tarjetas nuevas', 'Abrir más tarjetas para ir más rápido', 'Subir el límite WIP', 'Archivar las tarjetas en revisión'], c: 0, e: 'El cuello de botella es la revisión: terminar antes que empezar.' },
+  { cmd: true, q: 'Escribe la orden que muestra el historial con una línea por commit.', re: [/^git log --oneline$/], e: 'git log --oneline (con --graph --all verías también las ramas).' },
+  { cmd: true, q: 'Escribe la orden que crea la rama feature/PORT-7-login y te cambia a ella (con switch).', re: [/^git switch -c feature\/PORT-7-login$/], e: 'git switch -c feature/PORT-7-login. Con checkout sería git checkout -b feature/PORT-7-login.' },
+  { cmd: true, q: 'Escribe la orden que confirma lo preparado con el mensaje «PORT-9: Añade el login».', re: [/^git commit -m ["']PORT-9: Añade el login["']$/], e: 'git commit -m "PORT-9: Añade el login".' },
+  { cmd: true, q: 'Escribe la orden que cancela una fusión con conflictos.', re: [/^git merge --abort$/], e: 'git merge --abort.' },
+];
+const pregHost = document.getElementById('preg'), pCorr = document.getElementById('p-correccion');
+let pOrden = [], pPos = 0, pActual = null, pRespondida = false, pAciertos = Number(Lab.leer('aciertos')) || 0, pIntentos = Number(Lab.leer('intentos')) || 0, pOpc = [];
+function pintarMarcador() { document.getElementById('p-aciertos').textContent = String(pAciertos); document.getElementById('p-intentos').textContent = String(pIntentos); }
+function nuevaPregunta() {
+  if (pPos >= pOrden.length) { pOrden = mezclar(BANCO.map((_, i) => i)); pPos = 0; }
+  pActual = BANCO[pOrden[pPos++]]; pRespondida = false; pCorr.textContent = '';
+  pregHost.textContent = '';
+  const fs = el('fieldset', null, el('legend', { texto: pActual.q }));
+  if (pActual.cmd) {
+    fs.append(el('label', { for: 'p-cmd', texto: 'Tu respuesta: ' }), el('input', { id: 'p-cmd', type: 'text', spellcheck: 'false', autocapitalize: 'off', style: 'width:100%;font-family:var(--f-mono)' }));
+  } else {
+    pOpc = mezclar(pActual.o.map((t, i) => ({ t, ok: i === pActual.c })));
+    pOpc.forEach((op, k) => fs.append(el('label', { class: 'opc' }, el('input', { type: 'radio', name: 'p-op', value: String(k) }), document.createTextNode(' ' + op.t))));
+  }
+  pregHost.append(fs);
+  document.getElementById('p-comprobar').disabled = false;
+}
+document.getElementById('p-comprobar').addEventListener('click', () => {
+  if (pRespondida) return;
+  let acierto;
+  if (pActual.cmd) {
+    const t = document.getElementById('p-cmd').value.trim().replace(/\s+/g, ' ');
+    if (!t) { pCorr.textContent = 'Escribe una respuesta antes de comprobar.'; return; }
+    acierto = pActual.re.some((re) => re.test(t));
+  } else {
+    const sel = pregHost.querySelector('input[name="p-op"]:checked');
+    if (!sel) { pCorr.textContent = 'Elige una opción antes de comprobar.'; return; }
+    acierto = pOpc[Number(sel.value)].ok;
+  }
+  pRespondida = true; pIntentos++; if (acierto) pAciertos++;
+  Lab.guardar('aciertos', pAciertos); Lab.guardar('intentos', pIntentos); pintarMarcador();
+  pCorr.textContent = (acierto ? 'Correcto. ' : 'No es esa. ') + pActual.e;
+  document.getElementById('p-comprobar').disabled = true;
+});
+document.getElementById('p-otra').addEventListener('click', nuevaPregunta);
+pintarMarcador();
+nuevaPregunta();
+
+// --- Datos
+const msgDatos = document.getElementById('msg-datos');
+let borrarListo = false;
+document.getElementById('bt-progreso').addEventListener('click', () => {
+  const datos = { laboratorio: 'simulador-git', retosCompletados: RETOS.filter((x) => hechos.has(x.id)).map((x) => x.titulo), conflictosResueltos: CONF.filter((x, i) => hechosConf.has(i)).map((x) => x.titulo), mejorRachaMensajes: mejor, practica: { aciertos: pAciertos, intentos: pIntentos } };
+  msgDatos.textContent = descargar('progreso-simulador-git.json', JSON.stringify(datos, null, 2), 'application/json') ? 'Progreso descargado.' : 'No se ha podido descargar desde este navegador.';
+});
+document.getElementById('bt-borrar').addEventListener('click', (e) => {
+  if (!borrarListo) { borrarListo = true; e.target.textContent = 'Pulsa otra vez para confirmar el borrado'; return; }
+  borrarListo = false; e.target.textContent = 'Borrar mis datos';
+  ['libre', 'retos', 'conflictos', 'mejor-racha', 'aciertos', 'intentos'].forEach((k) => Lab.guardar(k, ''));
+  hechos.clear(); hechosConf.clear(); mejor = 0; pAciertos = 0; pIntentos = 0;
+  termLibre.reiniciar(); pintarGrafoLibre(); cargarReto(); cargarConf(); pintarMarcador(); racha = 0; pintarClasif('');
+  msgDatos.textContent = 'Datos borrados.';
+});
+
+mostrar(location.hash.slice(1) || Lab.leer('pestana'));
+</script>
+</body>
+</html>
