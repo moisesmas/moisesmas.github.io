@@ -1,0 +1,62 @@
+---
+import type { CodigoIdioma } from '../config/modulos';
+import { TEXTOS_PRESENTACION } from '../lib/diapositivas';
+import '../styles/presentacion.css';
+
+interface Props {
+  titulo: string;
+  subtitulo?: string;
+  modulo: string;
+  unidad: string;
+  idioma: CodigoIdioma;
+  hrefApuntes: string;
+  idiomas: { texto: string; href: string; actual: boolean }[];
+}
+
+const { titulo, subtitulo, modulo, unidad, idioma, hrefApuntes, idiomas } = Astro.props;
+const t = TEXTOS_PRESENTACION[idioma];
+---
+
+<!doctype html>
+<html lang={idioma} data-tema="claro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo} · {modulo}</title>
+    <link rel="icon" href="/comun/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/comun/fuentes.css" />
+    <script is:inline>
+      try {
+        if (localStorage.getItem('presentacion-tema') === 'oscuro') document.documentElement.dataset.tema = 'oscuro';
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <nav class="barra-presentacion" data-barra>
+      <a href={hrefApuntes} data-volver>← {t.volver}</a>
+      {
+        idiomas.map((i) => (
+          <a href={i.href} data-con-diapositiva aria-current={i.actual ? 'page' : undefined}>
+            {i.texto}
+          </a>
+        ))
+      }
+      <button type="button" data-tema-boton aria-label={t.tema} title={t.tema}>◐</button>
+      <a href="?pdf" data-pdf target="_blank">{t.pdf}</a>
+    </nav>
+    <div class="reveal">
+      <div class="slides">
+        <section class="portada">
+          <p class="portada__modulo">{modulo}</p>
+          <h1>{titulo}</h1>
+          {subtitulo && <p class="portada__subtitulo">{subtitulo}</p>}
+          <p class="portada__unidad">{unidad}</p>
+        </section>
+        <slot />
+      </div>
+    </div>
+    <script>
+      import '../scripts/presentacion';
+    </script>
+  </body>
+</html>

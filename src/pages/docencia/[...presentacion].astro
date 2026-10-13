@@ -1,0 +1,47 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import Diapositivas from '../../components/Diapositivas.astro';
+import Presentacion from '../../layouts/Presentacion.astro';
+import { ETIQUETA_IDIOMA, moduloDeId } from '../../config/modulos';
+import { hrefPresentacion, idUnidad } from '../../lib/diapositivas';
+import { esTraduccion, hrefDeId, idiomaContenido, idOriginal, idTraduccion } from '../../lib/idiomas';
+
+export async function getStaticPaths() {
+  const entradas = await getCollection('diapositivas');
+  return entradas.map((entrada) => {
+    if (!entrada.id.startsWith('docencia/')) throw new Error(`Diapositivas fuera de /docencia/: ${entrada.filePath}`);
+    return { params: { presentacion: `${entrada.id.slice('docencia/'.length)}/presentacion` }, props: { entrada } };
+  });
+}
+
+const { entrada } = Astro.props;
+const id = entrada.id;
+const pagina = await getEntry('docs', id);
+if (!pagina) throw new Error(`${entrada.filePath}: no existe la página de apuntes ${id}`);
+const modulo = moduloDeId(id);
+if (!modulo) throw new Error(`${entrada.filePath}: la página no pertenece a ningún módulo`);
+const idioma = idiomaContenido(id, modulo);
+const unidad = (await getEntry('docs', idUnidad(id))) ?? (await getEntry('docs', idUnidad(idOriginal(id))));
+const conDiapositivas = new Set((await getCollection('diapositivas')).map((e) => e.id));
+const pareja = esTraduccion(id) ? idOriginal(id) : idTraduccion(id);
+const idiomas =
+  modulo.idioma !== 'es' && conDiapositivas.has(pareja)
+    ? [
+        { texto: ETIQUETA_IDIOMA[modulo.idioma], href: hrefPresentacion(idOriginal(id)), actual: !esTraduccion(id) },
+        { texto: ETIQUETA_IDIOMA.es, href: hrefPresentacion(idTraduccion(id)), actual: esTraduccion(id) },
+      ]
+    : [];
+const { Content } = await render(entrada);
+---
+
+<Presentacion
+  titulo={entrada.data.title ?? pagina.data.title}
+  subtitulo={entrada.data.subtitle}
+  modulo={modulo.nombre}
+  unidad={unidad?.data.title ?? ''}
+  idioma={idioma}
+  hrefApuntes={hrefDeId(id)}
+  idiomas={idiomas}
+>
+  <Diapositivas><Content /></Diapositivas>
+</Presentacion>

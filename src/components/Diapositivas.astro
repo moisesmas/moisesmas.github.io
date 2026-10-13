@@ -1,0 +1,8 @@
+---
+import { trocear } from '../lib/diapositivas';
+
+// El HTML ya compilado (con imágenes resueltas) se parte por cada «---» del Markdown.
+const diapositivas = trocear(await Astro.slots.render('default'));
+---
+
+{diapositivas.map((d) => <section set:html={d} />)}
