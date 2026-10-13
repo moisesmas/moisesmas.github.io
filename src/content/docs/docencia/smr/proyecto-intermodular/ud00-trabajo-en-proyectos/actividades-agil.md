@@ -91,7 +91,7 @@ Esta unidad de formación previa (unidad 0) **no figura en la programación did�
 3. En la pestaña **Historias** del laboratorio, escribid **seis historias** con el formato «Como… quiero… para…». Al menos una debe ser una **épica** que luego dividiréis en tres historias más pequeñas.
 4. Cada historia lleva **al menos tres criterios de aceptación**, y una de ellas los escribe en formato *Dado / Cuando / Entonces*.
 5. Revisad cada historia con la lista INVEST del laboratorio. Reescribid las que fallen y anotad qué corregisteis y por qué.
-6. Antes de estimar, practicad con el *clasificador*: acertad al menos 6 de 8 historias del banco.
+6. Antes de estimar, practicad con el *clasificador*: acertad al menos 7 de 9 historias del banco.
 7. Estimad las historias en puntos con *planning poker* (en el laboratorio, la pestaña **Estimación** simula la votación; con vuestro equipo, hacedlo con cartas o a mano). Anotad en cada historia el valor acordado.
 8. Ordenad el backlog y marcad con MoSCoW cuáles entrarían en el primer sprint.
 9. Exportad las historias con «Exportar historias (Markdown)».
