@@ -1,14 +1,17 @@
 import type { MdastContent, MdastPluginEntry } from 'satteri';
 import { artefacto } from './artefacto';
 import { aules } from './aules';
+import { columnas } from './columnas';
 import { archivoMd, type Manejador, type NodoDirectiva } from './comun';
 import { descarga } from './descarga';
+import { laboratorio } from './laboratorio';
 import { laboratorios } from './laboratorios';
 import { modulos } from './modulos';
+import { pasos } from './pasos';
 import { video } from './video';
 
-const HOJAS: Record<string, Manejador> = { descarga, video, modulos, artefacto, laboratorios };
-const CONTENEDORES: Record<string, Manejador> = { aules };
+const HOJAS: Record<string, Manejador> = { descarga, video, modulos, artefacto, laboratorios, laboratorio };
+const CONTENEDORES: Record<string, Manejador> = { aules, pasos, columnas };
 
 /**
  * Bloques especiales de la web (plugin mdast de Sätteri, trampa 2).

@@ -2,6 +2,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { MdastContent } from 'satteri';
 import { moduloDeId, type Modulo } from '../../config/modulos';
+import { esDeDiapositivas, idPagina } from '../diapositivas';
 import { generarId } from '../ids';
 import { esTraduccion } from '../idiomas';
 
@@ -25,6 +26,8 @@ export interface ArchivoMd {
   hrefDir: string;
   traduccion: boolean;
   modulo: Modulo | undefined;
+  /** Es un archivo de <unidad>/diapositivas/: id, dir y hrefDir son los de su página. */
+  diapositivas: boolean;
 }
 
 export type Manejador = (nodo: NodoDirectiva, archivo: ArchivoMd) => MdastContent | undefined;
@@ -38,17 +41,20 @@ export function archivoMd(fileURL: URL | undefined): ArchivoMd | undefined {
   if (i === -1) return undefined;
   const docs = ruta.slice(0, i + MARCA.length - 1);
   const relativo = path.relative(docs, ruta).split(path.sep).join('/');
-  const id = generarId({ entry: relativo, data: {} });
-  const dirRelativo = path.posix.dirname(relativo);
+  const diapositivas = esDeDiapositivas(relativo);
+  const id = diapositivas ? idPagina(relativo) : generarId({ entry: relativo, data: {} });
+  const dir = diapositivas ? path.dirname(path.dirname(ruta)) : path.dirname(ruta);
+  const dirRelativo = path.relative(docs, dir).split(path.sep).join('/');
   return {
     ruta,
     docs,
     relativo,
     id,
-    dir: path.dirname(ruta),
-    hrefDir: dirRelativo === '.' ? '/' : `/${dirRelativo}/`,
+    dir,
+    hrefDir: dirRelativo === '' ? '/' : `/${dirRelativo}/`,
     traduccion: esTraduccion(id),
     modulo: moduloDeId(id),
+    diapositivas,
   };
 }
 
