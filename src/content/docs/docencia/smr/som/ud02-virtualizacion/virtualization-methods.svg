@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 470" width="1100" height="470" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Three ways to handle dangerous guest instructions</title>
+<desc id="d">Three columns. Software virtualization: the guest OS runs on top of a hypervisor that rewrites the dangerous code before it reaches the CPU; slowest. Hardware-assisted virtualization: the guest OS runs almost directly on a CPU with VT-x or AMD-V, which calls the hypervisor only when needed; fast. Paravirtualization: the guest OS uses virtio drivers to talk to the hypervisor, which uses the hardware; fast for disk and network.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="470" fill="#ffffff"/>
+<text x="190.0" y="44" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Software</text>
+<rect x="20" y="70" width="340" height="80" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="190.0" y="118" text-anchor="middle" fill="#16201b">Guest OS</text>
+<line x1="190.0" y1="152" x2="190.0" y2="176" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="180" width="340" height="80" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="190.0" y="214" text-anchor="middle" fill="#16201b">Hypervisor rewrites</text>
+<text x="190.0" y="242" text-anchor="middle" fill="#16201b">dangerous code</text>
+<line x1="190.0" y1="262" x2="190.0" y2="286" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="290" width="340" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="190.0" y="338" text-anchor="middle" fill="#16201b">CPU</text>
+<rect x="40" y="402" width="300" height="48" rx="24" fill="#ffffff" stroke="#b86e00" stroke-width="2"/>
+<text x="190.0" y="434" text-anchor="middle" fill="#5c3700" font-weight="700">Slowest</text>
+<text x="550.0" y="44" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Hardware-assisted</text>
+<rect x="380" y="70" width="340" height="80" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="550.0" y="118" text-anchor="middle" fill="#16201b">Guest OS</text>
+<line x1="550.0" y1="152" x2="550.0" y2="176" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="380" y="180" width="340" height="80" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="550.0" y="214" text-anchor="middle" fill="#16201b">CPU in guest mode</text>
+<text x="550.0" y="242" text-anchor="middle" fill="#16201b">VT-x / AMD-V</text>
+<line x1="550.0" y1="262" x2="550.0" y2="286" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="380" y="290" width="340" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="550.0" y="324" text-anchor="middle" fill="#16201b">Hypervisor</text>
+<text x="550.0" y="352" text-anchor="middle" fill="#16201b">only when needed</text>
+<rect x="400" y="402" width="300" height="48" rx="24" fill="#ffffff" stroke="#b86e00" stroke-width="2"/>
+<text x="550.0" y="434" text-anchor="middle" fill="#5c3700" font-weight="700">Fast</text>
+<text x="910.0" y="44" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Paravirtualization</text>
+<rect x="740" y="70" width="340" height="80" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="910.0" y="104" text-anchor="middle" fill="#16201b">Guest OS</text>
+<text x="910.0" y="132" text-anchor="middle" fill="#16201b">+ virtio drivers</text>
+<line x1="910.0" y1="152" x2="910.0" y2="176" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="740" y="180" width="340" height="80" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="910.0" y="228" text-anchor="middle" fill="#16201b">Hypervisor</text>
+<line x1="910.0" y1="262" x2="910.0" y2="286" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="740" y="290" width="340" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="910.0" y="338" text-anchor="middle" fill="#16201b">Hardware</text>
+<rect x="760" y="402" width="300" height="48" rx="24" fill="#ffffff" stroke="#b86e00" stroke-width="2"/>
+<text x="910.0" y="434" text-anchor="middle" fill="#5c3700" font-weight="700">Fast for disk and network</text>
+</svg>
