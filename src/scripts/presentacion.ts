@@ -1,5 +1,6 @@
 import Reveal from 'reveal.js';
 import 'reveal.js/reveal.css';
+import { crearPizarra } from './pizarra';
 
 const CLAVE_TEMA = 'presentacion-tema';
 const raiz = document.documentElement;
@@ -17,6 +18,11 @@ export function alternarTema(): void {
 export const atajos: Record<number, (e: KeyboardEvent) => void> = {
   68: alternarTema, // D
 };
+
+export const pizarra = crearPizarra(document.body);
+atajos[80] = () => pizarra.alternar('puntero'); // P (sustituye «anterior» de reveal.js; siguen las flechas y RePág)
+atajos[76] = () => pizarra.alternar('lapiz'); // L
+atajos[67] = () => pizarra.borrar(); // C
 
 export const presentacion = new Reveal({
   hash: true,
@@ -46,3 +52,48 @@ for (const enlace of document.querySelectorAll<HTMLAnchorElement>('[data-con-dia
     enlace.href = enlace.href.split('#')[0] + location.hash;
   });
 }
+
+presentacion.on('slidechanged', () => pizarra.borrar());
+
+function marcar(selector: string, activo: Element | null): void {
+  for (const b of document.querySelectorAll(selector)) b.setAttribute('aria-pressed', String(b === activo));
+}
+function marcarModo(): void {
+  for (const b of document.querySelectorAll('[data-pizarra="puntero"], [data-pizarra="lapiz"]')) {
+    b.setAttribute('aria-pressed', String(b.getAttribute('data-pizarra') === pizarra.modo));
+  }
+}
+for (const b of document.querySelectorAll<HTMLButtonElement>('[data-pizarra]')) {
+  b.addEventListener('click', () => {
+    const accion = b.dataset.pizarra;
+    if (accion === 'borrar') pizarra.borrar();
+    else if (accion === 'puntero' || accion === 'lapiz') pizarra.alternar(accion);
+    marcarModo();
+  });
+}
+document.addEventListener('keyup', marcarModo);
+for (const b of document.querySelectorAll<HTMLButtonElement>('[data-color]')) {
+  b.addEventListener('click', () => {
+    pizarra.color(b.dataset.color!);
+    marcar('[data-color]', b);
+  });
+}
+for (const b of document.querySelectorAll<HTMLButtonElement>('[data-grosor]')) {
+  b.addEventListener('click', () => {
+    pizarra.grosor(Number(b.dataset.grosor));
+    marcar('[data-grosor]', b);
+  });
+}
+
+// Las barras se ocultan tras 3 s sin mover el ratón.
+const barras = document.querySelectorAll('[data-barra]');
+let temporizador: ReturnType<typeof setTimeout> | undefined;
+function mostrarBarras(): void {
+  for (const b of barras) b.classList.remove('oculta');
+  clearTimeout(temporizador);
+  temporizador = setTimeout(() => {
+    for (const b of barras) b.classList.add('oculta');
+  }, 3000);
+}
+document.addEventListener('pointermove', mostrarBarras);
+mostrarBarras();

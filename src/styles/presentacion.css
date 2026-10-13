@@ -227,3 +227,80 @@ body {
     transition: none;
   }
 }
+/* Pizarra */
+.pizarra-barra {
+  position: fixed;
+  bottom: 0.6rem;
+  left: 0.5rem;
+  z-index: 30;
+  display: flex;
+  gap: 0.3rem;
+  transition: opacity 0.3s;
+}
+.pizarra-barra button {
+  min-width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  background: var(--fondo);
+  color: var(--texto);
+  font: 600 16px var(--titulos);
+  cursor: pointer;
+}
+.pizarra-barra button[aria-pressed='true'] {
+  border: 2px solid var(--acento);
+}
+.pizarra-barra .muestra {
+  background: var(--muestra);
+}
+.pizarra-lienzo {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 20;
+  pointer-events: none;
+}
+.pizarra-lienzo[data-modo='lapiz'] {
+  pointer-events: auto;
+  touch-action: none;
+  cursor: crosshair;
+}
+.pizarra-puntero {
+  position: fixed;
+  z-index: 25;
+  display: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #e0212f;
+  box-shadow: 0 0 12px 4px rgb(224 33 47 / 0.6);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+.pizarra-puntero[data-visible] {
+  display: block;
+}
+html[data-pizarra='puntero'] {
+  cursor: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pizarra-barra {
+    transition: none;
+  }
+}
+/* Vista de impresión (PDF) y papel: solo las diapositivas. */
+html.reveal-print .barra-presentacion,
+html.reveal-print .pizarra-barra,
+html.reveal-print .pizarra-lienzo,
+html.reveal-print .pizarra-puntero {
+  display: none !important;
+}
+@media print {
+  .barra-presentacion,
+  .pizarra-barra,
+  .pizarra-lienzo,
+  .pizarra-puntero {
+    display: none !important;
+  }
+}

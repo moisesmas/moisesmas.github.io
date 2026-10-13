@@ -50,3 +50,16 @@ describe('presentación de una página', () => {
     expect(existe('docencia/smr/som/ud02-virtualizacion/diapositivas/02-hypervisors/index.html')).toBe(false);
   });
 });
+
+describe('pizarra', () => {
+  it('barra con puntero, lápiz, 3 colores, 2 grosores y borrar, con textos en el idioma del contenido', () => {
+    const html = en();
+    expect(html).toContain('data-pizarra="puntero"');
+    expect(html).toContain('data-pizarra="lapiz"');
+    expect(html).toContain('data-pizarra="borrar"');
+    expect(html.match(/data-color="/g)).toHaveLength(3);
+    expect(html.match(/data-grosor="/g)).toHaveLength(2);
+    expect(html).toContain('title="Pen (L)"');
+    expect(es()).toContain('title="Lápiz (L)"');
+  });
+});
