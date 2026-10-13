@@ -1,0 +1,1271 @@
+<!doctype html>
+<html lang="es" data-lab="agil-en-practica" data-idioma-original="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="/comun/lab.js"></script>
+<title>Laboratorio Ágil en la práctica: Kanban, Scrum, historias, estimación, versiones y DevOps</title>
+<meta name="description" content="Practica la gestión ágil de proyectos: un tablero Kanban con límites WIP, un sprint de Scrum con Definición de Hecho, historias de usuario con INVEST, planning poker y proyección, versionado semántico y un pipeline de integración continua.">
+<meta name="keywords" content="ágil, Kanban, WIP, Scrum, historias de usuario, INVEST, planning poker, velocidad, versionado semántico, DevOps, pipeline, proyecto intermodular">
+<link rel="icon" href="/comun/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/comun/fuentes.css">
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f2f4ef;--surface:#ffffff;--surface2:#e9ede6;--ink:#16201b;--muted:#56655d;--line:#d3dbd4;
+  --accent:#b86e00;--accent-soft:#fbeed8;--pcb:#1f5244;
+  --ok:#1b6b3f;--ko:#a8281f;
+  --f-display:"Chakra Petch",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0e1411;--surface:#161f1b;--surface2:#1d2823;--ink:#e4ebe6;--muted:#95a69d;--line:#2b3832;
+  --accent:#f3aa3c;--accent-soft:#33260f;--pcb:#1a463a;
+  --ok:#6fd49a;--ko:#ff9d94;
+}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--f-body)}
+h1,h2,h3{font-family:var(--f-display);line-height:1.2;margin:0 0 .5rem}
+h1{font-size:1.25rem}
+h2{font-size:1.5rem}
+h3{font-size:1.1rem;margin-top:1.1rem}
+code,pre{font-family:var(--f-mono)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{border:1px solid var(--muted);background:var(--surface);border-radius:.4rem;padding:.35rem .8rem;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cabecera{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;padding:.6rem 1rem;background:var(--pcb);color:#fff}
+.cabecera h1{flex:1 1 12rem;margin:0}
+.cabecera a{color:#fff}
+.cabecera button{background:transparent;border-color:#fff;color:#fff}
+main{max-width:66rem;margin:0 auto;padding:1rem}
+.pestanas{display:flex;gap:.25rem;overflow-x:auto;border-bottom:1px solid var(--muted)}
+[role="tab"]{display:flex;gap:.5rem;align-items:baseline;white-space:nowrap;border:0;border-bottom:3px solid transparent;border-radius:.4rem .4rem 0 0;background:var(--surface2);font:600 1rem var(--f-display)}
+[role="tab"][aria-selected="true"]{background:var(--accent-soft);border-bottom-color:var(--accent)}
+.n{font:600 .8rem var(--f-mono);color:var(--muted)}
+[role="tabpanel"]{background:var(--surface);border:1px solid var(--line);border-top:0;padding:1rem 1.25rem}
+.intro{margin:.25rem 0 1rem;color:var(--muted)}
+.campos{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:.6rem .8rem;align-items:end;margin:.5rem 0}
+.campo{display:flex;flex-direction:column;gap:.2rem;min-width:0}
+.campo.ancho{grid-column:1/-1}
+.campo label,.etq{font-weight:700;font-size:.9rem}
+.ayuda{color:var(--muted);font-size:.85rem}
+input,select,textarea{width:100%;border:1px solid var(--muted);border-radius:.4rem;padding:.35rem .6rem;background:var(--surface)}
+input[type="checkbox"],input[type="radio"]{width:auto}
+input[type="range"]{padding:0;height:1.6rem;min-width:8rem;border:0;background:transparent;accent-color:var(--accent)}
+textarea{resize:vertical;min-height:4rem}
+.fila{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin:.5rem 0}
+.primario{background:var(--pcb);border-color:var(--pcb);color:#fff}
+.pq{padding:.15rem .5rem;font-size:.85rem}
+.tabla{overflow-x:auto;margin:.5rem 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{border-bottom:1px solid var(--line);padding:.35rem .5rem;text-align:left;vertical-align:top}
+th{background:var(--surface2);font-family:var(--f-display);font-weight:600}
+td.num,th.num{text-align:right}
+tr.total td{font-weight:700;background:var(--surface2)}
+.msg{margin:.5rem 0;min-height:1.4rem}
+.msg:empty{min-height:0;margin:0}
+.aviso{margin:.75rem 0;padding:.5rem .75rem;border-left:4px solid var(--accent);background:var(--accent-soft)}
+.aviso ul{margin:.25rem 0 0;padding-left:1.2rem}
+.aviso:empty{display:none}
+.correccion{margin:.75rem 0;padding:.4rem .75rem;border-left:4px solid var(--accent);background:var(--surface2)}
+.correccion:empty{display:none}
+.ok{color:var(--ok);font-weight:700}
+.ko{color:var(--ko);font-weight:700}
+.dos{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1rem}
+.tarjeta{border:1px solid var(--line);border-radius:.5rem;padding:.6rem .8rem;margin:.4rem 0;background:var(--surface)}
+.tarjeta h4{margin:0 0 .3rem;font-family:var(--f-display)}
+.tarjeta p{margin:.2rem 0}
+.sub{margin-top:1.5rem;padding-top:.5rem;border-top:1px solid var(--line)}
+pre{white-space:pre-wrap;background:var(--surface2);padding:.75rem;border-radius:.4rem;max-height:22rem;overflow:auto;font-size:.82rem}
+.tablero{display:grid;grid-template-columns:repeat(auto-fit,minmax(12.5rem,1fr));gap:.6rem;margin:.6rem 0}
+.col{border:2px solid var(--muted);border-radius:.5rem;background:var(--surface2);padding:.5rem;min-height:8rem}
+.col.lleno{border-color:var(--accent)}
+.col.sup{border:3px solid var(--ko)}
+.col-cab{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem}
+.col-cab h3{margin:0;font-size:1rem}
+.col p{margin:.2rem 0 0;font-size:.82rem}
+.col ul{list-style:none;margin:.4rem 0 0;padding:0;display:flex;flex-direction:column;gap:.4rem}
+.carta{background:var(--surface);border:1px solid var(--muted);border-radius:.4rem;padding:.4rem .5rem;font-size:.9rem}
+.carta small{display:block;color:var(--muted)}
+.carta .btns{display:flex;gap:.3rem;margin-top:.3rem}
+.limites{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:end;margin:.5rem 0}
+.limites .campo{width:7.5rem}
+.metricas{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.5rem;margin:.5rem 0}
+.metricas div{border:1px solid var(--line);border-radius:.4rem;padding:.3rem .6rem;background:var(--surface)}
+.metricas b{display:block;font:700 1.35rem var(--f-mono)}
+.metricas span{font-size:.82rem;color:var(--muted)}
+.dias{display:flex;flex-wrap:wrap;gap:.3rem;margin:.5rem 0}
+.dias button{min-width:3.4rem;display:flex;flex-direction:column;align-items:center;line-height:1.25;padding:.25rem .4rem}
+.dias small{font-size:.7rem;color:var(--muted)}
+[aria-pressed="true"].marca{background:var(--accent-soft);border:2px solid var(--accent)}
+.lista-marcas{list-style:none;margin:.4rem 0;padding:0}
+.lista-marcas li{margin:.25rem 0}
+.mazo{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0}
+.naipe{width:3.3rem;height:4.4rem;font:700 1.3rem var(--f-mono);padding:0}
+.votos{display:flex;flex-wrap:wrap;gap:.6rem;margin:.6rem 0}
+.voto{display:flex;flex-direction:column;align-items:center;border:2px solid var(--muted);border-radius:.4rem;padding:.3rem .7rem;min-width:5rem;background:var(--surface)}
+.voto b{font:700 1.5rem var(--f-mono)}
+.voto small{color:var(--muted)}
+.barra{display:flex;align-items:center;gap:.5rem;margin:.15rem 0;font-size:.9rem}
+.barra span.t{flex:0 0 7rem}
+.barra span.b{display:block;height:.8rem;background:var(--accent);border-radius:.2rem;min-width:2px}
+.etapas{list-style:none;margin:.5rem 0;padding:0}
+.etapa{display:flex;flex-wrap:wrap;gap:.2rem .8rem;align-items:baseline;border:1px solid var(--muted);border-left-width:6px;border-radius:.4rem;padding:.35rem .6rem;margin:.3rem 0;background:var(--surface)}
+.etapa.ok{border-left-color:var(--ok)}
+.etapa.ko{border-left-color:var(--ko)}
+.etapa.sin{opacity:.75;border-left-color:var(--line)}
+.etapa.act{border-left-color:var(--accent);background:var(--accent-soft)}
+.etapa b{min-width:11rem}
+.opcion{display:flex;gap:.5rem;align-items:flex-start;margin:.3rem 0;padding:.3rem .5rem;border:1px solid var(--line);border-radius:.4rem}
+.opcion input{margin-top:.35rem}
+fieldset{border:0;padding:0;margin:.5rem 0}
+legend{font-weight:700;padding:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="cabecera">
+  <a href="../../" data-lab-volver aria-label="Volver a la unidad">← <span>Unidad</span></a>
+  <h1>Laboratorio Ágil en la práctica</h1>
+  <div role="group" aria-label="Tamaño del texto">
+    <button type="button" data-lab-zoom="-" aria-label="Reducir texto">A−</button>
+    <button type="button" data-lab-zoom="+" aria-label="Aumentar texto">A+</button>
+  </div>
+</header>
+<main>
+  <div class="pestanas" role="tablist" aria-label="Secciones del laboratorio">
+    <button type="button" role="tab" id="tab-tablero" data-tab="tablero" aria-controls="panel-tablero" aria-selected="true"><span class="n">1</span><span>Tablero Kanban</span></button>
+    <button type="button" role="tab" id="tab-scrum" data-tab="scrum" aria-controls="panel-scrum" aria-selected="false" tabindex="-1"><span class="n">2</span><span>Scrum</span></button>
+    <button type="button" role="tab" id="tab-historias" data-tab="historias" aria-controls="panel-historias" aria-selected="false" tabindex="-1"><span class="n">3</span><span>Historias</span></button>
+    <button type="button" role="tab" id="tab-estimacion" data-tab="estimacion" aria-controls="panel-estimacion" aria-selected="false" tabindex="-1"><span class="n">4</span><span>Estimación</span></button>
+    <button type="button" role="tab" id="tab-versionado" data-tab="versionado" aria-controls="panel-versionado" aria-selected="false" tabindex="-1"><span class="n">5</span><span>Versionado</span></button>
+    <button type="button" role="tab" id="tab-devops" data-tab="devops" aria-controls="panel-devops" aria-selected="false" tabindex="-1"><span class="n">6</span><span>DevOps</span></button>
+    <button type="button" role="tab" id="tab-practica" data-tab="practica" aria-controls="panel-practica" aria-selected="false" tabindex="-1"><span class="n">7</span><span>Práctica</span></button>
+  </div>
+
+  <!-- 1. TABLERO KANBAN -->
+  <section role="tabpanel" id="panel-tablero" aria-labelledby="tab-tablero" tabindex="0">
+    <h2>Tablero Kanban con límites WIP</h2>
+    <p class="intro">Mueve las tarjetas con los botones «←» y «→». Cada columna puede tener un límite de trabajo en curso (WIP); un 0 significa sin límite. Pulsa «Pasar al día siguiente» para que pase el tiempo y mira cómo cambian las métricas. Los datos se guardan en este navegador.</p>
+    <div class="fila">
+      <button type="button" id="k-caso-taller">Cargar caso del taller</button>
+      <button type="button" id="k-caso-portal">Cargar caso del portal</button>
+      <button type="button" id="k-recargar">Vaciar y recargar el caso</button>
+    </div>
+    <fieldset>
+      <legend>Límites WIP por columna (0 = sin límite)</legend>
+      <div class="limites">
+        <div class="campo"><label for="lim-pend">Pendiente</label><input id="lim-pend" type="number" min="0" max="20" value="0"></div>
+        <div class="campo"><label for="lim-curso">En curso</label><input id="lim-curso" type="number" min="0" max="20" value="3"></div>
+        <div class="campo"><label for="lim-pruebas">En pruebas</label><input id="lim-pruebas" type="number" min="0" max="20" value="2"></div>
+        <div class="campo"><label for="lim-hecho">Hecho</label><input id="lim-hecho" type="number" min="0" max="20" value="0"></div>
+      </div>
+      <label><input type="checkbox" id="k-bloquear" checked> Bloquear movimientos que superen el límite</label>
+    </fieldset>
+    <p class="msg" id="k-aviso" role="status"></p>
+    <div class="tablero" id="k-tablero"></div>
+    <div class="fila">
+      <b id="k-dia">Día 1</b>
+      <button type="button" id="k-dia-mas" class="primario">Pasar al día siguiente</button>
+      <form class="fila" id="k-nueva" autocomplete="off">
+        <label for="k-nueva-t" class="etq">Nueva tarjeta</label>
+        <input id="k-nueva-t" type="text" maxlength="80" placeholder="Título de la tarjeta" style="width:14rem">
+        <button type="submit">Añadir a Pendiente</button>
+      </form>
+    </div>
+    <h3>Métricas del flujo</h3>
+    <div class="metricas" id="k-metricas"></div>
+    <p class="ayuda">Lead time: de la creación a «Hecho». Cycle time: de «En curso» a «Hecho». WIP medio: media de tarjetas en «En curso» y «En pruebas» al cierre de cada día.</p>
+    <div class="fila"><button type="button" id="k-exportar">Exportar tablero (Markdown)</button></div>
+  </section>
+
+  <!-- 2. SCRUM -->
+  <section role="tabpanel" id="panel-scrum" aria-labelledby="tab-scrum" tabindex="0" hidden>
+    <h2>Un sprint de Scrum de dos semanas</h2>
+    <p class="intro">Recorre los diez días del sprint, planifícalo según la capacidad del equipo y comprueba qué elementos cumplen la Definición de Hecho.</p>
+
+    <h3>Línea del tiempo</h3>
+    <p class="ayuda">Pulsa un día. P: Sprint Planning · D: Daily Scrum · Ref: refinamiento (actividad, no evento oficial) · Rev y Ret: Sprint Review y Retrospective.</p>
+    <div class="dias" id="s-dias" role="group" aria-label="Días del sprint"></div>
+    <div id="s-eventos" role="status"></div>
+
+    <h3>Quién es quién</h3>
+    <div class="dos">
+      <div class="tarjeta"><h4>Product Owner</h4><p>Una persona. Maximiza el valor del producto y ordena el Product Backlog. Compromiso: <b>Objetivo del Producto</b>.</p></div>
+      <div class="tarjeta"><h4>Scrum Master</h4><p>Ayuda al equipo a aplicar Scrum, elimina obstáculos y protege los eventos. No manda sobre el equipo.</p></div>
+      <div class="tarjeta"><h4>Developers</h4><p>Hacen el trabajo para crear un Incremento utilizable cada sprint y cumplen la <b>Definición de Hecho</b>.</p></div>
+    </div>
+    <div class="tabla"><table>
+      <thead><tr><th>Artefacto</th><th>Qué es</th><th>Compromiso</th></tr></thead>
+      <tbody>
+        <tr><td>Product Backlog</td><td>Lista ordenada de todo lo que necesita el producto</td><td>Objetivo del Producto</td></tr>
+        <tr><td>Sprint Backlog</td><td>Objetivo, elementos elegidos y plan</td><td>Objetivo del Sprint</td></tr>
+        <tr><td>Incremento</td><td>Paso utilizable y terminado hacia el objetivo</td><td>Definición de Hecho</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 class="sub">Planificador del sprint</h3>
+    <p class="ayuda">Product Backlog de ejemplo del portal de incidencias de Byte Alacant (empresa ficticia), ordenado por el Product Owner. Elige los elementos que cabrían en el sprint.</p>
+    <div class="campos">
+      <div class="campo"><label for="s-cap">Velocidad de referencia (puntos)</label><input id="s-cap" type="number" min="1" max="200" value="15"></div>
+      <div class="campo ancho"><label for="s-meta">Objetivo del Sprint (una frase con el valor, no una lista de tareas)</label><textarea id="s-meta" rows="2" maxlength="240" placeholder="Ejemplo: un cliente registrado puede abrir una incidencia y ver su estado."></textarea></div>
+    </div>
+    <ul class="lista-marcas" id="s-backlog"></ul>
+    <p class="aviso" id="s-veredicto" role="status"></p>
+
+    <h3 class="sub">Comprobador de la Definición de Hecho</h3>
+    <p class="ayuda">Elige un elemento del sprint y marca lo que se ha cumplido. Un elemento que no cumple todo no entra en el Incremento y suma 0 puntos a la velocidad.</p>
+    <div class="campos"><div class="campo"><label for="s-dod-elem">Elemento</label><select id="s-dod-elem"></select></div></div>
+    <ul class="lista-marcas" id="s-dod"></ul>
+    <p class="aviso" id="s-dod-res" role="status"></p>
+    <p class="aviso" id="s-vel" role="status"></p>
+  </section>
+
+  <!-- 3. HISTORIAS -->
+  <section role="tabpanel" id="panel-historias" aria-labelledby="tab-historias" tabindex="0" hidden>
+    <h2>Historias de usuario</h2>
+    <p class="intro">Escribe una historia con el formato «Como… quiero… para…», añade criterios de aceptación y revisa los avisos y la lista INVEST. Después, entrénate con el clasificador.</p>
+
+    <h3>Constructor</h3>
+    <div class="campos">
+      <div class="campo"><label for="h-rol">Como… (rol)</label><input id="h-rol" type="text" maxlength="60" placeholder="cliente, técnico, gerente…"></div>
+      <div class="campo ancho"><label for="h-quiero">Quiero… (qué quiere hacer)</label><input id="h-quiero" type="text" maxlength="160" placeholder="registrar una avería desde el móvil"></div>
+      <div class="campo ancho"><label for="h-para">Para… (el beneficio)</label><input id="h-para" type="text" maxlength="160" placeholder="no tener que llamar al taller"></div>
+      <div class="campo ancho"><label for="h-crit">Criterios de aceptación (uno por línea)</label><textarea id="h-crit" rows="4" placeholder="Si falta un dato obligatorio se indica cuál&#10;Al enviar se muestra el número de incidencia"></textarea></div>
+      <div class="campo"><label for="h-est">Estimación (puntos)</label><select id="h-est"><option value="">Sin estimar</option><option>1</option><option>2</option><option>3</option><option>5</option><option>8</option><option>13</option><option>21</option></select></div>
+      <div class="campo"><label for="h-mos">Prioridad MoSCoW</label><select id="h-mos"><option value="">Sin priorizar</option><option>Must</option><option>Should</option><option>Could</option><option>Won't</option></select></div>
+    </div>
+    <p class="aviso" id="h-vista" role="status" style="font-weight:700"></p>
+    <fieldset>
+      <legend>Revisión INVEST (marca lo que cumple)</legend>
+      <div id="h-invest"></div>
+    </fieldset>
+    <div class="aviso" id="h-avisos" role="status"></div>
+    <div class="fila">
+      <button type="button" class="primario" id="h-anadir">Añadir al backlog</button>
+      <button type="button" id="h-limpiar">Limpiar formulario</button>
+      <button type="button" id="h-ejemplo">Cargar ejemplo de Byte Alacant</button>
+    </div>
+    <h3>Backlog de historias</h3>
+    <p class="msg" id="h-msg" role="status"></p>
+    <ol id="h-lista"></ol>
+    <div class="fila">
+      <b id="h-total"></b>
+      <button type="button" id="h-exportar">Exportar historias (Markdown)</button>
+      <button type="button" id="h-vaciar">Vaciar el backlog</button>
+    </div>
+
+    <h3 class="sub">Clasificador: ¿buena o mala?</h3>
+    <p class="ayuda">Lee la historia y decide: ¿cumple INVEST o falla en una letra? Si falla en varias, elige la que más se nota.</p>
+    <p id="c-historia" class="tarjeta"></p>
+    <fieldset id="c-opciones"><legend>Tu decisión</legend></fieldset>
+    <div class="fila">
+      <button type="button" class="primario" id="c-comprobar">Comprobar</button>
+      <button type="button" id="c-otra">Otra historia</button>
+      <span>Aciertos: <b id="c-marcador">0 de 0</b></span>
+    </div>
+    <p class="correccion" id="c-correccion" role="status"></p>
+  </section>
+
+  <!-- 4. ESTIMACIÓN -->
+  <section role="tabpanel" id="panel-estimacion" aria-labelledby="tab-estimacion" tabindex="0" hidden>
+    <h2>Planning poker y proyección de sprints</h2>
+    <p class="intro">Vota el tamaño de cada historia con la serie de Fibonacci. Tu equipo simulado (Irene, Samuel y Luis) vota a la vez que tú. Después usa la velocidad para proyectar cuántos sprints faltan.</p>
+    <h3>Planning poker</h3>
+    <div class="campos"><div class="campo"><label for="e-historia">Historia a estimar</label><select id="e-historia"></select></div></div>
+    <p id="e-texto" class="tarjeta" style="font-weight:700"></p>
+    <p class="etq" id="e-ronda"></p>
+    <div class="mazo" id="e-mazo" role="group" aria-label="Tu carta"></div>
+    <div class="fila">
+      <button type="button" class="primario" id="e-revelar">Revelar votos</button>
+      <button type="button" id="e-otra-ronda" hidden>Votar de nuevo (ronda 2)</button>
+      <button type="button" id="e-siguiente">Siguiente historia</button>
+    </div>
+    <div class="votos" id="e-votos" role="status"></div>
+    <p class="aviso" id="e-debate" role="status"></p>
+    <h3>Estimaciones acordadas</h3>
+    <div class="tabla"><table><thead><tr><th>Historia</th><th class="num">Puntos</th></tr></thead><tbody id="e-acordadas"></tbody></table></div>
+    <div class="fila">
+      <button type="button" id="e-usar">Usar el total como puntos pendientes</button>
+      <button type="button" id="e-reiniciar">Borrar estimaciones</button>
+    </div>
+
+    <h3 class="sub">Velocidad y proyección</h3>
+    <div class="campos">
+      <div class="campo ancho"><label for="p-vel">Puntos terminados en cada sprint (separados por comas, del más antiguo al más reciente)</label><input id="p-vel" type="text" value="10, 14, 15, 17"></div>
+      <div class="campo"><label for="p-pend">Puntos pendientes en el backlog</label><input id="p-pend" type="number" min="0" max="9999" value="80"></div>
+      <div class="campo"><label for="p-sem">Semanas por sprint</label><input id="p-sem" type="number" min="1" max="4" value="2"></div>
+    </div>
+    <div id="p-barras"></div>
+    <div class="tabla"><table>
+      <thead><tr><th>Escenario</th><th class="num">Velocidad</th><th class="num">Sprints</th><th class="num">Semanas</th></tr></thead>
+      <tbody id="p-tabla"></tbody>
+    </table></div>
+    <p class="aviso" id="p-nota" role="status"></p>
+  </section>
+
+  <!-- 5. VERSIONADO -->
+  <section role="tabpanel" id="panel-versionado" aria-labelledby="tab-versionado" tabindex="0" hidden>
+    <h2>Versionado semántico</h2>
+    <p class="intro">MAYOR.MENOR.PARCHE. Indica la versión actual y los cambios incluidos: el laboratorio calcula la siguiente. Después compara versiones y prepara el registro de cambios.</p>
+    <h3>Calculadora de versión</h3>
+    <div class="campos">
+      <div class="campo"><label for="v-actual">Versión actual (sin «v» delante)</label><input id="v-actual" type="text" value="1.4.2" spellcheck="false"></div>
+      <div class="campo"><label for="v-pre">Publicar como preversión</label><select id="v-pre"><option value="">No, versión definitiva</option><option>alpha</option><option>beta</option><option>rc</option></select></div>
+      <div class="campo"><label for="v-pre-n">Número de preversión</label><input id="v-pre-n" type="number" min="1" max="99" value="1"></div>
+    </div>
+    <fieldset>
+      <legend>Cambios incluidos en la nueva versión</legend>
+      <label class="opcion"><input type="checkbox" id="v-fix"> <span>Corrijo errores sin cambiar la interfaz pública</span></label>
+      <label class="opcion"><input type="checkbox" id="v-feat"> <span>Añado funcionalidad nueva compatible con lo anterior</span></label>
+      <label class="opcion"><input type="checkbox" id="v-dep"> <span>Marco algo como obsoleto (sigue funcionando, pero desaparecerá)</span></label>
+      <label class="opcion"><input type="checkbox" id="v-brk"> <span>Hago un cambio incompatible (elimino o cambio algo público)</span></label>
+      <label class="opcion"><input type="checkbox" id="v-int"> <span>Solo documentación o cambios internos sin efecto externo</span></label>
+      <label class="opcion"><input type="checkbox" id="v-est"> <span>Es la primera versión estable (solo desde 0.x)</span></label>
+    </fieldset>
+    <p class="aviso" id="v-res" role="status"></p>
+
+    <h3 class="sub">Comparador y ordenador</h3>
+    <div class="campos">
+      <div class="campo"><label for="v-a">Versión A</label><input id="v-a" type="text" value="1.10.0" spellcheck="false"></div>
+      <div class="campo"><label for="v-b">Versión B</label><input id="v-b" type="text" value="1.9.3" spellcheck="false"></div>
+    </div>
+    <p class="aviso" id="v-cmp" role="status"></p>
+    <div class="campos"><div class="campo ancho"><label for="v-lista">Lista de versiones (una por línea)</label><textarea id="v-lista" rows="6" spellcheck="false">2.0.0
+2.0.0-rc.1
+1.10.0
+1.9.3
+2.0.0-beta.11
+2.0.0-beta.2</textarea></div></div>
+    <div class="fila"><button type="button" id="v-ordenar">Ordenar de menor a mayor</button></div>
+    <pre id="v-orden" role="status"></pre>
+
+    <h3 class="sub">Registro de cambios</h3>
+    <div class="campos">
+      <div class="campo"><label for="l-version">Versión</label><input id="l-version" type="text" value="1.5.0" spellcheck="false"></div>
+      <div class="campo"><label for="l-fecha">Fecha</label><input id="l-fecha" type="date"></div>
+    </div>
+    <div class="campos" id="l-cats"></div>
+    <div class="fila">
+      <button type="button" class="primario" id="l-generar">Generar Markdown</button>
+      <button type="button" id="l-exportar">Exportar CHANGELOG.md</button>
+    </div>
+    <pre id="l-salida"></pre>
+  </section>
+
+  <!-- 6. DEVOPS -->
+  <section role="tabpanel" id="panel-devops" aria-labelledby="tab-devops" tabindex="0" hidden>
+    <h2>Pipeline de integración y entrega continuas</h2>
+    <p class="intro">Un cambio recorre las etapas del pipeline. Elige qué falla y ejecuta paso a paso o todo de una vez. Si una etapa falla, el pipeline se detiene.</p>
+    <div class="campos">
+      <div class="campo"><label for="d-esc">¿Qué falla en este cambio?</label>
+        <select id="d-esc">
+          <option value="nada">Nada: el cambio es correcto</option>
+          <option value="build">No se puede construir</option>
+          <option value="unit">Un fallo lógico (lo detectan las pruebas unitarias)</option>
+          <option value="analisis">Una dependencia con vulnerabilidad conocida</option>
+          <option value="integracion">No encaja con el resto (pruebas de integración)</option>
+          <option value="produccion">Solo falla con datos reales en producción</option>
+        </select></div>
+      <div class="campo"><label for="d-modo">Modo de publicación</label>
+        <select id="d-modo">
+          <option value="entrega">Entrega continua (alguien aprueba)</option>
+          <option value="despliegue">Despliegue continuo (automático)</option>
+        </select></div>
+    </div>
+    <label class="opcion"><input type="checkbox" id="d-saltar"> <span>Saltar las pruebas unitarias («es urgente, ya lo probé yo»)</span></label>
+    <div class="fila">
+      <button type="button" class="primario" id="d-paso">Ejecutar siguiente paso</button>
+      <button type="button" id="d-todo">Ejecutar todo</button>
+      <button type="button" id="d-reiniciar">Reiniciar el cambio</button>
+    </div>
+    <ol class="etapas" id="d-etapas"></ol>
+    <p class="aviso" id="d-resultado" role="status"></p>
+    <div class="metricas" id="d-cuenta"></div>
+  </section>
+
+  <!-- 7. PRÁCTICA -->
+  <section role="tabpanel" id="panel-practica" aria-labelledby="tab-practica" tabindex="0" hidden>
+    <h2>Práctica con corrección</h2>
+    <p class="intro">Ejercicios al azar sobre todo lo anterior: versiones, límites WIP, métricas, velocidad y preguntas de concepto. La corrección te explica la respuesta.</p>
+    <p class="etq" id="x-cat"></p>
+    <form id="x-form" autocomplete="off">
+      <fieldset id="x-opciones"><legend id="x-enunciado"></legend></fieldset>
+      <div class="fila">
+        <button type="submit" class="primario" id="x-comprobar">Comprobar</button>
+        <button type="button" id="x-otro">Otro ejercicio</button>
+        <button type="button" id="x-reiniciar">Reiniciar marcador</button>
+      </div>
+    </form>
+    <p class="correccion" id="x-correccion" role="status"></p>
+    <p>Aciertos: <b id="x-marcador">0 de 0 (0 %)</b></p>
+  </section>
+</main>
+
+<script>
+// ---------- Utilidades ----------
+const $ = (s, r) => (r || document).querySelector(s);
+function el(tag, props, ...hijos) {
+  const e = document.createElement(tag);
+  if (props) {
+    for (const k of Object.keys(props)) {
+      const v = props[k];
+      if (k === 'class') e.className = v;
+      else if (k === 'text') e.textContent = v;
+      else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+      else if (v === true) e.setAttribute(k, '');
+      else if (v !== false && v != null) e.setAttribute(k, String(v));
+    }
+  }
+  for (const h of hijos.flat()) if (h != null) e.append(h.nodeType ? h : document.createTextNode(String(h)));
+  return e;
+}
+function vaciar(e) { while (e.firstChild) e.removeChild(e.firstChild); }
+function guardarJSON(k, v) { try { Lab.guardar(k, JSON.stringify(v)); } catch (e) { /* sin memoria */ } }
+function leerJSON(k, defecto) { try { const t = Lab.leer(k); return t ? JSON.parse(t) : defecto; } catch (e) { return defecto; } }
+function descargar(nombre, texto, tipo) {
+  const b = new Blob([texto], { type: tipo || 'text/markdown' });
+  const u = URL.createObjectURL(b);
+  const a = document.createElement('a');
+  a.href = u; a.download = nombre;
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 1000);
+}
+function mezclar(a) { const r = a.slice(); for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; }
+function azar(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
+function elegir(a) { return a[Math.floor(Math.random() * a.length)]; }
+function dec(n) { return (Math.round(n * 10) / 10).toString().replace('.', ','); }
+function media(a) { return a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0; }
+
+// ---------- Pestañas (patrón WAI-ARIA) ----------
+const pestanas = [...document.querySelectorAll('[role="tab"]')];
+function mostrar(id) {
+  const activa = pestanas.find((p) => p.dataset.tab === id) || pestanas[0];
+  for (const p of pestanas) {
+    const es = p === activa;
+    p.setAttribute('aria-selected', String(es));
+    p.tabIndex = es ? 0 : -1;
+    document.getElementById(p.getAttribute('aria-controls')).hidden = !es;
+  }
+  activa.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  return activa;
+}
+function elegirPestana(id, enfocar) {
+  const activa = mostrar(id);
+  Lab.guardar('pestana', activa.dataset.tab);
+  history.replaceState(null, '', '#' + activa.dataset.tab);
+  if (enfocar) activa.focus();
+}
+pestanas.forEach((p) => p.addEventListener('click', () => elegirPestana(p.dataset.tab)));
+$('[role="tablist"]').addEventListener('keydown', (e) => {
+  const i = pestanas.indexOf(document.activeElement);
+  const destino = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: pestanas.length - 1 }[e.key];
+  if (i < 0 || destino === undefined) return;
+  e.preventDefault();
+  elegirPestana(pestanas[(destino + pestanas.length) % pestanas.length].dataset.tab, true);
+});
+window.addEventListener('hashchange', () => mostrar(location.hash.slice(1)));
+mostrar(location.hash.slice(1) || Lab.leer('pestana'));
+
+// ---------- 1. Tablero Kanban ----------
+const COLS = [['pend', 'Pendiente'], ['curso', 'En curso'], ['pruebas', 'En pruebas'], ['hecho', 'Hecho']];
+const CASOS = {
+  taller: ['Cambiar la pantalla de un portátil', 'Reinstalar Windows en un equipo de oficina', 'Cambiar un disco duro por un SSD', 'Revisar la red Wi-Fi de un bar', 'Montar un PC para una estudiante', 'Recuperar datos de un disco externo', 'Configurar copias de seguridad en una gestoría', 'Presupuesto de cinco equipos para una academia', 'Cambiar la fuente de alimentación de un sobremesa', 'Limpiar y actualizar un portátil lento'],
+  portal: ['Pantalla de inicio de sesión', 'Formulario de nueva incidencia', 'Listado de incidencias del cliente', 'Filtro por estado', 'Cambiar estado (técnico)', 'Aviso por correo al cerrar', 'Adjuntar foto a la avería', 'Informe semanal para la gerencia', 'Recuperar la contraseña', 'Valorar el servicio'],
+};
+function nuevoTablero(caso, lim) {
+  return {
+    caso, dia: 1, wipSuma: 0, bloquear: true,
+    lim: lim || { pend: 0, curso: 0, pruebas: 0, hecho: 0 },
+    sig: CASOS[caso].length + 1,
+    tarjetas: CASOS[caso].map((t, i) => ({ id: i + 1, t, col: 'pend', creada: 1, inicio: null, fin: null })),
+  };
+}
+let kb = leerJSON('tablero', null);
+if (!kb || !Array.isArray(kb.tarjetas) || !kb.lim || !CASOS[kb.caso]) kb = nuevoTablero('taller', { pend: 0, curso: 3, pruebas: 2, hecho: 0 });
+const kAviso = $('#k-aviso');
+let kFoco = null;
+function kGuardar() { guardarJSON('tablero', kb); }
+function kMetricas() {
+  const hechas = kb.tarjetas.filter((c) => c.col === 'hecho');
+  const wip = kb.tarjetas.filter((c) => c.col === 'curso' || c.col === 'pruebas').length;
+  const dias = kb.dia - 1;
+  return {
+    hechas: hechas.length, wip,
+    wipMedio: dias > 0 ? kb.wipSuma / dias : wip,
+    lead: hechas.length ? media(hechas.map((c) => c.fin - c.creada)) : null,
+    cycle: hechas.length ? media(hechas.map((c) => c.fin - (c.inicio == null ? c.creada : c.inicio))) : null,
+    rend: dias > 0 ? hechas.length / dias : null,
+  };
+}
+function kRender() {
+  const tab = $('#k-tablero');
+  vaciar(tab);
+  for (const [id, nombre] of COLS) {
+    const ts = kb.tarjetas.filter((c) => c.col === id);
+    const lim = kb.lim[id];
+    const sup = lim > 0 && ts.length > lim;
+    const lleno = lim > 0 && ts.length === lim;
+    const lista = el('ul');
+    for (const c of ts) {
+      const i = COLS.findIndex((x) => x[0] === id);
+      const btns = el('div', { class: 'btns' });
+      if (i > 0) btns.append(el('button', { type: 'button', class: 'pq', 'data-id': c.id, 'data-dir': -1, 'aria-label': 'Mover «' + c.t + '» a ' + COLS[i - 1][1], text: '←', onclick: () => kMover(c.id, -1) }));
+      if (i < COLS.length - 1) btns.append(el('button', { type: 'button', class: 'pq', 'data-id': c.id, 'data-dir': 1, 'aria-label': 'Mover «' + c.t + '» a ' + COLS[i + 1][1], text: '→', onclick: () => kMover(c.id, 1) }));
+      let datos = 'Creada el día ' + c.creada;
+      if (c.fin != null) datos += ' · terminada el día ' + c.fin;
+      else if (c.inicio != null) datos += ' · empezada el día ' + c.inicio;
+      lista.append(el('li', { class: 'carta' }, el('b', { text: c.t }), el('small', { text: datos }), btns));
+    }
+    const estado = sup ? '¡Límite superado!' : lleno ? 'Límite alcanzado' : '';
+    tab.append(el('div', { class: 'col' + (sup ? ' sup' : lleno ? ' lleno' : '') },
+      el('div', { class: 'col-cab' }, el('h3', { text: nombre }), el('span', { class: sup ? 'ko' : '', text: ts.length + (lim > 0 ? ' / ' + lim : '') })),
+      estado ? el('p', { class: sup ? 'ko' : '', text: estado }) : null,
+      lista));
+  }
+  $('#k-dia').textContent = 'Día ' + kb.dia;
+  const m = kMetricas();
+  const cel = (v, t) => el('div', {}, el('b', { text: v }), el('span', { text: t }));
+  const mt = $('#k-metricas');
+  vaciar(mt);
+  mt.append(
+    cel(String(m.wip), 'WIP actual (curso + pruebas)'),
+    cel(dec(m.wipMedio), 'WIP medio'),
+    cel(String(m.hechas), 'Tarjetas terminadas'),
+    cel(m.rend == null ? '—' : dec(m.rend), 'Terminadas por día'),
+    cel(m.lead == null ? '—' : dec(m.lead) + ' d', 'Lead time medio'),
+    cel(m.cycle == null ? '—' : dec(m.cycle) + ' d', 'Cycle time medio'));
+  for (const [id] of COLS) $('#lim-' + id).value = String(kb.lim[id]);
+  $('#k-bloquear').checked = !!kb.bloquear;
+  if (kFoco) {
+    const b = document.querySelector('[data-id="' + kFoco.id + '"][data-dir="' + kFoco.dir + '"]') || document.querySelector('[data-id="' + kFoco.id + '"]');
+    if (b) b.focus();
+    kFoco = null;
+  }
+}
+function kMover(id, dir) {
+  const c = kb.tarjetas.find((x) => x.id === id);
+  if (!c) return;
+  const i = COLS.findIndex((x) => x[0] === c.col);
+  const j = i + dir;
+  if (j < 0 || j >= COLS.length) return;
+  const [dest, nombre] = COLS[j];
+  const lim = kb.lim[dest];
+  const n = kb.tarjetas.filter((x) => x.col === dest).length;
+  if (lim > 0 && n >= lim) {
+    if (kb.bloquear) {
+      kAviso.textContent = 'No se puede mover: «' + nombre + '» ya está en su límite (' + n + '/' + lim + '). Termina algo de esa columna o ayuda a desbloquearla antes de empezar nada nuevo.';
+      return;
+    }
+    kAviso.textContent = 'Aviso: «' + nombre + '» supera ahora su límite (' + (n + 1) + '/' + lim + '). El límite está para respetarlo: ¿de verdad era urgente?';
+  } else {
+    kAviso.textContent = 'Movida «' + c.t + '» a «' + nombre + '».';
+  }
+  c.col = dest;
+  if (dest === 'pend') { c.inicio = null; c.fin = null; }
+  if (dest === 'curso') { if (c.inicio == null) c.inicio = kb.dia; c.fin = null; }
+  if (dest === 'pruebas') c.fin = null;
+  if (dest === 'hecho') { if (c.inicio == null) c.inicio = kb.dia; c.fin = kb.dia; }
+  kFoco = { id, dir };
+  kGuardar();
+  kRender();
+}
+function kCargar(caso) {
+  kb = nuevoTablero(caso);
+  kAviso.textContent = 'Caso cargado: ' + (caso === 'taller' ? 'taller de reparaciones' : 'portal de incidencias') + '. Diez tarjetas en «Pendiente» y límites a 0.';
+  kGuardar(); kRender();
+}
+$('#k-caso-taller').addEventListener('click', () => kCargar('taller'));
+$('#k-caso-portal').addEventListener('click', () => kCargar('portal'));
+$('#k-recargar').addEventListener('click', () => kCargar(kb.caso));
+for (const [id] of COLS) {
+  $('#lim-' + id).addEventListener('change', (e) => {
+    const v = Math.max(0, Math.min(20, Math.floor(Number(e.target.value) || 0)));
+    kb.lim[id] = v; kGuardar(); kRender();
+  });
+}
+$('#k-bloquear').addEventListener('change', (e) => { kb.bloquear = e.target.checked; kGuardar(); });
+$('#k-dia-mas').addEventListener('click', () => {
+  kb.wipSuma += kb.tarjetas.filter((c) => c.col === 'curso' || c.col === 'pruebas').length;
+  kb.dia++;
+  kAviso.textContent = 'Empieza el día ' + kb.dia + '.';
+  kGuardar(); kRender();
+});
+$('#k-nueva').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const t = $('#k-nueva-t').value.trim();
+  if (!t) { kAviso.textContent = 'Escribe un título para la tarjeta.'; return; }
+  kb.tarjetas.push({ id: kb.sig++, t, col: 'pend', creada: kb.dia, inicio: null, fin: null });
+  $('#k-nueva-t').value = '';
+  kAviso.textContent = 'Tarjeta añadida a «Pendiente».';
+  kGuardar(); kRender();
+});
+$('#k-exportar').addEventListener('click', () => {
+  const m = kMetricas();
+  let t = '# Tablero Kanban (' + (kb.caso === 'taller' ? 'taller de reparaciones' : 'portal de incidencias') + ')\n\nDía actual: ' + kb.dia + '\n\n## Límites WIP\n\n';
+  for (const [id, nombre] of COLS) t += '- ' + nombre + ': ' + (kb.lim[id] > 0 ? kb.lim[id] : 'sin límite') + '\n';
+  for (const [id, nombre] of COLS) {
+    const ts = kb.tarjetas.filter((c) => c.col === id);
+    t += '\n## ' + nombre + ' (' + ts.length + ')\n\n';
+    for (const c of ts) t += '- ' + c.t + ' (creada día ' + c.creada + (c.inicio != null ? ', empezada día ' + c.inicio : '') + (c.fin != null ? ', terminada día ' + c.fin : '') + ')\n';
+  }
+  t += '\n## Métricas\n\n- WIP actual: ' + m.wip + '\n- WIP medio: ' + dec(m.wipMedio) + '\n- Tarjetas terminadas: ' + m.hechas + '\n- Lead time medio: ' + (m.lead == null ? '—' : dec(m.lead) + ' días') + '\n- Cycle time medio: ' + (m.cycle == null ? '—' : dec(m.cycle) + ' días') + '\n';
+  descargar('tablero-kanban.md', t);
+});
+kRender();
+
+// ---------- 2. Scrum ----------
+const PBIS = [[1, 'Registrar una incidencia', 5], [2, 'Ver mis incidencias', 5], [3, 'Cambiar el estado de una incidencia (técnico)', 8], [4, 'Aviso por correo al cambiar el estado', 3], [5, 'Adjuntar una foto a la avería', 8], [6, 'Cancelar una reparación no iniciada', 3], [7, 'Informe semanal para la gerencia', 5], [8, 'Recuperar la contraseña', 3]];
+const DOD = ['El código ha sido revisado por otra persona', 'Las pruebas automáticas pasan', 'Probado a mano el caso principal y los casos de error', 'Desplegado en el entorno de pruebas', 'Documentación o manual de usuario actualizado', 'El Product Owner ha comprobado los criterios de aceptación'];
+const EVENTOS = {
+  planning: { n: 'Sprint Planning', quien: 'Todo el equipo Scrum', dura: 'Hasta 8 h en un sprint de un mes; unas 4 h en uno de dos semanas (propuesta).', texto: 'Se acuerda por qué es valioso el sprint (Objetivo del Sprint), qué se puede hacer y cómo. Sale el Sprint Backlog.' },
+  daily: { n: 'Daily Scrum', quien: 'Developers (el Scrum Master y el Product Owner pueden asistir)', dura: '15 minutos como máximo, a la misma hora y en el mismo sitio.', texto: 'Se inspecciona el avance hacia el Objetivo del Sprint y se adapta el plan de las próximas 24 horas. No es un informe al jefe.' },
+  refinamiento: { n: 'Refinamiento del Product Backlog', quien: 'Product Owner y Developers', dura: 'Lo que el equipo decida (actividad continua, no un evento oficial).', texto: 'Se dividen, aclaran y estiman las historias que entrarán en próximos sprints.' },
+  review: { n: 'Sprint Review', quien: 'Equipo Scrum y partes interesadas', dura: 'Hasta 4 h en un sprint de un mes; unas 2 h en uno de dos semanas (propuesta).', texto: 'Sesión de trabajo para enseñar el Incremento, recoger comentarios y decidir qué conviene hacer después. Se enseña producto que funciona, no diapositivas.' },
+  retro: { n: 'Sprint Retrospective', quien: 'Equipo Scrum', dura: 'Hasta 3 h en un sprint de un mes; unas 1,5 h en uno de dos semanas (propuesta).', texto: 'El equipo analiza cómo ha trabajado y se compromete con al menos una mejora para el siguiente sprint.' },
+};
+function eventosDia(d) {
+  const r = [];
+  if (d === 1) r.push('planning');
+  if (d >= 2 && d <= 9) r.push('daily');
+  if (d === 7) r.push('refinamiento');
+  if (d === 10) r.push('review', 'retro');
+  return r;
+}
+const sc = Object.assign({ sel: [], cap: 15, meta: '', dod: {} }, leerJSON('scrum', {}));
+if (!Array.isArray(sc.sel) || typeof sc.dod !== 'object' || sc.dod === null) { sc.sel = []; sc.dod = {}; }
+let diaSel = 1;
+function scGuardar() { guardarJSON('scrum', sc); }
+function scDias() {
+  const cont = $('#s-dias');
+  vaciar(cont);
+  for (let d = 1; d <= 10; d++) {
+    const ev = eventosDia(d);
+    const marcas = ev.map((x) => ({ planning: 'P', daily: 'D', refinamiento: 'Ref', review: 'Rev', retro: 'Ret' }[x])).join(' ');
+    cont.append(el('button', { type: 'button', class: 'marca', 'aria-pressed': String(d === diaSel), 'aria-label': 'Día ' + d + ': ' + (ev.map((x) => EVENTOS[x].n).join(', ') || 'sin eventos'), onclick: () => { diaSel = d; scDias(); } },
+      el('span', { text: 'Día ' + d }), el('small', { text: marcas || '·' })));
+  }
+  const caja = $('#s-eventos');
+  vaciar(caja);
+  const ev = eventosDia(diaSel);
+  caja.append(el('h4', { text: 'Día ' + diaSel + (diaSel === 1 ? ' (lunes)' : diaSel === 10 ? ' (viernes)' : '') }));
+  if (!ev.length) caja.append(el('p', { text: 'Sin eventos hoy: el equipo trabaja en el Sprint Backlog.' }));
+  for (const x of ev) {
+    const E = EVENTOS[x];
+    caja.append(el('div', { class: 'tarjeta' }, el('h4', { text: E.n }), el('p', {}, el('b', { text: 'Participa: ' }), E.quien), el('p', {}, el('b', { text: 'Duración: ' }), E.dura), el('p', { text: E.texto })));
+  }
+}
+function scBacklog() {
+  const ul = $('#s-backlog');
+  vaciar(ul);
+  for (const [id, t, pts] of PBIS) {
+    const cb = el('input', { type: 'checkbox', id: 's-pbi-' + id, checked: sc.sel.includes(id) });
+    cb.addEventListener('change', () => {
+      sc.sel = PBIS.map((p) => p[0]).filter((i) => (i === id ? cb.checked : sc.sel.includes(i)));
+      scGuardar(); scVeredicto(); scDodElementos();
+    });
+    ul.append(el('li', {}, el('label', {}, cb, ' ' + id + '. ' + t + ' — ', el('b', { text: pts + ' puntos' }))));
+  }
+}
+function scPuntos(id) { return PBIS.find((p) => p[0] === id)[2]; }
+function scVeredicto() {
+  const total = sc.sel.reduce((a, id) => a + scPuntos(id), 0);
+  const cap = sc.cap;
+  let t = 'Elegidos: ' + total + ' puntos de una capacidad de ' + cap + '. ';
+  if (!sc.sel.length) t = 'Todavía no has elegido ningún elemento. La capacidad es de ' + cap + ' puntos.';
+  else if (total > cap) t += 'Te pasas en ' + (total - cap) + ' puntos: es probable que no se termine todo. Quita algo o divide un elemento.';
+  else if (total < cap * 0.7) t += 'Vas holgado: aún caben ' + (cap - total) + ' puntos. Si el Objetivo del Sprint lo permite, añade algo.';
+  else t += 'Dentro de la capacidad. Revisa que el Objetivo del Sprint tenga sentido con estos elementos.';
+  $('#s-veredicto').textContent = t;
+}
+function scDodElementos() {
+  const s = $('#s-dod-elem');
+  const actual = s.value;
+  vaciar(s);
+  if (!sc.sel.length) s.append(el('option', { value: '', text: '(elige antes los elementos del sprint)' }));
+  for (const id of sc.sel) s.append(el('option', { value: id, text: id + '. ' + PBIS.find((p) => p[0] === id)[1] }));
+  if (actual && sc.sel.map(String).includes(actual)) s.value = actual;
+  scDodChecks();
+}
+function scDodChecks() {
+  const id = Number($('#s-dod-elem').value);
+  const ul = $('#s-dod');
+  vaciar(ul);
+  const res = $('#s-dod-res');
+  if (!id) { res.textContent = 'Elige primero los elementos del sprint en el planificador.'; scVelocidad(); return; }
+  const marcas = sc.dod[id] || DOD.map(() => false);
+  DOD.forEach((t, i) => {
+    const cb = el('input', { type: 'checkbox', checked: !!marcas[i] });
+    cb.addEventListener('change', () => {
+      const m = (sc.dod[id] || DOD.map(() => false)).slice();
+      m[i] = cb.checked; sc.dod[id] = m; scGuardar(); scDodResultado(id);
+    });
+    ul.append(el('li', {}, el('label', {}, cb, ' ' + t)));
+  });
+  scDodResultado(id);
+}
+function scDodResultado(id) {
+  const m = sc.dod[id] || DOD.map(() => false);
+  const faltan = DOD.filter((t, i) => !m[i]);
+  const pts = scPuntos(id);
+  $('#s-dod-res').textContent = faltan.length === 0
+    ? 'Cumple la Definición de Hecho: entra en el Incremento y suma ' + pts + ' puntos a la velocidad.'
+    : 'No cumple la Definición de Hecho (faltan ' + faltan.length + '): no entra en el Incremento, no se enseña como terminado y vuelve al Product Backlog. Suma 0 puntos. Falta: ' + faltan.join('; ') + '.';
+  scVelocidad();
+}
+function scVelocidad() {
+  let hechos = 0, plan = 0;
+  for (const id of sc.sel) {
+    plan += scPuntos(id);
+    const m = sc.dod[id];
+    if (m && m.length === DOD.length && m.every(Boolean)) hechos += scPuntos(id);
+  }
+  $('#s-vel').textContent = sc.sel.length ? 'Velocidad del sprint: ' + hechos + ' puntos terminados de ' + plan + ' planificados.' : '';
+}
+$('#s-cap').value = String(sc.cap);
+$('#s-cap').addEventListener('change', (e) => { sc.cap = Math.max(1, Math.min(200, Math.floor(Number(e.target.value) || 15))); scGuardar(); scVeredicto(); });
+$('#s-meta').value = sc.meta;
+$('#s-meta').addEventListener('input', (e) => { sc.meta = e.target.value; scGuardar(); });
+$('#s-dod-elem').addEventListener('change', scDodChecks);
+scDias(); scBacklog(); scVeredicto(); scDodElementos();
+
+// ---------- 3. Historias de usuario ----------
+const INVEST = [['I', 'Independiente: se puede construir sin esperar a otra historia'], ['N', 'Negociable: no impone la solución técnica'], ['V', 'Valiosa: aporta valor a alguien'], ['E', 'Estimable: el equipo puede hacerse una idea de su tamaño'], ['S', 'Pequeña: cabe en pocos días'], ['T', 'Comprobable: tiene criterios que se pueden verificar']];
+let hist = leerJSON('historias', []);
+if (!Array.isArray(hist)) hist = [];
+const hInvest = $('#h-invest');
+INVEST.forEach(([l, t]) => hInvest.append(el('label', { class: 'opcion' }, el('input', { type: 'checkbox', 'data-inv': l }), el('span', {}, el('b', { text: l + ' ' }), t))));
+function hLeer() {
+  return {
+    rol: $('#h-rol').value.trim(), quiero: $('#h-quiero').value.trim(), para: $('#h-para').value.trim(),
+    crit: $('#h-crit').value.split('\n').map((x) => x.trim()).filter(Boolean),
+    est: $('#h-est').value, mos: $('#h-mos').value,
+    invest: INVEST.map(([l]) => $('[data-inv="' + l + '"]').checked),
+  };
+}
+function hTexto(h) { return 'Como ' + (h.rol || '…') + ', quiero ' + (h.quiero || '…') + ' para ' + (h.para || '…') + '.'; }
+function hAvisos() {
+  const h = hLeer();
+  $('#h-vista').textContent = hTexto(h);
+  const a = [];
+  if (!h.rol) a.push('Falta el rol: ¿quién lo necesita?');
+  else if (/^(el |un |una )?(usuario|usuarios|persona)$/i.test(h.rol)) a.push('«' + h.rol + '» es un rol demasiado genérico: piensa en cliente, técnico, gerente…');
+  if (!h.quiero) a.push('Falta lo que quiere hacer.');
+  if (!h.para) a.push('Falta el «para»: sin beneficio no se puede priorizar ni proponer alternativas.');
+  if (/base de datos|tabla|sql|api|servidor|botón|boton|menú|menu|framework|clase |endpoint/i.test(h.quiero)) a.push('Lo que quiere parece una solución técnica; describe la necesidad del usuario (la solución se negocia).');
+  if (/rápid|rapid|fácil|facil|intuitiv|bonit|moderno|amigable|seguro|potente|mejor/i.test(h.quiero + ' ' + h.crit.join(' '))) a.push('Hay una palabra vaga (rápido, fácil, intuitivo, seguro…): concreta con una medida que se pueda comprobar.');
+  if (h.crit.length < 3) a.push('Tiene ' + h.crit.length + ' criterio(s) de aceptación; apunta a tres como mínimo, incluyendo algún caso de error.');
+  if (h.crit.length > 7) a.push('Más de siete criterios: la historia probablemente es demasiado grande.');
+  if (Number(h.est) >= 13) a.push('Estimación de ' + h.est + ' puntos: demasiado grande para un sprint; divídela.');
+  const faltan = INVEST.filter((x, i) => !h.invest[i]).map((x) => x[0]);
+  if (faltan.length && faltan.length < 6) a.push('INVEST sin marcar: ' + faltan.join(', ') + '. Revisa si la historia lo cumple o reescríbela.');
+  const caja = $('#h-avisos');
+  vaciar(caja);
+  if (!a.length && faltan.length === 0) caja.append(document.createTextNode('Sin avisos: la historia tiene buena pinta.'));
+  else if (a.length) { caja.append(el('b', { text: 'Avisos' })); caja.append(el('ul', {}, a.map((x) => el('li', { text: x })))); }
+}
+for (const id of ['h-rol', 'h-quiero', 'h-para', 'h-crit', 'h-est', 'h-mos']) { $('#' + id).addEventListener('input', hAvisos); $('#' + id).addEventListener('change', hAvisos); }
+document.querySelectorAll('[data-inv]').forEach((c) => c.addEventListener('change', hAvisos));
+function hLista() {
+  const ol = $('#h-lista');
+  vaciar(ol);
+  hist.forEach((h, i) => {
+    ol.append(el('li', { class: 'tarjeta' },
+      el('b', { text: hTexto(h) }),
+      el('p', { text: (h.est ? h.est + ' puntos' : 'sin estimar') + ' · ' + (h.mos || 'sin priorizar') + ' · ' + h.crit.length + ' criterios' }),
+      el('div', { class: 'fila' },
+        el('button', { type: 'button', class: 'pq', 'aria-label': 'Subir la historia ' + (i + 1), text: '↑', disabled: i === 0, onclick: () => { [hist[i - 1], hist[i]] = [hist[i], hist[i - 1]]; hGuardar(); } }),
+        el('button', { type: 'button', class: 'pq', 'aria-label': 'Bajar la historia ' + (i + 1), text: '↓', disabled: i === hist.length - 1, onclick: () => { [hist[i + 1], hist[i]] = [hist[i], hist[i + 1]]; hGuardar(); } }),
+        el('button', { type: 'button', class: 'pq', 'aria-label': 'Editar la historia ' + (i + 1), text: 'Editar', onclick: () => hEditar(i) }),
+        el('button', { type: 'button', class: 'pq', 'aria-label': 'Quitar la historia ' + (i + 1), text: 'Quitar', onclick: () => { hist.splice(i, 1); hGuardar(); } }))));
+  });
+  const pts = hist.reduce((a, h) => a + (Number(h.est) || 0), 0);
+  $('#h-total').textContent = hist.length + ' historias · ' + pts + ' puntos estimados';
+}
+function hGuardar() { guardarJSON('historias', hist); hLista(); }
+function hEditar(i) {
+  const h = hist[i];
+  $('#h-rol').value = h.rol; $('#h-quiero').value = h.quiero; $('#h-para').value = h.para;
+  $('#h-crit').value = h.crit.join('\n'); $('#h-est').value = h.est; $('#h-mos').value = h.mos;
+  INVEST.forEach(([l], k) => { $('[data-inv="' + l + '"]').checked = !!h.invest[k]; });
+  hist.splice(i, 1); hGuardar(); hAvisos();
+  $('#h-msg').textContent = 'Historia cargada en el formulario para editarla; vuelve a añadirla al terminar.';
+}
+function hLimpiar() {
+  for (const id of ['h-rol', 'h-quiero', 'h-para', 'h-crit']) $('#' + id).value = '';
+  $('#h-est').value = ''; $('#h-mos').value = '';
+  document.querySelectorAll('[data-inv]').forEach((c) => { c.checked = false; });
+  hAvisos();
+}
+$('#h-anadir').addEventListener('click', () => {
+  const h = hLeer();
+  if (!h.rol || !h.quiero || !h.para) { $('#h-msg').textContent = 'Completa el rol, lo que quiere y el beneficio antes de añadirla.'; return; }
+  hist.push(h); hGuardar(); hLimpiar();
+  $('#h-msg').textContent = 'Historia añadida al backlog.';
+});
+$('#h-limpiar').addEventListener('click', hLimpiar);
+$('#h-ejemplo').addEventListener('click', () => {
+  const ej = (rol, quiero, para, crit, est, mos) => ({ rol, quiero, para, crit, est, mos, invest: [true, true, true, true, true, true] });
+  hist.push(
+    ej('cliente', 'registrar una avería indicando equipo, descripción y contacto', 'no tener que llamar al taller', ['Si falta el contacto se indica y no se envía', 'Al enviar se muestra el número de incidencia', 'Se envía un correo con el número'], '5', 'Must'),
+    ej('técnico', 'cambiar el estado de una reparación', 'que el cliente sepa en qué punto está', ['Los estados posibles son Recibida, En reparación, Lista y Entregada', 'Solo un técnico puede cambiar el estado', 'El cambio queda registrado con fecha'], '5', 'Must'),
+    ej('gerente', 'ver cuántas reparaciones se cierran cada semana', 'decidir si necesito más personal', ['Se muestra una cifra por semana de las últimas ocho', 'Se puede exportar a una hoja de cálculo', 'Solo la gerencia accede'], '3', 'Could'));
+  hGuardar();
+  $('#h-msg').textContent = 'Se han añadido tres historias de ejemplo.';
+});
+$('#h-vaciar').addEventListener('click', () => { hist = []; hGuardar(); $('#h-msg').textContent = 'Backlog vaciado.'; });
+$('#h-exportar').addEventListener('click', () => {
+  let t = '# Product Backlog (historias de usuario)\n\n';
+  hist.forEach((h, i) => {
+    t += '## ' + (i + 1) + '. ' + hTexto(h) + '\n\n- Estimación: ' + (h.est ? h.est + ' puntos' : 'sin estimar') + '\n- Prioridad MoSCoW: ' + (h.mos || 'sin priorizar') + '\n- INVEST cumplido: ' + (INVEST.filter((x, k) => h.invest[k]).map((x) => x[0]).join(', ') || 'ninguno marcado') + '\n\n**Criterios de aceptación**\n\n';
+    t += h.crit.map((c) => '- [ ] ' + c).join('\n') + '\n\n';
+  });
+  descargar('historias-de-usuario.md', t);
+});
+hLista(); hAvisos();
+
+const BANCO_C = [
+  { t: 'Como cliente, quiero registrar una avería indicando el equipo y un contacto para no tener que llamar al taller. Criterios: si falta el contacto se avisa; al enviar se muestra un número de incidencia.', r: 'ok', e: 'Tiene rol, acción y beneficio, es pequeña, se puede probar y no impone la solución técnica.' },
+  { t: 'Como administrador, quiero que el servidor use una base de datos PostgreSQL con tres réplicas.', r: 'N', e: 'Impone una solución técnica y no dice qué necesidad cubre. Falla la N: negociable. Habría que describir la necesidad (por ejemplo, que el portal no se caiga).' },
+  { t: 'Como gerente, quiero gestionar todo el taller desde el portal para llevar mejor el negocio.', r: 'S', e: 'Es una épica: «todo el taller» no cabe en un sprint. Falla la S: pequeña. Hay que dividirla (clientes, reparaciones, informes…).' },
+  { t: 'Como cliente, quiero un portal intuitivo y agradable de usar.', r: 'T', e: '«Intuitivo» y «agradable» no se pueden comprobar. Falla la T: comprobable. Concreta con criterios medibles, por ejemplo cuántos pasos o segundos hacen falta para registrar una avería.' },
+  { t: 'Como técnico, quiero ver el historial de una reparación para saber qué se hizo antes. (No se puede construir ni probar hasta que otra historia, «Guardar el historial de cambios», esté terminada.)', r: 'I', e: 'Depende de otra historia sin la que no funciona. Falla la I: independiente. Se reordena o se unen las dos de forma que cada una aporte valor por sí sola.' },
+  { t: 'Como equipo, quiero reorganizar el código interno del módulo de usuarios porque nos parece feo.', r: 'V', e: 'No dice qué valor aporta a nadie fuera del equipo. Falla la V: valiosa. Si hay un beneficio (menos errores, cambios más rápidos), hay que explicarlo.' },
+  { t: 'Como gerente, quiero integrar el portal con el programa de facturación de la gestoría, del que no tenemos documentación ni acceso, para que las facturas se generen solas.', r: 'E', e: 'El equipo no puede hacerse una idea del tamaño porque no conoce el sistema. Falla la E: estimable. Primero hace falta una tarea de investigación.' },
+  { t: 'Como técnico, quiero cambiar el estado de una reparación a «En reparación» o «Lista» para que el cliente sepa cuándo recoger su equipo. Criterios: solo técnicos; el cambio queda registrado con fecha.', r: 'ok', e: 'Cumple INVEST: valiosa, clara, pequeña, sin imponer solución y con criterios comprobables.' },
+  { t: 'Como cliente, quiero recibir un correo cuando mi reparación esté lista para saber cuándo recogerla. Criterio: el correo llega en menos de 5 minutos tras el cambio de estado.', r: 'ok', e: 'Tiene beneficio claro y un criterio medible. Es pequeña y se puede probar.' },
+];
+let cIdx = -1, cOk = 0, cTotal = 0, cResuelta = false;
+const cOpc = $('#c-opciones');
+[['ok', 'Es una buena historia'], ...INVEST.map(([l, t]) => [l, 'Falla en la ' + l + ' (' + t.split(':')[0].toLowerCase() + ')'])].forEach(([v, t]) => {
+  cOpc.append(el('label', { class: 'opcion' }, el('input', { type: 'radio', name: 'c-r', value: v }), el('span', { text: t })));
+});
+function cNueva() {
+  let n;
+  do { n = Math.floor(Math.random() * BANCO_C.length); } while (n === cIdx && BANCO_C.length > 1);
+  cIdx = n; cResuelta = false;
+  $('#c-historia').textContent = BANCO_C[n].t;
+  $('#c-correccion').textContent = '';
+  document.querySelectorAll('[name="c-r"]').forEach((r) => { r.checked = false; });
+}
+$('#c-comprobar').addEventListener('click', () => {
+  const sel = document.querySelector('[name="c-r"]:checked');
+  if (!sel) { $('#c-correccion').textContent = 'Elige una opción antes de comprobar.'; return; }
+  if (cResuelta) { $('#c-correccion').textContent = 'Ya la has comprobado. Pulsa «Otra historia».'; return; }
+  cResuelta = true; cTotal++;
+  const h = BANCO_C[cIdx];
+  const ok = sel.value === h.r;
+  if (ok) cOk++;
+  $('#c-correccion').textContent = (ok ? 'Correcto. ' : 'No exactamente. ') + h.e;
+  $('#c-marcador').textContent = cOk + ' de ' + cTotal;
+});
+$('#c-otra').addEventListener('click', cNueva);
+cNueva();
+
+// ---------- 4. Estimación ----------
+const FIB = [1, 2, 3, 5, 8, 13, 21];
+const EQUIPO = ['Irene', 'Samuel', 'Luis'];
+const POKER = [
+  { t: 'Mostrar un aviso «Gracias» tras enviar una incidencia', base: 0, r1: [0, 1, 0], r2: [0, 0, 0], aclara: 'Solo es un mensaje en pantalla; no envía correos ni guarda nada.', debate: 'Casi todos coinciden: es la historia más pequeña del backlog y sirve de referencia.' },
+  { t: 'Ver el estado de mi reparación', base: 2, r1: [-1, 0, 1], r2: [0, 0, 0], aclara: 'Basta con un texto con el estado actual, sin historial.', debate: 'Leer datos y mostrarlos: tamaño medio-bajo. Es una buena historia de referencia (3).' },
+  { t: 'Registrar una avería con validaciones', base: 3, r1: [-2, 0, 2], r2: [0, 0, 1], aclara: 'Campos: equipo, descripción y contacto. Hay que validar los tres.', debate: 'Quien votó bajo olvidó las validaciones y los mensajes de error; quien votó alto añadía fotos, que no entran en esta historia.' },
+  { t: 'Adjuntar una foto a la avería', base: 4, r1: [-3, 0, 2], r2: [0, 0, 0], aclara: 'Solo imágenes, con un tamaño máximo.', debate: 'Hay que limitar el tipo y el tamaño del archivo, guardarlo y mostrarlo: más trabajo y más riesgos de seguridad de lo que parece.' },
+  { t: 'Aviso por correo en cada cambio de estado', base: 4, r1: [-2, -1, 1], r2: [0, 0, -1], aclara: 'Un correo con texto fijo; no hace falta personalizarlo.', debate: 'Plantillas, envío y qué hacer si el correo falla. Pesa más que un simple texto.' },
+  { t: 'Pago online de la reparación', base: 6, r1: [-2, 0, 0], r2: [0, 0, 0], aclara: 'Con una pasarela de pago externa, sin guardar tarjetas.', debate: 'Mucha incertidumbre (seguridad, devoluciones, normativa). 21 es una señal de que hay que dividirla antes de planificarla.' },
+];
+let pk = Object.assign({ acordadas: {} }, leerJSON('poker', {}));
+if (typeof pk.acordadas !== 'object' || pk.acordadas === null) pk.acordadas = {};
+let pHist = 0, pRonda = 1, pVoto = null, pFinal = false;
+const pSel = $('#e-historia');
+POKER.forEach((p, i) => pSel.append(el('option', { value: i, text: (i + 1) + '. ' + p.t })));
+const mazo = $('#e-mazo');
+function pMazo() {
+  vaciar(mazo);
+  [...FIB, '?'].forEach((v) => mazo.append(el('button', { type: 'button', class: 'naipe marca', 'aria-pressed': String(pVoto === v), 'aria-label': 'Carta ' + v, text: String(v), onclick: () => { if (pFinal) return; pVoto = v; pMazo(); } })));
+}
+function pTexto() {
+  const p = POKER[pHist];
+  $('#e-texto').textContent = p.t;
+  $('#e-ronda').textContent = 'Ronda ' + pRonda + ': elige tu carta y pulsa «Revelar votos».';
+  vaciar($('#e-votos')); $('#e-debate').textContent = '';
+  $('#e-otra-ronda').hidden = true;
+  pSel.value = String(pHist);
+}
+function pVotar() {
+  const p = POKER[pHist];
+  if (pFinal) { $('#e-debate').textContent = 'Esta historia ya está estimada. Pasa a la siguiente o cambia de historia.'; return; }
+  if (pVoto == null) { $('#e-debate').textContent = 'Elige primero una carta.'; return; }
+  if (pVoto === '?') { $('#e-debate').textContent = 'Pides más información. El Product Owner aclara: ' + p.aclara + ' Ahora vota.'; pVoto = null; pMazo(); return; }
+  const off = pRonda === 1 ? p.r1 : p.r2;
+  const votos = EQUIPO.map((n, i) => ({ n, v: FIB[Math.max(0, Math.min(6, p.base + off[i]))] }));
+  votos.push({ n: 'Tú', v: pVoto });
+  const caja = $('#e-votos');
+  vaciar(caja);
+  votos.forEach((x) => caja.append(el('div', { class: 'voto' }, el('b', { text: String(x.v) }), el('small', { text: x.n }))));
+  const idx = votos.map((x) => FIB.indexOf(x.v));
+  const dif = Math.max(...idx) - Math.min(...idx);
+  if (dif >= 2 && pRonda === 1) {
+    const alto = votos[idx.indexOf(Math.max(...idx))], bajo = votos[idx.indexOf(Math.min(...idx))];
+    $('#e-debate').textContent = 'Hay mucha diferencia (' + bajo.v + ' frente a ' + alto.v + '). Hablan ' + bajo.n + ' (voto más bajo) y ' + alto.n + ' (voto más alto). ' + p.debate + ' Vota de nuevo.';
+    $('#e-otra-ronda').hidden = false;
+    pFinal = false; $('#e-revelar').disabled = true;
+    return;
+  }
+  const cuenta = {};
+  votos.forEach((x) => { cuenta[x.v] = (cuenta[x.v] || 0) + 1; });
+  const maxc = Math.max(...Object.values(cuenta));
+  const acuerdo = Math.max(...Object.keys(cuenta).filter((k) => cuenta[k] === maxc).map(Number));
+  pk.acordadas[pHist] = acuerdo; guardarJSON('poker', pk); pFinal = true; $('#e-revelar').disabled = false;
+  $('#e-debate').textContent = (dif >= 2 ? 'Aún hay diferencias, pero se acepta el valor más votado. Si no se resuelve, conviene dividir la historia. ' : 'Consenso. ') + 'El equipo acuerda ' + acuerdo + ' puntos. ' + p.debate;
+  pTabla();
+}
+function pTabla() {
+  const tb = $('#e-acordadas');
+  vaciar(tb);
+  let total = 0;
+  POKER.forEach((p, i) => {
+    const v = pk.acordadas[i];
+    if (v != null) total += v;
+    tb.append(el('tr', {}, el('td', { text: p.t }), el('td', { class: 'num', text: v == null ? '—' : String(v) })));
+  });
+  tb.append(el('tr', { class: 'total' }, el('td', { text: 'Total' }), el('td', { class: 'num', text: String(total) })));
+}
+function pReiniciarHist(i) { pHist = i; pRonda = 1; pVoto = null; pFinal = false; $('#e-revelar').disabled = false; pMazo(); pTexto(); }
+pSel.addEventListener('change', () => pReiniciarHist(Number(pSel.value)));
+$('#e-revelar').addEventListener('click', pVotar);
+$('#e-otra-ronda').addEventListener('click', () => { pRonda = 2; pVoto = null; $('#e-revelar').disabled = false; pMazo(); pTexto(); });
+$('#e-siguiente').addEventListener('click', () => pReiniciarHist((pHist + 1) % POKER.length));
+$('#e-reiniciar').addEventListener('click', () => { pk.acordadas = {}; guardarJSON('poker', pk); pTabla(); pReiniciarHist(0); });
+$('#e-usar').addEventListener('click', () => {
+  const total = Object.values(pk.acordadas).reduce((a, b) => a + b, 0);
+  $('#p-pend').value = String(total); pProyectar();
+});
+pMazo(); pTexto(); pTabla();
+
+const pr = Object.assign({ vel: '10, 14, 15, 17', pend: 80, sem: 2 }, leerJSON('proyeccion', {}));
+$('#p-vel').value = String(pr.vel); $('#p-pend').value = String(pr.pend); $('#p-sem').value = String(pr.sem);
+function pProyectar() {
+  pr.vel = $('#p-vel').value; pr.pend = Math.max(0, Number($('#p-pend').value) || 0); pr.sem = Math.max(1, Number($('#p-sem').value) || 2);
+  guardarJSON('proyeccion', pr);
+  const vs = pr.vel.split(/[,;\s]+/).filter((x) => x !== '').map(Number).filter((x) => isFinite(x) && x >= 0);
+  const barras = $('#p-barras');
+  vaciar(barras);
+  const mx = Math.max(1, ...vs);
+  vs.forEach((v, i) => barras.append(el('div', { class: 'barra' }, el('span', { class: 't', text: 'Sprint ' + (i + 1) }), el('span', { class: 'b', style: 'width:' + Math.round((v / mx) * 60) + '%' }), el('span', { text: String(v) }))));
+  const tb = $('#p-tabla');
+  vaciar(tb);
+  if (!vs.length) { $('#p-nota').textContent = 'Escribe al menos la velocidad de un sprint.'; return; }
+  const ult = vs.slice(-3);
+  const filas = [['Pesimista (mínima de los últimos 3)', Math.min(...ult)], ['Probable (media de los últimos 3)', media(ult)], ['Optimista (máxima de los últimos 3)', Math.max(...ult)]];
+  const res = [];
+  for (const [n, v] of filas) {
+    const s = v > 0 ? Math.ceil(pr.pend / v - 1e-9) : null;
+    res.push(s);
+    tb.append(el('tr', {}, el('td', { text: n }), el('td', { class: 'num', text: dec(v) }), el('td', { class: 'num', text: s == null ? '—' : String(s) }), el('td', { class: 'num', text: s == null ? '—' : String(s * pr.sem) })));
+  }
+  $('#p-nota').textContent = res.every((x) => x != null)
+    ? 'Previsión: entre ' + res[2] + ' y ' + res[0] + ' sprints (lo más probable, ' + res[1] + '). Es una previsión, no una promesa: actualízala al terminar cada sprint.'
+    : 'Alguna velocidad es 0: no se puede proyectar con ella.';
+}
+['p-vel', 'p-pend', 'p-sem'].forEach((id) => $('#' + id).addEventListener('input', pProyectar));
+pProyectar();
+
+// ---------- 5. Versionado semántico ----------
+const RE_SEMVER = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/;
+function leerVersion(s) {
+  const m = RE_SEMVER.exec(String(s).trim());
+  if (!m) return null;
+  return { M: Number(m[1]), m: Number(m[2]), p: Number(m[3]), pre: m[4] ? m[4].split('.') : null, build: m[5] || null };
+}
+function textoVersion(v) { return v.M + '.' + v.m + '.' + v.p + (v.pre ? '-' + v.pre.join('.') : ''); }
+function subirVersion(v, nivel) {
+  if (nivel === 'M') return { M: v.M + 1, m: 0, p: 0, pre: null };
+  if (nivel === 'm') return { M: v.M, m: v.m + 1, p: 0, pre: null };
+  return { M: v.M, m: v.m, p: v.p + 1, pre: null };
+}
+function compararVersiones(a, b) {
+  for (const [k, n] of [['M', 'MAYOR'], ['m', 'MENOR'], ['p', 'PARCHE']]) {
+    if (a[k] !== b[k]) return { c: a[k] < b[k] ? -1 : 1, motivo: 'se decide por el número ' + n + ' (' + a[k] + ' frente a ' + b[k] + ')' };
+  }
+  if (!a.pre && !b.pre) return { c: 0, motivo: 'MAYOR, MENOR y PARCHE coinciden; los metadatos de compilación (+…) no cuentan' };
+  if (a.pre && !b.pre) return { c: -1, motivo: 'una preversión es menor que la versión definitiva' };
+  if (!a.pre && b.pre) return { c: 1, motivo: 'una preversión es menor que la versión definitiva' };
+  const n = Math.min(a.pre.length, b.pre.length);
+  for (let i = 0; i < n; i++) {
+    const x = a.pre[i], y = b.pre[i];
+    if (x === y) continue;
+    const nx = /^\d+$/.test(x), ny = /^\d+$/.test(y);
+    if (nx && ny) return { c: Number(x) < Number(y) ? -1 : 1, motivo: 'en la preversión se comparan como números ' + x + ' y ' + y };
+    if (nx) return { c: -1, motivo: 'en la preversión, un identificador numérico es menor que uno con letras' };
+    if (ny) return { c: 1, motivo: 'en la preversión, un identificador numérico es menor que uno con letras' };
+    return { c: x < y ? -1 : 1, motivo: 'en la preversión se comparan alfabéticamente «' + x + '» y «' + y + '»' };
+  }
+  if (a.pre.length === b.pre.length) return { c: 0, motivo: 'son la misma versión' };
+  return { c: a.pre.length < b.pre.length ? -1 : 1, motivo: 'con las partes iguales, la preversión con menos partes es menor' };
+}
+function calcularVersion() {
+  const out = $('#v-res');
+  const v = leerVersion($('#v-actual').value);
+  if (!v) { out.textContent = 'La versión actual no es válida. Usa tres números separados por puntos, por ejemplo 1.4.2 (sin «v» delante ni ceros a la izquierda).'; return; }
+  const c = { fix: $('#v-fix').checked, feat: $('#v-feat').checked, dep: $('#v-dep').checked, brk: $('#v-brk').checked, int: $('#v-int').checked, est: $('#v-est').checked };
+  const pre = $('#v-pre').value;
+  const n = Math.max(1, Math.floor(Number($('#v-pre-n').value) || 1));
+  let sig, porque;
+  if (c.est) {
+    if (v.M !== 0) { out.textContent = 'Solo se pasa a 1.0.0 desde una versión 0.x.y; la actual ya es ' + textoVersion(v) + '.'; return; }
+    sig = { M: 1, m: 0, p: 0, pre: null };
+    porque = 'Se declara estable la interfaz pública: de 0.x.y se pasa a 1.0.0.';
+  } else if (v.pre && !(c.fix || c.feat || c.dep || c.brk || c.int)) {
+    sig = { M: v.M, m: v.m, p: v.p, pre: null };
+    porque = 'La versión actual es una preversión: al publicar la definitiva se quita la etiqueta, sin subir ningún número.';
+  } else if (!(c.fix || c.feat || c.dep || c.brk || c.int)) {
+    out.textContent = 'Marca al menos un cambio para calcular la versión.'; return;
+  } else if (c.brk) {
+    sig = v.M === 0 ? subirVersion(v, 'm') : subirVersion(v, 'M');
+    porque = v.M === 0 ? 'Cambio incompatible en 0.x.y: en desarrollo inicial todo puede cambiar, y lo habitual es subir el MENOR.' : 'Hay un cambio incompatible: sube el MAYOR y MENOR y PARCHE vuelven a 0. Manda sobre el resto de cambios.';
+  } else if (c.feat || c.dep) {
+    sig = subirVersion(v, 'm');
+    porque = (c.dep && !c.feat ? 'Marcar algo como obsoleto' : 'Hay funcionalidad nueva compatible') + ': sube el MENOR y el PARCHE vuelve a 0.';
+  } else if (c.fix) {
+    sig = subirVersion(v, 'p');
+    porque = 'Solo correcciones de errores compatibles: sube el PARCHE.';
+  } else {
+    sig = subirVersion(v, 'p');
+    porque = 'Sin cambios visibles desde fuera: no hace falta publicar versión nueva. Si se publica, PARCHE.';
+  }
+  let txt = sig.M + '.' + sig.m + '.' + sig.p;
+  if (pre) txt += '-' + pre + '.' + n;
+  out.textContent = 'Siguiente versión: ' + txt + '. ' + porque + (pre ? ' Es una preversión: ' + txt + ' es menor que ' + sig.M + '.' + sig.m + '.' + sig.p + '.' : '');
+  $('#l-version').value = txt;
+}
+['v-actual', 'v-pre', 'v-pre-n', 'v-fix', 'v-feat', 'v-dep', 'v-brk', 'v-int', 'v-est'].forEach((id) => { $('#' + id).addEventListener('input', calcularVersion); $('#' + id).addEventListener('change', calcularVersion); });
+function comparar() {
+  const a = leerVersion($('#v-a').value), b = leerVersion($('#v-b').value);
+  const out = $('#v-cmp');
+  if (!a || !b) { out.textContent = 'Alguna de las versiones no es válida (ejemplo: 1.10.0 o 2.0.0-rc.1).'; return; }
+  const r = compararVersiones(a, b);
+  out.textContent = textoVersion(a) + (r.c < 0 ? ' < ' : r.c > 0 ? ' > ' : ' = ') + textoVersion(b) + ': ' + r.motivo + '.';
+}
+['v-a', 'v-b'].forEach((id) => $('#' + id).addEventListener('input', comparar));
+$('#v-ordenar').addEventListener('click', () => {
+  const lineas = $('#v-lista').value.split('\n').map((x) => x.trim()).filter(Boolean);
+  const buenas = lineas.map((l) => ({ l, v: leerVersion(l) }));
+  const validas = buenas.filter((x) => x.v).sort((x, y) => compararVersiones(x.v, y.v).c);
+  const malas = buenas.filter((x) => !x.v).map((x) => x.l);
+  $('#v-orden').textContent = validas.map((x) => x.l).join('  <  ') + (malas.length ? '\nNo válidas: ' + malas.join(', ') : '');
+});
+const CATS = ['Añadido', 'Cambiado', 'Obsoleto', 'Eliminado', 'Corregido', 'Seguridad'];
+CATS.forEach((c) => $('#l-cats').append(el('div', { class: 'campo' }, el('label', { for: 'l-' + c, text: c + ' (uno por línea)' }), el('textarea', { id: 'l-' + c, rows: 3 }))));
+$('#l-fecha').value = new Date().toISOString().slice(0, 10);
+function generarLog() {
+  let t = '## [' + $('#l-version').value.trim() + '] - ' + $('#l-fecha').value + '\n';
+  for (const c of CATS) {
+    const items = $('#l-' + c).value.split('\n').map((x) => x.trim()).filter(Boolean);
+    if (items.length) t += '### ' + c + '\n' + items.map((x) => '- ' + x).join('\n') + '\n';
+  }
+  $('#l-salida').textContent = t;
+  return t;
+}
+$('#l-generar').addEventListener('click', generarLog);
+$('#l-exportar').addEventListener('click', () => descargar('CHANGELOG.md', '# Registro de cambios\n\n' + generarLog()));
+calcularVersion(); comparar();
+
+// ---------- 6. DevOps ----------
+const ETAPAS = [
+  ['codigo', 'Código', 'Alguien sube un cambio al repositorio.'],
+  ['build', 'Construcción', 'Se compila o empaqueta la aplicación.'],
+  ['unit', 'Pruebas unitarias', 'Se comprueba cada función por separado.'],
+  ['analisis', 'Análisis de calidad y seguridad', 'Se revisan el estilo, los errores comunes y las dependencias.'],
+  ['dtest', 'Despliegue en pruebas', 'Se instala en un entorno que imita la producción.'],
+  ['integracion', 'Pruebas de integración', 'Se prueba el conjunto: formulario, base de datos, avisos.'],
+  ['aprob', 'Aprobación', 'En entrega continua, alguien da luz verde.'],
+  ['dprod', 'Despliegue en producción', 'Se publica para los usuarios reales.'],
+  ['monit', 'Monitorización', 'Se vigila el sistema con datos reales.'],
+];
+let dEst, dPos, dFin, dBug;
+const dCuenta = { llegaron: 0, frenados: 0, revertidos: 0 };
+function dReiniciar() {
+  dEst = ETAPAS.map(() => ({ s: 'pend', t: '' }));
+  dPos = 0; dFin = false; dBug = false;
+  $('#d-resultado').textContent = '';
+  dPintar();
+}
+function dPintar() {
+  const ol = $('#d-etapas');
+  vaciar(ol);
+  ETAPAS.forEach(([id, n, desc], i) => {
+    const e = dEst[i];
+    const clase = e.s === 'ok' ? 'ok' : e.s === 'ko' ? 'ko' : e.s === 'sin' || e.s === 'omit' ? 'sin' : (i === dPos && !dFin ? 'act' : '');
+    const estado = { pend: 'Pendiente', ok: '✔ Correcto', ko: '✖ Falla', sin: 'No se ejecuta (pipeline detenido)', omit: 'Omitida', esp: 'Esperando aprobación' }[e.s];
+    ol.append(el('li', { class: 'etapa ' + clase }, el('b', { text: (i + 1) + '. ' + n }), el('span', { text: estado }), el('span', { class: 'ayuda', text: e.t || desc })));
+  });
+  const aprobacion = !dFin && dPos < ETAPAS.length && ETAPAS[dPos][0] === 'aprob' && $('#d-modo').value === 'entrega';
+  $('#d-paso').textContent = aprobacion ? 'Aprobar y publicar' : 'Ejecutar siguiente paso';
+  $('#d-paso').disabled = dFin;
+  $('#d-todo').disabled = dFin;
+  const c = $('#d-cuenta');
+  vaciar(c);
+  const cel = (v, t) => el('div', {}, el('b', { text: String(v) }), el('span', { text: t }));
+  c.append(cel(dCuenta.frenados, 'Fallos frenados antes de producción'), cel(dCuenta.llegaron, 'Fallos que llegaron a producción'), cel(dCuenta.revertidos, 'Vueltas atrás (rollback)'));
+}
+function dDetener(i, texto, resumen, frenado) {
+  dEst[i].s = 'ko'; dEst[i].t = texto;
+  for (let k = i + 1; k < ETAPAS.length; k++) { dEst[k].s = 'sin'; dEst[k].t = ''; }
+  dFin = true;
+  if (frenado) dCuenta.frenados++;
+  $('#d-resultado').textContent = resumen;
+}
+function dPaso() {
+  if (dFin) return;
+  const esc = $('#d-esc').value, modo = $('#d-modo').value;
+  const id = ETAPAS[dPos][0];
+  const i = dPos;
+  if (id === 'build' && esc === 'build') { dDetener(i, 'La construcción falla: hay un error de sintaxis.', 'El pipeline se detuvo en la construcción. El cambio nunca llegó a probarse ni a desplegarse: el fallo se descubrió en minutos y es barato de corregir.', true); dPintar(); return; }
+  if (id === 'unit') {
+    if ($('#d-saltar').checked) {
+      dEst[i].s = 'omit'; dEst[i].t = 'Se saltaron las pruebas unitarias: ya no hay red de seguridad en este paso.';
+      if (esc === 'unit') dBug = true;
+    } else if (esc === 'unit') { dDetener(i, 'Una prueba unitaria falla: la función devuelve un resultado incorrecto.', 'El pipeline se detuvo en las pruebas unitarias. Nadie ha visto el fallo en producción: se corrige el código y se vuelve a subir.', true); dPintar(); return; }
+    else { dEst[i].s = 'ok'; dEst[i].t = 'Todas las pruebas unitarias pasan.'; }
+  } else if (id === 'analisis') {
+    if (esc === 'analisis') { dDetener(i, 'El análisis encuentra una dependencia con una vulnerabilidad conocida.', 'El pipeline se detuvo en el análisis de seguridad. Actualizar la dependencia antes de publicar evita que un atacante la explote.', true); dPintar(); return; }
+    dEst[i].s = 'ok'; dEst[i].t = 'Sin problemas de calidad ni de seguridad.';
+  } else if (id === 'integracion') {
+    if (esc === 'integracion') { dDetener(i, 'Las pruebas de integración fallan: el formulario no guarda en la base de datos.', 'El pipeline se detuvo en las pruebas de integración. El fallo se encontró en el entorno de pruebas, sin afectar a ningún cliente.', true); dPintar(); return; }
+    dEst[i].s = 'ok'; dEst[i].t = 'El conjunto funciona.';
+  } else if (id === 'aprob') {
+    if (modo === 'entrega') { dEst[i].s = 'ok'; dEst[i].t = 'Una persona ha revisado el resultado y ha aprobado la publicación.'; }
+    else { dEst[i].s = 'omit'; dEst[i].t = 'Despliegue continuo: no hay aprobación manual, se publica solo.'; }
+  } else if (id === 'dprod') {
+    dEst[i].s = 'ok'; dEst[i].t = 'Versión publicada para los usuarios.';
+  } else if (id === 'monit') {
+    if (esc === 'produccion' || dBug) {
+      dCuenta.llegaron++; dCuenta.revertidos++;
+      dEst[i].s = 'ko'; dEst[i].t = 'La monitorización detecta un aumento de errores con datos reales.';
+      dFin = true;
+      $('#d-resultado').textContent = dBug
+        ? 'El fallo se coló porque se saltaron las pruebas unitarias. La monitorización lo detectó ya en producción: se hizo rollback a la versión anterior, pero algunos clientes sufrieron el error.'
+        : 'Ninguna prueba previa podía detectar este fallo. La monitorización lo vio en producción y se hizo rollback a la versión anterior: el servicio se recuperó rápido gracias a los despliegues pequeños y reversibles.';
+      dPintar(); return;
+    }
+    dEst[i].s = 'ok'; dEst[i].t = 'Todo normal: sin errores, tiempos de respuesta correctos.';
+    dFin = true;
+    $('#d-resultado').textContent = 'El cambio llegó a los usuarios y funciona. Cada etapa fue una puerta que se superó.';
+    dPintar(); return;
+  } else { dEst[i].s = 'ok'; dEst[i].t = id === 'codigo' ? 'Cambio subido al repositorio.' : id === 'build' ? 'Construcción correcta.' : 'Correcto.'; }
+  dPos++;
+  dPintar();
+}
+$('#d-paso').addEventListener('click', dPaso);
+$('#d-todo').addEventListener('click', () => { let n = 0; while (!dFin && n++ < 20) dPaso(); });
+$('#d-reiniciar').addEventListener('click', dReiniciar);
+['d-esc', 'd-modo', 'd-saltar'].forEach((id) => $('#' + id).addEventListener('change', dReiniciar));
+dReiniciar();
+
+// ---------- 7. Práctica ----------
+function unicas(correcto, candidatos) {
+  const s = [correcto];
+  for (const c of candidatos) if (c > 0 && !s.includes(c)) s.push(c);
+  for (let k = 1; s.length < 4 && k < 30; k++) for (const c of [correcto + k, correcto - k]) if (c > 0 && !s.includes(c) && s.length < 4) s.push(c);
+  return s.slice(0, 4);
+}
+const GENERADORES = [
+  function semver() {
+    const v = { M: azar(1, 4), m: azar(0, 9), p: azar(0, 9) };
+    const cambios = mezclar([
+      ['se corrige un error sin cambiar la interfaz', 'p'], ['se añade una función nueva compatible', 'm'],
+      ['se elimina una función de la interfaz pública', 'M'], ['se marca una función como obsoleta (sigue funcionando)', 'm'],
+    ]).slice(0, azar(1, 2));
+    const nivel = cambios.some((c) => c[1] === 'M') ? 'M' : cambios.some((c) => c[1] === 'm') ? 'm' : 'p';
+    const f = (x) => x.M + '.' + x.m + '.' + x.p;
+    const ok = f(subirVersion(v, nivel));
+    const dist = [f(subirVersion(v, 'M')), f(subirVersion(v, 'm')), f(subirVersion(v, 'p')), nivel === 'M' ? (v.M + 1) + '.' + v.m + '.' + v.p : nivel === 'm' ? v.M + '.' + (v.m + 1) + '.' + v.p : v.M + '.' + (v.m + 1) + '.' + (v.p + 1)];
+    const opts = [ok]; for (const d of dist) if (!opts.includes(d)) opts.push(d);
+    return { cat: 'Versionado semántico', q: 'La versión actual es ' + f(v) + '. En la nueva versión ' + cambios.map((c) => c[0]).join(' y ') + '. ¿Cuál es la siguiente versión?', opts, ok,
+      e: 'Manda el cambio más fuerte: ' + (nivel === 'M' ? 'hay un cambio incompatible, así que sube el MAYOR y MENOR y PARCHE vuelven a 0' : nivel === 'm' ? 'hay funcionalidad nueva compatible (u obsolescencia), así que sube el MENOR y el PARCHE vuelve a 0' : 'solo hay correcciones, así que sube el PARCHE') + '. Resultado: ' + ok + '.' };
+  },
+  function wip() {
+    const lim = azar(1, 3), n = Math.random() < 0.5 ? lim : lim - 1;
+    const puede = n < lim;
+    const si = 'Sí, hay hueco y se puede mover', no1 = 'No: «En pruebas» ya está en su límite; hay que ayudar a terminar lo que está en pruebas', no2 = 'Sí, pero hay que subir antes el límite';
+    return { cat: 'Kanban y límites WIP', q: 'En «En pruebas» el límite es ' + lim + ' y ahora hay ' + n + ' tarjeta(s). Una persona termina una tarjeta de «En curso». ¿Puede moverla a «En pruebas» respetando el límite?', opts: [si, no1, no2], ok: puede ? si : no1,
+      e: puede ? 'Hay ' + n + ' de ' + lim + ': queda un hueco, así que se puede mover.' : 'La columna está en ' + n + '/' + lim + ': no cabe nada más. Subir el límite para salir del paso lo vacía de sentido; lo correcto es ayudar a terminar lo que ya está en pruebas.' };
+  },
+  function velocidad() {
+    const v = [azar(8, 20), azar(8, 20), azar(8, 20)], pend = azar(40, 120);
+    const av = media(v), ok = Math.ceil(pend / av - 1e-9);
+    const opts = unicas(ok, [Math.ceil(pend / Math.min(...v) - 1e-9), Math.ceil(pend / Math.max(...v) - 1e-9), ok + 1]).map(String);
+    return { cat: 'Velocidad y proyección', q: 'Un equipo terminó ' + v.join(', ') + ' puntos en sus tres últimos sprints. Quedan ' + pend + ' puntos en el backlog. ¿Cuántos sprints necesita con la velocidad media?', opts, ok: String(ok),
+      e: 'Velocidad media = (' + v.join(' + ') + ') ÷ 3 = ' + dec(av) + '. Sprints = ' + pend + ' ÷ ' + dec(av) + ' = ' + dec(pend / av) + ', y como no se puede hacer medio sprint, ' + ok + ' (se redondea hacia arriba).' };
+  },
+  function tiempos() {
+    const c = azar(1, 5), i = c + azar(1, 4), f = i + azar(2, 6);
+    const lead = Math.random() < 0.5, ok = lead ? f - c : f - i;
+    const opts = unicas(ok, [lead ? f - i : f - c, f, ok + 1]).map((x) => x + ' días');
+    return { cat: 'Métricas de Kanban', q: 'Una tarjeta se crea el día ' + c + ', se empieza el día ' + i + ' y se termina el día ' + f + '. ¿Cuál es su ' + (lead ? 'lead time' : 'cycle time') + '?', opts, ok: ok + ' días',
+      e: lead ? 'El lead time cuenta desde que se pide: ' + f + ' − ' + c + ' = ' + ok + ' días.' : 'El cycle time cuenta desde que se empieza a trabajar: ' + f + ' − ' + i + ' = ' + ok + ' días.' };
+  },
+  function velocidadSprint() {
+    const pts = [azar(2, 5), azar(3, 8), azar(2, 8), azar(3, 8)], fallo = azar(0, 3);
+    const ok = pts.reduce((a, b, k) => a + (k === fallo ? 0 : b), 0), total = pts.reduce((a, b) => a + b, 0);
+    const opts = unicas(ok, [total, ok + 1, total - 1]).map((x) => x + ' puntos');
+    return { cat: 'Scrum y velocidad', q: 'Un sprint planificó cuatro historias de ' + pts.join(', ') + ' puntos. Al terminar, la historia n.º ' + (fallo + 1) + ' (' + pts[fallo] + ' puntos) no cumple la Definición de Hecho. ¿Cuál es la velocidad del sprint?', opts, ok: ok + ' puntos',
+      e: 'Solo cuentan las historias terminadas según la Definición de Hecho: ' + total + ' − ' + pts[fallo] + ' = ' + ok + ' puntos. Lo que está a medias suma 0.' };
+  },
+];
+const BANCO = [
+  ['Scrum', '¿Quién ordena el Product Backlog?', ['El Product Owner', 'El Scrum Master', 'Los Developers por votación', 'El cliente directamente'], 'El Product Owner', 'El Product Owner es una sola persona responsable de maximizar el valor y de ordenar el Product Backlog.'],
+  ['Scrum', 'Un elemento no cumple la Definición de Hecho al terminar el sprint. ¿Qué ocurre?', ['No entra en el Incremento y vuelve al Product Backlog', 'Entra en el Incremento con la mitad de los puntos', 'Se presenta en la revisión como terminado', 'Pasa al siguiente sprint automáticamente sin más'], 'No entra en el Incremento y vuelve al Product Backlog', 'Lo que no cumple la Definición de Hecho no es parte del Incremento ni se enseña como terminado; el Product Owner decide qué hacer con él.'],
+  ['Scrum', '¿Cuánto dura como máximo el Daily Scrum?', ['15 minutos', '30 minutos', '1 hora', 'Lo que haga falta'], '15 minutos', 'Es un evento de 15 minutos como máximo, cada día, a la misma hora y en el mismo lugar.'],
+  ['Scrum', '¿Qué compromiso va asociado al Sprint Backlog?', ['El Objetivo del Sprint', 'El Objetivo del Producto', 'La Definición de Hecho', 'La velocidad'], 'El Objetivo del Sprint', 'Product Backlog → Objetivo del Producto; Sprint Backlog → Objetivo del Sprint; Incremento → Definición de Hecho.'],
+  ['Scrum', '¿Quién puede cancelar un sprint?', ['El Product Owner', 'El Scrum Master', 'Los Developers', 'Cualquier miembro del equipo'], 'El Product Owner', 'Solo el Product Owner puede cancelar un sprint, por ejemplo si su objetivo deja de tener sentido.'],
+  ['Kanban', '¿Para qué sirve un límite WIP?', ['Para obligar a terminar lo empezado y destapar cuellos de botella', 'Para que cada persona tenga siempre varias tareas', 'Para medir las horas trabajadas', 'Para repartir las tarjetas entre las columnas'], 'Para obligar a terminar lo empezado y destapar cuellos de botella', 'Limitar el trabajo en curso reduce los cambios de contexto, acorta los plazos y hace visible dónde se atasca el flujo.'],
+  ['Kanban', '¿Qué mide el lead time?', ['El tiempo desde que se pide algo hasta que se entrega', 'El tiempo desde que se empieza a trabajar hasta que se termina', 'Las tarjetas terminadas por semana', 'Las tarjetas que hay en marcha'], 'El tiempo desde que se pide algo hasta que se entrega', 'Es lo que espera el cliente. El cycle time empieza cuando se comienza a trabajar; el throughput cuenta tarjetas terminadas.'],
+  ['Kanban', 'En un sistema pull, ¿cuándo se empieza una tarjeta nueva?', ['Cuando alguien tiene capacidad y tira de ella', 'Cuando el jefe se la asigna', 'Cuando se acaba el día', 'Cuando hay más de diez pendientes'], 'Cuando alguien tiene capacidad y tira de ella', 'En un sistema pull el trabajo no se empuja: lo toma quien termina y tiene hueco dentro del límite WIP.'],
+  ['Metodologías ágiles', 'Según el manifiesto ágil, ¿qué se valora más?', ['Responder al cambio sobre seguir un plan', 'Seguir un plan sobre responder al cambio', 'Documentación exhaustiva sobre producto que funciona', 'Negociar contratos sobre colaborar con el cliente'], 'Responder al cambio sobre seguir un plan', 'Los cuatro valores dan más peso a personas, producto funcionando, colaboración con el cliente y respuesta al cambio; lo otro también vale, pero menos.'],
+  ['Metodologías ágiles', '¿Cuál de estas NO es una práctica de XP?', ['Aprobar cada cambio en un comité semanal', 'Programación en parejas', 'Desarrollo guiado por pruebas', 'Integración continua'], 'Aprobar cada cambio en un comité semanal', 'XP propone prácticas técnicas ligeras y frecuentes; un comité de aprobación semanal va en dirección contraria.'],
+  ['DevOps', '¿Qué diferencia hay entre entrega continua y despliegue continuo?', ['En la entrega alguien aprueba la publicación; en el despliegue es automática', 'Son lo mismo con otro nombre', 'La entrega continua no usa pruebas', 'El despliegue continuo exige aprobación de tres personas'], 'En la entrega alguien aprueba la publicación; en el despliegue es automática', 'En ambas todo cambio que pasa las pruebas queda listo; solo en el despliegue continuo se publica solo.'],
+  ['DevOps', 'Un cambio falla en las pruebas unitarias del pipeline. ¿Qué ocurre?', ['El pipeline se detiene y avisa; el cambio no avanza', 'Se despliega igualmente y se corrige después', 'Se saltan las pruebas y se sigue', 'Se borra el cambio del repositorio'], 'El pipeline se detiene y avisa; el cambio no avanza', 'Cada etapa es una puerta: si falla, el cambio malo no llega a las siguientes ni a producción.'],
+  ['DevOps', '¿Qué es un rollback?', ['Volver a la versión anterior que funcionaba', 'Escribir una prueba nueva', 'Subir el número de versión', 'Crear una rama'], 'Volver a la versión anterior que funcionaba', 'Es la red de seguridad cuando una publicación da problemas en producción.'],
+  ['Historias de usuario', '¿Qué letra de INVEST incumple «el portal debe ser intuitivo»?', ['T: comprobable', 'I: independiente', 'S: pequeña', 'V: valiosa'], 'T: comprobable', '«Intuitivo» no se puede verificar sin una medida concreta.'],
+  ['Historias de usuario', '¿En qué se diferencian los criterios de aceptación y la Definición de Hecho?', ['Los criterios son de una historia; la Definición de Hecho vale para todas', 'Son lo mismo', 'La Definición de Hecho es de una sola historia y los criterios de todas', 'Los criterios los escribe el Scrum Master'], 'Los criterios son de una historia; la Definición de Hecho vale para todas', 'Una historia se da por terminada cuando cumple sus criterios y además la Definición de Hecho del equipo.'],
+  ['Estimación', '¿Qué es un punto de historia?', ['Una unidad relativa y abstracta propia de cada equipo', 'Una hora de trabajo', 'Un día de trabajo de una persona', 'Un euro de presupuesto'], 'Una unidad relativa y abstracta propia de cada equipo', 'Los puntos comparan tamaños; no se convierten en horas ni se comparan entre equipos.'],
+  ['Estimación', '¿Por qué se usan saltos crecientes (1, 2, 3, 5, 8, 13…)?', ['Porque cuanto mayor es la tarea, más incierta es la estimación', 'Porque son números de la suerte', 'Porque son más fáciles de sumar', 'Porque así salen más puntos'], 'Porque cuanto mayor es la tarea, más incierta es la estimación', 'Discutir entre 14 y 15 no aporta nada; los saltos obligan a elegir tamaños realmente distintos.'],
+  ['Estimación', 'En planning poker los votos son 2, 3, 3 y 13. ¿Qué se hace?', ['Hablan quien votó 2 y quien votó 13, y se vota de nuevo', 'Se hace la media y se acepta', 'Se acepta el voto más alto', 'Decide el Scrum Master'], 'Hablan quien votó 2 y quien votó 13, y se vota de nuevo', 'El valor de la técnica está en descubrir las diferencias de comprensión antes de empezar a trabajar.'],
+];
+let xActual = null, xResuelto = false;
+let xm = Object.assign({ ok: 0, total: 0 }, leerJSON('marcador', {}));
+function xMarcador() { $('#x-marcador').textContent = xm.ok + ' de ' + xm.total + ' (' + (xm.total ? Math.round((xm.ok / xm.total) * 100) : 0) + ' %)'; }
+function xNuevo() {
+  const k = Math.random();
+  if (k < 0.45) xActual = elegir(GENERADORES)();
+  else { const b = elegir(BANCO); xActual = { cat: b[0], q: b[1], opts: b[2], ok: b[3], e: b[4] }; }
+  xResuelto = false;
+  $('#x-cat').textContent = xActual.cat;
+  $('#x-correccion').textContent = '';
+  const f = $('#x-opciones');
+  vaciar(f);
+  f.append(el('legend', { id: 'x-enunciado', text: xActual.q }));
+  mezclar(xActual.opts).forEach((o, i) => f.append(el('label', { class: 'opcion' }, el('input', { type: 'radio', name: 'x-r', value: o, id: 'x-o' + i }), el('span', { text: o }))));
+}
+$('#x-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const sel = document.querySelector('[name="x-r"]:checked');
+  if (!sel) { $('#x-correccion').textContent = 'Elige una respuesta antes de comprobar.'; return; }
+  if (xResuelto) { $('#x-correccion').textContent = 'Ya lo has comprobado. Pulsa «Otro ejercicio».'; return; }
+  xResuelto = true; xm.total++;
+  const ok = sel.value === xActual.ok;
+  if (ok) xm.ok++;
+  Lab.guardar('marcador', JSON.stringify(xm));
+  $('#x-correccion').textContent = (ok ? 'Correcto. ' : 'No es esa. La respuesta es: ' + xActual.ok + '. ') + xActual.e;
+  xMarcador();
+});
+$('#x-otro').addEventListener('click', xNuevo);
+$('#x-reiniciar').addEventListener('click', () => { xm = { ok: 0, total: 0 }; Lab.guardar('marcador', JSON.stringify(xm)); xMarcador(); xNuevo(); });
+xMarcador(); xNuevo();
+</script>
+</body>
+</html>
