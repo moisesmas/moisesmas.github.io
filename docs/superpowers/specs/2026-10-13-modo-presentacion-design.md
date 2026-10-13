@@ -130,7 +130,7 @@ Se recogen en `docs/guia-diapositivas.md` (nueva). Resumen:
 
 - **Estructura:**
   1. Portada (automática).
-  2. «Hoy veremos»: objetivos de la sesión, 3–5 viñetas.
+  2. «Qué aprenderás» (*What you will learn*, «Què aprendràs»): objetivos de la presentación, 3–5 viñetas. No se usa «Hoy veremos»: una presentación puede durar más o menos de una sesión.
   3. Contenido: una o dos diapositivas por apartado `##` de los apuntes.
   4. «Pruébalo»: diapositiva `::laboratorio`, si la unidad tiene un laboratorio relacionado.
   5. «Resumen»: ideas clave y enlace a las actividades de la unidad.

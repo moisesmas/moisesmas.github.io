@@ -743,7 +743,7 @@ Expected: `package.json` con `"reveal.js": "6.0.2"` en `dependencies`.
 Crea `src/content/docs/docencia/smr/som/ud02-virtualizacion/diapositivas/02-hypervisors.md`:
 
 ```markdown
-## Today
+## What you will learn
 
 :::pasos
 - What a hypervisor does
@@ -783,7 +783,7 @@ grep -E -c 'vmx|svm' /proc/cpuinfo
 ::laboratorio{src="virtualizacion" pestana="stack"}
 ```
 
-Y la traducción `…/diapositivas/02-hypervisors.es.md`, con la misma estructura en castellano: «Hoy veremos», «Tipo 1 frente a tipo 2» con `../hypervisor-types-es.svg`, «VirtualBox es de tipo 2.», «Comprobar VT-x en Linux» y «Pruébalo». **Mismo número de diapositivas (4).**
+Y la traducción `…/diapositivas/02-hypervisors.es.md`, con la misma estructura en castellano: «Qué aprenderás», «Tipo 1 frente a tipo 2» con `../hypervisor-types-es.svg`, «VirtualBox es de tipo 2.», «Comprobar VT-x en Linux» y «Pruébalo». **Mismo número de diapositivas (4).**
 
 - [ ] **Step 3: Write the failing output test**
 
@@ -2020,7 +2020,7 @@ Escríbela con estas secciones, en este orden. Usa el contenido de §3, §4 y §
    - `::laboratorio{src pestana}`. `pestana` es el `data-tab` del laboratorio y se ve en la dirección `#…` de sus pestañas.
    - Un ejemplo completo de 3 diapositivas con los tres bloques.
 4. **Pautas de redacción:** las de §5 de la especificación, completas:
-   - Estructura «Hoy veremos» → contenido → «Pruébalo» → «Resumen», con 10–20 diapositivas.
+   - Estructura «Qué aprenderás» (*What you will learn*, «Què aprendràs»; nunca «Hoy veremos», porque una presentación puede durar más o menos de una sesión) → contenido → «Pruébalo» → «Resumen», con 10–20 diapositivas.
    - Una idea por diapositiva, como máximo 6 viñetas de unas 8 palabras y sin párrafos.
    - Material gráfico siempre que se pueda: SVG con la paleta de la web (`#16201b` texto, `#b86e00` / `#fbeed8` ámbar, `#1f5244` / `#e3ece7` verde, fondo `#ffffff`), texto de 24 px o más en una `viewBox` de unos 1100 px de ancho, y versión `-es.svg` guardada en la carpeta de la unidad.
    - Tablas de 5 × 4 como máximo y código de 12 líneas como máximo.
@@ -2131,7 +2131,7 @@ Sustituye `diapositivas/02-hypervisors.md` por estas **14 diapositivas** (portad
 
 | # | Título | Contenido | Fuente | Visual |
 |---|---|---|---|---|
-| 1 | Today | 4 viñetas: qué hace un hipervisor; tipo 1 y tipo 2; ayuda del procesador; elegir un hipervisor | Encabezados `##` | — |
+| 1 | What you will learn | 4 viñetas: qué hace un hipervisor; tipo 1 y tipo 2; ayuda del procesador; elegir un hipervisor | Encabezados `##` | — |
 | 2 | What a hypervisor does | `:::pasos`, 3–4 viñetas | §1 | — |
 | 3 | Two families | Una frase grande y el diagrama | §2 | `../hypervisor-types.svg` |
 | 4 | Type 1: bare metal | `::::columnas`: viñetas (dónde corre, uso típico, ejemplos) + diagrama recortado o el mismo | §2 «Type 1» | sí |
