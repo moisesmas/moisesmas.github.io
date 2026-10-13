@@ -1,0 +1,1041 @@
+<!doctype html>
+<html lang="es" data-lab="documentos-del-proyecto" data-idioma-original="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="/comun/lab.js"></script>
+<title>Documentos del proyecto: backlog, pruebas, manual y memoria</title>
+<meta name="description" content="Practica los documentos de un proyecto: Product Backlog con MoSCoW y valor/esfuerzo, retrospectiva con votación y acuerdos, plan de pruebas, guía de instalación con errores que detectar, comprobador de manual de usuario y memoria final exportable.">
+<meta name="keywords" content="product backlog, MoSCoW, retrospectiva, plan de pruebas, guía de instalación, manual de usuario, memoria final, documentación, proyecto intermodular">
+<link rel="icon" href="/comun/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/comun/fuentes.css">
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f2f4ef;--surface:#ffffff;--surface2:#e9ede6;--ink:#16201b;--muted:#56655d;--line:#d3dbd4;
+  --accent:#b86e00;--accent-soft:#fbeed8;--pcb:#1f5244;
+  --ok:#1b6b3f;--ko:#a8281f;
+  --f-display:"Chakra Petch",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0e1411;--surface:#161f1b;--surface2:#1d2823;--ink:#e4ebe6;--muted:#95a69d;--line:#2b3832;
+  --accent:#f3aa3c;--accent-soft:#33260f;--pcb:#1a463a;
+  --ok:#6fd49a;--ko:#ff9d94;
+}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--f-body)}
+h1,h2,h3{font-family:var(--f-display);line-height:1.2;margin:0 0 .5rem}
+h1{font-size:1.25rem}
+h2{font-size:1.5rem}
+h3{font-size:1.1rem;margin-top:1.25rem}
+p{margin:.4rem 0 .6rem}
+code,pre{font-family:var(--f-mono)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{border:1px solid var(--muted);background:var(--surface);border-radius:.4rem;padding:.35rem .8rem;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+input,select,textarea{width:100%;border:1px solid var(--muted);border-radius:.4rem;padding:.35rem .6rem;background:var(--surface)}
+textarea{resize:vertical;line-height:1.4}
+input[type="checkbox"]{width:auto;accent-color:var(--pcb)}
+label{display:block;font-size:.9rem;color:var(--muted)}
+label input,label select,label textarea{margin-top:.15rem;color:var(--ink)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cabecera{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;padding:.6rem 1rem;background:var(--pcb);color:#fff}
+.cabecera h1{flex:1 1 12rem;margin:0}
+.cabecera a{color:#fff}
+.cabecera button{background:transparent;border-color:#fff;color:#fff}
+main{max-width:64rem;margin:0 auto;padding:1rem}
+.proyecto{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:end;margin-bottom:.75rem}
+.proyecto label{flex:1 1 18rem}
+.pestanas{display:flex;gap:.25rem;overflow-x:auto;border-bottom:1px solid var(--muted)}
+[role="tab"]{display:flex;gap:.5rem;align-items:baseline;white-space:nowrap;border:0;border-bottom:3px solid transparent;border-radius:.4rem .4rem 0 0;background:var(--surface2);font:600 1rem var(--f-display)}
+[role="tab"][aria-selected="true"]{background:var(--accent-soft);border-bottom-color:var(--accent)}
+.n{font:600 .8rem var(--f-mono);color:var(--muted)}
+[role="tabpanel"]{background:var(--surface);border:1px solid var(--line);border-top:0;padding:1rem 1.25rem}
+.fila{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem}
+.primario{background:var(--pcb);border-color:var(--pcb);color:#fff}
+.peligro{border-color:var(--ko);color:var(--ko)}
+.ayuda{color:var(--muted);font-size:.95rem}
+.tarjeta{border:1px solid var(--line);border-radius:.5rem;background:var(--surface2);padding:.6rem .75rem;margin:.6rem 0}
+.th{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .6rem;margin-bottom:.4rem}
+.th b{font:700 1rem var(--f-mono)}
+.th input{flex:1 1 12rem;width:auto}
+.acc{display:flex;gap:.25rem}
+.acc button{padding:.2rem .55rem}
+.rejilla{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));gap:.5rem;margin-bottom:.5rem}
+.rejilla2{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:.5rem;margin-bottom:.5rem}
+.ratio{display:inline-block;font:700 1.1rem var(--f-mono);margin-top:.35rem;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
+.chip{border:1px solid var(--accent);background:var(--accent-soft);border-radius:1rem;padding:.1rem .7rem;font-size:.9rem}
+.resumen{border-left:4px solid var(--accent);background:var(--surface2);padding:.5rem .8rem;margin:.75rem 0}
+.resumen ul{margin:.3rem 0 0;padding-left:1.2rem}
+.vacio{color:var(--muted);font-style:italic}
+.columnas{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.75rem;margin:.75rem 0}
+.col{border:1px solid var(--line);border-radius:.5rem;padding:.6rem;background:var(--surface2)}
+.col h3{margin-top:0}
+.col ul{list-style:none;margin:.5rem 0;padding:0}
+.col li{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem;background:var(--surface);border:1px solid var(--line);border-radius:.4rem;padding:.35rem .5rem;margin:.35rem 0}
+.col li .txt{flex:1 1 100%}
+.col li button{padding:.1rem .5rem}
+.votos{font:700 .9rem var(--f-mono);border:1px solid var(--accent);border-radius:.8rem;padding:0 .5rem;background:var(--accent-soft)}
+.col form{display:flex;gap:.3rem}
+.insignia{display:inline-block;font:700 .8rem var(--f-mono);border:1px solid var(--muted);border-radius:.8rem;padding:0 .5rem}
+.insignia.ok{border-color:var(--ok);color:var(--ok)}
+.insignia.ko{border-color:var(--ko);color:var(--ko)}
+.barra{height:.8rem;border:1px solid var(--muted);border-radius:.5rem;overflow:hidden;background:var(--surface);display:flex}
+.barra span{display:block;height:100%}
+.b-ok{background:var(--ok)}.b-ko{background:var(--ko)}.b-bl{background:var(--accent)}.b-pe{background:var(--line)}
+.aviso-caso{font-size:.9rem;color:var(--ko);margin:.2rem 0 0}
+.aviso-caso:empty{display:none}
+.guia{list-style:none;margin:.5rem 0;padding:0;counter-reset:l}
+.guia li{margin:.3rem 0}
+.guia button{width:100%;text-align:left;display:flex;gap:.6rem;align-items:baseline;background:var(--surface2)}
+.guia button::before{counter-increment:l;content:counter(l);font:700 .85rem var(--f-mono);color:var(--muted)}
+.guia button[aria-pressed="true"]{background:var(--accent-soft);border:2px solid var(--accent)}
+.guia code{white-space:pre-wrap;overflow-wrap:anywhere}
+.guia .res{display:block;font-size:.9rem;margin:.2rem 0 0 1.6rem}
+.res.ok{color:var(--ok)}.res.ko{color:var(--ko)}.res.bl{color:var(--ink)}
+.lista-ck{list-style:none;padding:0;margin:.5rem 0}
+.lista-ck li{display:flex;flex-wrap:wrap;gap:.4rem .7rem;align-items:baseline;border-bottom:1px solid var(--line);padding:.35rem 0}
+.mk{font:700 .85rem var(--f-mono)}
+.ok .mk{color:var(--ok)}.ko .mk{color:var(--ko)}
+.opciones{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.5rem;margin:.75rem 0}
+.opciones button{text-align:left}
+.opciones .acierto{border:2px solid var(--ok)}
+.opciones .fallo{border:2px solid var(--ko)}
+.correccion{margin:.75rem 0;padding:.4rem .75rem;border-left:4px solid var(--accent);background:var(--surface2)}
+.correccion:empty{display:none}
+.nota-exp{min-height:1.4rem;font-size:.9rem;color:var(--muted)}
+pre.md{background:var(--surface2);border:1px solid var(--line);border-radius:.4rem;padding:.6rem;max-height:16rem;overflow:auto;font-size:.85rem;white-space:pre-wrap}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="cabecera">
+  <a href="../../" data-lab-volver aria-label="Volver a la unidad">← <span>Unidad</span></a>
+  <h1>Documentos del proyecto</h1>
+  <div role="group" aria-label="Tamaño del texto">
+    <button type="button" data-lab-zoom="-" aria-label="Reducir texto">A−</button>
+    <button type="button" data-lab-zoom="+" aria-label="Aumentar texto">A+</button>
+  </div>
+</header>
+<main>
+  <div class="proyecto">
+    <label>Nombre del proyecto (aparece en las exportaciones)
+      <input id="proyecto" type="text" autocomplete="off">
+    </label>
+    <span class="ayuda">Tus datos se guardan solo en este navegador. Exporta al terminar cada sesión.</span>
+  </div>
+
+  <div class="pestanas" role="tablist" aria-label="Secciones del laboratorio">
+    <button type="button" role="tab" id="tab-backlog" data-tab="backlog" aria-controls="panel-backlog" aria-selected="true"><span class="n">1</span><span>Product Backlog</span></button>
+    <button type="button" role="tab" id="tab-retrospectiva" data-tab="retrospectiva" aria-controls="panel-retrospectiva" aria-selected="false" tabindex="-1"><span class="n">2</span><span>Retrospectiva</span></button>
+    <button type="button" role="tab" id="tab-pruebas" data-tab="pruebas" aria-controls="panel-pruebas" aria-selected="false" tabindex="-1"><span class="n">3</span><span>Plan de pruebas</span></button>
+    <button type="button" role="tab" id="tab-instalacion" data-tab="instalacion" aria-controls="panel-instalacion" aria-selected="false" tabindex="-1"><span class="n">4</span><span>Guía de instalación</span></button>
+    <button type="button" role="tab" id="tab-manual" data-tab="manual" aria-controls="panel-manual" aria-selected="false" tabindex="-1"><span class="n">5</span><span>Manual de usuario</span></button>
+    <button type="button" role="tab" id="tab-memoria" data-tab="memoria" aria-controls="panel-memoria" aria-selected="false" tabindex="-1"><span class="n">6</span><span>Memoria final</span></button>
+    <button type="button" role="tab" id="tab-practica" data-tab="practica" aria-controls="panel-practica" aria-selected="false" tabindex="-1"><span class="n">7</span><span>Práctica</span></button>
+  </div>
+
+  <!-- 1. PRODUCT BACKLOG -->
+  <section role="tabpanel" id="panel-backlog" aria-labelledby="tab-backlog" tabindex="0">
+    <h2>Product Backlog</h2>
+    <p>Cada elemento lleva prioridad MoSCoW, valor y esfuerzo (de 1 a 5) y criterios de aceptación. La razón valor/esfuerzo ayuda a desempatar dentro de cada categoría. Empieza con el ejemplo del portal de incidencias de <i>Reparaciones Byte Alacant, S. L.</i> (empresa ficticia) y vacíalo para escribir el tuyo.</p>
+    <div class="fila">
+      <button type="button" class="primario" id="bl-add">Añadir elemento</button>
+      <button type="button" id="bl-ordenar">Ordenar por prioridad y valor/esfuerzo</button>
+      <button type="button" id="bl-vaciar">Empezar con mi proyecto</button>
+      <button type="button" id="bl-ejemplo">Cargar el ejemplo</button>
+    </div>
+    <div id="bl-lista"></div>
+    <div class="resumen" id="bl-resumen" role="status"></div>
+    <h3>Definición de Hecho del equipo</h3>
+    <label>Una condición por línea
+      <textarea id="bl-dod" rows="5"></textarea>
+    </label>
+    <div class="fila" style="margin-top:.6rem">
+      <button type="button" class="primario" id="bl-md">Exportar Markdown</button>
+      <button type="button" id="bl-json">Exportar JSON</button>
+      <span class="nota-exp" id="bl-exp" role="status"></span>
+    </div>
+  </section>
+
+  <!-- 2. RETROSPECTIVA -->
+  <section role="tabpanel" id="panel-retrospectiva" aria-labelledby="tab-retrospectiva" tabindex="0" hidden>
+    <h2>Retrospectiva: Empezar / Parar / Continuar</h2>
+    <p>Cada persona anota en silencio, se agrupa, se vota y de lo más votado salen <b>acuerdos concretos</b> con responsable, plazo y forma de comprobarlos. Critica procesos, no personas.</p>
+    <div class="rejilla2">
+      <label>Fecha<input id="rt-fecha" type="text" placeholder="p. ej. 14/11" autocomplete="off"></label>
+      <label>Asistentes<input id="rt-asist" type="text" placeholder="Nombres separados por comas" autocomplete="off"></label>
+      <label>Personas que votan<input id="rt-personas" type="number" min="1" max="12" inputmode="numeric"></label>
+    </div>
+    <p class="ayuda">Cada persona dispone de 3 votos. <b id="rt-votos" role="status"></b></p>
+    <div class="columnas">
+      <div class="col">
+        <h3>Empezar</h3>
+        <ul id="rt-empezar" aria-label="Notas de Empezar"></ul>
+        <form data-col="empezar"><input type="text" aria-label="Nueva nota en Empezar" placeholder="Qué deberíamos empezar a hacer" autocomplete="off"><button type="submit">Añadir</button></form>
+      </div>
+      <div class="col">
+        <h3>Parar</h3>
+        <ul id="rt-parar" aria-label="Notas de Parar"></ul>
+        <form data-col="parar"><input type="text" aria-label="Nueva nota en Parar" placeholder="Qué deberíamos dejar de hacer" autocomplete="off"><button type="submit">Añadir</button></form>
+      </div>
+      <div class="col">
+        <h3>Continuar</h3>
+        <ul id="rt-continuar" aria-label="Notas de Continuar"></ul>
+        <form data-col="continuar"><input type="text" aria-label="Nueva nota en Continuar" placeholder="Qué funciona y mantenemos" autocomplete="off"><button type="submit">Añadir</button></form>
+      </div>
+    </div>
+    <div class="fila">
+      <button type="button" id="rt-ordenar">Ordenar notas por votos</button>
+      <button type="button" id="rt-vaciar">Empezar una retrospectiva nueva</button>
+      <button type="button" id="rt-ejemplo">Cargar el ejemplo</button>
+    </div>
+    <h3>Acuerdos</h3>
+    <p class="ayuda">Un acuerdo está completo cuando tiene acción, responsable, plazo y forma de comprobarlo. Marca «Cumplido» al revisar los de la retrospectiva anterior.</p>
+    <div id="rt-acuerdos"></div>
+    <div class="fila">
+      <button type="button" id="rt-acu-add">Añadir acuerdo</button>
+    </div>
+    <div class="fila" style="margin-top:.6rem">
+      <button type="button" class="primario" id="rt-md">Exportar acta en Markdown</button>
+      <button type="button" id="rt-json">Exportar JSON</button>
+      <span class="nota-exp" id="rt-exp" role="status"></span>
+    </div>
+  </section>
+
+  <!-- 3. PLAN DE PRUEBAS -->
+  <section role="tabpanel" id="panel-pruebas" aria-labelledby="tab-pruebas" tabindex="0" hidden>
+    <h2>Plan de pruebas</h2>
+    <p>Un caso de prueba es una receta repetible: requisito que comprueba, precondiciones, pasos, resultado esperado, resultado obtenido y estado. El laboratorio avisa de los fallos de redacción más comunes y resume la ejecución.</p>
+    <div class="fila">
+      <button type="button" class="primario" id="pr-add">Añadir caso</button>
+      <button type="button" id="pr-vaciar">Empezar con mi proyecto</button>
+      <button type="button" id="pr-ejemplo">Cargar el ejemplo</button>
+    </div>
+    <div id="pt-lista"></div>
+    <div class="resumen" id="pt-resumen" role="status"></div>
+    <div class="fila">
+      <button type="button" class="primario" id="pt-md">Exportar plan en Markdown</button>
+      <button type="button" id="pt-json">Exportar JSON</button>
+      <span class="nota-exp" id="pt-exp" role="status"></span>
+    </div>
+  </section>
+
+  <!-- 4. GUÍA DE INSTALACIÓN -->
+  <section role="tabpanel" id="panel-instalacion" aria-labelledby="tab-instalacion" tabindex="0" hidden>
+    <h2>Guía de instalación: encuentra los errores</h2>
+    <p>Esta guía de instalación del portal de incidencias tiene errores. Pulsa las líneas que creas defectuosas (se resaltan) y después «Comprobar». Una guía buena se puede seguir sin conocer el proyecto.</p>
+    <ol class="guia" id="gi-lineas"></ol>
+    <div class="fila">
+      <button type="button" class="primario" id="gi-comprobar">Comprobar</button>
+      <button type="button" id="gi-reiniciar">Reiniciar</button>
+    </div>
+    <p class="correccion" id="gi-res" role="status"></p>
+    <h3>Lista de verificación de una guía completa</h3>
+    <p class="ayuda">Úsala con la guía de tu proyecto: marca lo que ya incluye.</p>
+    <ul class="lista-ck" id="gi-ck"></ul>
+    <p><b id="gi-prog" role="status"></b></p>
+    <div class="fila">
+      <button type="button" id="gi-md">Exportar la lista en Markdown</button>
+      <span class="nota-exp" id="gi-exp" role="status"></span>
+    </div>
+  </section>
+
+  <!-- 5. MANUAL DE USUARIO -->
+  <section role="tabpanel" id="panel-manual" aria-labelledby="tab-manual" tabindex="0" hidden>
+    <h2>Comprobador de manual de usuario</h2>
+    <p>Pega o escribe la descripción de una tarea. El comprobador revisa a la vez diez rasgos de calidad: pasos numerados, una acción por paso, voz directa, frases cortas, sin jerga, sin muletillas, «antes de empezar», resultado, qué hacer si falla y nombres exactos entre comillas. No sustituye a una prueba con una persona real.</p>
+    <div class="fila">
+      <button type="button" id="mu-malo">Cargar texto con fallos</button>
+      <button type="button" id="mu-bueno">Cargar texto mejorado</button>
+      <button type="button" id="mu-vaciar">Vaciar</button>
+    </div>
+    <label style="margin-top:.5rem">Texto del manual
+      <textarea id="mu-texto" rows="12"></textarea>
+    </label>
+    <p><b id="mu-puntos" role="status"></b></p>
+    <ul class="lista-ck" id="mu-res"></ul>
+    <div class="fila">
+      <button type="button" id="mu-md">Descargar el texto (Markdown)</button>
+      <span class="nota-exp" id="mu-exp" role="status"></span>
+    </div>
+  </section>
+
+  <!-- 6. MEMORIA FINAL -->
+  <section role="tabpanel" id="panel-memoria" aria-labelledby="tab-memoria" tabindex="0" hidden>
+    <h2>Esqueleto de la memoria final</h2>
+    <p>Elige los apartados, ordénalos, anota de dónde saldrá el material y quién lo escribe. Esta estructura es una propuesta: tu profesor fija el índice y el formato de entrega.</p>
+    <div class="rejilla2">
+      <label>Título de la memoria<input id="me-titulo" type="text" autocomplete="off"></label>
+      <label>Autores<input id="me-autores" type="text" autocomplete="off"></label>
+      <label>Curso y centro<input id="me-curso" type="text" autocomplete="off"></label>
+      <label>Fecha<input id="me-fecha" type="text" autocomplete="off"></label>
+    </div>
+    <div id="me-lista"></div>
+    <form class="fila" id="me-form">
+      <label style="flex:1 1 14rem">Apartado propio<input id="me-nuevo" type="text" autocomplete="off" placeholder="p. ej. Análisis de costes"></label>
+      <button type="submit">Añadir apartado</button>
+      <button type="button" id="me-reset">Restablecer propuesta</button>
+    </form>
+    <div class="resumen" id="me-aviso" role="status"></div>
+    <label>Borrador del resumen (una página como máximo; se reescribe al final)
+      <textarea id="me-resumen" rows="5"></textarea>
+    </label>
+    <h3>Vista previa del índice</h3>
+    <pre class="md" id="me-vista" tabindex="0" aria-label="Vista previa del índice"></pre>
+    <div class="fila" style="margin-top:.6rem">
+      <button type="button" class="primario" id="me-md">Exportar esqueleto en Markdown</button>
+      <button type="button" id="me-json">Exportar JSON</button>
+      <span class="nota-exp" id="me-exp" role="status"></span>
+    </div>
+  </section>
+
+  <!-- 7. PRÁCTICA -->
+  <section role="tabpanel" id="panel-practica" aria-labelledby="tab-practica" tabindex="0" hidden>
+    <h2>Práctica</h2>
+    <p>Ejercicios al azar sobre todos los documentos de la unidad: ¿en qué documento va cada elemento?, MoSCoW, criterios, casos de prueba, retrospectivas, manuales y memoria. Corrección al momento.</p>
+    <p class="ayuda" id="pa-tipo"></p>
+    <p id="pa-enun" style="font-size:1.1rem"></p>
+    <div class="opciones" id="pa-opc" role="group" aria-label="Opciones de respuesta"></div>
+    <p class="correccion" id="pa-corr" role="status"></p>
+    <div class="fila">
+      <button type="button" class="primario" id="pa-otro">Otro ejercicio</button>
+      <span>Aciertos: <b id="pa-ac">0</b> de <b id="pa-in">0</b></span>
+      <button type="button" id="pa-cero">Poner a cero</button>
+    </div>
+  </section>
+</main>
+
+<script>
+// ===== Utilidades =====
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => [...(r || document).querySelectorAll(s)];
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const opts = (lista, sel) => lista.map((o) => `<option${String(o) === String(sel) ? ' selected' : ''}>${esc(o)}</option>`).join('');
+const slug = (s) => String(s || 'proyecto').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'proyecto';
+const sigId = (items, prefijo) => {
+  let m = 0;
+  items.forEach((i) => { const n = parseInt(String(i.id).replace(/\D/g, ''), 10); if (n > m) m = n; });
+  return prefijo + String(m + 1).padStart(2, '0');
+};
+const celda = (s) => String(s == null ? '' : s).replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
+
+function descargar(nombre, texto, tipo, aviso) {
+  try {
+    const blob = new Blob([texto], { type: tipo + ';charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nombre;
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    if (aviso) aviso.textContent = 'Exportado: ' + nombre;
+  } catch (e) {
+    if (aviso) aviso.textContent = 'No se ha podido exportar en este navegador.';
+  }
+}
+
+// Botón de dos pasos: primer clic arma, segundo ejecuta.
+function confirmar(btn, texto, accion) {
+  if (btn.dataset.arm) {
+    btn.textContent = btn.dataset.orig;
+    delete btn.dataset.arm;
+    accion();
+    return;
+  }
+  btn.dataset.arm = '1';
+  btn.dataset.orig = btn.textContent;
+  btn.textContent = texto;
+  setTimeout(() => {
+    if (btn.dataset.arm) { btn.textContent = btn.dataset.orig; delete btn.dataset.arm; }
+  }, 4000);
+}
+
+// ===== Datos de ejemplo y estado =====
+const MOS = ['Must', 'Should', 'Could', "Won't"];
+const TIPOS = ['Funcional', 'No funcional', 'Técnica'];
+const ESTADOS_BL = ['Por hacer', 'En curso', 'Hecho'];
+const ESTADOS_PT = ['Pendiente', 'Superado', 'Fallido', 'Bloqueado'];
+const COLS = ['empezar', 'parar', 'continuar'];
+const COL_TXT = { empezar: 'Empezar', parar: 'Parar', continuar: 'Continuar' };
+
+function ejemploBacklog() {
+  return {
+    items: [
+      { id: 'PB-01', titulo: 'Abrir una incidencia', tipo: 'Funcional', prio: 'Must', valor: 5, esfuerzo: 3, estado: 'Por hacer',
+        criterios: 'Dado que soy un cliente con sesión iniciada\nCuando relleno equipo, descripción y urgencia y pulso Enviar\nEntonces veo el mensaje «Incidencia recibida» con su número' },
+      { id: 'PB-02', titulo: 'Consultar el estado de una incidencia', tipo: 'Funcional', prio: 'Must', valor: 5, esfuerzo: 2, estado: 'Por hacer',
+        criterios: 'Dado que tengo una incidencia abierta\nCuando entro en Mis incidencias y pulso sobre ella\nEntonces veo su estado y la fecha del último cambio' },
+      { id: 'PB-03', titulo: 'Avisar por correo de los cambios de estado', tipo: 'Funcional', prio: 'Should', valor: 4, esfuerzo: 3, estado: 'Por hacer', criterios: '' },
+      { id: 'PB-04', titulo: 'Cada cliente solo ve sus incidencias', tipo: 'No funcional', prio: 'Must', valor: 5, esfuerzo: 2, estado: 'Por hacer',
+        criterios: 'Dado que soy un cliente\nCuando intento abrir la incidencia de otra empresa\nEntonces el sistema me lo impide y no muestra ningún dato' },
+      { id: 'PB-05', titulo: 'La consulta de una incidencia carga en menos de 3 segundos', tipo: 'No funcional', prio: 'Should', valor: 3, esfuerzo: 2, estado: 'Por hacer', criterios: '' },
+      { id: 'PB-06', titulo: 'Adjuntar una fotografía del equipo averiado', tipo: 'Funcional', prio: 'Could', valor: 3, esfuerzo: 3, estado: 'Por hacer', criterios: '' },
+      { id: 'PB-07', titulo: 'Gráfico de averías por mes para la gerencia', tipo: 'Funcional', prio: 'Could', valor: 2, esfuerzo: 4, estado: 'Por hacer', criterios: '' },
+      { id: 'PB-08', titulo: 'Aplicación móvil nativa', tipo: 'Funcional', prio: "Won't", valor: 3, esfuerzo: 5, estado: 'Por hacer', criterios: '' },
+    ],
+    dod: 'Cumple todos sus criterios de aceptación\nHa sido probado por alguien distinto de quien lo hizo\nEl trabajo está guardado en el repositorio\nEstá documentado lo que otra persona necesitaría saber\nEl Product Owner lo ha visto funcionar',
+  };
+}
+function ejemploRetro() {
+  return {
+    fecha: '14/11', asist: 'Equipo del portal de incidencias (4 personas)', personas: 4,
+    notas: [
+      { col: 'empezar', t: 'Revisar el código por parejas antes de fusionar', v: 2 },
+      { col: 'empezar', t: 'Apuntar cada cambio de requisito en el backlog', v: 3 },
+      { col: 'parar', t: 'Cambiar requisitos por mensajería sin dejar constancia', v: 3 },
+      { col: 'parar', t: 'Dejar las pruebas para el último día', v: 1 },
+      { col: 'continuar', t: 'La reunión diaria de 10 minutos', v: 1 },
+      { col: 'continuar', t: 'Enseñar el avance al cliente cada semana', v: 0 },
+    ],
+    acuerdos: [
+      { accion: 'Actualizar el backlog el mismo día que cambie un requisito', resp: 'Product Owner', plazo: 'Desde mañana', comprobar: 'El backlog coincide con lo hablado en cada Daily', hecho: false },
+      { accion: 'Comunicarnos más', resp: '', plazo: '', comprobar: '', hecho: false },
+    ],
+  };
+}
+function ejemploPruebas() {
+  return [
+    { id: 'CP-01', req: 'PB-01 Abrir una incidencia', pre: 'Existe el cliente «Taller Sur» con sesión iniciada y un equipo registrado', pasos: '1. Pulsar «Nueva incidencia»\n2. Elegir el equipo y escribir la descripción\n3. Elegir urgencia «Parado»\n4. Pulsar «Enviar»', esp: 'Se muestra «Incidencia recibida» con un número nuevo', obt: 'Se muestra «Incidencia recibida» con el número 481', estado: 'Superado' },
+    { id: 'CP-02', req: 'PB-01 Abrir una incidencia', pre: 'Sesión iniciada', pasos: '1. Pulsar «Nueva incidencia»\n2. Dejar la descripción vacía\n3. Pulsar «Enviar»', esp: 'Aparece un aviso en rojo junto a la descripción y no se crea la incidencia', obt: 'Se crea la incidencia sin descripción', estado: 'Fallido' },
+    { id: 'CP-03', req: 'PB-02 Consultar el estado', pre: 'Taller Sur tiene una incidencia en estado «En reparación»', pasos: '1. Iniciar sesión como Taller Sur\n2. Abrir «Mis incidencias»\n3. Pulsar sobre la incidencia', esp: 'Se muestra el estado «En reparación» y la fecha del último cambio', obt: '', estado: 'Pendiente' },
+    { id: 'CP-04', req: 'PB-04 Cada cliente ve lo suyo', pre: 'Existen dos clientes con incidencias', pasos: '1. Iniciar sesión como Taller Sur\n2. Escribir en la barra de direcciones la dirección de una incidencia de otro cliente', esp: 'El sistema deniega el acceso y no muestra datos del otro cliente', obt: '', estado: 'Bloqueado' },
+    { id: 'CP-05', req: '', pre: '', pasos: 'Probar que el acceso funciona', esp: 'Que funcione bien', obt: '', estado: 'Pendiente' },
+  ];
+}
+function porDefecto() {
+  return {
+    proyecto: 'Portal de incidencias (Reparaciones Byte Alacant, S. L.)',
+    backlog: ejemploBacklog(), retro: ejemploRetro(), pruebas: ejemploPruebas(),
+    guia: { marcas: [], comprobado: false, ck: [] },
+    manual: null,
+    memoria: memoriaBase(),
+    practica: { ac: 0, in: 0 },
+  };
+}
+function memoriaBase() {
+  const s = (id, titulo, pista) => ({ id, titulo, pista, incluir: true, material: '', resp: '' });
+  return {
+    titulo: 'Portal de incidencias para Reparaciones Byte Alacant', autores: '', curso: '2.º CFGM SMR', fecha: '', resumen: '',
+    secciones: [
+      s('resumen', 'Resumen', 'Se escribe al final: necesidad, solución, resultado y conclusión'),
+      s('intro', 'Introducción y objetivos', 'Registro de necesidades y objetivos medibles'),
+      s('plan', 'Planificación y seguimiento', 'Gantt o tablero, informes de avance y retrospectivas'),
+      s('diseno', 'Diseño', 'Documento de diseño, requisitos y decisiones'),
+      s('desarrollo', 'Desarrollo', 'Registro de trabajo, repositorio y guía de instalación'),
+      s('pruebas', 'Pruebas', 'Plan de pruebas y resumen de ejecución'),
+      s('resultados', 'Resultados', 'Objetivos previstos frente a conseguidos'),
+      s('conclusiones', 'Conclusiones y líneas de mejora', 'Lo aprendido y el backlog pendiente'),
+      s('biblio', 'Bibliografía', 'Todas las fuentes citadas, con formato coherente'),
+      s('anexos', 'Anexos', 'Backlog completo, manual de usuario y actas'),
+    ],
+  };
+}
+
+let E = porDefecto();
+try {
+  const g = Lab.leer('estado');
+  if (g) { const s = JSON.parse(g); if (s && typeof s === 'object') E = Object.assign(E, s); }
+} catch (e) { /* se parte del ejemplo */ }
+function guardar() { try { Lab.guardar('estado', JSON.stringify(E)); } catch (e) { /* sin memoria */ } }
+
+// ===== Pestañas (patrón WAI-ARIA) =====
+const pestanas = [...document.querySelectorAll('[role="tab"]')];
+function mostrar(id) {
+  const activa = pestanas.find((p) => p.dataset.tab === id) ?? pestanas[0];
+  for (const p of pestanas) {
+    const es = p === activa;
+    p.setAttribute('aria-selected', String(es));
+    p.tabIndex = es ? 0 : -1;
+    document.getElementById(p.getAttribute('aria-controls')).hidden = !es;
+  }
+  activa.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  return activa;
+}
+function elegir(id, enfocar) {
+  const activa = mostrar(id);
+  Lab.guardar('pestana', activa.dataset.tab);
+  history.replaceState(null, '', '#' + activa.dataset.tab);
+  if (enfocar) activa.focus();
+}
+pestanas.forEach((p) => p.addEventListener('click', () => elegir(p.dataset.tab)));
+document.querySelector('[role="tablist"]').addEventListener('keydown', (e) => {
+  const i = pestanas.indexOf(document.activeElement);
+  const destino = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: pestanas.length - 1 }[e.key];
+  if (i < 0 || destino === undefined) return;
+  e.preventDefault();
+  elegir(pestanas[(destino + pestanas.length) % pestanas.length].dataset.tab, true);
+});
+window.addEventListener('hashchange', () => mostrar(location.hash.slice(1)));
+
+// Nombre del proyecto
+const inpProyecto = $('#proyecto');
+inpProyecto.value = E.proyecto || '';
+inpProyecto.addEventListener('input', () => { E.proyecto = inpProyecto.value; guardar(); });
+const nombreProyecto = () => (E.proyecto || '').trim() || 'Proyecto sin nombre';
+
+// ===== 1. Product Backlog =====
+const rank = (p) => MOS.indexOf(p);
+const ratio = (it) => (Number(it.esfuerzo) > 0 ? Number(it.valor) / Number(it.esfuerzo) : 0);
+const ratioTxt = (it) => ratio(it).toFixed(1);
+
+function tarjetaBL(it, i) {
+  return `<article class="tarjeta" data-i="${i}">
+  <div class="th"><b>${esc(it.id)}</b>
+    <input type="text" data-c="titulo" value="${esc(it.titulo)}" aria-label="Título de ${esc(it.id)}" placeholder="Título del elemento" autocomplete="off">
+    <div class="acc">
+      <button type="button" data-a="sube" aria-label="Subir ${esc(it.id)}">↑</button>
+      <button type="button" data-a="baja" aria-label="Bajar ${esc(it.id)}">↓</button>
+      <button type="button" data-a="borra" aria-label="Quitar ${esc(it.id)}">✕</button>
+    </div>
+  </div>
+  <div class="rejilla">
+    <label>Tipo<select data-c="tipo">${opts(TIPOS, it.tipo)}</select></label>
+    <label>Prioridad MoSCoW<select data-c="prio">${opts(MOS, it.prio)}</select></label>
+    <label>Valor (1-5)<select data-c="valor">${opts([1, 2, 3, 4, 5], it.valor)}</select></label>
+    <label>Esfuerzo (1-5)<select data-c="esfuerzo">${opts([1, 2, 3, 4, 5], it.esfuerzo)}</select></label>
+    <div><span class="ayuda">Valor/esfuerzo</span><br><span class="ratio">${ratioTxt(it)}</span></div>
+    <label>Estado<select data-c="estado">${opts(ESTADOS_BL, it.estado)}</select></label>
+  </div>
+  <label>Criterios de aceptación (Dado / Cuando / Entonces)<textarea data-c="criterios" rows="3">${esc(it.criterios)}</textarea></label>
+</article>`;
+}
+function renderBL() {
+  const it = E.backlog.items;
+  $('#bl-lista').innerHTML = it.length ? it.map(tarjetaBL).join('') : '<p class="vacio">El backlog está vacío. Pulsa «Añadir elemento».</p>';
+  $('#bl-dod').value = E.backlog.dod || '';
+  resumenBL();
+}
+function resumenBL() {
+  const it = E.backlog.items;
+  const n = it.length;
+  if (!n) { $('#bl-resumen').innerHTML = '<b>Resumen</b><p>Sin elementos todavía.</p>'; return; }
+  const cuenta = MOS.map((m) => it.filter((x) => x.prio === m).length);
+  const chips = MOS.map((m, k) => `<span class="chip">${esc(m)}: ${cuenta[k]}</span>`).join('');
+  const av = [];
+  if (cuenta[0] / n > 0.5) av.push(`Más de la mitad de los elementos son Must (${cuenta[0]} de ${n}): la clasificación no está ayudando a decidir.`);
+  const sinCrit = it.filter((x) => !String(x.criterios).trim()).length;
+  if (sinCrit) av.push(`${sinCrit} elemento(s) sin criterios de aceptación: nadie podrá decir si están terminados.`);
+  if (!it.some((x) => x.tipo === 'No funcional')) av.push('No hay ningún requisito no funcional (rendimiento, seguridad, usabilidad…).');
+  const grandes = it.filter((x) => Number(x.esfuerzo) >= 5 && x.prio !== "Won't").length;
+  if (grandes) av.push(`${grandes} elemento(s) con esfuerzo 5: conviene trocearlos.`);
+  const mal = it.filter((x) => x.prio === 'Must' && Number(x.valor) <= 2).length;
+  if (mal) av.push(`${mal} Must con valor 2 o menos: revisa si de verdad es imprescindible.`);
+  $('#bl-resumen').innerHTML = `<b>${n} elementos</b><div class="chips">${chips}</div>` +
+    (av.length ? '<ul>' + av.map((a) => `<li>${esc(a)}</li>`).join('') + '</ul>' : '<p>Sin avisos: el backlog está equilibrado.</p>');
+}
+$('#bl-lista').addEventListener('input', (e) => {
+  const t = e.target; const card = t.closest('[data-i]');
+  if (!card || !t.dataset.c) return;
+  const it = E.backlog.items[+card.dataset.i];
+  if (!it) return;
+  it[t.dataset.c] = (t.dataset.c === 'valor' || t.dataset.c === 'esfuerzo') ? Number(t.value) : t.value;
+  if (t.dataset.c === 'valor' || t.dataset.c === 'esfuerzo') card.querySelector('.ratio').textContent = ratioTxt(it);
+  resumenBL(); guardar();
+});
+$('#bl-lista').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-a]'); if (!b) return;
+  const i = +b.closest('[data-i]').dataset.i; const arr = E.backlog.items;
+  if (b.dataset.a === 'sube' && i > 0) [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]];
+  if (b.dataset.a === 'baja' && i < arr.length - 1) [arr[i + 1], arr[i]] = [arr[i], arr[i + 1]];
+  if (b.dataset.a === 'borra') arr.splice(i, 1);
+  renderBL(); guardar();
+});
+$('#bl-dod').addEventListener('input', (e) => { E.backlog.dod = e.target.value; guardar(); });
+$('#bl-add').addEventListener('click', () => {
+  E.backlog.items.push({ id: sigId(E.backlog.items, 'PB-'), titulo: '', tipo: 'Funcional', prio: 'Should', valor: 3, esfuerzo: 3, estado: 'Por hacer', criterios: '' });
+  renderBL(); guardar();
+  const t = $$('#bl-lista [data-c="titulo"]').pop(); if (t) t.focus();
+});
+$('#bl-ordenar').addEventListener('click', () => {
+  E.backlog.items.sort((a, b) => rank(a.prio) - rank(b.prio) || ratio(b) - ratio(a) || String(a.id).localeCompare(String(b.id)));
+  renderBL(); guardar();
+});
+$('#bl-vaciar').addEventListener('click', (e) => confirmar(e.target, '¿Seguro? Pulsa otra vez para vaciar', () => { E.backlog = { items: [], dod: '' }; renderBL(); guardar(); }));
+$('#bl-ejemplo').addEventListener('click', (e) => confirmar(e.target, '¿Seguro? Se perderá lo que tienes', () => { E.backlog = ejemploBacklog(); renderBL(); guardar(); }));
+function mdBL() {
+  const it = E.backlog.items;
+  let s = `# Product Backlog: ${nombreProyecto()}\n\n| ID | Título | Tipo | Prioridad | Valor | Esfuerzo | V/E | Estado |\n|---|---|---|---|---|---|---|---|\n`;
+  it.forEach((x) => { s += `| ${celda(x.id)} | ${celda(x.titulo)} | ${celda(x.tipo)} | ${celda(x.prio)} | ${x.valor} | ${x.esfuerzo} | ${ratioTxt(x)} | ${celda(x.estado)} |\n`; });
+  s += '\n## Criterios de aceptación\n';
+  it.forEach((x) => { s += `\n### ${x.id} ${x.titulo}\n\n${String(x.criterios).trim() ? String(x.criterios).trim().split('\n').map((l) => '- ' + l).join('\n') : '_Pendiente de escribir._'}\n`; });
+  s += '\n## Definición de Hecho\n\n' + (String(E.backlog.dod).trim() ? String(E.backlog.dod).trim().split('\n').filter(Boolean).map((l) => '- ' + l).join('\n') : '_Pendiente de acordar._') + '\n';
+  return s;
+}
+$('#bl-md').addEventListener('click', () => descargar('product-backlog-' + slug(E.proyecto) + '.md', mdBL(), 'text/markdown', $('#bl-exp')));
+$('#bl-json').addEventListener('click', () => descargar('product-backlog-' + slug(E.proyecto) + '.json', JSON.stringify({ proyecto: E.proyecto, backlog: E.backlog }, null, 2), 'application/json', $('#bl-exp')));
+
+// ===== 2. Retrospectiva =====
+function totalVotos() { return (Number(E.retro.personas) || 1) * 3; }
+function usadosVotos() { return E.retro.notas.reduce((a, n) => a + (n.v || 0), 0); }
+function renderRT() {
+  $('#rt-fecha').value = E.retro.fecha || '';
+  $('#rt-asist').value = E.retro.asist || '';
+  $('#rt-personas').value = E.retro.personas || 1;
+  const quedan = totalVotos() - usadosVotos();
+  COLS.forEach((c) => {
+    const notas = E.retro.notas.map((n, idx) => ({ n, idx })).filter((x) => x.n.col === c);
+    $('#rt-' + c).innerHTML = notas.length ? notas.map(({ n, idx }) => `<li data-n="${idx}">
+      <span class="txt">${esc(n.t)}</span>
+      <span class="votos" aria-label="${n.v} votos">★ ${n.v}</span>
+      <button type="button" data-a="mas" aria-label="Votar: ${esc(n.t)}"${quedan <= 0 ? ' disabled' : ''}>+</button>
+      <button type="button" data-a="menos" aria-label="Quitar voto: ${esc(n.t)}"${n.v <= 0 ? ' disabled' : ''}>−</button>
+      <button type="button" data-a="acuerdo" aria-label="Convertir en acuerdo: ${esc(n.t)}">→ Acuerdo</button>
+      <button type="button" data-a="borra" aria-label="Quitar nota: ${esc(n.t)}">✕</button></li>`).join('') : '<li class="vacio">Sin notas</li>';
+  });
+  $('#rt-votos').textContent = `Votos usados: ${usadosVotos()} de ${totalVotos()}.` + (quedan < 0 ? ' Has gastado más votos de los disponibles.' : '');
+  renderAcuerdos();
+}
+function acuCompleto(a) { return !!(String(a.accion).trim() && String(a.resp).trim() && String(a.plazo).trim() && String(a.comprobar).trim()); }
+function renderAcuerdos() {
+  const ac = E.retro.acuerdos;
+  $('#rt-acuerdos').innerHTML = ac.length ? ac.map((a, i) => `<article class="tarjeta" data-i="${i}">
+    <div class="th"><b>A${i + 1}</b>
+      <input type="text" data-c="accion" value="${esc(a.accion)}" aria-label="Acción del acuerdo ${i + 1}" placeholder="Qué vamos a hacer" autocomplete="off">
+      <span class="insignia ${acuCompleto(a) ? 'ok' : 'ko'}">${acuCompleto(a) ? 'Completo' : 'Incompleto'}</span>
+      <div class="acc"><button type="button" data-a="borra" aria-label="Quitar acuerdo ${i + 1}">✕</button></div></div>
+    <div class="rejilla2">
+      <label>Responsable<input type="text" data-c="resp" value="${esc(a.resp)}" autocomplete="off"></label>
+      <label>Plazo<input type="text" data-c="plazo" value="${esc(a.plazo)}" autocomplete="off"></label>
+      <label>Cómo sabremos que funciona<input type="text" data-c="comprobar" value="${esc(a.comprobar)}" autocomplete="off"></label>
+    </div>
+    <label style="display:flex;gap:.5rem;align-items:center"><input type="checkbox" data-c="hecho"${a.hecho ? ' checked' : ''}> Cumplido (revisión en la siguiente retrospectiva)</label>
+  </article>`).join('') : '<p class="vacio">Todavía no hay acuerdos.</p>';
+}
+COLS.forEach((c) => {
+  $('#rt-' + c).addEventListener('click', (e) => {
+    const b = e.target.closest('[data-a]'); if (!b) return;
+    const idx = +b.closest('[data-n]').dataset.n; const n = E.retro.notas[idx];
+    if (b.dataset.a === 'mas' && usadosVotos() < totalVotos()) n.v++;
+    if (b.dataset.a === 'menos' && n.v > 0) n.v--;
+    if (b.dataset.a === 'borra') E.retro.notas.splice(idx, 1);
+    if (b.dataset.a === 'acuerdo') E.retro.acuerdos.push({ accion: n.t, resp: '', plazo: '', comprobar: '', hecho: false });
+    renderRT(); guardar();
+  });
+});
+$$('.col form').forEach((f) => f.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const inp = f.querySelector('input'); const t = inp.value.trim();
+  if (!t) return;
+  E.retro.notas.push({ col: f.dataset.col, t, v: 0 });
+  inp.value = '';
+  renderRT(); guardar();
+  const nuevo = $(`#rt-${f.dataset.col}`).parentElement.querySelector('input'); if (nuevo) nuevo.focus();
+}));
+$('#rt-acuerdos').addEventListener('input', (e) => {
+  const t = e.target; const card = t.closest('[data-i]'); if (!card || !t.dataset.c) return;
+  const a = E.retro.acuerdos[+card.dataset.i];
+  a[t.dataset.c] = t.type === 'checkbox' ? t.checked : t.value;
+  const ok = acuCompleto(a); const ins = card.querySelector('.insignia');
+  ins.textContent = ok ? 'Completo' : 'Incompleto'; ins.className = 'insignia ' + (ok ? 'ok' : 'ko');
+  guardar();
+});
+$('#rt-acuerdos').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-a="borra"]'); if (!b) return;
+  E.retro.acuerdos.splice(+b.closest('[data-i]').dataset.i, 1);
+  renderRT(); guardar();
+});
+$('#rt-acu-add').addEventListener('click', () => { E.retro.acuerdos.push({ accion: '', resp: '', plazo: '', comprobar: '', hecho: false }); renderRT(); guardar(); });
+$('#rt-fecha').addEventListener('input', (e) => { E.retro.fecha = e.target.value; guardar(); });
+$('#rt-asist').addEventListener('input', (e) => { E.retro.asist = e.target.value; guardar(); });
+$('#rt-personas').addEventListener('input', (e) => { E.retro.personas = Math.max(1, Math.min(12, Number(e.target.value) || 1)); $('#rt-votos').textContent = `Votos usados: ${usadosVotos()} de ${totalVotos()}.`; guardar(); });
+$('#rt-personas').addEventListener('change', () => { renderRT(); });
+$('#rt-ordenar').addEventListener('click', () => { E.retro.notas.sort((a, b) => b.v - a.v); renderRT(); guardar(); });
+$('#rt-vaciar').addEventListener('click', (e) => confirmar(e.target, '¿Seguro? Pulsa otra vez para vaciar', () => { E.retro = { fecha: '', asist: '', personas: E.retro.personas || 4, notas: [], acuerdos: [] }; renderRT(); guardar(); }));
+$('#rt-ejemplo').addEventListener('click', (e) => confirmar(e.target, '¿Seguro? Se perderá lo que tienes', () => { E.retro = ejemploRetro(); renderRT(); guardar(); }));
+function mdRT() {
+  const r = E.retro;
+  let s = `# Acta de retrospectiva: ${nombreProyecto()}\n\n- Fecha: ${r.fecha || '(sin indicar)'}\n- Asistentes: ${r.asist || '(sin indicar)'}\n`;
+  COLS.forEach((c) => {
+    s += `\n## ${COL_TXT[c]}\n\n`;
+    const l = r.notas.filter((n) => n.col === c);
+    s += l.length ? l.map((n) => `- ${n.t} (${n.v} voto${n.v === 1 ? '' : 's'})`).join('\n') + '\n' : '_Sin notas._\n';
+  });
+  s += '\n## Acuerdos\n\n';
+  if (r.acuerdos.length) {
+    s += '| Acción | Responsable | Plazo | Cómo se comprueba | Cumplido |\n|---|---|---|---|---|\n';
+    r.acuerdos.forEach((a) => { s += `| ${celda(a.accion)} | ${celda(a.resp)} | ${celda(a.plazo)} | ${celda(a.comprobar)} | ${a.hecho ? 'Sí' : 'No'} |\n`; });
+  } else s += '_Sin acuerdos._\n';
+  return s;
+}
+$('#rt-md').addEventListener('click', () => descargar('retrospectiva-' + slug(E.proyecto) + '.md', mdRT(), 'text/markdown', $('#rt-exp')));
+$('#rt-json').addEventListener('click', () => descargar('retrospectiva-' + slug(E.proyecto) + '.json', JSON.stringify({ proyecto: E.proyecto, retro: E.retro }, null, 2), 'application/json', $('#rt-exp')));
+
+// ===== 3. Plan de pruebas =====
+const VAGAS = /\b(bien|correctamente|correcto|funcione|funciona|normal|adecuad[oa]|ok|como debe)\b/i;
+function avisosCaso(c) {
+  const a = [];
+  if (!String(c.req).trim()) a.push('No indica qué requisito comprueba.');
+  if (!String(c.pasos).trim()) a.push('Faltan los pasos.');
+  else if (String(c.pasos).trim().split('\n').filter(Boolean).length < 2) a.push('Los pasos son demasiado vagos: escribe cada acción en una línea.');
+  if (!String(c.esp).trim()) a.push('Falta el resultado esperado.');
+  else if (VAGAS.test(c.esp) && String(c.esp).trim().length < 60) a.push('El resultado esperado no es verificable: di qué se ve o qué ocurre exactamente.');
+  if (c.estado === 'Fallido' && !String(c.obt).trim()) a.push('Un caso fallido necesita el resultado obtenido.');
+  if (c.estado === 'Superado' && !String(c.obt).trim()) a.push('Anota el resultado obtenido para dejar constancia.');
+  return a.join(' ');
+}
+function tarjetaPT(c, i) {
+  return `<article class="tarjeta" data-i="${i}">
+  <div class="th"><b>${esc(c.id)}</b>
+    <input type="text" data-c="req" value="${esc(c.req)}" aria-label="Requisito que comprueba ${esc(c.id)}" placeholder="Requisito o elemento del backlog que comprueba" autocomplete="off">
+    <div class="acc"><button type="button" data-a="borra" aria-label="Quitar ${esc(c.id)}">✕</button></div></div>
+  <div class="rejilla2">
+    <label>Precondiciones<textarea data-c="pre" rows="2">${esc(c.pre)}</textarea></label>
+    <label>Pasos (uno por línea)<textarea data-c="pasos" rows="3">${esc(c.pasos)}</textarea></label>
+    <label>Resultado esperado<textarea data-c="esp" rows="2">${esc(c.esp)}</textarea></label>
+  </div>
+  <div class="rejilla2">
+    <label>Resultado obtenido<input type="text" data-c="obt" value="${esc(c.obt)}" autocomplete="off"></label>
+    <label>Estado<select data-c="estado">${opts(ESTADOS_PT, c.estado)}</select></label>
+  </div>
+  <p class="aviso-caso" data-av></p>
+</article>`;
+}
+function actualizarPT() {
+  const p = E.pruebas; const n = p.length;
+  $$('#pt-lista [data-i]').forEach((card) => { const c = p[+card.dataset.i]; if (c) card.querySelector('[data-av]').textContent = avisosCaso(c); });
+  if (!n) { $('#pt-resumen').innerHTML = '<b>Resumen de la ejecución</b><p>Aún no hay casos.</p>'; return; }
+  const k = ESTADOS_PT.map((s) => p.filter((c) => c.estado === s).length);
+  const [pe, ok, ko, bl] = k;
+  const pct = Math.round((ok / n) * 100);
+  let veredicto;
+  if (pe) veredicto = `Quedan ${pe} caso(s) por ejecutar.`;
+  else if (ko) veredicto = `No se puede entregar: hay ${ko} caso(s) fallido(s). Abre un fallo por cada uno y repite la prueba tras corregirlo.`;
+  else if (bl) veredicto = `Hay ${bl} caso(s) bloqueado(s): resuelve lo que los bloquea y ejecútalos.`;
+  else veredicto = 'Todos los casos están superados.';
+  const w = (x) => (x / n * 100).toFixed(1) + '%';
+  $('#pt-resumen').innerHTML = `<b>Resumen de la ejecución</b>
+    <div class="chips"><span class="chip">Total: ${n}</span><span class="chip">Superados: ${ok} (${pct} %)</span><span class="chip">Fallidos: ${ko}</span><span class="chip">Bloqueados: ${bl}</span><span class="chip">Pendientes: ${pe}</span></div>
+    <div class="barra" aria-hidden="true"><span class="b-ok" style="width:${w(ok)}"></span><span class="b-ko" style="width:${w(ko)}"></span><span class="b-bl" style="width:${w(bl)}"></span><span class="b-pe" style="width:${w(pe)}"></span></div>
+    <p>${esc(veredicto)}</p>`;
+}
+function renderPT() {
+  $('#pt-lista').innerHTML = E.pruebas.length ? E.pruebas.map(tarjetaPT).join('') : '<p class="vacio">Sin casos de prueba. Pulsa «Añadir caso».</p>';
+  actualizarPT();
+}
+$('#pt-lista').addEventListener('input', (e) => {
+  const t = e.target; const card = t.closest('[data-i]'); if (!card || !t.dataset.c) return;
+  E.pruebas[+card.dataset.i][t.dataset.c] = t.value;
+  actualizarPT(); guardar();
+});
+$('#pt-lista').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-a="borra"]'); if (!b) return;
+  E.pruebas.splice(+b.closest('[data-i]').dataset.i, 1); renderPT(); guardar();
+});
+$('#pr-add').addEventListener('click', () => {
+  E.pruebas.push({ id: sigId(E.pruebas, 'CP-'), req: '', pre: '', pasos: '', esp: '', obt: '', estado: 'Pendiente' });
+  renderPT(); guardar();
+});
+$('#pr-vaciar').addEventListener('click', (e) => confirmar(e.target, '¿Seguro? Pulsa otra vez para vaciar', () => { E.pruebas = []; renderPT(); guardar(); }));
+$('#pr-ejemplo').addEventListener('click', (e) => confirmar(e.target, '¿Seguro? Se perderá lo que tienes', () => { E.pruebas = ejemploPruebas(); renderPT(); guardar(); }));
+function mdPT() {
+  const p = E.pruebas; const n = p.length;
+  let s = `# Plan de pruebas: ${nombreProyecto()}\n\n## Resumen de la ejecución\n\n`;
+  s += ESTADOS_PT.map((st) => `- ${st}: ${p.filter((c) => c.estado === st).length}`).join('\n') + `\n- Total: ${n}\n\n## Casos de prueba\n`;
+  p.forEach((c) => {
+    s += `\n### ${c.id}\n\n| Campo | Contenido |\n|---|---|\n| Requisito | ${celda(c.req)} |\n| Precondiciones | ${celda(c.pre)} |\n| Pasos | ${celda(String(c.pasos).split('\n').join(' / '))} |\n| Resultado esperado | ${celda(c.esp)} |\n| Resultado obtenido | ${celda(c.obt)} |\n| Estado | ${c.estado} |\n`;
+  });
+  return s;
+}
+$('#pt-md').addEventListener('click', () => descargar('plan-de-pruebas-' + slug(E.proyecto) + '.md', mdPT(), 'text/markdown', $('#pt-exp')));
+$('#pt-json').addEventListener('click', () => descargar('plan-de-pruebas-' + slug(E.proyecto) + '.json', JSON.stringify({ proyecto: E.proyecto, pruebas: E.pruebas }, null, 2), 'application/json', $('#pt-exp')));
+
+// ===== 4. Guía de instalación =====
+const GUIA = [
+  { t: 'Instala Node en tu equipo.', err: true, x: 'No indica la versión ni los requisitos previos (sistema operativo, base de datos, puerto). Mejor: «Instala Node.js 20 o superior».' },
+  { t: 'Descarga el proyecto del repositorio.', err: true, x: 'No dice de dónde ni cómo. Debe dar la dirección del repositorio y la orden de clonado o descarga.' },
+  { t: 'Abre una terminal en la carpeta del proyecto.', err: false, x: 'Bien: una acción, clara y en su sitio.' },
+  { t: 'Ejecuta npm start para arrancar la aplicación.', err: true, x: 'El orden está invertido: antes de arrancar hay que instalar las dependencias (el paso siguiente).' },
+  { t: 'Ejecuta npm install para instalar las dependencias.', err: false, x: 'Bien: una orden concreta. Va antes de arrancar, aunque en esta guía aparece después.' },
+  { t: 'Copia el archivo .env.ejemplo con el nombre .env.', err: false, x: 'Bien: una acción con nombres exactos de archivo.' },
+  { t: 'En .env escribe la contraseña de la base de datos: admin1234.', err: true, x: 'Nunca se escriben contraseñas reales en la documentación. Se indica dónde se configuran y la contraseña se entrega por otro canal.' },
+  { t: 'Crea la base de datos y configúrala.', err: true, x: 'Son dos acciones y ninguna es concreta: faltan las órdenes exactas y el resultado esperado de cada paso.' },
+  { t: 'Ejecuta rm -rf datos/ para eliminar restos de instalaciones anteriores.', err: true, x: 'Orden destructiva sin aviso ni copia de seguridad previa: puede borrar datos reales. Hay que advertirlo y explicar cómo copiarlos antes.' },
+  { t: 'Abre el navegador. Si todo ha ido bien, ya funciona.', err: true, x: 'No hay verificación concreta. Mejor: «Abre la dirección de la aplicación en el navegador; debe aparecer la pantalla de acceso».' },
+  { t: 'Si el puerto 3000 está ocupado, cambia la variable PORT en .env.', err: false, x: 'Bien: es una entrada de solución de problemas con causa y remedio.' },
+  { t: 'Para actualizar, repite los pasos.', err: true, x: 'Falta la copia de seguridad antes de actualizar y los pasos reales de actualización sin perder datos.' },
+];
+const CK_GUIA = ['Qué se instala (nombre y versión)', 'Requisitos previos (sistema, software con versión, puertos, permisos)', 'Obtención (de dónde y cómo comprobar que es el correcto)', 'Pasos numerados, uno por acción, con el resultado esperado', 'Configuración sin contraseñas ni claves reales', 'Verificación: cómo comprobar que quedó bien instalado', 'Actualización y copia de seguridad', 'Solución de problemas (síntoma, causa, solución)', 'Desinstalación'];
+function renderGI() {
+  const g = E.guia;
+  $('#gi-lineas').innerHTML = GUIA.map((l, i) => `<li><button type="button" data-i="${i}" aria-pressed="${g.marcas.includes(i)}"><code>${esc(l.t)}</code></button><span class="res" id="gi-r${i}"></span></li>`).join('');
+  if (g.comprobado) mostrarGI();
+  else $('#gi-res').textContent = '';
+  $('#gi-ck').innerHTML = CK_GUIA.map((t, i) => `<li><label style="display:flex;gap:.5rem;align-items:center;color:var(--ink)"><input type="checkbox" data-k="${i}"${g.ck.includes(i) ? ' checked' : ''}> ${esc(t)}</label></li>`).join('');
+  progGI();
+}
+function mostrarGI() {
+  const m = E.guia.marcas; let hit = 0, fp = 0, miss = 0;
+  GUIA.forEach((l, i) => {
+    const r = $('#gi-r' + i); if (!r) return;
+    const marcada = m.includes(i);
+    if (l.err && marcada) { hit++; r.className = 'res ok'; r.textContent = 'Acertaste, hay un error. ' + l.x; }
+    else if (l.err) { miss++; r.className = 'res ko'; r.textContent = 'No la marcaste y tiene un error. ' + l.x; }
+    else if (marcada) { fp++; r.className = 'res bl'; r.textContent = 'Esta línea no tiene error. ' + l.x; }
+    else { r.className = 'res'; r.textContent = ''; }
+  });
+  const total = GUIA.filter((l) => l.err).length;
+  $('#gi-res').textContent = `Errores encontrados: ${hit} de ${total}. Marcadas sin error: ${fp}. Errores sin marcar: ${miss}.` + (hit === total && !fp ? ' Perfecto.' : '');
+}
+function progGI() { $('#gi-prog').textContent = `Tu guía incluye ${E.guia.ck.length} de ${CK_GUIA.length} apartados.`; }
+$('#gi-lineas').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-i]'); if (!b) return;
+  const i = +b.dataset.i; const m = E.guia.marcas;
+  if (m.includes(i)) m.splice(m.indexOf(i), 1); else m.push(i);
+  b.setAttribute('aria-pressed', String(m.includes(i)));
+  E.guia.comprobado = false;
+  $$('#gi-lineas .res').forEach((r) => { r.textContent = ''; r.className = 'res'; });
+  $('#gi-res').textContent = '';
+  guardar();
+});
+$('#gi-comprobar').addEventListener('click', () => { E.guia.comprobado = true; mostrarGI(); guardar(); });
+$('#gi-reiniciar').addEventListener('click', () => { E.guia.marcas = []; E.guia.comprobado = false; renderGI(); guardar(); });
+$('#gi-ck').addEventListener('change', (e) => {
+  const c = e.target; if (c.dataset.k === undefined) return;
+  const k = +c.dataset.k; const ck = E.guia.ck;
+  if (c.checked && !ck.includes(k)) ck.push(k);
+  if (!c.checked && ck.includes(k)) ck.splice(ck.indexOf(k), 1);
+  progGI(); guardar();
+});
+$('#gi-md').addEventListener('click', () => {
+  const s = `# Lista de verificación de la guía de instalación: ${nombreProyecto()}\n\n` + CK_GUIA.map((t, i) => `- [${E.guia.ck.includes(i) ? 'x' : ' '}] ${t}`).join('\n') + '\n';
+  descargar('lista-guia-instalacion-' + slug(E.proyecto) + '.md', s, 'text/markdown', $('#gi-exp'));
+});
+
+// ===== 5. Manual de usuario =====
+const MANUAL_MALO = `Gestión de tickets
+
+Para instanciar un nuevo ticket en el sistema, el usuario deberá proceder a acceder al módulo correspondiente y posteriormente parametrizar los campos, lo cual es trivial.
+
+1. Se accederá al menú y luego se seleccionará la opción.
+2. Introduzca los datos del dispositivo y envíe el formulario.
+3. Pulse aquí para continuar.`;
+const MANUAL_BUENO = `Abrir una incidencia
+
+Úsalo cuando un equipo de tu empresa se ha averiado y quieres que lo revisemos.
+
+Antes de empezar: ten a mano el número de serie del equipo (viene en la etiqueta trasera) y haber iniciado sesión.
+
+1. En el menú superior, pulsa "Nueva incidencia".
+2. En "Equipo", elige el equipo averiado de la lista.
+3. En "¿Qué ocurre?", describe el problema con tus palabras.
+4. En "Urgencia", elige "Parado" si no puedes trabajar o "Con molestias" si puedes seguir.
+5. Pulsa "Enviar".
+
+Resultado: verás el mensaje "Incidencia recibida" con su número. Te avisaremos por correo cada vez que cambie de estado.
+
+Si no aparece tu equipo en la lista: llama al taller y lo daremos de alta.`;
+function analizarManual(t) {
+  const lineas = t.split('\n').map((l) => l.trim()).filter(Boolean);
+  const pasos = lineas.filter((l) => /^\d+[.)]\s/.test(l));
+  const frases = t.split(/(?<=[.!?])\s+|\n+/).map((s) => s.trim()).filter(Boolean);
+  const largas = frases.filter((f) => f.split(/\s+/).length > 25);
+  const multi = pasos.filter((p) => /(\by luego\b|\by después\b|\by posteriormente\b|\by a continuación\b|,\s*(luego|después)\b)/i.test(p));
+  const indirectos = pasos.filter((p) => /^\d+[.)]\s*(se\b|deberá|deberás|procederá|proceda\b|es necesario|es preciso|el usuario)/i.test(p));
+  const jerga = [...new Set((t.match(/\b(ticket|workflow|instanci\w*|parametriz\w*|backend|frontend|query|login|logout|dashboard|módulo|input|submit)\b/gi) || []).map((x) => x.toLowerCase()))];
+  const muletillas = [...new Set((t.match(/\b(trivial|simplemente|obviamente|evidentemente|fácilmente|sencillamente)\b/gi) || []).map((x) => x.toLowerCase()))];
+  const aqui = /\b(pulsa|pulse|haz|haga)\s+(clic\s+|click\s+)?aquí\b/i.test(t);
+  const hay = t.trim().length > 0;
+  const c = [];
+  c.push([hay && pasos.length >= 3, 'Pasos numerados', pasos.length >= 3 ? `${pasos.length} pasos numerados.` : 'Escribe al menos 3 pasos numerados (1. 2. 3.).']);
+  c.push([hay && pasos.length > 0 && !multi.length, 'Una acción por paso', multi.length ? `${multi.length} paso(s) con varias acciones (y luego, y después…). Divídelos.` : (pasos.length ? 'Cada paso tiene una acción.' : 'Sin pasos que revisar.')]);
+  c.push([hay && pasos.length > 0 && !indirectos.length && !aqui, 'Voz directa y enlaces claros', indirectos.length ? `${indirectos.length} paso(s) en forma impersonal (se…, deberá…, proceda…). Usa «Pulsa», «Escribe».` : (aqui ? 'Evita «pulsa aquí»: di a dónde lleva.' : (pasos.length ? 'Los pasos hablan de tú a tú.' : 'Sin pasos que revisar.'))]);
+  c.push([hay && !largas.length, 'Frases cortas', largas.length ? `${largas.length} frase(s) de más de 25 palabras. Divídelas.` : 'Ninguna frase pasa de 25 palabras.']);
+  c.push([hay && !jerga.length, 'Sin jerga', jerga.length ? 'Palabras técnicas: ' + jerga.join(', ') + '. Usa el lenguaje de quien lee.' : 'No se detecta jerga de la lista.']);
+  c.push([hay && !muletillas.length, 'Sin muletillas condescendientes', muletillas.length ? 'Quita: ' + muletillas.join(', ') + '. Lo fácil para ti puede no serlo para quien lee.' : 'Sin «trivial», «simplemente»…']);
+  c.push([/antes de empezar/i.test(t), '«Antes de empezar»', /antes de empezar/i.test(t) ? 'Dice qué hace falta tener.' : 'Añade lo necesario antes de empezar (sesión iniciada, datos a mano…).']);
+  c.push([/resultado|verás|aparecerá|aparece el mensaje/i.test(t), 'Resultado', /resultado|verás|aparecerá|aparece el mensaje/i.test(t) ? 'Dice qué se verá al terminar.' : 'Di qué verá la persona cuando termine.']);
+  c.push([/\bsi (no|falla|aparece|ves|hay)\b/i.test(t), 'Qué hacer si falla', /\bsi (no|falla|aparece|ves|hay)\b/i.test(t) ? 'Incluye una salida si algo falla.' : 'Añade una línea «Si no aparece…» con la solución.']);
+  c.push([/["“”«»]/.test(pasos.join(' ')), 'Nombres exactos entre comillas', /["“”«»]/.test(pasos.join(' ')) ? 'Los pasos citan los nombres de la pantalla.' : 'Pon entre comillas el nombre exacto de cada botón o campo.']);
+  return c;
+}
+function renderManual() {
+  const t = $('#mu-texto').value; const c = analizarManual(t);
+  const ok = c.filter((x) => x[0]).length;
+  $('#mu-puntos').textContent = `Puntuación: ${ok} de ${c.length}.`;
+  $('#mu-res').innerHTML = c.map(([b, titulo, det]) => `<li class="${b ? 'ok' : 'ko'}"><span class="mk">${b ? '✓ Bien' : '✗ Mejorar'}</span><b>${esc(titulo)}</b><span>${esc(det)}</span></li>`).join('');
+}
+$('#mu-texto').value = E.manual == null ? MANUAL_MALO : E.manual;
+$('#mu-texto').addEventListener('input', () => { E.manual = $('#mu-texto').value; renderManual(); guardar(); });
+$('#mu-malo').addEventListener('click', () => { $('#mu-texto').value = MANUAL_MALO; E.manual = MANUAL_MALO; renderManual(); guardar(); });
+$('#mu-bueno').addEventListener('click', () => { $('#mu-texto').value = MANUAL_BUENO; E.manual = MANUAL_BUENO; renderManual(); guardar(); });
+$('#mu-vaciar').addEventListener('click', () => { $('#mu-texto').value = ''; E.manual = ''; renderManual(); guardar(); });
+$('#mu-md').addEventListener('click', () => descargar('manual-' + slug(E.proyecto) + '.md', $('#mu-texto').value + '\n', 'text/markdown', $('#mu-exp')));
+
+// ===== 6. Memoria final =====
+function renderME() {
+  const m = E.memoria;
+  $('#me-titulo').value = m.titulo || ''; $('#me-autores').value = m.autores || ''; $('#me-curso').value = m.curso || ''; $('#me-fecha').value = m.fecha || ''; $('#me-resumen').value = m.resumen || '';
+  $('#me-lista').innerHTML = m.secciones.map((s, i) => `<article class="tarjeta" data-i="${i}">
+    <div class="th">
+      <label style="display:flex;gap:.4rem;align-items:center;color:var(--ink)"><input type="checkbox" data-c="incluir"${s.incluir ? ' checked' : ''} aria-label="Incluir ${esc(s.titulo)}"> <b style="font-family:var(--f-display)">${esc(s.titulo)}</b></label>
+      <span class="ayuda" style="flex:1 1 12rem">${esc(s.pista || '')}</span>
+      <div class="acc">
+        <button type="button" data-a="sube" aria-label="Subir ${esc(s.titulo)}">↑</button>
+        <button type="button" data-a="baja" aria-label="Bajar ${esc(s.titulo)}">↓</button>
+        ${s.custom ? `<button type="button" data-a="borra" aria-label="Quitar ${esc(s.titulo)}">✕</button>` : ''}
+      </div>
+    </div>
+    <div class="rejilla2">
+      <label>Material de partida<input type="text" data-c="material" value="${esc(s.material)}" autocomplete="off"></label>
+      <label>Responsable<input type="text" data-c="resp" value="${esc(s.resp)}" autocomplete="off"></label>
+    </div>
+  </article>`).join('');
+  actualizarME();
+}
+function incluidas() { return E.memoria.secciones.filter((s) => s.incluir); }
+function avisosME() {
+  const inc = incluidas(); const pos = (id) => inc.findIndex((s) => s.id === id); const av = [];
+  if (pos('resumen') > 0) av.push('El resumen va al principio (aunque se escriba al final).');
+  if (pos('anexos') >= 0 && pos('anexos') !== inc.length - 1) av.push('Los anexos van al final.');
+  if (pos('biblio') >= 0 && pos('anexos') >= 0 && pos('biblio') > pos('anexos')) av.push('La bibliografía va antes de los anexos.');
+  if (pos('conclusiones') >= 0 && pos('resultados') >= 0 && pos('conclusiones') < pos('resultados')) av.push('Las conclusiones van después de los resultados.');
+  if (pos('intro') >= 0 && pos('resultados') >= 0 && pos('intro') > pos('resultados')) av.push('La introducción y los objetivos van antes de los resultados.');
+  E.memoria.secciones.filter((s) => !s.incluir && !s.custom).forEach((s) => av.push(`Has quitado «${s.titulo}»: confirma con tu profesor que no se pide.`));
+  const sinResp = inc.filter((s) => !String(s.resp).trim()).length;
+  if (sinResp) av.push(`${sinResp} apartado(s) sin responsable.`);
+  return av;
+}
+function textoIndice() {
+  const m = E.memoria; const inc = incluidas();
+  let n = 0; const lineas = ['Portada'];
+  inc.forEach((s) => { if (s.id === 'resumen' || s.id === 'biblio' || s.id === 'anexos') lineas.push(s.titulo); else { n++; lineas.push(`${n}. ${s.titulo}`); } });
+  return lineas.join('\n');
+}
+function actualizarME() {
+  const av = avisosME();
+  $('#me-aviso').innerHTML = `<b>${incluidas().length} apartados</b>` + (av.length ? '<ul>' + av.map((a) => `<li>${esc(a)}</li>`).join('') + '</ul>' : '<p>El orden es coherente.</p>');
+  $('#me-vista').textContent = textoIndice();
+}
+function mdME() {
+  const m = E.memoria; const inc = incluidas(); let n = 0;
+  let s = `# ${m.titulo || nombreProyecto()}\n\n- Proyecto: ${nombreProyecto()}\n- Autores: ${m.autores || '(pendiente)'}\n- Curso: ${m.curso || '(pendiente)'}\n- Fecha: ${m.fecha || '(pendiente)'}\n\n## Índice\n\n`;
+  const nombres = inc.map((x) => { if (x.id === 'resumen' || x.id === 'biblio' || x.id === 'anexos') return x.titulo; n++; return `${n}. ${x.titulo}`; });
+  s += nombres.map((x) => '- ' + x).join('\n') + '\n';
+  inc.forEach((x, i) => {
+    s += `\n## ${nombres[i]}\n\n`;
+    if (x.id === 'resumen' && String(m.resumen).trim()) s += m.resumen.trim() + '\n';
+    else s += `<!-- Material: ${x.material || x.pista || ''}. Responsable: ${x.resp || 'pendiente'}. -->\n_Pendiente de escribir._\n`;
+  });
+  return s;
+}
+const meSimple = { '#me-titulo': 'titulo', '#me-autores': 'autores', '#me-curso': 'curso', '#me-fecha': 'fecha', '#me-resumen': 'resumen' };
+Object.keys(meSimple).forEach((sel) => $(sel).addEventListener('input', (e) => { E.memoria[meSimple[sel]] = e.target.value; guardar(); }));
+$('#me-lista').addEventListener('input', (e) => {
+  const t = e.target; const card = t.closest('[data-i]'); if (!card || !t.dataset.c) return;
+  E.memoria.secciones[+card.dataset.i][t.dataset.c] = t.type === 'checkbox' ? t.checked : t.value;
+  actualizarME(); guardar();
+});
+$('#me-lista').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-a]'); if (!b) return;
+  const i = +b.closest('[data-i]').dataset.i; const arr = E.memoria.secciones;
+  if (b.dataset.a === 'sube' && i > 0) [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]];
+  if (b.dataset.a === 'baja' && i < arr.length - 1) [arr[i + 1], arr[i]] = [arr[i], arr[i + 1]];
+  if (b.dataset.a === 'borra') arr.splice(i, 1);
+  renderME(); guardar();
+});
+$('#me-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const t = $('#me-nuevo').value.trim(); if (!t) return;
+  E.memoria.secciones.push({ id: 'x' + Date.now(), titulo: t, pista: 'Apartado propio', incluir: true, material: '', resp: '', custom: true });
+  $('#me-nuevo').value = ''; renderME(); guardar();
+});
+$('#me-reset').addEventListener('click', (e) => confirmar(e.target, '¿Seguro? Pulsa otra vez para restablecer', () => { E.memoria = memoriaBase(); renderME(); guardar(); }));
+$('#me-md').addEventListener('click', () => descargar('memoria-esqueleto-' + slug(E.proyecto) + '.md', mdME(), 'text/markdown', $('#me-exp')));
+$('#me-json').addEventListener('click', () => descargar('memoria-esqueleto-' + slug(E.proyecto) + '.json', JSON.stringify({ proyecto: E.proyecto, memoria: E.memoria }, null, 2), 'application/json', $('#me-exp')));
+
+// ===== 7. Práctica =====
+const DOCS = ['Product Backlog', 'Informe de revisión (Sprint Review)', 'Acta de retrospectiva', 'Documento de diseño', 'Plan de pruebas', 'Guía de instalación', 'Manual de usuario', 'Memoria final', 'Informe de avance semanal'];
+const ITEMS_DOC = [
+  ['Lista ordenada con identificador, prioridad MoSCoW y estimación de cada requisito', 0, 'El backlog recoge los requisitos ordenados, con su prioridad y estimación.'],
+  ['Criterios de aceptación en formato Dado / Cuando / Entonces de una historia de usuario', 0, 'Los criterios de aceptación se escriben en cada elemento del backlog.'],
+  ['Lista de elementos terminados y no terminados del sprint con los comentarios del cliente', 1, 'La revisión del sprint deja constancia de lo mostrado, lo no terminado y los cambios pedidos.'],
+  ['Cambios acordados en el backlog tras ver el incremento funcionando', 1, 'Se decide en la Sprint Review y se anota en su informe.'],
+  ['Acuerdo: revisar el código por parejas, con responsable y plazo, desde el próximo sprint', 2, 'Los acuerdos de mejora con responsable y plazo son el resultado de la retrospectiva.'],
+  ['Notas votadas de Empezar, Parar y Continuar', 2, 'Es el contenido típico de una retrospectiva.'],
+  ['Diagrama de cajas con navegador, servidor web y base de datos', 3, 'La arquitectura se describe en el documento de diseño.'],
+  ['Entidades Cliente, Equipo e Incidencia y sus relaciones', 3, 'El modelo de datos va en el documento de diseño.'],
+  ['Por qué se eligió una base de datos relacional frente a otras alternativas', 3, 'Las decisiones y sus motivos se documentan en el diseño.'],
+  ['CP-03: precondiciones, pasos y resultado esperado al abrir una incidencia', 4, 'Los casos de prueba forman el plan de pruebas.'],
+  ['Resumen: 18 casos, 15 superados, 2 fallidos y 1 bloqueado', 4, 'El resumen de ejecución cierra el plan de pruebas.'],
+  ['Versión mínima de Node y puertos que debe tener libres el servidor', 5, 'Los requisitos previos son el segundo apartado de la guía de instalación.'],
+  ['Tabla con el síntoma EADDRINUSE, su causa y su solución', 5, 'La solución de problemas va en la guía de instalación.'],
+  ['Cómo copiar la base de datos antes de actualizar la aplicación', 5, 'La copia de seguridad y la actualización se explican en la guía de instalación.'],
+  ['Pasos numerados para Abrir una incidencia y el mensaje que verá el cliente', 6, 'Las tareas paso a paso son el núcleo del manual de usuario.'],
+  ['Preguntas frecuentes: «He olvidado mi contraseña»', 6, 'Las preguntas frecuentes se dirigen a quien usa el producto: van en el manual.'],
+  ['Resumen de una página con la necesidad, la solución y el resultado', 7, 'El resumen abre la memoria final.'],
+  ['Comparación entre objetivos previstos y conseguidos, y líneas de mejora', 7, 'Los resultados y las conclusiones forman parte de la memoria final.'],
+  ['Semáforo amarillo, 5 de 8 elementos terminados y una decisión pendiente del Product Owner', 8, 'El informe de avance es breve, periódico y con semáforo, hechos y decisiones pendientes.'],
+];
+const BANCO = [
+  ['MoSCoW', '¿Qué prioridad MoSCoW tiene «Abrir una incidencia», sin lo cual el portal no sirve?', 'Must', ['Should', 'Could', "Won't"], 'Sin esa función el producto no sirve: es imprescindible, un Must.'],
+  ['MoSCoW', 'Un gráfico de averías por mes: «solo si hay tiempo».', 'Could', ['Must', 'Should', "Won't"], 'Es deseable pero prescindible: Could.'],
+  ['MoSCoW', 'Aplicación móvil nativa: se ha acordado que no entra en esta entrega.', "Won't", ['Must', 'Should', 'Could'], 'Won\'t no significa «nunca»: significa «no en esta entrega» y queda anotado.'],
+  ['MoSCoW', 'El aviso por correo es importante, pero se puede consultar el portal a mano mientras tanto.', 'Should', ['Must', 'Could', "Won't"], 'Duele que falte pero hay alternativa provisional: Should.'],
+  ['Valor y esfuerzo', 'Un elemento tiene valor 5 y esfuerzo 1. ¿Qué haces?', 'Hacerlo ya: es una victoria rápida', ['Descartarlo', 'Dejarlo para el final', 'Pedir más información al cliente'], 'Mucho valor con poco esfuerzo va primero.'],
+  ['Valor y esfuerzo', 'Un elemento tiene valor 1 y esfuerzo 5. ¿Qué haces?', 'Descartarlo o aplazarlo', ['Hacerlo el primero', 'Hacerlo ya porque es difícil', 'Subirle la prioridad a Must'], 'Poco valor y mucho esfuerzo es lo último que conviene hacer.'],
+  ['Criterios', '¿Qué criterio de aceptación es verificable?', 'La consulta de una incidencia carga en menos de 3 segundos con 30 usuarios conectados', ['La web debe ser rápida', 'Tiene que verse bien', 'Será fácil de usar'], 'Un criterio verificable tiene una medida y unas condiciones: se puede decir sí o no.'],
+  ['Criterios', '¿Cuál es un requisito no funcional?', 'Cada cliente solo puede ver sus propias incidencias', ['El cliente puede abrir una incidencia', 'El técnico cambia el estado de una incidencia', 'El cliente recibe un correo al cerrarla'], 'Habla de seguridad (quién puede ver qué), no de una función concreta.'],
+  ['Criterios', '¿Qué definición se comprueba ANTES de empezar a trabajar un elemento?', 'La Definición de Preparado', ['La Definición de Hecho', 'Ninguna: se comprueba al terminar el sprint', 'El criterio de aceptación de la memoria'], 'Preparado = ¿está lo bastante claro para empezar? Hecho = ¿podemos darlo por terminado?'],
+  ['Casos de prueba', '¿Qué defecto tiene el resultado esperado «que funcione bien»?', 'No es verificable', ['Es demasiado largo', 'Falta el identificador', 'Debería ir en los pasos'], '«Bien» no tiene medida: el resultado esperado debe decir exactamente qué se ve o qué ocurre.'],
+  ['Casos de prueba', '¿Qué tipo de prueba comprueba que un cambio reciente no ha estropeado lo que ya funcionaba?', 'Prueba de regresión', ['Prueba unitaria', 'Prueba de aceptación', 'Prueba de rendimiento'], 'Regresión: se repiten casos anteriores tras un cambio.'],
+  ['Casos de prueba', 'Un caso de prueba falla. ¿Qué debes anotar?', 'El resultado obtenido y abrir un fallo', ['Solo cambiar el estado a Superado', 'Borrar el caso', 'Cambiar el resultado esperado para que coincida'], 'Se anota qué ocurrió realmente. Cambiar lo esperado para que cuadre esconde el problema.'],
+  ['Review y retrospectiva', '¿Qué se muestra en la Sprint Review?', 'El incremento funcionando, solo lo que cumple la Definición de Hecho', ['Solo diapositivas', 'Elementos casi terminados presentados como terminados', 'Las quejas del equipo'], 'La Review inspecciona el producto real; lo que no está hecho no se presenta como hecho.'],
+  ['Review y retrospectiva', '¿Quién participa en la Sprint Retrospective?', 'Solo el equipo Scrum', ['El equipo y todo el cliente', 'Solo el Product Owner', 'Cualquier persona interesada'], 'Es una sesión interna para mejorar la forma de trabajar.'],
+  ['Review y retrospectiva', '¿Qué nota de «Parar» está bien formulada?', 'Dejar de subir cambios sin revisión', ['Pablo no revisa nunca', 'Todo el sprint fue un desastre', 'Que el profesor mande menos'], 'Critica un proceso, no a una persona, y se puede cambiar.'],
+  ['Review y retrospectiva', '¿Qué acuerdo de retrospectiva es mejor?', 'Actualizar el backlog el mismo día que cambie un requisito (responsable: Product Owner)', ['Comunicarnos más', 'Esforzarnos todos', 'Trabajar mejor'], 'Es concreto, tiene responsable y se puede comprobar.'],
+  ['Guía y manual', '¿Qué hay que hacer con la contraseña de la base de datos en una guía de instalación?', 'No escribirla: indicar dónde se configura y entregarla por otro canal', ['Escribirla para que no se olvide', 'Subirla al repositorio', 'Ponerla en una captura de pantalla'], 'Los secretos no van en la documentación.'],
+  ['Guía y manual', '¿Qué paso de un manual está mejor redactado?', 'Pulsa "Enviar"', ['Proceda al envío del formulario', 'Se procederá a enviar los datos', 'El usuario deberá enviar el formulario'], 'Voz directa, verbo de acción y el nombre exacto del botón.'],
+  ['Guía y manual', '¿Cómo se comprueba de verdad que un manual funciona?', 'Una persona que no conoce el producto hace una tarea solo con el manual mientras se observa', ['Lo revisa quien lo escribió', 'Se cuentan las páginas', 'Se pasa el corrector ortográfico'], 'Las dudas de esa persona señalan los fallos del manual.'],
+  ['Memoria', '¿Cuándo se escribe el resumen de la memoria?', 'Al final, aunque vaya al principio', ['El primer día', 'No hace falta', 'Justo después de la introducción'], 'Debe contar el resultado real del proyecto.'],
+  ['Memoria', '¿Dónde va el manual de usuario completo dentro de la memoria?', 'En un anexo', ['En el resumen', 'En las conclusiones', 'En la portada'], 'Apoya al proyecto pero alargaría el texto principal; en el cuerpo se menciona y se remite al anexo.'],
+];
+function barajar(a) { const r = a.slice(); for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; }
+let actual = null; let anterior = -1; let respondido = false;
+function nuevoPA() {
+  respondido = false;
+  const total = ITEMS_DOC.length + BANCO.length;
+  let k; do { k = Math.floor(Math.random() * total); } while (k === anterior && total > 1);
+  anterior = k;
+  if (k < ITEMS_DOC.length) {
+    const [txt, d, x] = ITEMS_DOC[k];
+    actual = { tipo: '¿En qué documento va?', enun: `¿En qué documento va este elemento? «${txt}»`, opc: DOCS.slice(), ok: DOCS[d], x: `${DOCS[d]}. ${x}` };
+  } else {
+    const [tipo, enun, ok, mal, x] = BANCO[k - ITEMS_DOC.length];
+    actual = { tipo, enun, opc: tipo === 'MoSCoW' ? ['Must', 'Should', 'Could', "Won't"] : barajar([ok, ...mal]), ok, x };
+  }
+  $('#pa-tipo').textContent = 'Tipo de ejercicio: ' + actual.tipo;
+  $('#pa-enun').textContent = actual.enun;
+  $('#pa-corr').textContent = '';
+  $('#pa-opc').innerHTML = actual.opc.map((o, i) => `<button type="button" data-o="${i}">${esc(o)}</button>`).join('');
+}
+$('#pa-opc').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-o]'); if (!b || respondido) return;
+  respondido = true;
+  const elegida = actual.opc[+b.dataset.o]; const acierto = elegida === actual.ok;
+  E.practica.in++; if (acierto) E.practica.ac++;
+  $$('#pa-opc button').forEach((x) => {
+    x.disabled = true;
+    const txt = actual.opc[+x.dataset.o];
+    if (txt === actual.ok) { x.classList.add('acierto'); x.textContent = '✓ ' + txt; }
+    else if (x === b) { x.classList.add('fallo'); x.textContent = '✗ ' + txt; }
+  });
+  $('#pa-corr').textContent = (acierto ? 'Correcto. ' : 'Incorrecto. La respuesta es «' + actual.ok + '». ') + (acierto ? actual.x : actual.x);
+  marcadorPA(); guardar();
+});
+function marcadorPA() { $('#pa-ac').textContent = String(E.practica.ac); $('#pa-in').textContent = String(E.practica.in); }
+$('#pa-otro').addEventListener('click', nuevoPA);
+$('#pa-cero').addEventListener('click', () => { E.practica = { ac: 0, in: 0 }; marcadorPA(); guardar(); });
+
+// ===== Arranque =====
+renderBL(); renderRT(); renderPT(); renderGI(); renderManual(); renderME(); marcadorPA(); nuevoPA();
+mostrar(location.hash.slice(1) || Lab.leer('pestana'));
+</script>
+</body>
+</html>
