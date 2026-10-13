@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 230" width="800" height="230" role="img" aria-label="Historial con dos ramas: main avanza con tres commits y la rama feature sale del segundo commit, recibe dos commits y se fusiona en main con un commit de fusión.">
+  <rect width="800" height="230" fill="#ffffff"/>
+  <g font-family="system-ui, -apple-system, 'Segoe UI', Arial, sans-serif" font-size="13" fill="#16201b">
+    <path d="M60 70H700" stroke="#1f5244" stroke-width="3" fill="none"/>
+    <path d="M200 70L270 150H430L510 70" stroke="#8a4b00" stroke-width="3" fill="none" stroke-linejoin="round"/>
+
+    <circle cx="60" cy="70" r="14" fill="#1f5244"/>
+    <circle cx="200" cy="70" r="14" fill="#1f5244"/>
+    <circle cx="350" cy="70" r="14" fill="#1f5244"/>
+    <circle cx="510" cy="70" r="14" fill="#1f5244"/>
+    <circle cx="700" cy="70" r="14" fill="#1f5244"/>
+    <circle cx="270" cy="150" r="14" fill="#8a4b00"/>
+    <circle cx="430" cy="150" r="14" fill="#8a4b00"/>
+
+    <text x="60" y="104" text-anchor="middle">A</text>
+    <text x="200" y="104" text-anchor="middle">B</text>
+    <text x="350" y="104" text-anchor="middle">C</text>
+    <text x="510" y="104" text-anchor="middle">M</text>
+    <text x="700" y="104" text-anchor="middle">D</text>
+    <text x="270" y="184" text-anchor="middle">E</text>
+    <text x="430" y="184" text-anchor="middle">F</text>
+
+    <text x="60" y="38" text-anchor="middle" font-weight="700">main</text>
+    <text x="270" y="206" text-anchor="middle" font-size="12" fill="#56655d">rama feature/PORT-12-formulario</text>
+    <text x="510" y="38" text-anchor="middle" font-size="12" fill="#56655d">commit de fusión (M)</text>
+    <text x="350" y="38" text-anchor="middle" font-size="12" fill="#56655d">otro trabajo en main</text>
+  </g>
+</svg>

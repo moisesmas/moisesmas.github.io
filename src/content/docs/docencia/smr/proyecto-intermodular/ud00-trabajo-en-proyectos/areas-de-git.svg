@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 270" width="800" height="270" role="img" aria-label="Las cuatro zonas de Git: directorio de trabajo, área de preparación, repositorio local y repositorio remoto, con las órdenes que mueven los cambios entre ellas.">
+  <rect width="800" height="270" fill="#ffffff"/>
+  <defs>
+    <marker id="f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1f5244"/></marker>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8a4b00"/></marker>
+  </defs>
+  <g font-family="system-ui, -apple-system, 'Segoe UI', Arial, sans-serif" font-size="14" fill="#16201b">
+    <rect x="10" y="60" width="160" height="90" rx="8" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/>
+    <text x="90" y="95" text-anchor="middle" font-weight="700">Directorio</text>
+    <text x="90" y="115" text-anchor="middle" font-weight="700">de trabajo</text>
+    <text x="90" y="136" text-anchor="middle" font-size="12" fill="#56655d">tus archivos</text>
+
+    <rect x="215" y="60" width="160" height="90" rx="8" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/>
+    <text x="295" y="95" text-anchor="middle" font-weight="700">Área de</text>
+    <text x="295" y="115" text-anchor="middle" font-weight="700">preparación</text>
+    <text x="295" y="136" text-anchor="middle" font-size="12" fill="#56655d">(staging)</text>
+
+    <rect x="420" y="60" width="160" height="90" rx="8" fill="#e9ede6" stroke="#1f5244" stroke-width="2"/>
+    <text x="500" y="95" text-anchor="middle" font-weight="700">Repositorio</text>
+    <text x="500" y="115" text-anchor="middle" font-weight="700">local</text>
+    <text x="500" y="136" text-anchor="middle" font-size="12" fill="#56655d">tus commits</text>
+
+    <rect x="625" y="60" width="165" height="90" rx="8" fill="#fbeed8" stroke="#8a4b00" stroke-width="2"/>
+    <text x="707" y="95" text-anchor="middle" font-weight="700">Repositorio</text>
+    <text x="707" y="115" text-anchor="middle" font-weight="700">remoto</text>
+    <text x="707" y="136" text-anchor="middle" font-size="12" fill="#56655d">el del equipo</text>
+
+    <path d="M172 90H213" stroke="#1f5244" stroke-width="2.5" marker-end="url(#f)"/>
+    <path d="M377 90H418" stroke="#1f5244" stroke-width="2.5" marker-end="url(#f)"/>
+    <path d="M582 90H623" stroke="#8a4b00" stroke-width="2.5" marker-end="url(#g)"/>
+    <text x="193" y="80" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12">add</text>
+    <text x="397" y="80" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12">commit</text>
+    <text x="602" y="80" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12">push</text>
+
+    <path d="M623 125H582" stroke="#8a4b00" stroke-width="2.5" marker-end="url(#g)"/>
+    <text x="602" y="144" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12">fetch</text>
+    <path d="M707 152V205H90V152" fill="none" stroke="#8a4b00" stroke-width="2.5" marker-end="url(#g)" stroke-dasharray="6 4"/>
+    <text x="400" y="225" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13">pull (= fetch + merge)</text>
+
+    <path d="M295 152V182H140V152" fill="none" stroke="#1f5244" stroke-width="2" marker-end="url(#f)"/>
+    <text x="217" y="176" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="11">restore --staged</text>
+    <text x="400" y="36" text-anchor="middle" font-size="13" fill="#56655d">Los cambios avanzan hacia la derecha con add, commit y push.</text>
+    <text x="400" y="255" text-anchor="middle" font-size="12" fill="#56655d">restore deshace lo no confirmado; pull trae a tu directorio lo que otros publicaron.</text>
+  </g>
+</svg>
