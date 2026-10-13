@@ -43,13 +43,18 @@ La Unidad 0 no figura en la programación didáctica del módulo: es una propues
 
 ### 3. Documentación e informes
 
-Requisitos y *product backlog*, informes de avance (revisión del sprint y retrospectiva), documentación técnica, manual de usuario y memoria final. *(En preparación.)*
+16. [3.1 Requisitos y Product Backlog](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/21-product-backlog/): qué debe hacer el sistema y en qué orden.
+17. [3.2 Informes de avance: Sprint Review y Retrospectiva](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/22-informes-de-avance/): enseñar lo hecho y mejorar como equipo.
+18. [3.3 Documentación técnica](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/23-documentacion-tecnica/): documentos de diseño, plan de pruebas, guía de instalación y despliegue y documentación del código.
+19. [3.4 Manual de usuario](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/24-manual-de-usuario/): explicar el sistema a quien lo usa.
+20. [3.5 Memoria final del proyecto](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/25-memoria-final/): cómo contar todo el proyecto.
 
 ### Actividades
 
 - [Actividades de planificación](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/actividades-planificacion/)
 - [Actividades: metodologías ágiles](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/actividades-agil/)
 - [Actividades: herramientas de trabajo colaborativo](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/actividades-herramientas/)
+- [Actividades de documentación](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/actividades-documentacion/)
 
 :::aules
 Las entregas de los retos y las rúbricas están en el curso de Aules del módulo.
@@ -57,10 +62,12 @@ Las entregas de los retos y las rúbricas están en el curso de Aules del módul
 
 ## Laboratorios
 
-Tres laboratorios interactivos acompañan a la unidad. El primero sirve para planificar y elegir un ciclo de vida; el segundo, para practicar Kanban, Scrum, historias de usuario, estimación, versiones y DevOps; el tercero, para aprender Git y la comunicación de equipo sin riesgo de estropear nada.
+Cuatro laboratorios interactivos acompañan a la unidad. El primero sirve para planificar y elegir un ciclo de vida; el segundo, para practicar Kanban, Scrum, historias de usuario, estimación, versiones y DevOps; el tercero, para aprender Git y la comunicación de equipo sin riesgo de estropear nada; el cuarto, para preparar los documentos del proyecto.
 
 ::artefacto{src="gantt-y-ciclos"}
 
 ::artefacto{src="agil-en-practica"}
 
 ::artefacto{src="simulador-git"}
+
+::artefacto{src="documentos-del-proyecto"}
