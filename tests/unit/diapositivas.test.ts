@@ -9,26 +9,50 @@ const DOCS = 'src/content/docs';
 const MAX_VINETAS = 8;
 const MAX_CODIGO = 15;
 
-const unidades = MODULOS.flatMap((m) =>
+const carpetas = MODULOS.flatMap((m) =>
   readdirSync(path.join(DOCS, m.ruta), { withFileTypes: true })
-    .filter((e) => e.isDirectory() && /^ud\d\d-/.test(e.name))
+    .filter((e) => e.isDirectory())
     .map((e) => `${m.ruta}/${e.name}`),
 ).sort();
+const unidades = carpetas.filter((c) => /^ud\d\d-/.test(path.basename(c)));
+
+// Copia congelada de la lista temporal tal como nació (2026-10-14): la lista solo puede encoger.
+const LISTA_INICIAL = [
+  'docencia/smr/som/ud01-introduccion',
+  'docencia/smr/som/ud02-virtualizacion',
+  'docencia/smr/som/ud03-funciones-sistema-operativo',
+  'docencia/dam/sistemas-informaticos/ud01-hardware',
+  'docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos',
+  'docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting',
+  'docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos',
+  'docencia/smr/proyecto-intermodular/ud01-sector-productivo',
+  'docencia/smr/proyecto-intermodular/ud02-diseno-proyecto',
+];
+
+function faltanEn(unidad: string): string[] {
+  return paginasDeTeoria(path.join(DOCS, unidad)).flatMap(({ nombre, traduccion }) =>
+    [`${nombre}.md`, ...(traduccion ? [`${nombre}.es.md`] : [])].filter((a) => !existsSync(path.join(DOCS, unidad, CARPETA, a))),
+  );
+}
 const archivos = globSync(`${DOCS}/**/${CARPETA}/*.md`).sort();
 
 describe('norma: toda página de teoría tiene su presentación', () => {
   for (const unidad of unidades.filter((u) => !UNIDADES_SIN_DIAPOSITIVAS.includes(u))) {
     it(unidad, () => {
-      const faltan = paginasDeTeoria(path.join(DOCS, unidad)).flatMap(({ nombre, traduccion }) =>
-        [`${nombre}.md`, ...(traduccion ? [`${nombre}.es.md`] : [])].filter(
-          (a) => !existsSync(path.join(DOCS, unidad, CARPETA, a)),
-        ),
-      );
-      expect(faltan, `Faltan en ${unidad}/${CARPETA}/ (ver docs/guia-diapositivas.md)`).toEqual([]);
+      expect(faltanEn(unidad), `Faltan en ${unidad}/${CARPETA}/ (ver docs/guia-diapositivas.md)`).toEqual([]);
     });
   }
   it('la lista temporal solo nombra unidades que existen', () => {
     expect(UNIDADES_SIN_DIAPOSITIVAS.filter((u) => !unidades.includes(u))).toEqual([]);
+  });
+  it('la lista temporal solo encoge: no admite unidades nuevas (el material nuevo lleva sus diapositivas)', () => {
+    expect(UNIDADES_SIN_DIAPOSITIVAS.filter((u) => !LISTA_INICIAL.includes(u))).toEqual([]);
+  });
+  it('ninguna unidad de la lista está ya completa (si lo está, quítala de src/config/diapositivas.ts)', () => {
+    expect(UNIDADES_SIN_DIAPOSITIVAS.filter((u) => faltanEn(u).length === 0)).toEqual([]);
+  });
+  it('toda carpeta de un módulo es una unidad «udNN-…» (si no, la norma no la vería)', () => {
+    expect(carpetas.filter((c) => !unidades.includes(c))).toEqual([]);
   });
 });
 

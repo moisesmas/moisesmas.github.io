@@ -39,6 +39,10 @@ describe('presentación de una página', () => {
     expect(en()).toMatch(new RegExp(`<a[^>]*href="/${P}es/presentacion/"[^>]*data-con-diapositiva`));
     expect(es()).toMatch(new RegExp(`<a[^>]*href="/${P}presentacion/"[^>]*data-con-diapositiva`));
   });
+  it('el tema de Expressive Code (data-theme) sigue al de la presentación, no al del sistema', () => {
+    expect(en()).toMatch(/<html[^>]*data-tema="claro"[^>]*data-theme="light"/);
+    expect(en()).toContain("document.documentElement.dataset.theme = 'dark'");
+  });
   it('textos de la interfaz en el idioma del contenido', () => {
     expect(en()).toContain('Back to the notes');
     expect(es()).toContain('Volver a los apuntes');
@@ -127,6 +131,19 @@ describe('todas las presentaciones', () => {
       });
     });
   }
+});
+
+describe('reveal.js solo en las presentaciones', () => {
+  it('ninguna página de apuntes enlaza una hoja de estilo con reglas de reveal.js', () => {
+    const conReveal = new Set(
+      globSync(`${DIST}_astro/*.css`)
+        .filter((css) => leer(css.slice(DIST.length)).includes('.reveal'))
+        .map((css) => `/${css.slice(DIST.length)}`),
+    );
+    const paginas = globSync(`${DIST}docencia/**/index.html`).filter((r) => !r.includes('/presentacion/'));
+    const afectadas = paginas.filter((r) => [...conReveal].some((css) => leer(r.slice(DIST.length)).includes(`href="${css}"`)));
+    expect(afectadas.slice(0, 3)).toEqual([]);
+  });
 });
 
 describe('hojas de estilo empaquetadas', () => {

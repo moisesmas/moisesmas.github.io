@@ -2,6 +2,8 @@
 import type { CodigoIdioma } from '../config/modulos';
 import { TEXTOS_PRESENTACION } from '../lib/diapositivas';
 import { COLORES, GROSORES } from '../scripts/pizarra';
+// reveal.css se importa aquí y no en el script: así solo lo enlazan las presentaciones.
+import 'reveal.js/reveal.css';
 import '../styles/presentacion.css';
 
 interface Props {
@@ -19,7 +21,7 @@ const t = TEXTOS_PRESENTACION[idioma];
 ---
 
 <!doctype html>
-<html lang={idioma} data-tema="claro">
+<html lang={idioma} data-tema="claro" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,7 +30,11 @@ const t = TEXTOS_PRESENTACION[idioma];
     <link rel="stylesheet" href="/comun/fuentes.css" />
     <script is:inline>
       try {
-        if (localStorage.getItem('presentacion-tema') === 'oscuro') document.documentElement.dataset.tema = 'oscuro';
+        // data-theme es el que miran los bloques de código (Expressive Code); va siempre con data-tema.
+        if (localStorage.getItem('presentacion-tema') === 'oscuro' && !new URLSearchParams(location.search).has('pdf')) {
+          document.documentElement.dataset.tema = 'oscuro';
+          document.documentElement.dataset.theme = 'dark';
+        }
       } catch {}
     </script>
   </head>

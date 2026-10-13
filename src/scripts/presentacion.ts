@@ -1,5 +1,4 @@
 import Reveal from 'reveal.js';
-import 'reveal.js/reveal.css';
 import { ocultarSinActividad } from './barras';
 import { crearPizarra } from './pizarra';
 
@@ -7,12 +6,18 @@ const CLAVE_TEMA = 'presentacion-tema';
 const raiz = document.documentElement;
 export const imprimir = new URLSearchParams(location.search).has('pdf');
 // La versión de impresión siempre en claro (ahorra tinta), sin cambiar la preferencia guardada.
-if (imprimir) raiz.dataset.tema = 'claro';
+if (imprimir) fijarTema('claro');
 const sinMovimiento = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/** data-tema (nuestros estilos) y data-theme (bloques de código de Expressive Code) van siempre juntos. */
+function fijarTema(tema: 'claro' | 'oscuro'): void {
+  raiz.dataset.tema = tema;
+  raiz.dataset.theme = tema === 'oscuro' ? 'dark' : 'light';
+}
 
 export function alternarTema(): void {
   const nuevo = raiz.dataset.tema === 'oscuro' ? 'claro' : 'oscuro';
-  raiz.dataset.tema = nuevo;
+  fijarTema(nuevo);
   try {
     localStorage.setItem(CLAVE_TEMA, nuevo);
   } catch {}
