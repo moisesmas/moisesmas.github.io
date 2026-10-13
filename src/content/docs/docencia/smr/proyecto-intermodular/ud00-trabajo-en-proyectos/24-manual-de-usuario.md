@@ -10,7 +10,7 @@ El mejor producto del mundo fracasa si quien lo recibe no sabe usarlo. Un **manu
 
 1. Lee las secciones 1 a 3.
 2. Evalúa el texto de ejemplo en la pestaña «Manual de usuario» del [laboratorio](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/laboratorios/documentos-del-proyecto/#manual).
-3. Lee las secciones 4 y 5 y redacta una tarea de tu proyecto (véanse las [actividades](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/actividades-documentacion/)).
+3. Lee las secciones 4 y 5 y haz el reto 4 de las [actividades](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/actividades-documentacion/).
 :::
 
 El ejemplo es el **portal de incidencias** de la empresa ficticia **Reparaciones Byte Alacant, S. L.**, que usan los clientes del taller: gerentes de pequeñas empresas, no informáticos.

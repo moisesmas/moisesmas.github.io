@@ -10,7 +10,7 @@ La **memoria final** es el documento que cuenta tu proyecto de principio a fin: 
 
 1. Lee las secciones 1 y 2.
 2. En la pestaña «Memoria final» del [laboratorio](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/laboratorios/documentos-del-proyecto/#memoria) arma tu índice y expórtalo a Markdown.
-3. Lee las secciones 3 y 4 y haz el reto 4 de las [actividades](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/actividades-documentacion/).
+3. Lee las secciones 3 y 4 y haz el reto 5 de las [actividades](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/actividades-documentacion/).
 :::
 
 :::note[Es una propuesta de estructura]

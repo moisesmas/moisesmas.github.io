@@ -9,7 +9,7 @@ Un equipo que trabaja sin parar a mirar atrás hace dos cosas mal: no se entera 
 **Tiempo orientativo:** 40 minutos de lectura y 1 hora de práctica.
 
 1. Lee las secciones 1 y 2 y haz una retrospectiva simulada en la pestaña «Retrospectiva» del [laboratorio](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/laboratorios/documentos-del-proyecto/#retrospectiva).
-2. Lee las secciones 3 y 4 y haz el reto 2 de las [actividades](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/actividades-documentacion/).
+2. Lee las secciones 3 y 4 y haz los retos 2 y 6 de las [actividades](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/actividades-documentacion/).
 :::
 
 Seguimos con el portal de incidencias de **Reparaciones Byte Alacant, S. L.** (empresa ficticia). Los eventos Scrum se explican en la página 1.3.2 Scrum; aquí nos centramos en el **documento** que cada uno deja.
