@@ -149,7 +149,7 @@ Ejemplo con los tres bloques:
 |---|---|
 | → ← espacio, AvPág RePág | Siguiente / anterior (los pasos cuentan como pulsaciones; vale el mando de presentación) |
 | `F` | Pantalla completa |
-| `Esc` | Vista general de todas las diapositivas |
+| `Esc` u `O` | Vista general de todas las diapositivas |
 | `B` | Pantalla en negro |
 | `D` | Tema claro / oscuro (se recuerda) |
 | `P` | Puntero rojo |
@@ -157,8 +157,8 @@ Ejemplo con los tres bloques:
 | `C` | Borrar lo dibujado (también se borra al cambiar de diapositiva) |
 
 - **Barras:** la de arriba (volver a los apuntes, idioma, tema, PDF) y la de abajo (pizarra: colores y grosores) se ocultan a los 3 segundos sin mover el ratón.
-- **PDF:** «Guardar como PDF» abre la versión de impresión, con una diapositiva por hoja y todos los pasos visibles. Se guarda con «Imprimir → Guardar como PDF».
-- **En el móvil:** en pantallas estrechas la presentación se ve como una página que se desplaza.
+- **PDF:** «Guardar como PDF» abre en otra pestaña la versión de impresión (siempre en tema claro), con una diapositiva por hoja y todos los pasos visibles. Su botón «Imprimir o guardar como PDF» abre el diálogo del navegador; ahí se elige «Guardar como PDF».
+- **En el móvil:** en vertical, la presentación se ve como una página que se desplaza, sin pizarra y con un aviso que propone girar el móvil o leer los apuntes (en vertical la letra queda muy pequeña).
 
 ## 7. Al terminar una presentación
 

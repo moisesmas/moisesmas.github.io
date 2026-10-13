@@ -6,6 +6,8 @@ import { crearPizarra } from './pizarra';
 const CLAVE_TEMA = 'presentacion-tema';
 const raiz = document.documentElement;
 export const imprimir = new URLSearchParams(location.search).has('pdf');
+// La versión de impresión siempre en claro (ahorra tinta), sin cambiar la preferencia guardada.
+if (imprimir) raiz.dataset.tema = 'claro';
 const sinMovimiento = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export function alternarTema(): void {
@@ -41,9 +43,10 @@ export const presentacion = new Reveal({
   keyboard: atajos,
 });
 
-presentacion.initialize().then(() => {
-  if (imprimir) setTimeout(() => window.print(), 800);
-});
+presentacion.initialize();
+
+// En la versión de impresión, el diálogo se abre con el botón del aviso (no por sorpresa).
+document.querySelector('[data-imprimir]')?.addEventListener('click', () => window.print());
 
 document.querySelector('[data-tema-boton]')?.addEventListener('click', alternarTema);
 

@@ -56,6 +56,20 @@ describe('presentación de una página', () => {
   });
 });
 
+describe('versión de impresión', () => {
+  it('aviso con botón para imprimir o guardar como PDF, en el idioma del contenido', () => {
+    expect(en()).toMatch(/<button[^>]*data-imprimir[^>]*>Print or save as PDF<\/button>/);
+    expect(es()).toMatch(/<button[^>]*data-imprimir[^>]*>Imprimir o guardar como PDF<\/button>/);
+  });
+});
+
+describe('móvil', () => {
+  it('aviso para pantallas estrechas en vertical, con enlace a los apuntes y en el idioma del contenido', () => {
+    expect(en()).toMatch(new RegExp(`<p class="aviso-movil">[^<]*Turn your phone[^<]*<a href="/${P}">`));
+    expect(es()).toMatch(new RegExp(`<p class="aviso-movil">[^<]*Gira el móvil[^<]*<a href="/${P}es/">`));
+  });
+});
+
 describe('pizarra', () => {
   it('barra con puntero, lápiz, 3 colores, 2 grosores y borrar, con textos en el idioma del contenido', () => {
     const html = en();

@@ -133,6 +133,10 @@ export interface TextosPresentacion {
   presentar: string;
   volver: string;
   pdf: string;
+  imprimir: string;
+  avisoImpresion: string;
+  avisoMovil: string;
+  apuntes: string;
   tema: string;
   laboratorio: string;
   abrirLab: string;
@@ -150,6 +154,10 @@ export const TEXTOS_PRESENTACION: Record<CodigoIdioma, TextosPresentacion> = {
     presentar: 'Presentar',
     volver: 'Volver a los apuntes',
     pdf: 'Guardar como PDF',
+    imprimir: 'Imprimir o guardar como PDF',
+    avisoMovil: 'Gira el móvil para ver mejor las diapositivas, o lee los',
+    apuntes: 'apuntes',
+    avisoImpresion: 'Versión para imprimir: una diapositiva por hoja, con todos los pasos visibles. En el diálogo, elige «Guardar como PDF».',
     tema: 'Tema claro u oscuro',
     laboratorio: 'Laboratorio',
     abrirLab: 'Abrir laboratorio',
@@ -164,6 +172,10 @@ export const TEXTOS_PRESENTACION: Record<CodigoIdioma, TextosPresentacion> = {
     presentar: 'Present',
     volver: 'Back to the notes',
     pdf: 'Save as PDF',
+    imprimir: 'Print or save as PDF',
+    avisoMovil: 'Turn your phone sideways to see the slides better, or read the',
+    apuntes: 'notes',
+    avisoImpresion: 'Print version: one slide per page, with every step visible. In the dialog, choose «Save as PDF».',
     tema: 'Light or dark theme',
     laboratorio: 'Lab',
     abrirLab: 'Open the lab',
@@ -178,6 +190,10 @@ export const TEXTOS_PRESENTACION: Record<CodigoIdioma, TextosPresentacion> = {
     presentar: 'Presentar',
     volver: 'Tornar als apunts',
     pdf: 'Guardar com a PDF',
+    imprimir: 'Imprimir o guardar com a PDF',
+    avisoMovil: 'Gira el mòbil per a veure millor les diapositives, o llig els',
+    apuntes: 'apunts',
+    avisoImpresion: 'Versió per a imprimir: una diapositiva per full, amb tots els passos visibles. En el diàleg, tria «Guardar com a PDF».',
     tema: 'Tema clar o fosc',
     laboratorio: 'Laboratori',
     abrirLab: 'Obrir el laboratori',

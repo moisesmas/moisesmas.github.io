@@ -343,3 +343,75 @@ html body.reveal-viewport {
   background: var(--fondo);
   --r-background-color: var(--fondo);
 }
+/* Aviso de la versión de impresión (solo en pantalla) */
+.aviso-impresion {
+  display: none;
+}
+html.reveal-print .aviso-impresion {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  background: var(--acento-suave);
+  border-bottom: 3px solid var(--acento);
+  font: 16px var(--cuerpo);
+  color: var(--texto);
+}
+.aviso-impresion p {
+  margin: 0;
+}
+.aviso-impresion button {
+  flex: none;
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 6px;
+  background: var(--acento);
+  color: #ffffff;
+  font: 600 16px var(--titulos);
+  cursor: pointer;
+}
+@media print {
+  html.reveal-print .aviso-impresion {
+    display: none !important;
+  }
+}
+/* Móvil en vertical: el lienzo de 1280 px queda muy pequeño. Aviso y sin pizarra. */
+.aviso-movil {
+  display: none;
+}
+@media (max-width: 600px) and (orientation: portrait) {
+  .aviso-movil {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    margin: 0;
+    padding: 0.7rem 1rem;
+    background: var(--acento-suave);
+    border-top: 3px solid var(--acento);
+    font: 15px var(--cuerpo);
+    color: var(--texto);
+  }
+  .aviso-movil a {
+    color: var(--acento);
+    font-weight: 700;
+  }
+  .pizarra-barra,
+  .pizarra-lienzo,
+  .pizarra-puntero {
+    display: none !important;
+  }
+}
+@media print {
+  .aviso-movil {
+    display: none !important;
+  }
+}

@@ -69,6 +69,11 @@ const t = TEXTOS_PRESENTACION[idioma];
       }
       <button type="button" data-pizarra="borrar" title={t.borrar}>⌫</button>
     </div>
+    <p class="aviso-movil">{t.avisoMovil} <a href={hrefApuntes}>{t.apuntes}</a>.</p>
+    <div class="aviso-impresion">
+      <p>{t.avisoImpresion}</p>
+      <button type="button" data-imprimir>{t.imprimir}</button>
+    </div>
     <div class="reveal">
       <div class="slides">
         <section class="portada">
