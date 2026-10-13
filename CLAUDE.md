@@ -42,3 +42,7 @@ Diseño: `docs/superpowers/specs/2026-09-30-web-docencia-design.md`. Guía del t
 
 - Repositorio público `moisesmas/moisesmas.github.io` (nombre de «sitio de usuario» para servir en la raíz). Dominio `moisesmas.com` con HTTPS (DNS en DonDominio apuntando a GitHub Pages).
 - Cada push a `main` ejecuta `.github/workflows/desplegar.yml`: `npm test`, `npm run verificar` y despliegue. Si algo falla no se publica y sigue la versión anterior.
+
+## Estado del proyecto y continuidad
+
+La memoria del proyecto (qué está hecho, qué falta, dónde está cada copia del repositorio, decisiones y proceso de trabajo) está en `~/Documents/Claude/Proyectos/Web Formación/privado/ESTADO-DEL-PROYECTO.md`, fuera de git porque contiene material privado. **Léela al empezar cualquier sesión y actualízala al terminar cada bloque de trabajo.** Antes de publicar nada (push a `main` = despliegue público) pide confirmación al titular.
