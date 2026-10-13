@@ -819,7 +819,7 @@ function simular() {
   const retraso = n.fin - c.fin;
   let txt = 'Si «' + id + ' · ' + nombreDe(id) + '» tarda ' + dias + (dias === 1 ? ' día' : ' días') + ' más, el proyecto pasa de ' + jornadas(c.fin) + ' a ' + jornadas(n.fin) + '. ';
   if (dias === 0) txt += 'Sin retraso, todo sigue igual.';
-  else if (retraso === 0) txt += 'No se retrasa: la tarea consume ' + dias + ' de sus ' + x.hol + ' jornadas de holgura.';
+  else if (retraso === 0) txt += 'No se retrasa: el retraso cabe en su holgura (' + jornadas(x.hol) + ').';
   else if (x.crit) txt += 'Es una tarea crítica: el retraso se traslada día por día.';
   else txt += 'Supera su holgura (' + x.hol + '): ' + dias + ' − ' + x.hol + ' = ' + retraso + (retraso === 1 ? ' jornada' : ' jornadas') + ' de retraso, y ahora forma parte de la ruta crítica.';
   if (n.rutas.length) txt += ' Ruta crítica ahora: ' + n.rutas.map((r) => r.join(' → ')).join(' · ') + '.';
@@ -996,7 +996,7 @@ const GENERADORES = {
     const t = pick(tareas), x = c.datos[t.id], r = rnd(1, 5);
     const nuevo = calcular(tareas.map((q) => (q.id === t.id ? { ...q, d: q.d + r } : q)));
     return { campo: 'num', tabla: tareas, enun: 'La tarea ' + t.id + ' tarda ' + r + (r === 1 ? ' día' : ' días') + ' más de lo previsto. ¿Cuántas jornadas dura ahora el proyecto?', correcta: nuevo.fin,
-      exp: 'Antes duraba ' + c.fin + '. La tarea ' + t.id + ' tiene ' + x.hol + ' de holgura: ' + (r <= x.hol ? 'el retraso (' + r + ') cabe en la holgura y el proyecto no cambia' : 'el retraso (' + r + ') supera la holgura y el proyecto se alarga ' + r + ' − ' + x.hol + ' = ' + (r - x.hol)) + '. Ahora dura ' + nuevo.fin + '.' };
+      exp: 'Antes duraba ' + c.fin + '. La tarea ' + t.id + ' tiene ' + x.hol + ' de holgura: ' + (r <= x.hol ? 'el retraso (' + r + ') cabe en la holgura y el proyecto no cambia' : 'el retraso (' + r + ') supera la holgura y el proyecto se alarga ' + r + ' − ' + x.hol + ' = ' + jornadas(r - x.hol)) + '. Ahora dura ' + nuevo.fin + '.' };
   },
   ciclo() {
     const c = pick(CICLOS_CASOS);
