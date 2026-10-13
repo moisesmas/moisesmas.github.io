@@ -48,3 +48,21 @@ h1#_top,
   font-size: var(--sl-text-xs);
   color: var(--sl-color-gray-3);
 }
+
+/* Botón «Presentar» (páginas con presentación) */
+.boton-presentar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-top: 0.75rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: var(--sl-color-accent);
+  color: var(--sl-color-black);
+  font: 600 0.95rem var(--fuente-titulos);
+  text-decoration: none;
+}
+.boton-presentar:hover {
+  background: var(--sl-color-accent-high);
+  color: var(--sl-color-black);
+}

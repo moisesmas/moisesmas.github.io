@@ -1,3 +1,4 @@
+import { globSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { existe, leer } from './leer';
 
@@ -61,5 +62,59 @@ describe('pizarra', () => {
     expect(html.match(/data-grosor="/g)).toHaveLength(2);
     expect(html).toContain('title="Pen (L)"');
     expect(es()).toContain('title="Lápiz (L)"');
+  });
+});
+
+const DIST = 'dist/';
+const presentaciones = globSync(`${DIST}**/presentacion/index.html`)
+  .map((r) => r.slice(DIST.length))
+  .sort();
+
+describe('botón «Presentar»', () => {
+  it('en la página con presentación, en su idioma', () => {
+    expect(leer(`${P}index.html`)).toMatch(new RegExp(`<a class="boton-presentar" href="/${P}presentacion/" lang="en"`));
+    expect(leer(`${P}es/index.html`)).toMatch(new RegExp(`<a class="boton-presentar" href="/${P}es/presentacion/" lang="es"`));
+    expect(leer(`${P}index.html`)).toContain('Present</a>');
+  });
+  it('en ninguna página sin presentación', () => {
+    const conBoton = globSync(`${DIST}docencia/**/index.html`)
+      .filter((r) => !r.includes('/presentacion/'))
+      .filter((r) => leer(r.slice(DIST.length)).includes('class="boton-presentar"'))
+      .map((r) => r.slice(DIST.length).replace(/index\.html$/, 'presentacion/index.html'))
+      .sort();
+    expect(conBoton).toEqual(presentaciones);
+  });
+});
+
+describe('todas las presentaciones', () => {
+  it('hay al menos una', () => {
+    expect(presentaciones.length).toBeGreaterThan(0);
+  });
+  for (const ruta of presentaciones) {
+    describe(ruta, () => {
+      const html = () => leer(ruta);
+      it('sin recursos de terceros', () => {
+        expect(html()).not.toMatch(/<(?:script|img|iframe|source|video|audio)\b[^>]*\ssrc="(?:https?:)?\/\//);
+        expect(html()).not.toMatch(/<link\b[^>]*\shref="(?:https?:)?\/\//);
+        expect(html()).not.toMatch(/fonts\.googleapis|@import\s+url\(\s*["']?https?:/);
+      });
+      it('los enlaces y recursos internos existen', () => {
+        const destinos = [...html().matchAll(/\s(?:href|src)="(\/[^"#?]*)/g)].map((m) => m[1]);
+        // Una dirección terminada en «/» necesita su index.html; las demás, el archivo (o su carpeta con index.html).
+        const rotos = destinos.filter((d) => {
+          const r = d.slice(1);
+          return r === '' || r.endsWith('/') ? !existe(`${r}index.html`) : !(existe(r) || existe(`${r}/index.html`));
+        });
+        expect(rotos).toEqual([]);
+      });
+    });
+  }
+});
+
+describe('hojas de estilo empaquetadas', () => {
+  it('ninguna importa recursos de terceros', () => {
+    for (const css of globSync(`${DIST}_astro/*.css`)) {
+      expect(leer(css.slice(DIST.length))).not.toMatch(/@import\s+(?:url\()?\s*["']?https?:|fonts\.googleapis/);
+    }
   });
 });
