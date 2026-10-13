@@ -1,0 +1,1115 @@
+<!doctype html>
+<html lang="es" data-lab="gantt-y-ciclos" data-idioma-original="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="/comun/lab.js"></script>
+<title>Gantt y ciclos de vida: planifica tu proyecto</title>
+<meta name="description" content="Clasifica proyectos, construye una EDT, escribe tareas con dependencias, mira el diagrama de Gantt, calcula la ruta crítica y las holguras, compara ciclos de vida y practica con ejercicios corregidos al momento.">
+<meta name="keywords" content="proyecto, EDT, Gantt, ruta crítica, holgura, dependencias, ciclo de vida, cascada, ágil, planificación, proyecto intermodular">
+<link rel="icon" href="/comun/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/comun/fuentes.css">
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f2f4ef;--surface:#ffffff;--surface2:#e9ede6;--ink:#16201b;--muted:#56655d;--line:#d3dbd4;
+  --accent:#b86e00;--accent-soft:#fbeed8;--pcb:#1f5244;
+  --ok:#1b6b3f;--ko:#a8281f;
+  --bar:#2f6f5a;--crit:#b3261e;--bar-ink:#ffffff;
+  --f-display:"Chakra Petch",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0e1411;--surface:#161f1b;--surface2:#1d2823;--ink:#e4ebe6;--muted:#95a69d;--line:#2b3832;
+  --accent:#f3aa3c;--accent-soft:#33260f;--pcb:#1a463a;
+  --ok:#6fd49a;--ko:#ff9d94;
+  --bar:#5fb894;--crit:#ff9d94;--bar-ink:#0e1411;
+}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 var(--f-body)}
+h1,h2,h3{font-family:var(--f-display);line-height:1.2;margin:0 0 .5rem}
+h1{font-size:1.25rem}
+h2{font-size:1.5rem}
+h3{font-size:1.1rem;margin-top:1.25rem}
+p{margin:.5rem 0}
+code{font-family:var(--f-mono);font-size:.92em}
+button,input,select{font:inherit;color:inherit}
+button{border:1px solid var(--muted);background:var(--surface);border-radius:.4rem;padding:.35rem .8rem;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+input,select{border:1px solid var(--muted);border-radius:.4rem;padding:.3rem .5rem;background:var(--surface);max-width:100%}
+input[type="checkbox"],input[type="radio"]{width:1.1rem;height:1.1rem;accent-color:var(--pcb)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cabecera{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;padding:.6rem 1rem;background:var(--pcb);color:#fff}
+.cabecera h1{flex:1 1 12rem;margin:0}
+.cabecera a{color:#fff}
+.cabecera button{background:transparent;border-color:#fff;color:#fff}
+main{max-width:66rem;margin:0 auto;padding:1rem}
+.pestanas{display:flex;gap:.25rem;overflow-x:auto;border-bottom:1px solid var(--muted)}
+[role="tab"]{display:flex;gap:.5rem;align-items:baseline;white-space:nowrap;border:0;border-bottom:3px solid transparent;border-radius:.4rem .4rem 0 0;background:var(--surface2);font:600 1rem var(--f-display)}
+[role="tab"][aria-selected="true"]{background:var(--accent-soft);border-bottom-color:var(--accent)}
+.n{font:600 .8rem var(--f-mono);color:var(--muted)}
+[role="tabpanel"]{background:var(--surface);border:1px solid var(--line);border-top:0;padding:1rem 1.25rem}
+.intro{color:var(--muted);margin-top:0}
+.fila{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem}
+.primario{background:var(--pcb);border-color:var(--pcb);color:#fff}
+.pequeno{padding:.15rem .5rem;font-size:.9rem}
+.datos{margin:0 0 1rem;border:1px solid var(--line);border-radius:.4rem;background:var(--surface);padding:.4rem .8rem}
+.datos summary{cursor:pointer;font-weight:700}
+.msg,.aviso{margin:.6rem 0;padding:.4rem .75rem;border-left:4px solid var(--accent);background:var(--accent-soft)}
+.msg:empty{display:none}
+.bien{border-left-color:var(--ok)}
+.mal{border-left-color:var(--ko)}
+.tabla-w{overflow-x:auto;margin:.5rem 0}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid var(--line);padding:.3rem .5rem;text-align:left;vertical-align:middle}
+th{background:var(--surface2);font-weight:700}
+td.num,th.num{text-align:right;font-family:var(--f-mono)}
+.tabla-ed input{width:100%}
+.tabla-ed td:nth-child(1){width:2.5rem;font-weight:700;font-family:var(--f-mono)}
+.tabla-ed td:nth-child(3) input{width:4.5rem}
+.tabla-ed td:nth-child(4) input{width:7rem}
+.tabla-ed td:nth-child(5) input{width:8rem}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.si{font-weight:700;color:var(--ko)}
+.no{color:var(--muted)}
+/* casos */
+.casos{list-style:none;margin:0;padding:0;display:grid;gap:.6rem}
+.caso{border:1px solid var(--line);border-radius:.4rem;padding:.6rem .8rem;background:var(--surface2)}
+.caso p{margin:0 0 .4rem}
+.caso .fila button[aria-pressed="true"]{background:var(--accent-soft);border:2px solid var(--accent)}
+.caso .msg{margin-bottom:0}
+.marcador{font-family:var(--f-mono);font-weight:700}
+.criterios{display:grid;gap:.3rem;margin:.5rem 0}
+.criterios label{display:flex;gap:.5rem;align-items:center}
+/* EDT */
+.edt-fila{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem;margin:.25rem 0}
+.edt-fila .num{font:600 .9rem var(--f-mono);min-width:2.8rem;color:var(--muted)}
+.edt-fila input{flex:1 1 12rem;min-width:8rem}
+.edt-1 input{font-weight:700}
+.hojas{font-size:.85rem;color:var(--muted)}
+/* gantt */
+.gantt{overflow-x:auto;border:1px solid var(--line);border-radius:.4rem;background:var(--surface)}
+.g-tabla{min-width:calc(var(--et) + var(--n)*1.5rem);padding-right:.8rem;--et:11rem}
+.g-fila{display:grid;grid-template-columns:var(--et) 1fr}
+.g-et{position:sticky;left:0;z-index:2;background:var(--surface);padding:.25rem .5rem;font-size:.9rem;display:flex;align-items:center;gap:.3rem;border-right:1px solid var(--line);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.g-area{display:grid;grid-template-columns:repeat(var(--n),minmax(1.5rem,1fr));align-items:center;min-height:2.2rem;background-image:linear-gradient(to right,var(--line) 1px,transparent 1px);background-size:calc(100% / var(--n)) 100%;border-bottom:1px solid var(--line)}
+.g-cab .g-area{min-height:1.6rem}
+.g-cab span{font:600 .7rem var(--f-mono);color:var(--muted);text-align:center}
+.barra{grid-row:1;background:var(--bar);color:var(--bar-ink);border-radius:.25rem;min-height:1.4rem;margin:0 1px;padding:0 .3rem;font:700 .8rem var(--f-mono);display:flex;align-items:center;overflow:hidden}
+.barra.crit{background:var(--crit);outline:2px solid var(--ink);outline-offset:-2px}
+.barra.sin-res{background:var(--bar)}
+.hol{grid-row:1;border:1px dashed var(--muted);min-height:.9rem;margin:0 1px}
+.hito{grid-row:1;width:.9rem;height:.9rem;background:var(--bar);transform:rotate(45deg);justify-self:end;margin-right:-.45rem;z-index:1}
+.hito.crit{background:var(--crit);outline:2px solid var(--ink)}
+.leyenda{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;font-size:.9rem;margin:.6rem 0}
+.leyenda span::before{content:"";display:inline-block;width:1rem;height:.7rem;margin-right:.4rem;vertical-align:middle;background:var(--bar);border-radius:.15rem}
+.leyenda .l-crit::before{background:var(--crit);outline:2px solid var(--ink);outline-offset:-2px}
+.leyenda .l-hol::before{background:none;border:1px dashed var(--muted)}
+/* ciclos */
+.selector{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
+.selector button[aria-pressed="true"]{background:var(--accent-soft);border:2px solid var(--accent);font-weight:700}
+.esquema{overflow-x:auto;margin:.6rem 0}
+.rejilla{display:grid;gap:.3rem;grid-template-columns:repeat(var(--c),minmax(4.6rem,1fr));min-width:calc(var(--c)*5rem);align-items:stretch}
+.bloque{background:var(--surface2);border:1px solid var(--muted);border-radius:.3rem;padding:.25rem .35rem;font-size:.8rem;text-align:center;display:flex;align-items:center;justify-content:center}
+.bloque.prueba{background:var(--accent-soft);border-color:var(--accent)}
+.bloque.riesgo{background:var(--accent-soft);border:2px solid var(--accent);font-weight:700}
+.bloque.entrega{background:var(--pcb);border-color:var(--pcb);color:#fff;font-weight:700}
+.dos{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr))}
+.dos ul{margin:.3rem 0;padding-left:1.2rem}
+.rec{display:grid;gap:.6rem 1rem;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));margin:.6rem 0}
+.rec label{display:grid;gap:.2rem;font-weight:700}
+.rec select{font-weight:400}
+.ranking{list-style:none;margin:.5rem 0;padding:0;display:grid;gap:.4rem}
+.ranking li{display:grid;grid-template-columns:8rem 1fr 3rem;gap:.5rem;align-items:center}
+.ranking .pt{height:.8rem;background:var(--bar);border-radius:.2rem}
+.ranking .primero .pt{background:var(--accent)}
+.ranking .primero{font-weight:700}
+.enunciado{font-weight:700}
+.opciones{display:grid;gap:.3rem;margin:.5rem 0}
+.opciones label{display:flex;gap:.5rem;align-items:flex-start}
+@media (max-width:600px){
+  main{padding:.5rem}
+  [role="tabpanel"]{padding:.8rem}
+  .g-tabla{--et:7.5rem}
+  .ranking li{grid-template-columns:6rem 1fr 2.5rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="cabecera">
+  <a href="../../" data-lab-volver aria-label="Volver a la unidad">← <span>Unidad</span></a>
+  <h1>Gantt y ciclos de vida</h1>
+  <div role="group" aria-label="Tamaño del texto">
+    <button type="button" data-lab-zoom="-" aria-label="Reducir texto">A−</button>
+    <button type="button" data-lab-zoom="+" aria-label="Aumentar texto">A+</button>
+  </div>
+</header>
+<main>
+  <details class="datos">
+    <summary>Tus datos: ejemplo, guardar, exportar e importar</summary>
+    <p class="intro">Lo que escribes se guarda solo en este navegador. Para entregarlo en Aules o llevarlo a otro ordenador, exporta. El laboratorio empieza con el proyecto de ejemplo de <em>Reparaciones Byte Alacant</em> (empresa ficticia).</p>
+    <div class="fila">
+      <button type="button" id="b-ejemplo">Cargar ejemplo</button>
+      <button type="button" id="b-blanco">Empezar en blanco</button>
+      <button type="button" id="b-md" class="primario">Exportar Markdown</button>
+      <button type="button" id="b-json">Exportar JSON</button>
+      <label class="fila">Importar JSON <input type="file" id="b-importar" accept=".json,application/json"></label>
+    </div>
+    <p class="msg" id="aviso-datos" role="status"></p>
+  </details>
+
+  <div class="pestanas" role="tablist" aria-label="Secciones del laboratorio">
+    <button type="button" role="tab" id="tab-proyecto" data-tab="proyecto" aria-controls="panel-proyecto" aria-selected="true"><span class="n">1</span><span>¿Es un proyecto?</span></button>
+    <button type="button" role="tab" id="tab-edt" data-tab="edt" aria-controls="panel-edt" aria-selected="false" tabindex="-1"><span class="n">2</span><span>EDT</span></button>
+    <button type="button" role="tab" id="tab-tareas" data-tab="tareas" aria-controls="panel-tareas" aria-selected="false" tabindex="-1"><span class="n">3</span><span>Tareas</span></button>
+    <button type="button" role="tab" id="tab-gantt" data-tab="gantt" aria-controls="panel-gantt" aria-selected="false" tabindex="-1"><span class="n">4</span><span>Diagrama de Gantt</span></button>
+    <button type="button" role="tab" id="tab-critica" data-tab="critica" aria-controls="panel-critica" aria-selected="false" tabindex="-1"><span class="n">5</span><span>Ruta crítica</span></button>
+    <button type="button" role="tab" id="tab-ciclos" data-tab="ciclos" aria-controls="panel-ciclos" aria-selected="false" tabindex="-1"><span class="n">6</span><span>Ciclos de vida</span></button>
+    <button type="button" role="tab" id="tab-practica" data-tab="practica" aria-controls="panel-practica" aria-selected="false" tabindex="-1"><span class="n">7</span><span>Práctica</span></button>
+  </div>
+
+  <section role="tabpanel" id="panel-proyecto" aria-labelledby="tab-proyecto" tabindex="0">
+    <h2>¿Es un proyecto?</h2>
+    <p class="intro">Un proyecto es un esfuerzo <b>temporal</b> para obtener un resultado <b>único</b>, con un objetivo concreto y varias tareas coordinadas. Lo que se repite sin fin es una operación rutinaria. Clasifica cada caso y lee la explicación.</p>
+    <p>Aciertos: <span class="marcador" id="pr-puntos">0 de 0</span> <button type="button" class="pequeno" id="pr-reiniciar">Reiniciar</button></p>
+    <ul class="casos" id="casos"></ul>
+    <h3>Prueba tu idea con los cuatro criterios</h3>
+    <div class="criterios" id="criterios">
+      <label><input type="checkbox" value="0"> Tiene un principio y un final</label>
+      <label><input type="checkbox" value="1"> Produce algo único, distinto de lo que ya se hacía</label>
+      <label><input type="checkbox" value="2"> Tiene un objetivo concreto que se puede comprobar</label>
+      <label><input type="checkbox" value="3"> Necesita coordinar varias tareas</label>
+    </div>
+    <p class="msg" id="veredicto" role="status"></p>
+  </section>
+
+  <section role="tabpanel" id="panel-edt" aria-labelledby="tab-edt" tabindex="0" hidden>
+    <h2>EDT: descomponer el trabajo</h2>
+    <p class="intro">La estructura de desglose del trabajo (EDT) divide el proyecto en ramas y en paquetes de trabajo (las hojas). Responde a <b>qué</b> hay que hacer, no a cuándo. Cada hoja será una tarea.</p>
+    <div class="fila">
+      <label class="fila">Proyecto <input type="text" id="edt-nombre" maxlength="80" size="32"></label>
+      <button type="button" id="edt-rama">+ Añadir rama</button>
+    </div>
+    <div id="edt-lista" role="list" aria-label="Estructura de desglose del trabajo"></div>
+    <p class="hojas" id="edt-info" role="status"></p>
+    <ul id="edt-avisos"></ul>
+    <p>Recuerda la regla del 100 %: las partes de cada rama deben abarcar todo su trabajo, sin huecos ni solapes.</p>
+    <div class="fila">
+      <button type="button" id="edt-tareas" class="primario">Usar las hojas como tareas</button>
+    </div>
+    <p class="msg" id="edt-msg" role="status"></p>
+  </section>
+
+  <section role="tabpanel" id="panel-tareas" aria-labelledby="tab-tareas" tabindex="0" hidden>
+    <h2>Tareas y dependencias</h2>
+    <p class="intro">Escribe la duración en jornadas y, en «Predecesoras», los identificadores de las tareas que deben terminar antes (por ejemplo <code>B, C</code>). Una duración de 0 es un hito. Si una tarea no tiene predecesoras, empieza el primer día.</p>
+    <div class="fila">
+      <label class="fila">Inicio <input type="date" id="t-inicio"></label>
+      <label class="fila"><input type="checkbox" id="t-lab"> Contar solo de lunes a viernes</label>
+    </div>
+    <div class="tabla-w">
+      <table class="tabla-ed" id="tabla-tareas">
+        <thead><tr><th>Id.</th><th>Tarea</th><th>Dur. (días)</th><th>Predecesoras</th><th>Responsable</th><th><span class="sr">Quitar</span></th></tr></thead>
+        <tbody id="tareas-cuerpo"></tbody>
+      </table>
+    </div>
+    <div class="fila"><button type="button" id="t-anadir">+ Añadir tarea</button></div>
+    <p class="msg" id="t-resumen" role="status"></p>
+    <ul id="t-errores"></ul>
+  </section>
+
+  <section role="tabpanel" id="panel-gantt" aria-labelledby="tab-gantt" tabindex="0" hidden>
+    <h2>Diagrama de Gantt</h2>
+    <p class="intro">Cada fila es una tarea, cada columna una jornada. El diagrama se calcula solo con las tareas de la pestaña anterior, empezando lo antes posible.</p>
+    <div class="fila">
+      <label class="fila"><input type="checkbox" id="g-crit" checked> Resaltar la ruta crítica</label>
+      <label class="fila"><input type="checkbox" id="g-hol" checked> Mostrar las holguras</label>
+    </div>
+    <div class="leyenda"><span>Tarea</span><span class="l-crit">Tarea crítica (holgura 0)</span><span class="l-hol">Holgura disponible</span></div>
+    <div id="gantt" class="gantt"></div>
+    <ul id="g-avisos"></ul>
+    <h3>Fechas de cada tarea</h3>
+    <div class="tabla-w"><table id="g-fechas"></table></div>
+  </section>
+
+  <section role="tabpanel" id="panel-critica" aria-labelledby="tab-critica" tabindex="0" hidden>
+    <h2>Ruta crítica y holguras</h2>
+    <p class="intro">Pasada hacia adelante: ES = mayor EF de las predecesoras; EF = ES + duración. Pasada hacia atrás: LF = menor LS de las sucesoras; LS = LF − duración. Holgura = LS − ES. La ruta crítica reúne las tareas con holgura 0.</p>
+    <div class="tabla-w"><table id="c-tabla"></table></div>
+    <div id="c-rutas" class="msg" role="status"></div>
+    <h3>Cómo se calcula una tarea</h3>
+    <div class="fila"><label class="fila">Tarea <select id="c-sel"></select></label></div>
+    <div id="c-expl" class="msg" role="status"></div>
+    <h3>Simulador de retrasos</h3>
+    <p>¿Qué pasa si una tarea se retrasa? Elige la tarea y los días de retraso.</p>
+    <div class="fila">
+      <label class="fila">Tarea <select id="s-sel"></select></label>
+      <label class="fila">Retraso (días) <input type="number" id="s-dias" min="0" max="30" value="2" inputmode="numeric"></label>
+    </div>
+    <div id="s-res" class="msg" role="status"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-ciclos" aria-labelledby="tab-ciclos" tabindex="0" hidden>
+    <h2>Ciclos de vida</h2>
+    <p class="intro">Un ciclo de vida decide cómo se encadenan las fases del desarrollo. Elige un modelo para ver su esquema, sus ventajas y cuándo encaja.</p>
+    <div class="selector" id="modelos" role="group" aria-label="Modelos de ciclo de vida"></div>
+    <div id="modelo"></div>
+    <h3>Comparación rápida</h3>
+    <div class="tabla-w">
+      <table>
+        <thead><tr><th>Modelo</th><th>Requisitos</th><th>Cliente</th><th>Entrega</th><th>Riesgo</th></tr></thead>
+        <tbody>
+          <tr><td>Cascada</td><td>Fijos desde el inicio</td><td>Al principio y al final</td><td>Una, al final</td><td>Se ve tarde</td></tr>
+          <tr><td>En V</td><td>Fijos</td><td>Al principio y al final</td><td>Una, al final</td><td>Pruebas planificadas</td></tr>
+          <tr><td>Iterativo</td><td>Se afinan por vueltas</td><td>En cada vuelta</td><td>Versiones cada vez mejores</td><td>Medio</td></tr>
+          <tr><td>Incremental</td><td>Conocidos y troceables</td><td>En cada incremento</td><td>Por piezas</td><td>Repartido</td></tr>
+          <tr><td>Espiral</td><td>Inciertos</td><td>En cada vuelta</td><td>Por vueltas</td><td>Es el centro</td></tr>
+          <tr><td>Prototipado</td><td>Difusos</td><td>Mucho</td><td>Prototipos y luego versión final</td><td>Aclara requisitos</td></tr>
+          <tr><td>Ágil</td><td>Cambiantes</td><td>Continuo</td><td>Cada pocas semanas</td><td>Continuo</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Recomendador (orientativo)</h3>
+    <p>Contesta sobre tu proyecto. Es una ayuda para pensar, no una sentencia: lo importante es que sepas justificar la elección.</p>
+    <div class="rec" id="rec"></div>
+    <div id="rec-res" role="status"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-practica" aria-labelledby="tab-practica" tabindex="0" hidden>
+    <h2>Práctica</h2>
+    <p class="intro">Ejercicios con corrección al momento. Cada uno cuenta una sola vez, la primera que pulses «Comprobar».</p>
+    <div class="fila">
+      <label class="fila">Tipo de ejercicio
+        <select id="p-tipo">
+          <option value="todos">Todos</option>
+          <option value="proyecto">¿Proyecto o rutina?</option>
+          <option value="duracion">Duración mínima</option>
+          <option value="holgura">Holgura de una tarea</option>
+          <option value="criticas">Tareas críticas</option>
+          <option value="fecha">Fecha de fin</option>
+          <option value="retraso">Efecto de un retraso</option>
+          <option value="ciclo">Elección de ciclo</option>
+        </select>
+      </label>
+    </div>
+    <div id="p-ej" aria-live="polite"></div>
+    <div class="fila">
+      <button type="button" id="p-comprobar" class="primario">Comprobar</button>
+      <button type="button" id="p-otro">Otro ejercicio</button>
+    </div>
+    <p class="msg" id="p-correccion" role="status"></p>
+    <p>Aciertos: <span class="marcador" id="p-aciertos">0</span> de <span class="marcador" id="p-intentos">0</span> <button type="button" class="pequeno" id="p-reiniciar">Poner a cero</button></p>
+  </section>
+</main>
+
+<script>
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const el = (tag, props = {}, ...kids) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    if (k === 'class') e.className = v;
+    else if (k === 'text') e.textContent = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (v === true) e.setAttribute(k, '');
+    else if (v !== false && v != null) e.setAttribute(k, v);
+  }
+  for (const c of kids.flat()) if (c != null) e.append(c);
+  return e;
+};
+
+// <calculo>
+// Cálculo de la planificación: pasada hacia adelante y hacia atrás, holguras y rutas críticas.
+function listaPred(p) {
+  const v = String(p || '').toUpperCase().split(/[^A-Z]+/).filter(Boolean);
+  return [...new Set(v)];
+}
+function calcular(tareas) {
+  const res = { errores: [], datos: {}, orden: [], fin: 0, rutas: [] };
+  const ids = new Set(tareas.map((t) => t.id));
+  for (const t of tareas) {
+    for (const p of listaPred(t.p)) {
+      if (p === t.id) res.errores.push('La tarea ' + t.id + ' depende de sí misma.');
+      else if (!ids.has(p)) res.errores.push('La tarea ' + t.id + ' depende de «' + p + '», que no existe.');
+    }
+  }
+  if (res.errores.length) return res;
+  const pred = {}, suc = {}, grado = {};
+  for (const t of tareas) { pred[t.id] = listaPred(t.p); suc[t.id] = []; }
+  for (const t of tareas) { grado[t.id] = pred[t.id].length; for (const p of pred[t.id]) suc[p].push(t.id); }
+  const cola = tareas.filter((t) => grado[t.id] === 0).map((t) => t.id);
+  while (cola.length) {
+    const id = cola.shift();
+    res.orden.push(id);
+    for (const s of suc[id]) { grado[s]--; if (grado[s] === 0) cola.push(s); }
+  }
+  if (res.orden.length < tareas.length) {
+    const resto = tareas.filter((t) => !res.orden.includes(t.id)).map((t) => t.id);
+    res.errores.push('Hay una dependencia circular entre ' + resto.join(', ') + ': una tarea acaba esperándose a sí misma.');
+    return res;
+  }
+  const por = {};
+  for (const t of tareas) por[t.id] = t;
+  const D = res.datos;
+  for (const id of res.orden) {
+    const es = pred[id].reduce((m, p) => Math.max(m, D[p].ef), 0);
+    D[id] = { id, d: por[id].d, pred: pred[id], suc: suc[id], es, ef: es + por[id].d };
+  }
+  res.fin = res.orden.reduce((m, id) => Math.max(m, D[id].ef), 0);
+  for (const id of [...res.orden].reverse()) {
+    const x = D[id];
+    x.lf = suc[id].length ? suc[id].reduce((m, s) => Math.min(m, D[s].ls), Infinity) : res.fin;
+    x.ls = x.lf - x.d;
+    x.hol = x.ls - x.es;
+    x.libre = (suc[id].length ? suc[id].reduce((m, s) => Math.min(m, D[s].es), Infinity) : res.fin) - x.ef;
+    x.crit = x.hol === 0;
+  }
+  // Rutas críticas: cadenas de tareas críticas que se tocan (EF de una = ES de la siguiente).
+  const rutas = [];
+  const seguir = (id, camino) => {
+    const c = [...camino, id];
+    const sig = D[id].suc.filter((s) => D[s].crit && D[s].es === D[id].ef);
+    if (!sig.length) { rutas.push(c); return; }
+    if (rutas.length < 8) for (const s of sig) seguir(s, c);
+  };
+  for (const id of res.orden) if (D[id].crit && D[id].es === 0 && D[id].pred.length === 0) seguir(id, []);
+  res.rutas = rutas.slice(0, 8);
+  return res;
+}
+const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+const DIAS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+function fechaDe(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+  return m ? new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])) : new Date(Date.UTC(2026, 10, 2));
+}
+// Fecha de la jornada número k (k >= 1) contada desde la fecha de inicio.
+function diaK(inicio, laborables, k) {
+  const d = fechaDe(inicio);
+  if (laborables) {
+    while (d.getUTCDay() === 0 || d.getUTCDay() === 6) d.setUTCDate(d.getUTCDate() + 1);
+    let c = 1;
+    while (c < k) { d.setUTCDate(d.getUTCDate() + 1); if (d.getUTCDay() !== 0 && d.getUTCDay() !== 6) c++; }
+  } else d.setUTCDate(d.getUTCDate() + Math.max(k, 1) - 1);
+  return d;
+}
+function fmt(d) { return DIAS[d.getUTCDay()] + ' ' + d.getUTCDate() + ' ' + MESES[d.getUTCMonth()] + ' ' + d.getUTCFullYear(); }
+function iso(d) { return d.toISOString().slice(0, 10); }
+// </calculo>
+
+// ---------- Datos de ejemplo y estado ----------
+const EJEMPLO = () => ({
+  nombre: 'Portal de citas de Byte Alacant',
+  inicio: '2026-11-02',
+  laborables: true,
+  edt: [
+    { t: 'Análisis y diseño', n: 1 }, { t: 'Análisis de requisitos', n: 2 }, { t: 'Diseño de la base de datos', n: 2 }, { t: 'Maquetas de la interfaz', n: 2 },
+    { t: 'Desarrollo', n: 1 }, { t: 'Servidor y formulario de citas', n: 2 }, { t: 'Interfaz de cliente', n: 2 }, { t: 'Integración', n: 2 },
+    { t: 'Pruebas, documentación y entrega', n: 1 }, { t: 'Pruebas', n: 2 }, { t: 'Manual de usuario', n: 2 }, { t: 'Despliegue y entrega', n: 2 },
+  ],
+  tareas: [
+    { id: 'A', n: 'Análisis de requisitos', d: 3, p: '', r: 'Aitana' },
+    { id: 'B', n: 'Diseño de la base de datos', d: 2, p: 'A', r: 'Bruno' },
+    { id: 'C', n: 'Maquetas de la interfaz', d: 3, p: 'A', r: 'Carla' },
+    { id: 'D', n: 'Servidor y formulario de citas', d: 5, p: 'B', r: 'Bruno' },
+    { id: 'E', n: 'Interfaz de cliente', d: 3, p: 'C', r: 'Carla' },
+    { id: 'F', n: 'Integración', d: 2, p: 'D, E', r: 'Aitana' },
+    { id: 'G', n: 'Pruebas', d: 3, p: 'F', r: 'Carla' },
+    { id: 'H', n: 'Manual de usuario', d: 2, p: 'E', r: 'Carla' },
+    { id: 'I', n: 'Despliegue y entrega', d: 1, p: 'G, H', r: 'Aitana' },
+    { id: 'J', n: 'Proyecto entregado (hito)', d: 0, p: 'I', r: '' },
+  ],
+});
+const texto = (v, max) => (typeof v === 'string' ? v.slice(0, max) : '');
+function limpiar(o) {
+  if (!o || typeof o !== 'object') return null;
+  const e = {
+    nombre: texto(o.nombre, 80),
+    inicio: /^\d{4}-\d{2}-\d{2}$/.test(o.inicio) ? o.inicio : '2026-11-02',
+    laborables: o.laborables !== false,
+    edt: [],
+    tareas: [],
+  };
+  let previo = 0;
+  for (const x of Array.isArray(o.edt) ? o.edt.slice(0, 60) : []) {
+    if (!x || typeof x.t !== 'string') continue;
+    const n = Math.min(Math.max(Math.round(Number(x.n)) || 1, 1), 3, previo + 1);
+    e.edt.push({ t: texto(x.t, 80), n });
+    previo = n;
+  }
+  const vistos = new Set();
+  for (const x of Array.isArray(o.tareas) ? o.tareas.slice(0, 26) : []) {
+    if (!x || typeof x.id !== 'string' || !/^[A-Z]$/.test(x.id) || vistos.has(x.id)) continue;
+    vistos.add(x.id);
+    const d = Math.min(Math.max(Math.round(Number(x.d)), 0), 60);
+    e.tareas.push({ id: x.id, n: texto(x.n, 80), d: Number.isFinite(d) ? d : 1, p: texto(x.p, 60), r: texto(x.r, 40) });
+  }
+  return e;
+}
+function cargarEstado() {
+  try {
+    const s = Lab.leer('estado');
+    if (s) { const e = limpiar(JSON.parse(s)); if (e) return e; }
+  } catch (x) { /* memoria vacía o dañada: se usa el ejemplo */ }
+  return EJEMPLO();
+}
+let E = cargarEstado();
+function guardarEstado() {
+  try { Lab.guardar('estado', JSON.stringify(E)); } catch (x) { /* sin memoria local */ }
+}
+function siguienteId() {
+  const usados = new Set(E.tareas.map((t) => t.id));
+  for (let i = 0; i < 26; i++) { const c = String.fromCharCode(65 + i); if (!usados.has(c)) return c; }
+  return null;
+}
+
+// ---------- Pestañas ----------
+const pestanas = [...document.querySelectorAll('[role="tab"]')];
+const pintores = {};
+function mostrar(id) {
+  const activa = pestanas.find((p) => p.dataset.tab === id) ?? pestanas[0];
+  for (const p of pestanas) {
+    const es = p === activa;
+    p.setAttribute('aria-selected', String(es));
+    p.tabIndex = es ? 0 : -1;
+    document.getElementById(p.getAttribute('aria-controls')).hidden = !es;
+  }
+  activa.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  const pintar = pintores[activa.dataset.tab];
+  if (pintar) pintar();
+  return activa;
+}
+function elegir(id, enfocar) {
+  const activa = mostrar(id);
+  Lab.guardar('pestana', activa.dataset.tab);
+  history.replaceState(null, '', '#' + activa.dataset.tab);
+  if (enfocar) activa.focus();
+}
+pestanas.forEach((p) => p.addEventListener('click', () => elegir(p.dataset.tab)));
+$('[role="tablist"]').addEventListener('keydown', (e) => {
+  const i = pestanas.indexOf(document.activeElement);
+  const destino = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: pestanas.length - 1 }[e.key];
+  if (i < 0 || destino === undefined) return;
+  e.preventDefault();
+  elegir(pestanas[(destino + pestanas.length) % pestanas.length].dataset.tab, true);
+});
+window.addEventListener('hashchange', () => mostrar(location.hash.slice(1)));
+
+// ---------- Pestaña 1: ¿es un proyecto? ----------
+const CASOS = [
+  { t: 'Revisar cada mañana que las copias de seguridad se han hecho bien.', p: false, e: 'Se repite todos los días y no tiene final: es una operación rutinaria.' },
+  { t: 'Diseñar e implantar la red wifi de una sucursal nueva de Byte Alacant.', p: true, e: 'Tiene principio y fin, un resultado concreto y distinto en cada local, y varias tareas (estudio, compra, instalación, pruebas).' },
+  { t: 'Atender las llamadas de los clientes para dar cita de reparación.', p: false, e: 'Es continuo y siempre igual: rutina. En cambio, crear una web para que pidan cita sí sería un proyecto.' },
+  { t: 'Migrar el correo de la empresa a un servicio nuevo.', p: true, e: 'Se hace una vez, tiene fecha de fin y exige coordinar copias, cuentas, configuración y comunicación al personal.' },
+  { t: 'Cambiar el tóner de una impresora.', p: false, e: 'Es una tarea corta y repetida que hace una persona. Un proyecto agrupa muchas tareas relacionadas.' },
+  { t: 'Montar un aula de informática con 20 equipos.', p: true, e: 'Resultado único, plazo y presupuesto, y muchas tareas encadenadas (pedido, montaje, red, imágenes, pruebas).' },
+  { t: 'Emitir las facturas a final de cada mes.', p: false, e: 'Es periódica y siempre produce lo mismo: rutina (aunque sea mensual, no tiene fin).' },
+  { t: 'Crear el portal de citas de reparación.', p: true, e: 'Objetivo claro, plazo, resultado nuevo y varias tareas: análisis, diseño, desarrollo, pruebas y entrega.' },
+  { t: 'Aplicar las actualizaciones de seguridad cada martes.', p: false, e: 'Es mantenimiento recurrente: no tiene final ni produce algo nuevo.' },
+  { t: 'Organizar la jornada de puertas abiertas del centro.', p: true, e: 'Es un evento único con fecha, objetivo y muchas tareas coordinadas entre varias personas.' },
+  { t: 'Actualizar al sistema operativo nuevo los 40 equipos del instituto durante el verano.', p: true, e: 'Tiene plazo y objetivo concreto, y exige planificar equipos, copias, imagen, pruebas y reparto del trabajo. Cada equipo por separado sería una tarea; el conjunto es un proyecto.' },
+];
+const respondidos = new Map();
+function pintarCasos() {
+  const ul = $('#casos');
+  ul.replaceChildren();
+  CASOS.forEach((c, i) => {
+    const msg = el('p', { class: 'msg', role: 'status' });
+    const bP = el('button', { type: 'button', 'aria-pressed': 'false', text: 'Es un proyecto' });
+    const bR = el('button', { type: 'button', 'aria-pressed': 'false', text: 'Es rutina o tarea' });
+    const responder = (esP) => {
+      const ok = esP === c.p;
+      if (!respondidos.has(i)) respondidos.set(i, ok);
+      bP.setAttribute('aria-pressed', String(esP));
+      bR.setAttribute('aria-pressed', String(!esP));
+      msg.className = 'msg ' + (ok ? 'bien' : 'mal');
+      msg.textContent = (ok ? 'Correcto. ' : 'No. Es ' + (c.p ? 'un proyecto' : 'una rutina o una tarea') + '. ') + c.e;
+      puntosCasos();
+    };
+    bP.addEventListener('click', () => responder(true));
+    bR.addEventListener('click', () => responder(false));
+    ul.append(el('li', { class: 'caso' }, el('p', { text: (i + 1) + '. ' + c.t }), el('div', { class: 'fila' }, bP, bR), msg));
+  });
+  puntosCasos();
+}
+function puntosCasos() {
+  const ok = [...respondidos.values()].filter(Boolean).length;
+  $('#pr-puntos').textContent = ok + ' de ' + respondidos.size;
+}
+$('#pr-reiniciar').addEventListener('click', () => { respondidos.clear(); pintarCasos(); });
+function veredicto() {
+  const marcados = [...document.querySelectorAll('#criterios input')].filter((i) => i.checked).length;
+  const v = $('#veredicto');
+  if (marcados === 4) { v.className = 'msg bien'; v.textContent = 'Cumple los cuatro criterios: es un proyecto. Define su objetivo y su alcance.'; }
+  else if (marcados === 0) { v.className = 'msg'; v.textContent = ''; }
+  else { v.className = 'msg mal'; v.textContent = 'Cumple ' + marcados + ' de 4 criterios. Si falta alguno, probablemente es una tarea o una operación rutinaria. Piensa si puedes darle un final, un resultado concreto o repartirlo en tareas.'; }
+}
+document.querySelectorAll('#criterios input').forEach((i) => i.addEventListener('change', veredicto));
+
+// ---------- Pestaña 2: EDT ----------
+const edt = () => E.edt;
+function finSub(i) { let j = i + 1; while (j < edt().length && edt()[j].n > edt()[i].n) j++; return j; }
+function esHoja(i) { return i + 1 >= edt().length || edt()[i + 1].n <= edt()[i].n; }
+function numeros() {
+  const cont = [0, 0, 0, 0];
+  return edt().map((x) => { cont[x.n]++; for (let k = x.n + 1; k < 4; k++) cont[k] = 0; return cont.slice(1, x.n + 1).join('.'); });
+}
+function moverArriba(i) {
+  let k = i - 1;
+  while (k >= 0 && edt()[k].n > edt()[i].n) k--;
+  if (k < 0 || edt()[k].n < edt()[i].n) return;
+  const bloque = edt().splice(i, finSub(i) - i);
+  edt().splice(k, 0, ...bloque);
+}
+function moverAbajo(i) {
+  const e = finSub(i);
+  if (e >= edt().length || edt()[e].n < edt()[i].n) return;
+  const e2 = finSub(e);
+  const bloque = edt().splice(i, e - i);
+  edt().splice(i + (e2 - e), 0, ...bloque);
+}
+function pintarEdt() {
+  $('#edt-nombre').value = E.nombre;
+  const cont = $('#edt-lista');
+  cont.replaceChildren();
+  const nums = numeros();
+  edt().forEach((x, i) => {
+    const input = el('input', { type: 'text', value: x.t, maxlength: '80', 'aria-label': 'Nombre del elemento ' + nums[i] });
+    input.addEventListener('input', () => { x.t = input.value; guardarEstado(); resumenEdt(); });
+    const btn = (txt, etiqueta, fn, desactivar) => el('button', { type: 'button', class: 'pequeno', text: txt, 'aria-label': etiqueta + ' ' + nums[i], title: etiqueta, disabled: desactivar || false, onclick: () => { fn(); guardarEstado(); pintarEdt(); } });
+    cont.append(el('div', { class: 'edt-fila edt-' + x.n, role: 'listitem', style: 'margin-left:' + (x.n - 1) * 1.4 + 'rem' },
+      el('span', { class: 'num', text: nums[i] }), input,
+      btn('↑', 'Subir', () => moverArriba(i)),
+      btn('↓', 'Bajar', () => moverAbajo(i)),
+      btn('+ hijo', 'Añadir un elemento dentro de', () => edt().splice(finSub(i), 0, { t: 'Nuevo paquete', n: x.n + 1 }), x.n >= 3 || edt().length >= 60),
+      btn('✕', 'Quitar (con sus hijos)', () => edt().splice(i, finSub(i) - i))));
+  });
+  resumenEdt();
+}
+function resumenEdt() {
+  const ramas = edt().filter((x) => x.n === 1).length;
+  const hojas = edt().filter((x, i) => esHoja(i)).length;
+  $('#edt-info').textContent = edt().length ? ramas + ' ramas y ' + hojas + ' paquetes de trabajo (las hojas). Cada hoja será una tarea.' : 'La EDT está vacía. Añade una rama.';
+  const av = $('#edt-avisos');
+  av.replaceChildren();
+  const nombres = edt().map((x) => x.t.trim().toLowerCase());
+  edt().forEach((x, i) => {
+    if (!x.t.trim()) av.append(el('li', { text: 'Un elemento no tiene nombre.' }));
+    if (!esHoja(i)) {
+      const hijos = []; let j = i + 1;
+      while (j < edt().length && edt()[j].n > x.n) { if (edt()[j].n === x.n + 1) hijos.push(j); j++; }
+      if (hijos.length === 1) av.append(el('li', { text: '«' + x.t + '» tiene un solo hijo: comprueba si hace falta ese nivel o si falta otra parte.' }));
+    }
+    if (x.t.trim() && nombres.indexOf(x.t.trim().toLowerCase()) !== i) av.append(el('li', { text: '«' + x.t + '» aparece repetido: ¿es el mismo trabajo en dos ramas?' }));
+  });
+}
+$('#edt-nombre').addEventListener('input', (e) => { E.nombre = e.target.value; guardarEstado(); });
+$('#edt-rama').addEventListener('click', () => { if (edt().length < 60) { edt().push({ t: 'Nueva rama', n: 1 }); guardarEstado(); pintarEdt(); } });
+function armar(boton, accion, aviso) {
+  const original = boton.textContent;
+  let cuenta = null;
+  boton.addEventListener('click', () => {
+    if (boton.dataset.armado) { clearTimeout(cuenta); delete boton.dataset.armado; boton.textContent = original; accion(); return; }
+    boton.dataset.armado = '1';
+    boton.textContent = 'Confirmar: ' + aviso;
+    cuenta = setTimeout(() => { delete boton.dataset.armado; boton.textContent = original; }, 5000);
+  });
+  boton.addEventListener('blur', () => { clearTimeout(cuenta); delete boton.dataset.armado; boton.textContent = original; });
+}
+armar($('#edt-tareas'), () => {
+  const hojas = edt().filter((x, i) => esHoja(i) && x.t.trim());
+  const msg = $('#edt-msg');
+  if (!hojas.length) { msg.className = 'msg mal'; msg.textContent = 'No hay hojas con nombre para convertir en tareas.'; return; }
+  if (hojas.length > 26) { msg.className = 'msg mal'; msg.textContent = 'Hay más de 26 hojas: el laboratorio admite 26 tareas como máximo. Agrupa algunas.'; return; }
+  E.tareas = hojas.map((x, i) => ({ id: String.fromCharCode(65 + i), n: x.t.trim(), d: 1, p: '', r: '' }));
+  guardarEstado();
+  msg.className = 'msg bien';
+  msg.textContent = 'Listo: ' + hojas.length + ' tareas creadas con 1 día de duración y sin predecesoras. Ve a la pestaña «Tareas» para completarlas.';
+}, 'se sustituirán las tareas actuales');
+pintores.edt = pintarEdt;
+
+// ---------- Pestaña 3: tareas ----------
+function pintarTareas() {
+  $('#t-inicio').value = E.inicio;
+  $('#t-lab').checked = E.laborables;
+  const cuerpo = $('#tareas-cuerpo');
+  cuerpo.replaceChildren();
+  for (const t of E.tareas) {
+    const campo = (clave, props, max) => {
+      const i = el('input', { type: props.type || 'text', 'aria-label': props.et + ' de la tarea ' + t.id, ...props.extra });
+      i.value = t[clave];
+      i.addEventListener('input', () => {
+        t[clave] = clave === 'd' ? Math.min(Math.max(Math.round(Number(i.value)) || 0, 0), max) : i.value;
+        guardarEstado(); resumenTareas();
+      });
+      return i;
+    };
+    const pred = campo('p', { et: 'Predecesoras', extra: { maxlength: '60', placeholder: 'A, B' } });
+    pred.addEventListener('change', () => { t.p = listaPred(pred.value).join(', '); pred.value = t.p; guardarEstado(); resumenTareas(); });
+    cuerpo.append(el('tr', {},
+      el('td', { text: t.id }),
+      el('td', {}, campo('n', { et: 'Nombre', extra: { maxlength: '80' } })),
+      el('td', {}, campo('d', { et: 'Duración', type: 'number', extra: { min: '0', max: '60', inputmode: 'numeric' } }, 60)),
+      el('td', {}, pred),
+      el('td', {}, campo('r', { et: 'Responsable', extra: { maxlength: '40' } })),
+      el('td', {}, el('button', { type: 'button', class: 'pequeno', text: '✕', title: 'Quitar la tarea ' + t.id, 'aria-label': 'Quitar la tarea ' + t.id, onclick: () => {
+        E.tareas = E.tareas.filter((x) => x !== t);
+        for (const x of E.tareas) x.p = listaPred(x.p).filter((q) => q !== t.id).join(', ');
+        guardarEstado(); pintarTareas();
+      } }))));
+  }
+  $('#t-anadir').disabled = E.tareas.length >= 26;
+  resumenTareas();
+}
+function resumenTareas() {
+  const c = calcular(E.tareas);
+  const r = $('#t-resumen');
+  const ul = $('#t-errores');
+  ul.replaceChildren();
+  if (!E.tareas.length) { r.className = 'msg'; r.textContent = 'No hay tareas. Añade alguna o conviértelas desde la EDT.'; return; }
+  if (c.errores.length) {
+    r.className = 'msg mal';
+    r.textContent = 'Hay que corregir las dependencias antes de calcular el calendario.';
+    for (const e of c.errores) ul.append(el('li', { text: e }));
+    return;
+  }
+  r.className = 'msg bien';
+  const ult = c.fin > 0 ? fmt(diaK(E.inicio, E.laborables, c.fin)) : fmt(diaK(E.inicio, E.laborables, 1));
+  r.textContent = 'Duración del proyecto: ' + c.fin + (c.fin === 1 ? ' jornada' : ' jornadas') + '. Termina el ' + ult + '.';
+}
+$('#t-inicio').addEventListener('change', (e) => { if (e.target.value) { E.inicio = e.target.value; guardarEstado(); resumenTareas(); } });
+$('#t-lab').addEventListener('change', (e) => { E.laborables = e.target.checked; guardarEstado(); resumenTareas(); });
+$('#t-anadir').addEventListener('click', () => {
+  const id = siguienteId();
+  if (!id) return;
+  E.tareas.push({ id, n: 'Nueva tarea', d: 1, p: '', r: '' });
+  guardarEstado(); pintarTareas();
+});
+pintores.tareas = pintarTareas;
+
+// ---------- Pestaña 4: Gantt ----------
+function jornadas(n) { return n + (n === 1 ? ' jornada' : ' jornadas'); }
+function fechasTarea(x) {
+  const ini = x.d > 0 ? diaK(E.inicio, E.laborables, x.es + 1) : null;
+  const fin = diaK(E.inicio, E.laborables, Math.max(x.ef, 1));
+  return { ini, fin };
+}
+function pintarGantt() {
+  const cont = $('#gantt');
+  const tabla = $('#g-fechas');
+  const avisos = $('#g-avisos');
+  cont.replaceChildren(); tabla.replaceChildren(); avisos.replaceChildren();
+  if (!E.tareas.length) { cont.append(el('p', { class: 'aviso', text: 'No hay tareas. Añádelas en la pestaña «Tareas».' })); return; }
+  const c = calcular(E.tareas);
+  if (c.errores.length) { cont.append(el('p', { class: 'aviso', text: 'Corrige las dependencias en la pestaña «Tareas»: ' + c.errores[0] })); return; }
+  const resaltar = $('#g-crit').checked, holguras = $('#g-hol').checked;
+  const s = Math.max(1, Math.ceil(c.fin / 120));
+  const N = Math.max(1, Math.ceil(c.fin / s));
+  const cab = el('div', { class: 'g-fila g-cab' }, el('div', { class: 'g-et', text: s > 1 ? 'Cada columna son ' + s + ' jornadas' : 'Jornada' }),
+    el('div', { class: 'g-area' }, Array.from({ length: N }, (_, i) => el('span', { text: String(i * s + 1) }))));
+  cab.lastChild.setAttribute('style', '--n:' + N);
+  const tab = el('div', { class: 'g-tabla' }, cab);
+  tab.setAttribute('style', '--n:' + N);
+  for (const t of E.tareas) {
+    const x = c.datos[t.id];
+    const f = fechasTarea(x);
+    const area = el('div', { class: 'g-area' });
+    area.setAttribute('style', '--n:' + N);
+    const crit = resaltar && x.crit;
+    if (x.d > 0) {
+      const c0 = Math.floor(x.es / s), c1 = Math.ceil(x.ef / s);
+      const barra = el('div', { class: 'barra' + (crit ? ' crit' : ''), role: 'img', text: t.id,
+        'aria-label': t.id + ', ' + t.n + ', ' + jornadas(x.d) + ', del ' + fmt(f.ini) + ' al ' + fmt(f.fin) + (x.crit ? ', ruta crítica' : ', holgura ' + x.hol) });
+      barra.style.gridColumn = (c0 + 1) + ' / span ' + Math.max(1, c1 - c0);
+      area.append(barra);
+      if (holguras && x.hol > 0 && c1 < N) {
+        const h = el('div', { class: 'hol', 'aria-hidden': 'true' });
+        h.style.gridColumn = (c1 + 1) + ' / span ' + Math.max(1, Math.min(Math.round(x.hol / s), N - c1));
+        area.append(h);
+      }
+    } else {
+      const h = el('div', { class: 'hito' + (crit ? ' crit' : ''), role: 'img', 'aria-label': t.id + ', ' + t.n + ', hito el ' + fmt(f.fin) });
+      h.style.gridColumn = String(Math.min(Math.max(Math.ceil(x.ef / s), 1), N));
+      area.append(h);
+    }
+    tab.append(el('div', { class: 'g-fila' }, el('div', { class: 'g-et', title: t.id + ' ' + t.n }, el('b', { text: t.id }), ' ' + t.n), area));
+  }
+  cont.append(tab);
+  // Avisos de carga: misma persona en dos tareas que se solapan.
+  const porPersona = {};
+  for (const t of E.tareas) { const k = t.r.trim().toLowerCase(); if (k && t.d > 0) (porPersona[k] = porPersona[k] || []).push(t); }
+  for (const lista of Object.values(porPersona)) {
+    for (let i = 0; i < lista.length; i++) for (let j = i + 1; j < lista.length; j++) {
+      const a = c.datos[lista[i].id], b = c.datos[lista[j].id];
+      if (a.es < b.ef && b.es < a.ef) avisos.append(el('li', { text: lista[i].r.trim() + ' tiene a la vez las tareas ' + a.id + ' y ' + b.id + '. Con el calendario más temprano no puede hacer las dos a la vez: retrasa una (usa su holgura, si tiene) o reparte el trabajo.' }));
+    }
+  }
+  // Tabla de fechas (alternativa en texto del diagrama)
+  tabla.append(el('thead', {}, el('tr', {}, ['Id.', 'Tarea', 'Dur.', 'Empieza', 'Termina', 'Holgura', 'Crítica'].map((h) => el('th', { text: h })))));
+  const cuerpo = el('tbody');
+  for (const t of E.tareas) {
+    const x = c.datos[t.id], f = fechasTarea(x);
+    cuerpo.append(el('tr', {}, el('td', { text: t.id }), el('td', { text: t.n }), el('td', { class: 'num', text: String(x.d) }),
+      el('td', { text: f.ini ? fmt(f.ini) : 'hito' }), el('td', { text: fmt(f.fin) }), el('td', { class: 'num', text: String(x.hol) }),
+      el('td', { class: x.crit ? 'si' : 'no', text: x.crit ? 'Sí' : 'No' })));
+  }
+  tabla.append(cuerpo);
+}
+$('#g-crit').addEventListener('change', pintarGantt);
+$('#g-hol').addEventListener('change', pintarGantt);
+pintores.gantt = pintarGantt;
+
+// ---------- Pestaña 5: ruta crítica ----------
+function poblarSelect(sel, valorPorDefecto) {
+  const actual = sel.value || valorPorDefecto;
+  sel.replaceChildren();
+  for (const t of E.tareas) sel.append(el('option', { value: t.id, text: t.id + ' · ' + t.n }));
+  if (E.tareas.some((t) => t.id === actual)) sel.value = actual;
+}
+const nombreDe = (id) => (E.tareas.find((t) => t.id === id) || { n: '' }).n;
+function pintarCritica() {
+  const tabla = $('#c-tabla');
+  tabla.replaceChildren();
+  const rutas = $('#c-rutas');
+  if (!E.tareas.length) { rutas.textContent = 'No hay tareas. Añádelas en la pestaña «Tareas».'; $('#c-expl').textContent = ''; $('#s-res').textContent = ''; poblarSelect($('#c-sel')); poblarSelect($('#s-sel')); return; }
+  const c = calcular(E.tareas);
+  if (c.errores.length) { rutas.textContent = 'Corrige las dependencias en la pestaña «Tareas»: ' + c.errores[0]; $('#c-expl').textContent = ''; $('#s-res').textContent = ''; return; }
+  tabla.append(el('thead', {}, el('tr', {}, ['Id.', 'Tarea', 'Dur.', 'ES', 'EF', 'LS', 'LF', 'Holgura', 'Holgura libre', 'Crítica'].map((h) => el('th', { text: h })))));
+  const cuerpo = el('tbody');
+  for (const t of E.tareas) {
+    const x = c.datos[t.id];
+    cuerpo.append(el('tr', {}, el('td', { text: t.id }), el('td', { text: t.n }),
+      ...[x.d, x.es, x.ef, x.ls, x.lf, x.hol, x.libre].map((v) => el('td', { class: 'num', text: String(v) })),
+      el('td', { class: x.crit ? 'si' : 'no', text: x.crit ? 'Sí' : 'No' })));
+  }
+  tabla.append(cuerpo);
+  rutas.replaceChildren(el('b', { text: 'Duración mínima: ' + jornadas(c.fin) + '. ' }),
+    c.rutas.length > 1 ? 'Hay ' + c.rutas.length + ' rutas críticas (el proyecto es más frágil): ' : 'Ruta crítica: ',
+    ...c.rutas.map((r, i) => el('span', { text: (i ? ' · ' : '') + r.join(' → ') })));
+  poblarSelect($('#c-sel'));
+  poblarSelect($('#s-sel'));
+  explicar();
+  simular();
+}
+function explicar() {
+  const id = $('#c-sel').value;
+  const out = $('#c-expl');
+  out.replaceChildren();
+  const c = calcular(E.tareas);
+  if (c.errores.length || !c.datos[id]) return;
+  const x = c.datos[id];
+  const lin = (t) => out.append(el('div', { text: t }));
+  lin(x.pred.length ? 'ES(' + id + ') = máx(' + x.pred.map((p) => 'EF de ' + p).join(', ') + ') = máx(' + x.pred.map((p) => c.datos[p].ef).join(', ') + ') = ' + x.es : 'ES(' + id + ') = 0 porque no tiene predecesoras.');
+  lin('EF(' + id + ') = ES + duración = ' + x.es + ' + ' + x.d + ' = ' + x.ef);
+  lin(x.suc.length ? 'LF(' + id + ') = mín(' + x.suc.map((s) => 'LS de ' + s).join(', ') + ') = mín(' + x.suc.map((s) => c.datos[s].ls).join(', ') + ') = ' + x.lf : 'LF(' + id + ') = duración del proyecto = ' + x.lf + ' (no tiene sucesoras).');
+  lin('LS(' + id + ') = LF − duración = ' + x.lf + ' − ' + x.d + ' = ' + x.ls);
+  lin('Holgura = LS − ES = ' + x.ls + ' − ' + x.es + ' = ' + x.hol + (x.crit ? ': es una tarea crítica.' : ': puede retrasarse ' + x.hol + (x.hol === 1 ? ' jornada' : ' jornadas') + ' sin retrasar el proyecto.'));
+}
+function simular() {
+  const id = $('#s-sel').value;
+  const out = $('#s-res');
+  const dias = Math.min(Math.max(Math.round(Number($('#s-dias').value)) || 0, 0), 30);
+  const c = calcular(E.tareas);
+  if (c.errores.length || !c.datos[id]) { out.textContent = ''; return; }
+  const copia = E.tareas.map((t) => (t.id === id ? { ...t, d: t.d + dias } : t));
+  const n = calcular(copia);
+  const x = c.datos[id];
+  const retraso = n.fin - c.fin;
+  let txt = 'Si «' + id + ' · ' + nombreDe(id) + '» tarda ' + dias + (dias === 1 ? ' día' : ' días') + ' más, el proyecto pasa de ' + jornadas(c.fin) + ' a ' + jornadas(n.fin) + '. ';
+  if (dias === 0) txt += 'Sin retraso, todo sigue igual.';
+  else if (retraso === 0) txt += 'No se retrasa: la tarea consume ' + dias + ' de sus ' + x.hol + ' jornadas de holgura.';
+  else if (x.crit) txt += 'Es una tarea crítica: el retraso se traslada día por día.';
+  else txt += 'Supera su holgura (' + x.hol + '): ' + dias + ' − ' + x.hol + ' = ' + retraso + (retraso === 1 ? ' jornada' : ' jornadas') + ' de retraso, y ahora forma parte de la ruta crítica.';
+  if (n.rutas.length) txt += ' Ruta crítica ahora: ' + n.rutas.map((r) => r.join(' → ')).join(' · ') + '.';
+  out.className = 'msg ' + (retraso > 0 ? 'mal' : 'bien');
+  out.textContent = txt;
+}
+$('#c-sel').addEventListener('change', explicar);
+$('#s-sel').addEventListener('change', simular);
+$('#s-dias').addEventListener('input', simular);
+pintores.critica = pintarCritica;
+
+// ---------- Pestaña 6: ciclos de vida ----------
+const B = (t, c, r, k, cls) => ({ t, c, r, k: k || 1, cls: cls || '' });
+const filasIter = (extra) => [1, 2, 3].flatMap((i) => extra(i));
+const MODELOS = [
+  { id: 'cascada', nombre: 'Cascada', cols: 6,
+    idea: 'Las fases se hacen una detrás de otra, completas, y cada una termina con un documento aprobado.',
+    pro: ['Fácil de planificar y de controlar', 'Mucha documentación'], con: ['El cliente no ve nada hasta el final', 'Los cambios y los errores de requisitos salen caros'],
+    encaja: 'Requisitos claros y estables, problema conocido, contrato con entregables fijos.', caso: 'El informe mensual de residuos electrónicos para la administración.',
+    bloques: [B('Requisitos', 1, 1), B('Diseño', 2, 2), B('Implementación', 3, 3), B('Pruebas', 4, 4), B('Despliegue', 5, 5), B('Mantenimiento', 6, 6)] },
+  { id: 'v', nombre: 'En V', cols: 7,
+    idea: 'Cada fase de construcción tiene su prueba asociada, que se prepara a la vez que se especifica.',
+    pro: ['Las pruebas se piensan desde el principio', 'Adecuado donde un fallo es grave'], con: ['Tan rígido como la cascada', 'Poco margen para cambiar'],
+    encaja: 'Sistemas críticos o muy regulados con requisitos estables.', caso: 'El control de acceso del almacén de piezas con cerradura inteligente.',
+    bloques: [B('Requisitos', 1, 1), B('Diseño del sistema', 2, 2), B('Diseño detallado', 3, 3), B('Código', 4, 4), B('Pruebas unitarias', 5, 3, 1, 'prueba'), B('Pruebas de integración', 6, 2, 1, 'prueba'), B('Pruebas de aceptación', 7, 1, 1, 'prueba')] },
+  { id: 'iterativo', nombre: 'Iterativo', cols: 5,
+    idea: 'Se construye pronto una versión completa y tosca del sistema y se mejora en vueltas sucesivas.',
+    pro: ['Se aprende de cada vuelta', 'Los malentendidos se corrigen pronto'], con: ['Cuesta saber cuándo parar', 'El coste final es menos predecible'],
+    encaja: 'El problema no se entiende del todo al principio.', caso: 'Una aplicación interna cuyo funcionamiento ideal se descubre usándola.',
+    bloques: filasIter((i) => [B('Requisitos', 1, i), B('Diseño', 2, i), B('Código', 3, i), B('Pruebas', 4, i, 1, 'prueba'), B('Versión ' + i + ' completa', 5, i, 1, 'entrega')]) },
+  { id: 'incremental', nombre: 'Incremental', cols: 8,
+    idea: 'El sistema se trocea y se construye y entrega pieza a pieza; cada incremento se suma a los anteriores.',
+    pro: ['El cliente recibe valor pronto', 'Los riesgos se reparten'], con: ['Exige una buena arquitectura de partida', 'No todo se puede trocear'],
+    encaja: 'Interesa entregar algo útil pronto y el sistema es divisible.', caso: 'El portal de citas: primero pedir cita, luego los avisos y después la gestión.',
+    bloques: filasIter((i) => { const c = 2 * i - 1; return [B('Diseño', c, i), B('Código', c + 1, i), B('Pruebas', c + 2, i, 1, 'prueba'), B('Entrega ' + i, c + 3, i, 1, 'entrega')]; }) },
+  { id: 'espiral', nombre: 'En espiral', cols: 5,
+    idea: 'Iterativo con análisis explícito de riesgos en cada vuelta: primero se reduce lo más incierto.',
+    pro: ['Detecta los riesgos antes de gastar mucho', 'Sirve para proyectos grandes e inciertos'], con: ['Pesado para proyectos pequeños', 'Exige experiencia analizando riesgos'],
+    encaja: 'Riesgos técnicos o de negocio altos y errores muy caros.', caso: 'Una app que identifica la avería a partir de una foto, con tecnología nueva para la empresa.',
+    bloques: filasIter((i) => [B('Objetivos', 1, i), B('Analizar y reducir riesgos', 2, i, 1, 'riesgo'), B('Desarrollar y probar', 3, i), B('Planificar la siguiente vuelta', 4, i), B('Vuelta ' + i, 5, i, 1, 'entrega')]) },
+  { id: 'prototipado', nombre: 'Prototipado', cols: 5,
+    idea: 'Se construye pronto un prototipo para enseñárselo al cliente y aclarar los requisitos. Puede ser desechable o evolutivo.',
+    pro: ['El cliente ve algo concreto', 'Descubre requisitos difíciles de explicar'], con: ['El cliente puede creer que el prototipo ya es el producto', 'Si evoluciona, arrastra un diseño improvisado'],
+    encaja: 'Requisitos difusos o interfaz muy importante.', caso: 'Una web de reservas cuyo cliente solo sabe que «tiene que ser fácil».',
+    bloques: [B('Requisitos básicos', 1, 1), B('Prototipo', 2, 1), B('Evaluación del cliente', 3, 1), B('Mejorar el prototipo', 2, 2, 2, 'riesgo'), B('Diseño final', 4, 1), B('Producto', 5, 1, 1, 'entrega')] },
+  { id: 'agil', nombre: 'Ágil', cols: 5,
+    idea: 'Ciclos cortos que entregan una versión usable, con el cliente implicado y disposición a cambiar de prioridades.',
+    pro: ['Se adapta al cambio', 'Entregas frecuentes y feedback continuo'], con: ['Necesita un cliente disponible', 'Difícil de cerrar con precio y alcance fijos'],
+    encaja: 'Requisitos cambiantes y cliente cercano.', caso: 'Las mejoras semanales del portal de incidencias interno.',
+    bloques: filasIter((i) => [B('Planificar el ciclo ' + i, 1, i), B('Desarrollar y probar', 2, i, 2), B('Revisar con el cliente y mejorar', 4, i, 1, 'prueba'), B('Incremento usable', 5, i, 1, 'entrega')]) },
+];
+function pintarModelo(id) {
+  const m = MODELOS.find((x) => x.id === id) || MODELOS[0];
+  document.querySelectorAll('#modelos button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.m === m.id)));
+  const rej = el('div', { class: 'rejilla', role: 'img', 'aria-label': 'Esquema del ciclo ' + m.nombre + ': ' + m.bloques.map((b) => b.t).join(', ') });
+  rej.setAttribute('style', '--c:' + m.cols);
+  for (const b of m.bloques) {
+    const bl = el('div', { class: 'bloque ' + b.cls, text: b.t });
+    bl.style.gridColumn = b.c + ' / span ' + b.k;
+    bl.style.gridRow = String(b.r);
+    rej.append(bl);
+  }
+  const lista = (arr) => el('ul', {}, arr.map((t) => el('li', { text: t })));
+  $('#modelo').replaceChildren(
+    el('h3', { text: m.nombre }), el('p', { text: m.idea }), el('div', { class: 'esquema' }, rej),
+    el('div', { class: 'dos' }, el('div', {}, el('b', { text: 'Ventajas' }), lista(m.pro)), el('div', {}, el('b', { text: 'Inconvenientes' }), lista(m.con))),
+    el('p', {}, el('b', { text: 'Encaja cuando: ' }), m.encaja), el('p', {}, el('b', { text: 'Ejemplo en Byte Alacant: ' }), m.caso));
+}
+function iniciarCiclos() {
+  const caja = $('#modelos');
+  for (const m of MODELOS) caja.append(el('button', { type: 'button', 'data-m': m.id, 'aria-pressed': 'false', text: m.nombre, onclick: () => pintarModelo(m.id) }));
+  pintarModelo('cascada');
+}
+// Recomendador: puntos por modelo según la respuesta (0, 1 o 2) a cada pregunta.
+const PREG = [
+  { q: 'Los requisitos están…', o: ['Claros y estables', 'Por concretar: se afinarán', 'Muy inciertos o cambiarán mucho'], lab: ['requisitos claros y estables', 'requisitos que se irán concretando', 'requisitos muy inciertos'],
+    p: { cascada: [3, 0, -2], v: [3, 0, -2], iterativo: [0, 2, 2], incremental: [2, 2, 0], espiral: [-1, 1, 3], prototipado: [-1, 2, 3], agil: [0, 3, 3] } },
+  { q: 'El cliente puede colaborar…', o: ['Solo al principio y al final', 'De vez en cuando', 'Muy a menudo'], lab: ['cliente poco disponible', 'cliente disponible a ratos', 'cliente muy disponible'],
+    p: { cascada: [2, 0, -1], v: [2, 0, -1], iterativo: [0, 2, 1], incremental: [1, 2, 1], espiral: [1, 1, 1], prototipado: [-2, 1, 3], agil: [-3, 1, 3] } },
+  { q: 'El riesgo técnico o de negocio es…', o: ['Bajo', 'Medio', 'Alto'], lab: ['riesgo bajo', 'riesgo medio', 'riesgo alto'],
+    p: { cascada: [2, 0, -2], v: [1, 1, -1], iterativo: [0, 1, 1], incremental: [1, 1, 0], espiral: [-2, 1, 3], prototipado: [0, 1, 3], agil: [1, 1, 0] } },
+  { q: 'Si falla, las consecuencias son…', o: ['Leves', 'Importantes', 'Graves (seguridad, normativa)'], lab: ['fallos poco graves', 'fallos importantes', 'sistema crítico'],
+    p: { cascada: [1, 0, -1], v: [-1, 1, 3], iterativo: [1, 0, -2], incremental: [1, 0, -2], espiral: [0, 1, 2], prototipado: [1, 0, -2], agil: [1, 0, -2] } },
+  { q: 'Entregar algo útil pronto es…', o: ['Indiferente', 'Conveniente', 'Imprescindible'], lab: ['no importa entregar pronto', 'conviene entregar pronto', 'hace falta entregar pronto'],
+    p: { cascada: [2, -1, -3], v: [2, -1, -3], iterativo: [0, 1, 1], incremental: [0, 3, 3], espiral: [0, 0, 0], prototipado: [0, 1, 1], agil: [0, 3, 3] } },
+  { q: 'El contrato de alcance y precio es…', o: ['Cerrado de antemano', 'Cerrado con margen de cambio', 'Abierto, por ciclos'], lab: ['alcance y precio cerrados', 'contrato con margen de cambio', 'contrato abierto por ciclos'],
+    p: { cascada: [3, 0, -2], v: [3, 0, -2], iterativo: [0, 1, 1], incremental: [1, 2, 1], espiral: [0, 1, 1], prototipado: [0, 1, 1], agil: [-2, 1, 3] } },
+];
+function iniciarRecomendador() {
+  const caja = $('#rec');
+  PREG.forEach((p, i) => {
+    const sel = el('select', { id: 'rec-' + i }, p.o.map((t, k) => el('option', { value: String(k), text: t })));
+    sel.value = '1';
+    sel.addEventListener('change', recomendar);
+    caja.append(el('label', { for: 'rec-' + i, text: p.q }, sel));
+  });
+  recomendar();
+}
+function recomendar() {
+  const resp = PREG.map((_, i) => Number($('#rec-' + i).value));
+  const pts = MODELOS.map((m) => ({ m, total: PREG.reduce((s, p, i) => s + p.p[m.id][resp[i]], 0) })).sort((a, b) => b.total - a.total);
+  const max = Math.max(...pts.map((x) => Math.abs(x.total)), 1);
+  const ul = el('ul', { class: 'ranking' }, pts.map((x, i) => el('li', { class: i === 0 ? 'primero' : '' },
+    el('span', { text: x.m.nombre }), el('span', { class: 'pt', style: 'width:' + Math.max(0, Math.round(100 * x.total / max)) + '%' }), el('span', { text: String(x.total) }))));
+  const top = pts[0].m;
+  const bien = PREG.filter((p, i) => p.p[top.id][resp[i]] >= 2).map((p, i) => p.lab[resp[PREG.indexOf(p)]]);
+  const mal = PREG.filter((p, i) => p.p[top.id][resp[i]] <= -2).map((p) => p.lab[resp[PREG.indexOf(p)]]);
+  const seg = pts[1].m;
+  $('#rec-res').replaceChildren(ul,
+    el('p', {}, el('b', { text: 'Sugerencia: ' + top.nombre + '. ' }), bien.length ? 'Encaja por: ' + bien.join(', ') + '. ' : 'No destaca por ningún factor concreto. ',
+      mal.length ? 'Ojo con: ' + mal.join(', ') + '. ' : '', 'Segunda opción: ' + seg.nombre + (pts[0].total - pts[1].total <= 1 ? ' (casi empatada: decide con el contexto).' : '.')));
+}
+pintores.ciclos = () => { if (!$('#modelos').children.length) { iniciarCiclos(); iniciarRecomendador(); } };
+
+// ---------- Pestaña 7: práctica ----------
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick = (arr) => arr[rnd(0, arr.length - 1)];
+const TOPOLOGIAS = [
+  [['A', ''], ['B', 'A'], ['C', 'A'], ['D', 'B'], ['E', 'C'], ['F', 'D,E']],
+  [['A', ''], ['B', 'A'], ['C', 'A'], ['D', 'A'], ['E', 'B,C'], ['F', 'C,D'], ['G', 'E,F']],
+  [['A', ''], ['B', ''], ['C', 'A'], ['D', 'B'], ['E', 'C,D'], ['F', 'E']],
+  [['A', ''], ['B', 'A'], ['C', 'B'], ['D', 'A'], ['E', 'D'], ['F', 'C,E'], ['G', 'F']],
+];
+const CICLOS_CASOS = [
+  { t: 'Un ayuntamiento encarga una aplicación de cita previa. El pliego fija todos los requisitos, el precio es cerrado y se entrega una sola vez a los seis meses.', ops: ['Cascada', 'Ágil', 'Prototipado', 'En espiral'], ok: 'Cascada', e: 'Requisitos cerrados, cliente que solo aparece al principio y al final, y contrato de precio fijo: es el terreno de la cascada (o de la V). Los modelos ágiles o de prototipos aprovechan poco un alcance que no puede cambiar.' },
+  { t: 'Byte Alacant quiere un asistente que diagnostique averías con inteligencia artificial, pero nadie sabe si es viable con los datos que tiene.', ops: ['Cascada', 'En espiral', 'Incremental', 'En V'], ok: 'En espiral', e: 'Hay un riesgo técnico alto. El modelo en espiral dedica cada vuelta a analizar y reducir riesgos (con un prototipo, por ejemplo) antes de comprometer más presupuesto.' },
+  { t: 'Un cliente quiere una web de reservas pero solo sabe que «tiene que ser bonita y fácil»; no sabe qué pantallas necesita.', ops: ['Cascada', 'Prototipado', 'En V', 'En espiral'], ok: 'Prototipado', e: 'Los requisitos son difusos y la interfaz es clave: enseñar pronto prototipos permite que el cliente reaccione a algo concreto y los requisitos se aclaren.' },
+  { t: 'Se desarrolla el firmware de una cerradura de seguridad del almacén, con normativa estricta y pruebas obligatorias en cada nivel.', ops: ['Prototipado', 'En V', 'Ágil', 'Iterativo'], ok: 'En V', e: 'Es un sistema crítico con requisitos estables: el modelo en V prepara las pruebas de aceptación, integración y unitarias desde la especificación.' },
+  { t: 'El taller pide mejoras pequeñas del portal interno cada semana y cambia sus prioridades continuamente.', ops: ['Cascada', 'En V', 'Ágil', 'En espiral'], ok: 'Ágil', e: 'Flujo continuo de peticiones con prioridades cambiantes y cliente cercano: encaja un enfoque ágil (Kanban o ciclos cortos de Scrum).' },
+  { t: 'Hay que entregar en dos semanas un primer módulo útil de inventario y después ir ampliando con ventas y proveedores.', ops: ['Cascada', 'Incremental', 'Prototipado', 'En V'], ok: 'Incremental', e: 'El sistema se puede trocear y se necesita valor pronto: se construye y entrega por incrementos, empezando por el núcleo.' },
+  { t: 'Una web informativa de seis páginas fijas, con textos y diseño ya decididos, la hace una sola persona.', ops: ['En espiral', 'Cascada', 'Prototipado desechable', 'En V'], ok: 'Cascada', e: 'Alcance pequeño y estable, sin riesgos ni cliente que cambie de idea: planificar de más costaría más que hacerlo. Una cascada sencilla basta.' },
+  { t: 'El equipo no entiende bien el problema de una aplicación interna y prefiere construir una primera versión completa y mejorarla en vueltas.', ops: ['Cascada', 'Iterativo', 'En V', 'Incremental'], ok: 'Iterativo', e: 'Se rehace y mejora el sistema entero en vueltas sucesivas. En el incremental, en cambio, se añadirían partes nuevas en cada entrega.' },
+];
+const resumenCalc = (c, orden) => orden.map((id) => id + ' (' + c.datos[id].es + '→' + c.datos[id].ef + ')').join(', ');
+function tablaRed(tareas) {
+  return el('div', { class: 'tabla-w' }, el('table', {}, el('thead', {}, el('tr', {}, ['Tarea', 'Duración', 'Predecesoras'].map((h) => el('th', { text: h })))),
+    el('tbody', {}, tareas.map((t) => el('tr', {}, el('td', { text: t.id }), el('td', { class: 'num', text: String(t.d) }), el('td', { text: t.p ? t.p.split(',').join(', ') : '—' }))))));
+}
+function redAleatoria() {
+  const tareas = pick(TOPOLOGIAS).map(([id, p]) => ({ id, n: 'Tarea ' + id, d: rnd(1, 6), p, r: '' }));
+  return { tareas, c: calcular(tareas) };
+}
+const GENERADORES = {
+  proyecto() {
+    const i = rnd(0, CASOS.length - 1), c = CASOS[i];
+    return { campo: 'radio', enun: 'Clasifica esta actividad: ' + c.t, opciones: [['p', 'Es un proyecto'], ['r', 'Es una operación rutinaria o una tarea']], correcta: c.p ? 'p' : 'r', exp: c.e };
+  },
+  duracion() {
+    const { tareas, c } = redAleatoria();
+    return { campo: 'num', tabla: tareas, enun: '¿Cuál es la duración mínima del proyecto, en jornadas?', correcta: c.fin,
+      exp: 'Pasada hacia adelante (inicio→fin): ' + resumenCalc(c, c.orden) + '. El EF más alto es ' + c.fin + ': esa es la duración mínima.' };
+  },
+  holgura() {
+    const { tareas, c } = redAleatoria();
+    const t = pick(tareas), x = c.datos[t.id];
+    return { campo: 'num', tabla: tareas, enun: '¿Cuántas jornadas de holgura total tiene la tarea ' + t.id + '?', correcta: x.hol,
+      exp: 'Duración del proyecto: ' + c.fin + '. Para ' + t.id + ': ES = ' + x.es + ', EF = ' + x.ef + ', LF = ' + x.lf + ', LS = ' + x.ls + '. Holgura = LS − ES = ' + x.ls + ' − ' + x.es + ' = ' + x.hol + '.' };
+  },
+  criticas() {
+    const { tareas, c } = redAleatoria();
+    const crit = c.orden.filter((id) => c.datos[id].crit).sort();
+    return { campo: 'multi', tabla: tareas, enun: 'Marca todas las tareas críticas (holgura 0).', opciones: tareas.map((t) => [t.id, 'Tarea ' + t.id]), correcta: crit,
+      exp: 'Duración del proyecto: ' + c.fin + '. Holguras: ' + c.orden.slice().sort().map((id) => id + ' = ' + c.datos[id].hol).join(', ') + '. Críticas: ' + crit.join(', ') + '.' };
+  },
+  fecha() {
+    const { tareas, c } = redAleatoria();
+    const lunes = new Date(Date.UTC(2026, 10, 2 + 7 * rnd(0, 8)));
+    const fin = diaK(iso(lunes), true, c.fin);
+    return { campo: 'fecha', tabla: tareas, enun: 'El proyecto empieza el ' + fmt(lunes) + ' (jornada 1). Cuenta solo de lunes a viernes, sin festivos. ¿Qué día termina?', correcta: iso(fin),
+      exp: 'La duración mínima es ' + c.fin + ' jornadas (' + resumenCalc(c, c.orden) + '). La jornada ' + c.fin + ' cae el ' + fmt(fin) + '.' };
+  },
+  retraso() {
+    const { tareas, c } = redAleatoria();
+    const t = pick(tareas), x = c.datos[t.id], r = rnd(1, 5);
+    const nuevo = calcular(tareas.map((q) => (q.id === t.id ? { ...q, d: q.d + r } : q)));
+    return { campo: 'num', tabla: tareas, enun: 'La tarea ' + t.id + ' tarda ' + r + (r === 1 ? ' día' : ' días') + ' más de lo previsto. ¿Cuántas jornadas dura ahora el proyecto?', correcta: nuevo.fin,
+      exp: 'Antes duraba ' + c.fin + '. La tarea ' + t.id + ' tiene ' + x.hol + ' de holgura: ' + (r <= x.hol ? 'el retraso (' + r + ') cabe en la holgura y el proyecto no cambia' : 'el retraso (' + r + ') supera la holgura y el proyecto se alarga ' + r + ' − ' + x.hol + ' = ' + (r - x.hol)) + '. Ahora dura ' + nuevo.fin + '.' };
+  },
+  ciclo() {
+    const c = pick(CICLOS_CASOS);
+    return { campo: 'radio', enun: c.t + ' ¿Qué ciclo de vida elegirías?', opciones: c.ops.map((o) => [o, o]), correcta: c.ok, exp: c.e };
+  },
+};
+let actual = null, resuelto = false;
+let aciertos = Number(Lab.leer('aciertos')) || 0, intentos = Number(Lab.leer('intentos')) || 0;
+function pintarMarcador() { $('#p-aciertos').textContent = String(aciertos); $('#p-intentos').textContent = String(intentos); }
+function nuevoEjercicio() {
+  const tipo = $('#p-tipo').value;
+  const clave = tipo === 'todos' ? pick(Object.keys(GENERADORES)) : tipo;
+  actual = GENERADORES[clave]();
+  resuelto = false;
+  const cont = $('#p-ej');
+  cont.replaceChildren();
+  cont.append(el('p', { class: 'enunciado', text: actual.enun }));
+  if (actual.tabla) cont.append(tablaRed(actual.tabla));
+  if (actual.campo === 'num') cont.append(el('label', { class: 'fila' }, 'Tu respuesta ', el('input', { type: 'number', id: 'p-resp', inputmode: 'numeric', min: '0' })));
+  else if (actual.campo === 'fecha') cont.append(el('label', { class: 'fila' }, 'Tu respuesta ', el('input', { type: 'date', id: 'p-resp' })));
+  else {
+    const tipoInput = actual.campo === 'multi' ? 'checkbox' : 'radio';
+    cont.append(el('div', { class: 'opciones', role: 'group', 'aria-label': 'Opciones' }, actual.opciones.map(([v, t]) =>
+      el('label', {}, el('input', { type: tipoInput, name: 'p-op', value: v }), t))));
+  }
+  const c = $('#p-correccion');
+  c.className = 'msg'; c.textContent = '';
+}
+function comprobar() {
+  if (!actual) return;
+  const c = $('#p-correccion');
+  let ok = false, vacio = false;
+  if (actual.campo === 'num') { const v = $('#p-resp').value; vacio = v === ''; ok = Number(v) === actual.correcta; }
+  else if (actual.campo === 'fecha') { const v = $('#p-resp').value; vacio = !v; ok = v === actual.correcta; }
+  else if (actual.campo === 'multi') {
+    const m = [...document.querySelectorAll('#p-ej input:checked')].map((i) => i.value).sort();
+    vacio = !m.length; ok = m.join() === actual.correcta.join();
+  } else {
+    const m = document.querySelector('#p-ej input:checked');
+    vacio = !m; ok = !!m && m.value === actual.correcta;
+  }
+  if (vacio) { c.className = 'msg'; c.textContent = 'Contesta primero y después pulsa «Comprobar».'; return; }
+  if (!resuelto) {
+    resuelto = true; intentos++; if (ok) aciertos++;
+    Lab.guardar('aciertos', aciertos); Lab.guardar('intentos', intentos); pintarMarcador();
+  }
+  c.className = 'msg ' + (ok ? 'bien' : 'mal');
+  c.textContent = (ok ? '¡Correcto! ' : 'No es correcto. ') + actual.exp;
+}
+$('#p-comprobar').addEventListener('click', comprobar);
+$('#p-otro').addEventListener('click', nuevoEjercicio);
+$('#p-tipo').addEventListener('change', nuevoEjercicio);
+$('#p-reiniciar').addEventListener('click', () => { aciertos = 0; intentos = 0; Lab.guardar('aciertos', 0); Lab.guardar('intentos', 0); pintarMarcador(); });
+pintores.practica = () => { if (!actual) nuevoEjercicio(); };
+
+// ---------- Datos: ejemplo, blanco, exportar, importar ----------
+function aviso(t, ok) { const a = $('#aviso-datos'); a.className = 'msg ' + (ok === false ? 'mal' : 'bien'); a.textContent = t; }
+function refrescar() {
+  guardarEstado();
+  const id = (pestanas.find((p) => p.getAttribute('aria-selected') === 'true') || pestanas[0]).dataset.tab;
+  mostrar(id);
+}
+armar($('#b-ejemplo'), () => { E = EJEMPLO(); refrescar(); aviso('Ejemplo cargado: portal de citas de Byte Alacant.'); }, 'se perderán tus datos');
+armar($('#b-blanco'), () => { E = { nombre: '', inicio: E.inicio, laborables: E.laborables, edt: [], tareas: [] }; refrescar(); aviso('Proyecto en blanco. Empieza por la EDT o por las tareas.'); }, 'se borrarán tus datos');
+function descargar(nombre, contenido, tipo) {
+  const url = URL.createObjectURL(new Blob([contenido], { type: tipo }));
+  const a = el('a', { href: url, download: nombre });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function aMarkdown() {
+  const c = calcular(E.tareas);
+  const ls = ['# ' + (E.nombre || 'Mi proyecto'), ''];
+  ls.push('Inicio: ' + fmt(fechaDe(E.inicio)) + '. Calendario: ' + (E.laborables ? 'solo lunes a viernes' : 'todos los días') + '.');
+  if (!c.errores.length && E.tareas.length) ls.push('Duración: ' + jornadas(c.fin) + '. Fin: ' + fmt(diaK(E.inicio, E.laborables, Math.max(c.fin, 1))) + '.');
+  ls.push('', '## EDT', '');
+  const nums = numeros();
+  edt().forEach((x, i) => ls.push('  '.repeat(x.n - 1) + '- ' + nums[i] + ' ' + x.t));
+  ls.push('', '## Tareas', '');
+  if (c.errores.length) ls.push('Dependencias por corregir: ' + c.errores.join(' '));
+  else if (E.tareas.length) {
+    ls.push('| Id. | Tarea | Dur. | Predecesoras | Responsable | Empieza | Termina | Holgura | Crítica |', '|---|---|---:|---|---|---|---|---:|---|');
+    for (const t of E.tareas) {
+      const x = c.datos[t.id], f = fechasTarea(x);
+      ls.push('| ' + [t.id, t.n, t.d, listaPred(t.p).join(', ') || '—', t.r || '—', f.ini ? fmt(f.ini) : 'hito', fmt(f.fin), x.hol, x.crit ? 'Sí' : 'No'].join(' | ') + ' |');
+    }
+    ls.push('', '## Ruta crítica', '');
+    for (const r of c.rutas) ls.push('- ' + r.join(' → '));
+  } else ls.push('Sin tareas.');
+  return ls.join('\n') + '\n';
+}
+$('#b-md').addEventListener('click', () => { descargar('plan-proyecto.md', aMarkdown(), 'text/markdown;charset=utf-8'); aviso('Se ha preparado el archivo plan-proyecto.md.'); });
+$('#b-json').addEventListener('click', () => { descargar('plan-proyecto.json', JSON.stringify(E, null, 2), 'application/json'); aviso('Se ha preparado el archivo plan-proyecto.json.'); });
+$('#b-importar').addEventListener('change', (ev) => {
+  const f = ev.target.files && ev.target.files[0];
+  if (!f) return;
+  const lector = new FileReader();
+  lector.onload = () => {
+    try {
+      const e = limpiar(JSON.parse(String(lector.result)));
+      if (e) { E = e; refrescar(); aviso('Datos importados desde ' + f.name + '.'); }
+      else aviso('No se pudo leer ese archivo: no parece un JSON exportado por este laboratorio.', false);
+    } catch (x) { aviso('No se pudo leer ese archivo: no parece un JSON exportado por este laboratorio.', false); }
+    ev.target.value = '';
+  };
+  lector.readAsText(f);
+});
+
+// ---------- Arranque ----------
+pintarCasos();
+mostrar(location.hash.slice(1) || Lab.leer('pestana'));
+</script>
+</body>
+</html>

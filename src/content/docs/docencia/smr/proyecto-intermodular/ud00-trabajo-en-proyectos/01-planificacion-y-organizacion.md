@@ -89,21 +89,21 @@ Una EDT responde a «**qué** hay que hacer», no a «cuándo». El orden y las 
 
 ```text
 Portal de citas de Byte Alacant
-├── 1 Análisis
-│   └── 1.1 Entrevista con el taller y lista de requisitos
-├── 2 Diseño
-│   ├── 2.1 Diseño de la base de datos
-│   └── 2.2 Maquetas de la interfaz
-├── 3 Desarrollo
-│   ├── 3.1 Servidor y formulario de citas
-│   ├── 3.2 Interfaz de cliente
-│   └── 3.3 Integración
-├── 4 Pruebas y calidad
-│   └── 4.1 Plan y ejecución de pruebas
-└── 5 Entrega
-    ├── 5.1 Manual de usuario
-    └── 5.2 Despliegue y entrega al cliente
+├── 1 Análisis y diseño
+│   ├── 1.1 Análisis de requisitos
+│   ├── 1.2 Diseño de la base de datos
+│   └── 1.3 Maquetas de la interfaz
+├── 2 Desarrollo
+│   ├── 2.1 Servidor y formulario de citas
+│   ├── 2.2 Interfaz de cliente
+│   └── 2.3 Integración
+└── 3 Pruebas, documentación y entrega
+    ├── 3.1 Pruebas
+    ├── 3.2 Manual de usuario
+    └── 3.3 Despliegue y entrega
 ```
+
+Esta EDT tiene tres ramas y nueve paquetes de trabajo; es la del ejemplo del [laboratorio](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/laboratorios/gantt-y-ciclos/#edt). Observa que incluye las pruebas y la documentación, no solo la construcción.
 
 ### Reglas para construir una buena EDT
 
