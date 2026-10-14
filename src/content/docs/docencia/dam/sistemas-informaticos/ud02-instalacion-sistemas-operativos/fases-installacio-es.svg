@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Del instalador al equipo listo</title>
+<desc id="d">Dos filas. Primera fila, la instalación: idioma y teclado, disco, usuario, copia de archivos y reinicio. Segunda fila, después de la instalación: configuración inicial, actualizaciones, aplicaciones y controladores.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="360" fill="#ffffff"/>
+<text x="20" y="36" fill="#16201b" font-size="28" font-weight="700">Instalación</text>
+<rect x="20" y="56" width="184" height="96" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="112.0" y="98.0" text-anchor="middle" fill="#16201b">Idioma</text>
+<text x="112.0" y="126.0" text-anchor="middle" fill="#16201b">y teclado</text>
+<line x1="207" y1="104" x2="236" y2="104" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="239" y="56" width="184" height="96" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="331.0" y="98.0" text-anchor="middle" fill="#16201b">Disco</text>
+<text x="331.0" y="126.0" text-anchor="middle" fill="#16201b">y particiones</text>
+<line x1="426" y1="104" x2="455" y2="104" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="458" y="56" width="184" height="96" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="550.0" y="98.0" text-anchor="middle" fill="#16201b">Usuario</text>
+<text x="550.0" y="126.0" text-anchor="middle" fill="#16201b">y contraseña</text>
+<line x1="645" y1="104" x2="674" y2="104" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="677" y="56" width="184" height="96" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="769.0" y="98.0" text-anchor="middle" fill="#16201b">Copia</text>
+<text x="769.0" y="126.0" text-anchor="middle" fill="#16201b">de archivos</text>
+<line x1="864" y1="104" x2="893" y2="104" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="896" y="56" width="184" height="96" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="988.0" y="98.0" text-anchor="middle" fill="#16201b">Reinicio</text>
+<text x="988.0" y="126.0" text-anchor="middle" fill="#16201b">sin el medio</text>
+<text x="20" y="216" fill="#16201b" font-size="28" font-weight="700">Después de la instalación</text>
+<rect x="20" y="236" width="320" height="96" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="180.0" y="278.0" text-anchor="middle" fill="#16201b">Configuración</text>
+<text x="180.0" y="306.0" text-anchor="middle" fill="#16201b">inicial</text>
+<line x1="343" y1="284" x2="387" y2="284" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="390" y="236" width="320" height="96" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="550.0" y="292.0" text-anchor="middle" fill="#16201b">Actualizaciones</text>
+<line x1="713" y1="284" x2="757" y2="284" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="760" y="236" width="320" height="96" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="920.0" y="278.0" text-anchor="middle" fill="#16201b">Aplicaciones</text>
+<text x="920.0" y="306.0" text-anchor="middle" fill="#16201b">y controladores</text>
+</svg>

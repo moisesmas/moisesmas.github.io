@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 400" width="1100" height="400" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">apt update i apt upgrade: dos temps, en este ordre</title>
+<desc id="d">Tres caixes en vertical: el repositori de la distribució, la llista local de paquets i els paquets instal·lats. De la primera a la segona, la fletxa és sudo apt update, que actualitza la llista sense instal·lar res. De la segona a la tercera, sudo apt upgrade, que instal·la les actualitzacions d'eixa llista.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="400" fill="#ffffff"/>
+<rect x="60" y="20" width="400" height="80" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="260.0" y="68.0" text-anchor="middle" fill="#16201b" font-weight="700">Repositori</text>
+<line x1="260" y1="104" x2="260" y2="156" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<text x="500" y="124" fill="#5c3700" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">sudo apt update</text>
+<text x="500" y="154" fill="#16201b">actualitza la llista, no instal·la res</text>
+<rect x="60" y="160" width="400" height="80" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="260.0" y="208.0" text-anchor="middle" fill="#16201b" font-weight="700">Llista local de paquets</text>
+<line x1="260" y1="244" x2="260" y2="296" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<text x="500" y="264" fill="#5c3700" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">sudo apt upgrade</text>
+<text x="500" y="294" fill="#16201b">instal·la les actualitzacions d'eixa llista</text>
+<rect x="60" y="300" width="400" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="260.0" y="348.0" text-anchor="middle" fill="#16201b" font-weight="700">Paquets instal·lats</text>
+</svg>
