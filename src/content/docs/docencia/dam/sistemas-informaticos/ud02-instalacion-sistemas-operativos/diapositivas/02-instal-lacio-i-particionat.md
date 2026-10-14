@@ -132,6 +132,23 @@ Windows 11 en un disc nou de 4 TB: exigix UEFI i el disc passa de 2 TiB. Soluci�
 
 ---
 
+## Eines per a veure-ho
+
+::::columnas
+```bash
+lsblk         # arbre de discos i particions
+lsblk -f      # amb el sistema d'arxius i la UUID
+sudo fdisk -l # taules de particions
+```
+
+```powershell
+Get-Disk      # discs i estil (MBR o GPT)
+Get-Partition # particions amb lletra i grandària
+```
+::::
+
+---
+
 ## Un esquema típic per a Linux
 
 | Partició | Sistema | Muntatge | Grandària |

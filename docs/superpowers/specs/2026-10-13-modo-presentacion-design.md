@@ -135,7 +135,7 @@ Se recogen en `docs/guia-diapositivas.md` (nueva). Resumen:
   4. «Pruébalo»: diapositiva `::laboratorio`, si la unidad tiene un laboratorio relacionado.
   5. «Resumen»: ideas clave y enlace a las actividades de la unidad.
 
-  En total, **10–20 diapositivas** por página.
+  **Sin límite de diapositivas** por página: las necesarias (decisión del titular, 2026-10-14; antes se proponían 10–20).
 - **Texto:**
   - Una idea por diapositiva, con un título que la diga (afirmación o pregunta).
   - Como máximo 6 viñetas de unas 8 palabras. Sin párrafos.

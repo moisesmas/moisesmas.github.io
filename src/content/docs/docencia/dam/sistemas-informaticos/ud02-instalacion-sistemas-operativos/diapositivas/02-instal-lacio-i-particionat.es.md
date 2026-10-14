@@ -132,6 +132,23 @@ Windows 11 en un disco nuevo de 4 TB: exige UEFI y el disco pasa de 2 TiB. Soluc
 
 ---
 
+## Herramientas para verlo
+
+::::columnas
+```bash
+lsblk         # árbol de discos y particiones
+lsblk -f      # con el sistema de archivos y la UUID
+sudo fdisk -l # tablas de particiones
+```
+
+```powershell
+Get-Disk      # discos y estilo (MBR o GPT)
+Get-Partition # particiones con letra y tamaño
+```
+::::
+
+---
+
 ## Un esquema típico para Linux
 
 | Partición | Sistema | Montaje | Tamaño |

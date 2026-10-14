@@ -154,6 +154,21 @@ Un disco, por sí mismo, es solo una sucesión de bytes.
 
 ---
 
+## Los límites de volumen de FAT32
+
+:::pasos
+- «8 TB por partición»: depende del **clúster** y del **sector**
+- Sectores de 512 B y clústeres de 32 KiB → unos **8 TiB**
+- Las **herramientas de formateo** pueden poner un límite propio
+- Windows, durante años: **máximo 32 GB** al crear (pero los leía)
+:::
+
+:::caution[Piensa en órdenes de magnitud]
+Ante estas cifras, comprueba la herramienta concreta que usas.
+:::
+
+---
+
 ## NTFS y ext4
 
 ::::columnas

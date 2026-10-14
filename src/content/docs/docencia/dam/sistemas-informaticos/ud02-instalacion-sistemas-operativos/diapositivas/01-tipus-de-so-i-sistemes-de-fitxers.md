@@ -154,6 +154,21 @@ Un disc, per si mateix, és només una successió de bytes.
 
 ---
 
+## Els límits de volum de FAT32
+
+:::pasos
+- «8 TB per partició»: depén del **clúster** i del **sector**
+- Sectors de 512 B i clústers de 32 KiB → uns **8 TiB**
+- Les **eines de formatat** poden posar un límit propi
+- Windows, durant anys: **màxim 32 GB** en crear (però els llegia)
+:::
+
+:::caution[Pensa en ordres de magnitud]
+Davant d'estes xifres, comprova l'eina concreta que uses.
+:::
+
+---
+
 ## NTFS i ext4
 
 ::::columnas

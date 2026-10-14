@@ -88,7 +88,7 @@ Ejemplo con los tres bloques:
 
 ## 4. Pautas de redacción
 
-**Estructura** (10–20 diapositivas por página):
+**Estructura** (sin límite de diapositivas: las que hagan falta para recoger lo importante de los apuntes, una idea por diapositiva):
 
 1. Portada, que sale sola.
 2. **«Qué aprenderás»** (*What you will learn*, «Què aprendràs»): 3–5 objetivos. No uses «Hoy veremos», porque una presentación puede durar más o menos de una sesión.
