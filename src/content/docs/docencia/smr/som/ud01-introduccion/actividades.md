@@ -22,8 +22,6 @@ Hand in every activity in **Aules**, in the matching task, as a document (PDF, O
 
 **What you hand in:** one document with your answers to 2–6, in the Aules task "Activity 1".
 
-**Criteria that it works on:** RA1.a
-
 **Difficulty:** ★☆☆ · **Estimated time:** 45 minutes
 
 ## Activity 2 · My computer, inside and out
@@ -49,8 +47,6 @@ If you cannot use a computer, ask your teacher for the data sheet of a classroom
 
 **What you hand in:** the table, the list of peripherals and the conclusion. A screenshot of the *About* window is welcome. Task "Activity 2" in Aules.
 
-**Criteria that it works on:** RA1.a, RA2.c
-
 **Difficulty:** ★☆☆ · **Estimated time:** 45 minutes
 
 ## Activity 3 · The right computer for the job
@@ -73,8 +69,6 @@ If you cannot use a computer, ask your teacher for the data sheet of a classroom
 
 **What you hand in:** one document with the answers, in the task "Activity 3".
 
-**Criteria that it works on:** RA1.a, RA2.d
-
 **Difficulty:** ★★☆ · **Estimated time:** 40 minutes
 
 ## Activity 4 · Layers, structure and classification of operating systems
@@ -90,8 +84,6 @@ If you cannot use a computer, ask your teacher for the data sheet of a classroom
 5. In the tab **OS classifier**, classify Windows 11, Ubuntu Desktop, Android and FreeRTOS. Copy your classification into a table and mark the criteria where more than one answer is acceptable.
 
 **What you hand in:** a document with the list, the two tables, the mind map and the screenshots with your five sentences, in the task "Activity 4".
-
-**Criteria that it works on:** RA2.a, RA2.b, RA2.d
 
 **Difficulty:** ★★☆ · **Estimated time:** 90 minutes
 
@@ -117,8 +109,6 @@ If you cannot use a computer, ask your teacher for the data sheet of a classroom
 
 **What you hand in:** a document with the screenshot, the conversions, the answers to steps 3–5 and a screenshot of the hex view. Task "Activity 5".
 
-**Criteria that it works on:** RA1.b
-
 **Difficulty:** ★★☆ · **Estimated time:** 60 minutes
 
 ## Activity 6 · Units and how each operating system shows them
@@ -141,8 +131,6 @@ If you cannot use a computer, ask your teacher for the data sheet of a classroom
 
 **What you hand in:** a document with the calculations, the table and the explanation, in the task "Activity 6".
 
-**Criteria that it works on:** RA1.b
-
 **Difficulty:** ★★☆ · **Estimated time:** 50 minutes
 
 ## Activity 7 · Licences and the right operating system
@@ -163,10 +151,8 @@ If you cannot use a computer, ask your teacher for the data sheet of a classroom
 
 **What you hand in:** the table of licences and the three decisions with their justification, in the task "Activity 7".
 
-**Criteria that it works on:** RA2.c, RA2.d, RA2.i
-
 **Difficulty:** ★★★ · **Estimated time:** 90 minutes
 
 :::aules
-You hand in all the activities in Aules, in the task of each one. There you will also find the assessment criteria, your marks and the solutions.
+You hand in all the activities in Aules, in the task of each one. There you will also find the rubric, your marks and the solutions.
 :::

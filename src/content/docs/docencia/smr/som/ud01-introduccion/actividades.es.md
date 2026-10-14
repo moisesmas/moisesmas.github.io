@@ -22,8 +22,6 @@ Entrega cada actividad en **Aules**, en la tarea correspondiente, en un document
 
 **Qué entregas:** un documento con tus respuestas a los puntos 2–6, en la tarea «Actividad 1» de Aules.
 
-**Criterios que trabaja:** RA1.a
-
 **Dificultad:** ★☆☆ · **Tiempo estimado:** 45 minutos
 
 ## Actividad 2 · Mi ordenador, por dentro y por fuera
@@ -49,8 +47,6 @@ Si no puedes usar un ordenador, pide a tu profesor la ficha técnica de un PC de
 
 **Qué entregas:** la tabla, la lista de periféricos y la conclusión. Se agradece una captura de la ventana *Acerca de*. Tarea «Actividad 2» de Aules.
 
-**Criterios que trabaja:** RA1.a, RA2.c
-
 **Dificultad:** ★☆☆ · **Tiempo estimado:** 45 minutos
 
 ## Actividad 3 · El ordenador adecuado para cada trabajo
@@ -73,8 +69,6 @@ Si no puedes usar un ordenador, pide a tu profesor la ficha técnica de un PC de
 
 **Qué entregas:** un documento con las respuestas, en la tarea «Actividad 3».
 
-**Criterios que trabaja:** RA1.a, RA2.d
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 40 minutos
 
 ## Actividad 4 · Capas, estructura y clasificación de los sistemas operativos
@@ -90,8 +84,6 @@ Si no puedes usar un ordenador, pide a tu profesor la ficha técnica de un PC de
 5. En la pestaña **Clasificador de SO**, clasifica Windows 11, Ubuntu Desktop, Android y FreeRTOS. Copia tu clasificación en una tabla y marca los criterios en los que se acepta más de una respuesta.
 
 **Qué entregas:** un documento con la lista, las dos tablas, el mapa mental y las capturas con tus cinco frases, en la tarea «Actividad 4».
-
-**Criterios que trabaja:** RA2.a, RA2.b, RA2.d
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** 90 minutos
 
@@ -117,8 +109,6 @@ Si no puedes usar un ordenador, pide a tu profesor la ficha técnica de un PC de
 
 **Qué entregas:** un documento con la captura, las conversiones, las respuestas a los puntos 3–5 y una captura de la vista hexadecimal. Tarea «Actividad 5».
 
-**Criterios que trabaja:** RA1.b
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 60 minutos
 
 ## Actividad 6 · Unidades y cómo las muestra cada sistema operativo
@@ -141,8 +131,6 @@ Si no puedes usar un ordenador, pide a tu profesor la ficha técnica de un PC de
 
 **Qué entregas:** un documento con los cálculos, la tabla y la explicación, en la tarea «Actividad 6».
 
-**Criterios que trabaja:** RA1.b
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 50 minutos
 
 ## Actividad 7 · Licencias y el sistema operativo adecuado
@@ -163,10 +151,8 @@ Si no puedes usar un ordenador, pide a tu profesor la ficha técnica de un PC de
 
 **Qué entregas:** la tabla de licencias y las tres decisiones con su justificación, en la tarea «Actividad 7».
 
-**Criterios que trabaja:** RA2.c, RA2.d, RA2.i
-
 **Dificultad:** ★★★ · **Tiempo estimado:** 90 minutos
 
 :::aules
-Entregas todas las actividades en Aules, en la tarea de cada una. Allí encontrarás también los criterios de evaluación, tus notas y las soluciones.
+Entregas todas las actividades en Aules, en la tarea de cada una. Allí encontrarás también la rúbrica, tus notas y las soluciones.
 :::

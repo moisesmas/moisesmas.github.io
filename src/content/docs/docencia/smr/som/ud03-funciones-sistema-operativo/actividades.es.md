@@ -25,8 +25,6 @@ Para las actividades 1, 6 y 7 necesitas una máquina virtual con Ubuntu (la de l
 
 **Qué entregas:** un documento con las órdenes, la salida relevante (texto o capturas) y tus explicaciones. Tarea «Actividad 1» de Aules.
 
-**Criterios que trabaja:** RA1.c, RA2.a, RA4.c
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 75 minutos
 
 ## Actividad 2 · Procesos y servicios en Windows
@@ -44,8 +42,6 @@ Para las actividades 1, 6 y 7 necesitas una máquina virtual con Ubuntu (la de l
 7. Haz una tabla comparativa con cinco filas: cómo listar procesos, cómo finalizar uno, cómo cambiar su prioridad, cómo listar servicios y cómo iniciar o detener un servicio. Una columna para Linux y otra para Windows.
 
 **Qué entregas:** el documento con capturas y la tabla comparativa. Tarea «Actividad 2» de Aules.
-
-**Criterios que trabaja:** RA1.c, RA2.a, RA4.c
 
 **Dificultad:** ★☆☆ · **Tiempo estimado:** 60 minutos
 
@@ -79,8 +75,6 @@ Para las actividades 1, 6 y 7 necesitas una máquina virtual con Ubuntu (la de l
 
 **Qué entregas:** los seis diagramas de Gantt (se acepta una foto de tu letra) con las tablas y tus respuestas a 4 y 5. Tarea «Actividad 3» de Aules.
 
-**Criterios que trabaja:** RA1.c, RA2.a
-
 **Dificultad:** ★★★ · **Tiempo estimado:** 90 minutos
 
 ## Actividad 4 · Quantum e inanición
@@ -96,8 +90,6 @@ Para las actividades 1, 6 y 7 necesitas una máquina virtual con Ubuntu (la de l
 5. Un ordenador de escritorio tiene un gestor de ventanas, un reproductor de vídeo y un programa de copias de seguridad. ¿Qué algoritmo usarías y por qué? Menciona al menos un problema de tu elección y cómo reducirlo.
 
 **Qué entregas:** las tablas, las conclusiones y tus respuestas. Tarea «Actividad 4» de Aules.
-
-**Criterios que trabaja:** RA2.a, RA4.c
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** 60 minutos
 
@@ -115,8 +107,6 @@ Para las actividades 1, 6 y 7 necesitas una máquina virtual con Ubuntu (la de l
 6. **Optimizar.** Propón tres acciones realistas para reducir el uso de memoria de ese ordenador. Para cada una indica qué medirías antes y después. Si puedes, prueba una e informa de la diferencia.
 
 **Qué entregas:** los cálculos (muestra los pasos), la tabla de datos y las tres propuestas. Tarea «Actividad 5» de Aules.
-
-**Criterios que trabaja:** RA2.a, RA4.e
 
 **Dificultad:** ★★★ · **Tiempo estimado:** 100 minutos
 
@@ -138,8 +128,6 @@ Para las actividades 1, 6 y 7 necesitas una máquina virtual con Ubuntu (la de l
 
 **Qué entregas:** capturas de GParted antes y después, las salidas, las tablas y el plan. Tarea «Actividad 6» de Aules.
 
-**Criterios que trabaja:** RA1.d, RA1.e, RA1.g, RA2.e, RA4.g
-
 **Dificultad:** ★★★ · **Tiempo estimado:** 120 minutos
 
 ## Actividad 7 · Permisos y recursos compartidos
@@ -159,10 +147,8 @@ Para las actividades 1, 6 y 7 necesitas una máquina virtual con Ubuntu (la de l
 
 **Qué entregas:** un documento con las órdenes, las salidas y las capturas y tus respuestas. Tarea «Actividad 7» de Aules.
 
-**Criterios que trabaja:** RA1.e, RA1.f, RA4.h
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 90 minutos
 
 :::aules
-Entregas todas las actividades en Aules, en la tarea de cada una. Allí encontrarás también los criterios de evaluación, tus notas y las soluciones.
+Entregas todas las actividades en Aules, en la tarea de cada una. Allí encontrarás también la rúbrica, tus notas y las soluciones.
 :::

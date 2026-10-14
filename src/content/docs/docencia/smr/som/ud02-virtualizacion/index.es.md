@@ -17,12 +17,6 @@ A partir de ahora, casi todas las prácticas de este módulo se harán dentro de
 - Instalar las Guest Additions y usar el portapapeles y las carpetas compartidas.
 - Medir el rendimiento de CPU, memoria y disco en el anfitrión y en el invitado, y explicar la diferencia.
 
-## La unidad de un vistazo
-
-| Trimestre | Horas | Peso en la evaluación | Resultado de aprendizaje |
-|---|---|---|---|
-| 1.º | 12 h | 10 % | RA5: crea máquinas virtuales identificando su campo de aplicación e instalando software específico (criterios a-g) |
-
 ## Mapa de la unidad
 
 1. [¿Qué es la virtualización?](/docencia/smr/som/ud02-virtualizacion/01-what-is-virtualization/es/): anfitrión e invitado, físico frente a virtual, ventajas, inconvenientes y escenarios reales.

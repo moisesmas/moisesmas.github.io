@@ -17,12 +17,6 @@ From now on, almost every practice in this module will happen inside a virtual m
 - Install Guest Additions and use the shared clipboard and shared folders.
 - Measure CPU, memory and disk performance on the host and in the guest, and explain the difference.
 
-## The unit at a glance
-
-| Term | Hours | Weight in the assessment | Learning outcome |
-|---|---|---|---|
-| 1st | 12 h | 10 % | RA5: creates virtual machines, identifying their field of application and installing specific software (criteria a-g) |
-
 ## Map of the unit
 
 1. [What is virtualization?](/docencia/smr/som/ud02-virtualizacion/01-what-is-virtualization/): host and guest, physical against virtual, advantages, disadvantages and real scenarios.

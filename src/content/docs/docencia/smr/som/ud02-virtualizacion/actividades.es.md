@@ -25,8 +25,6 @@ Todas se **entregan en Aules**, en la tarea de cada actividad, en un PDF con tu 
 
 **Qué entregas:** un PDF con la tabla de las cinco situaciones, tus dos situaciones y tu puntuación del laboratorio, en la tarea de Aules «Actividad 1».
 
-**Criterios que trabaja:** RA5.a, RA5.b
-
 **Dificultad:** ★☆☆ · **Tiempo estimado:** 40 minutos
 
 ## Actividad 2 · Instala software de virtualización y compara hipervisores
@@ -48,8 +46,6 @@ Todas se **entregan en Aules**, en la tarea de cada actividad, en un PDF con tu 
 6. Responde: ¿en qué casos elegirías el producto propietario que has seleccionado y en qué casos elegirías VirtualBox?
 
 **Qué entregas:** un PDF con las capturas, la tabla, el resumen y la respuesta, en la tarea de Aules «Actividad 2».
-
-**Criterios que trabaja:** RA5.c
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** 60 minutos
 
@@ -83,8 +79,6 @@ Todas se **entregan en Aules**, en la tarea de cada actividad, en un PDF con tu 
 
 **Qué entregas:** un PDF con las capturas y las respuestas, en la tarea de Aules «Actividad 3».
 
-**Criterios que trabaja:** RA5.d, RA5.e, RA5.f
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 60 minutos
 
 ## Actividad 4 · Instantáneas como red de seguridad
@@ -112,8 +106,6 @@ Todas se **entregan en Aules**, en la tarea de cada actividad, en un PDF con tu 
 
 **Qué entregas:** un PDF con las capturas, los tamaños de los archivos y las respuestas, en la tarea de Aules «Actividad 4».
 
-**Criterios que trabaja:** RA5.e
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 60 minutos
 
 ## Actividad 5 · Guest Additions y una carpeta compartida
@@ -131,8 +123,6 @@ Todas se **entregan en Aules**, en la tarea de cada actividad, en un PDF con tu 
 
 **Qué entregas:** un PDF con las capturas y la reflexión, en la tarea de Aules «Actividad 5».
 
-**Criterios que trabaja:** RA5.e, RA5.f
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 60 minutos
 
 ## Actividad 6 · Una VM con un sistema operativo propietario
@@ -149,8 +139,6 @@ Todas se **entregan en Aules**, en la tarea de cada actividad, en un PDF con tu 
 6. Responde: ¿qué diferencias has encontrado respecto a la aplicación Linux (tiempo de instalación, requisitos, licencia)? ¿Por qué un invitado propietario es más «caro» en recursos y en licencias?
 
 **Qué entregas:** un PDF con las capturas (requisitos, ajustes, instalación terminada) y las respuestas, en la tarea de Aules «Actividad 6».
-
-**Criterios que trabaja:** RA5.d, RA5.e
 
 **Dificultad:** ★★★ · **Tiempo estimado:** 120 minutos
 
@@ -172,8 +160,6 @@ Todas se **entregan en Aules**, en la tarea de cada actividad, en un PDF con tu 
 7. Escribe una conclusión de 100 a 150 palabras: ¿dónde está la mayor diferencia, por qué y qué harías para mejorarla?
 
 **Qué entregas:** un PDF con los datos de ambos sistemas, las órdenes, la tabla y la conclusión, en la tarea de Aules «Actividad 7».
-
-**Criterios que trabaja:** RA5.f, RA5.g
 
 **Dificultad:** ★★★ · **Tiempo estimado:** 90 minutos
 

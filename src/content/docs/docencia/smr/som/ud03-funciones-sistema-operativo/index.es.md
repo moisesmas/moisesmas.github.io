@@ -16,12 +16,6 @@ En esta unidad abres el capó del sistema operativo. Verás cómo reparte la CPU
 - Comparar FAT32, NTFS y ext4, explicar por qué importa el journaling al elegir un sistema de archivos y optimizar el uso de los dispositivos de almacenamiento.
 - Distinguir los atributos de un archivo y de un directorio, leer y establecer permisos en Linux y en Windows, y configurar recursos compartidos.
 
-## La unidad de un vistazo
-
-| Trimestre | Horas | Peso en la evaluación | RA que trabaja |
-|---|---|---|---|
-| 1.er trimestre | 16 h | 10 % | RA1 (c, d, e, f, g), RA2 (a, e) y RA4 (c, e, g, h) |
-
 ## Mapa de la unidad
 
 1. [Procesos y servicios](/docencia/smr/som/ud03-funciones-sistema-operativo/01-processes/es/): funciones del SO, programa y proceso, servicios, estados, primer y segundo plano, señales y zombis.
