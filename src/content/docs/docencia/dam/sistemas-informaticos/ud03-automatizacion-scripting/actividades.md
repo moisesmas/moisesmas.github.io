@@ -227,7 +227,7 @@ Es fa **individualment, durant la sessió presencial**, en el sistema operatiu d
 4. **Programació.** Programa la comprovació del disc perquè s'execute **cada 5 minuts**: amb `crontab -e` (línia `*/5 * * * *` amb ruta absoluta i redirecció) o amb el Programador de tasques / `schtasks` (acció `powershell.exe` amb `-File`). Espera, com a mínim, a dos execucions i comprova-ho en el registre.
 5. **Documenta.** Reflexió breu (3-4 línies): quina altra tasca del teu dia a dia automatitzaries amb un script semblant, i per què.
 
-**Què entregues:** abans d'acabar la classe, en la tasca d'Aules «Activitat UP3 — Scripts d'automatització i tasca programada»: un document amb
+**Què entregues:** abans d'acabar la classe, en la tasca d'Aules d'esta activitat: un document amb
 - **Apartat 1:** l'script de còpia i una captura del fitxer comprimit generat;
 - **Apartat 2:** l'script d'altes i una captura dels usuaris creats en el sistema;
 - **Apartat 3:** l'script de comprovació del disc i una captura de la seua execució;

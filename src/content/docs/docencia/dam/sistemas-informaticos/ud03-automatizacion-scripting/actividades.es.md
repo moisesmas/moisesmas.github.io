@@ -227,7 +227,7 @@ Se hace **individualmente, durante la sesión presencial**, en el sistema operat
 4. **Programación.** Programa la comprobación del disco para que se ejecute **cada 5 minutos**: con `crontab -e` (línea `*/5 * * * *` con ruta absoluta y redirección) o con el Programador de tareas / `schtasks` (acción `powershell.exe` con `-File`). Espera, como mínimo, a dos ejecuciones y compruébalo en el registro.
 5. **Documenta.** Reflexión breve (3-4 líneas): qué otra tarea de tu día a día automatizarías con un script parecido, y por qué.
 
-**Qué entregas:** antes de acabar la clase, en la tarea de Aules «Actividad UP3 — Scripts de automatización y tarea programada»: un documento con
+**Qué entregas:** antes de acabar la clase, en la tarea de Aules de esta actividad: un documento con
 - **Apartado 1:** el script de copia y una captura del archivo comprimido generado;
 - **Apartado 2:** el script de altas y una captura de los usuarios creados en el sistema;
 - **Apartado 3:** el script de comprobación del disco y una captura de su ejecución;

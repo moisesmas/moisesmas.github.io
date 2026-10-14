@@ -189,7 +189,7 @@ table.t td.mono,table.t td code{font-size:.88rem;overflow-wrap:anywhere}
     "antes-de-ejecutar-una": "Antes de ejecutar una línea, Bash sustituye variables, ejecuta $( ), calcula $(( )) y parte el texto en palabras. Escribe una línea y mira qué recibe la orden.",
     "la-linea": "La línea",
     "linea-de-ordenes-prueba": "Línea de órdenes (prueba una tuya)",
-    "carpeta-simulada-a-txt": "Carpeta simulada: a.txt, b.txt y notes.md. Fechas simuladas: hoy es 2026-11-24.",
+    "carpeta-simulada-a-txt": "Carpeta simulada: a.txt, b.txt y notes.md. Fechas simuladas: hoy es 2026-03-15.",
     "que-recibe-la-orden": "Qué recibe la orden",
     "regla-practica-pon-siempre": "Regla práctica: pon siempre las variables entre comillas dobles (\"$variable\"). Las comillas simples no expanden nada. PowerShell no parte las variables en palabras.",
     "laboratorio-3-condiciones": "Laboratorio 3 · Condiciones",
@@ -345,7 +345,7 @@ table.t td.mono,table.t td code{font-size:.88rem;overflow-wrap:anywhere}
       <label class="fld"><span data-t="linea-de-ordenes-prueba">Línia d'ordres (prova-ne una de tu)</span>
         <input type="text" id="co-line" value="" size="48" spellcheck="false" autocomplete="off"></label>
       <div class="opts" id="co-ex" role="group" aria-label="Exemples" data-t-attr="aria-label:ejemplos"></div>
-      <p class="note" data-t="carpeta-simulada-a-txt">Carpeta simulada: a.txt, b.txt i notes.md. Dates simulades: avui és 2026-11-24.</p>
+      <p class="note" data-t="carpeta-simulada-a-txt">Carpeta simulada: a.txt, b.txt i notes.md. Dates simulades: avui és 2026-03-15.</p>
     </div>
     <div class="panel">
       <h3 data-t="que-recibe-la-orden">Què rep l'ordre</h3>
@@ -1591,7 +1591,7 @@ const GEN = {
       { l: "echo '$nom'", q: T('Què mostra?', '¿Qué muestra?'), a: '$nom', o: ['$nom', nom, 'nom', T('(res)', '(nada)')], w: T('Les cometes simples no expandixen res.', 'Las comillas simples no expanden nada.') },
       { l: 'echo "Hola $nom"', q: T('Què mostra?', '¿Qué muestra?'), a: 'Hola ' + nom, o: ['Hola ' + nom, 'Hola $nom', 'Hola nom', 'Hola'], w: T('Les cometes dobles substituïxen la variable pel seu valor.', 'Las comillas dobles sustituyen la variable por su valor.') },
       { l: 'echo "Total: $((2 + 3 * 4))"', q: T('Què mostra?', '¿Qué muestra?'), a: 'Total: 14', o: ['Total: 14', 'Total: 20', 'Total: 2 + 3 * 4', 'Total: 9'], w: T('$(( )) calcula amb la precedència normal: primer 3 * 4 = 12 i després 2 + 12 = 14.', '$(( )) calcula con la precedencia normal: primero 3 * 4 = 12 y después 2 + 12 = 14.') },
-      { l: 'echo "Avui: $(date +%F)"', q: T('Si avui és el 24 de novembre de 2026, què mostra?', 'Si hoy es el 24 de noviembre de 2026, ¿qué muestra?'), a: 'Avui: 2026-11-24', o: ['Avui: 2026-11-24', 'Avui: $(date +%F)', 'Avui: date +%F', 'Avui: 24/11/2026'], w: T('$( ) executa l\'ordre de dins i posa la seua eixida; date +%F dóna ISO: any-mes-dia.', '$( ) ejecuta la orden de dentro y pone su salida; date +%F da ISO: año-mes-día.') },
+      { l: 'echo "Avui: $(date +%F)"', q: T('Si avui és el 15 de març de 2026, què mostra?', 'Si hoy es el 15 de marzo de 2026, ¿qué muestra?'), a: 'Avui: 2026-03-15', o: ['Avui: 2026-03-15', 'Avui: $(date +%F)', 'Avui: date +%F', 'Avui: 15/03/2026'], w: T('$( ) executa l\'ordre de dins i posa la seua eixida; date +%F dóna ISO: any-mes-dia.', '$( ) ejecuta la orden de dentro y pone su salida; date +%F da ISO: año-mes-día.') },
     ]);
     return { p: L.q, code: setup + L.l, a: L.a, o: L.o, w: L.w };
   },

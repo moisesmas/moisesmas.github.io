@@ -74,7 +74,7 @@ Coses que cal saber:
 
 - `tar -czf` crea (`c`) un arxiu comprimit amb gzip (`z`) en el fitxer indicat (`f`). Si l'origen és una ruta absoluta, `tar` avisa que lleva la barra inicial (*Removing leading `/`*): és normal i fa que la còpia siga més fàcil de restaurar.
 - `Compress-Archive` de Windows PowerShell 5.1 té limitacions amb fitxers molt grans (al voltant de 2 GB) i amb fitxers oberts per altres programes. Per a còpies grans s'usa `robocopy` o altres eines (pàgina 4).
-- Comprova sempre el resultat: `tar -tzf /backups/backup_2026-11-24.tar.gz` llista el contingut, i en Windows pots obrir el `.zip`.
+- Comprova sempre el resultat: `tar -tzf /backups/backup_2026-03-15.tar.gz` llista el contingut, i en Windows pots obrir el `.zip`.
 
 ## 2. Script d'alta massiva d'usuaris
 

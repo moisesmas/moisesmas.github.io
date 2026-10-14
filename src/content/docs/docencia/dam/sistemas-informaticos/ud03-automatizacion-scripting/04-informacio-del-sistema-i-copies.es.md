@@ -123,13 +123,13 @@ Una regla simple para empezar es **3-2-1**: tres copias de los datos, en dos sop
 
 ### Restaurar es la parte que importa
 
-Ya sabes hacer la copia (página 3). Ahora, la restauración. Supongamos que `backup.sh` creó `/backups/backup_2026-11-24.tar.gz` a partir de `/home/ana/documents`:
+Ya sabes hacer la copia (página 3). Ahora, la restauración. Supongamos que `backup.sh` creó `/backups/backup_2026-03-15.tar.gz` a partir de `/home/ana/documents`:
 
 ```bash
-tar -tzf /backups/backup_2026-11-24.tar.gz | head          # ver qué contiene (t = listar)
+tar -tzf /backups/backup_2026-03-15.tar.gz | head          # ver qué contiene (t = listar)
 mkdir -p /tmp/restauracio
-tar -xzf /backups/backup_2026-11-24.tar.gz -C /tmp/restauracio    # restaurarlo todo (x = extraer)
-tar -xzf /backups/backup_2026-11-24.tar.gz -C /tmp/restauracio home/ana/documents/nota.txt   # un solo archivo
+tar -xzf /backups/backup_2026-03-15.tar.gz -C /tmp/restauracio    # restaurarlo todo (x = extraer)
+tar -xzf /backups/backup_2026-03-15.tar.gz -C /tmp/restauracio home/ana/documents/nota.txt   # un solo archivo
 diff -r /home/ana/documents /tmp/restauracio/home/ana/documents  # compara original y restaurado
 ```
 
@@ -138,13 +138,13 @@ Dos detalles: dentro del archivo las rutas han perdido la barra inicial (`home/a
 Para saber si el archivo de copia se ha estropeado, se calcula una **suma de verificación** (*hash*) cuando se crea y se vuelve a calcular cuando se quiere usar:
 
 ```bash
-sha256sum backup_2026-11-24.tar.gz > sumes.sha256     # al crear la copia
+sha256sum backup_2026-03-15.tar.gz > sumes.sha256     # al crear la copia
 sha256sum -c sumes.sha256                             # después: «OK» o «FAILED»
 ```
 
 ```powershell
-Expand-Archive -Path D:\Backups\backup_2026-11-24.zip -DestinationPath C:\Restauracio
-Get-FileHash D:\Backups\backup_2026-11-24.zip -Algorithm SHA256
+Expand-Archive -Path D:\Backups\backup_2026-03-15.zip -DestinationPath C:\Restauracio
+Get-FileHash D:\Backups\backup_2026-03-15.zip -Algorithm SHA256
 ```
 
 `Expand-Archive` también admite `-Force`, que sobrescribe los archivos que ya existen en el destino. Windows tiene, además, sus propias herramientas de copia (Historial de archivos, copia de seguridad de Windows, según la versión) y en Linux, por ejemplo, Déjà Dup en GNOME: son el equivalente gráfico del script, y conviene saber que existen.

@@ -123,13 +123,13 @@ Una regla simple per a començar és **3-2-1**: tres còpies de les dades, en do
 
 ### Restaurar és la part que importa
 
-Ja saps fer la còpia (pàgina 3). Ara, la restauració. Suposem que `backup.sh` va crear `/backups/backup_2026-11-24.tar.gz` a partir de `/home/ana/documents`:
+Ja saps fer la còpia (pàgina 3). Ara, la restauració. Suposem que `backup.sh` va crear `/backups/backup_2026-03-15.tar.gz` a partir de `/home/ana/documents`:
 
 ```bash
-tar -tzf /backups/backup_2026-11-24.tar.gz | head          # veure què conté (t = llistar)
+tar -tzf /backups/backup_2026-03-15.tar.gz | head          # veure què conté (t = llistar)
 mkdir -p /tmp/restauracio
-tar -xzf /backups/backup_2026-11-24.tar.gz -C /tmp/restauracio    # restaurar-ho tot (x = extraure)
-tar -xzf /backups/backup_2026-11-24.tar.gz -C /tmp/restauracio home/ana/documents/nota.txt   # un sol fitxer
+tar -xzf /backups/backup_2026-03-15.tar.gz -C /tmp/restauracio    # restaurar-ho tot (x = extraure)
+tar -xzf /backups/backup_2026-03-15.tar.gz -C /tmp/restauracio home/ana/documents/nota.txt   # un sol fitxer
 diff -r /home/ana/documents /tmp/restauracio/home/ana/documents  # compara original i restaurat
 ```
 
@@ -138,13 +138,13 @@ Dos detalls: dins de l'arxiu les rutes han perdut la barra inicial (`home/ana/do
 Per a saber si el fitxer de còpia s'ha malmés, es calcula una **suma de verificació** (*hash*) quan es crea i es torna a calcular quan es vol usar:
 
 ```bash
-sha256sum backup_2026-11-24.tar.gz > sumes.sha256     # en crear la còpia
+sha256sum backup_2026-03-15.tar.gz > sumes.sha256     # en crear la còpia
 sha256sum -c sumes.sha256                             # després: «OK» o «FAILED»
 ```
 
 ```powershell
-Expand-Archive -Path D:\Backups\backup_2026-11-24.zip -DestinationPath C:\Restauracio
-Get-FileHash D:\Backups\backup_2026-11-24.zip -Algorithm SHA256
+Expand-Archive -Path D:\Backups\backup_2026-03-15.zip -DestinationPath C:\Restauracio
+Get-FileHash D:\Backups\backup_2026-03-15.zip -Algorithm SHA256
 ```
 
 `Expand-Archive` també admet `-Force`, que sobreescriu els fitxers que ja existixen en el destí. Windows té, a més, les seues pròpies eines de còpia (Historial de fitxers, còpia de seguretat de Windows, segons la versió) i en Linux, per exemple, Déjà Dup en GNOME: són l'equivalent gràfic de l'script, i convé saber que existixen.
