@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 450" width="1100" height="450" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Cuadrícula de poder e interés de las partes interesadas</title>
+<desc id="d">Cuadrícula de dos por dos. Poder alto e interés bajo: mantener satisfecha, por ejemplo el proveedor del servicio en la nube. Poder alto e interés alto: gestionar de cerca, por ejemplo la gerencia de cada pyme. Poder bajo e interés bajo: vigilar, por ejemplo la gestoría. Poder bajo e interés alto: mantener informada, por ejemplo el personal administrativo.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="450" fill="#ffffff"/>
+<rect x="100" y="20" width="480" height="180" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="340.0" y="103.0" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Mantener satisfecha</text>
+<text x="340.0" y="135.0" text-anchor="middle" fill="#16201b">Proveedor de la nube</text>
+<rect x="600" y="20" width="480" height="180" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="840.0" y="103.0" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Gestionar de cerca</text>
+<text x="840.0" y="135.0" text-anchor="middle" fill="#16201b">Gerencia de cada pyme</text>
+<rect x="100" y="210" width="480" height="180" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="340.0" y="293.0" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Vigilar</text>
+<text x="340.0" y="325.0" text-anchor="middle" fill="#16201b">Gestoría</text>
+<rect x="600" y="210" width="480" height="180" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="840.0" y="293.0" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Mantener informada</text>
+<text x="840.0" y="325.0" text-anchor="middle" fill="#16201b">Personal administrativo</text>
+<text x="55" y="110" text-anchor="middle" fill="#16201b" font-weight="700" transform="rotate(-90 55 110)">Poder alto</text>
+<text x="55" y="300" text-anchor="middle" fill="#16201b" font-weight="700" transform="rotate(-90 55 300)">Poder bajo</text>
+<text x="340" y="424" text-anchor="middle" fill="#16201b" font-weight="700">Interés bajo</text>
+<text x="840" y="424" text-anchor="middle" fill="#16201b" font-weight="700">Interés alto</text>
+</svg>
