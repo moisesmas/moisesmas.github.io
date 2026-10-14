@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 450" width="1100" height="450" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Estructura de directorios de Linux y de Windows</title>
+<desc id="d">Dos árboles. Linux, desde la raíz: /etc la configuración, /home las carpetas personales, /var logs y datos variables, /usr programas y bibliotecas, /dev dispositivos y /tmp archivos temporales. Windows, desde la unidad C: Windows el sistema, Program Files los programas, Users los perfiles de usuario y ProgramData los datos comunes.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="450" fill="#ffffff"/>
+<text x="280" y="38" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Linux</text>
+<text x="830" y="38" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Windows</text>
+<rect x="15" y="221.0" width="80" height="60" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="55.0" y="259.0" text-anchor="middle" fill="#16201b" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">/</text>
+<polyline points="97,251.0 118,251.0 118,96 138,96" fill="none" stroke="#56655d" stroke-width="3"/>
+<rect x="140" y="70" width="430" height="52" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="355.0" y="104.0" text-anchor="middle" fill="#16201b">/etc · configuración</text>
+<polyline points="97,251.0 118,251.0 118,158 138,158" fill="none" stroke="#56655d" stroke-width="3"/>
+<rect x="140" y="132" width="430" height="52" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="355.0" y="166.0" text-anchor="middle" fill="#16201b">/home · carpetas personales</text>
+<polyline points="97,251.0 118,251.0 118,220 138,220" fill="none" stroke="#56655d" stroke-width="3"/>
+<rect x="140" y="194" width="430" height="52" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="355.0" y="228.0" text-anchor="middle" fill="#16201b">/var · logs y datos variables</text>
+<polyline points="97,251.0 118,251.0 118,282 138,282" fill="none" stroke="#56655d" stroke-width="3"/>
+<rect x="140" y="256" width="430" height="52" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="355.0" y="290.0" text-anchor="middle" fill="#16201b">/usr · programas y bibliotecas</text>
+<polyline points="97,251.0 118,251.0 118,344 138,344" fill="none" stroke="#56655d" stroke-width="3"/>
+<rect x="140" y="318" width="430" height="52" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="355.0" y="352.0" text-anchor="middle" fill="#16201b">/dev · dispositivos</text>
+<polyline points="97,251.0 118,251.0 118,406 138,406" fill="none" stroke="#56655d" stroke-width="3"/>
+<rect x="140" y="380" width="430" height="52" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="355.0" y="414.0" text-anchor="middle" fill="#16201b">/tmp · archivos temporales</text>
+<rect x="600" y="221.0" width="80" height="60" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="640.0" y="259.0" text-anchor="middle" fill="#16201b" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">C:\</text>
+<polyline points="682,251.0 702,251.0 702,158.0 722,158.0" fill="none" stroke="#56655d" stroke-width="3"/>
+<rect x="724" y="132.0" width="360" height="52" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="904.0" y="166.0" text-anchor="middle" fill="#16201b">Windows · el sistema</text>
+<polyline points="682,251.0 702,251.0 702,220.0 722,220.0" fill="none" stroke="#56655d" stroke-width="3"/>
+<rect x="724" y="194.0" width="360" height="52" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="904.0" y="228.0" text-anchor="middle" fill="#16201b">Program Files · programas</text>
+<polyline points="682,251.0 702,251.0 702,282.0 722,282.0" fill="none" stroke="#56655d" stroke-width="3"/>
+<rect x="724" y="256.0" width="360" height="52" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="904.0" y="290.0" text-anchor="middle" fill="#16201b">Users · perfil de usuario</text>
+<polyline points="682,251.0 702,251.0 702,344.0 722,344.0" fill="none" stroke="#56655d" stroke-width="3"/>
+<rect x="724" y="318.0" width="360" height="52" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="904.0" y="352.0" text-anchor="middle" fill="#16201b">ProgramData · datos comunes</text>
+</svg>

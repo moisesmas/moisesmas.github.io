@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 400" width="1100" height="400" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Tipus de xarxes segons l'abast</title>
+<desc id="d">Quatre columnes cada vegada més altes. PAN: uns pocs metres, per exemple el mòbil amb els auriculars. LAN: un edifici, com la xarxa de l'institut o d'una casa. MAN: una ciutat, com una xarxa municipal. WAN: grans distàncies, com Internet.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="400" fill="#ffffff"/>
+<rect x="7" y="150" width="258" height="140" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="136.0" y="200.0" text-anchor="middle" fill="#16201b" font-weight="700">PAN</text>
+<text x="136.0" y="228.0" text-anchor="middle" fill="#16201b">uns pocs metres</text>
+<text x="136.0" y="256.0" text-anchor="middle" fill="#16201b">mòbil i auriculars</text>
+<rect x="283" y="110" width="258" height="180" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="412.0" y="180.0" text-anchor="middle" fill="#16201b" font-weight="700">LAN</text>
+<text x="412.0" y="208.0" text-anchor="middle" fill="#16201b">un edifici</text>
+<text x="412.0" y="236.0" text-anchor="middle" fill="#16201b">institut o casa</text>
+<rect x="559" y="70" width="258" height="220" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="688.0" y="160.0" text-anchor="middle" fill="#16201b" font-weight="700">MAN</text>
+<text x="688.0" y="188.0" text-anchor="middle" fill="#16201b">una ciutat</text>
+<text x="688.0" y="216.0" text-anchor="middle" fill="#16201b">xarxa municipal</text>
+<rect x="835" y="30" width="258" height="260" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="964.0" y="140.0" text-anchor="middle" fill="#16201b" font-weight="700">WAN</text>
+<text x="964.0" y="168.0" text-anchor="middle" fill="#16201b">grans distàncies</text>
+<text x="964.0" y="196.0" text-anchor="middle" fill="#16201b">Internet</text>
+<line x1="20" y1="335" x2="1075" y2="335" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="330" y="312" width="440" height="46" rx="23.0" fill="#ffffff" stroke="#b86e00" stroke-width="2"/>
+<text x="550.0" y="343.0" text-anchor="middle" fill="#5c3700" font-weight="700">Abast cada vegada més gran</text>
+</svg>

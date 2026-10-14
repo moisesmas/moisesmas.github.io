@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 400" width="1100" height="400" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Del encendido al sistema operativo</title>
+<desc id="d">Siete pasos en dos filas. Primera fila: el botón de encendido, la fuente envía la señal power good, la CPU ejecuta el firmware UEFI o BIOS, el POST comprueba CPU, RAM y gráfica. Segunda fila: el firmware busca un disco con cargador según el orden de arranque, carga el cargador de arranque y este carga el núcleo del sistema operativo. Si el POST falla, la placa avisa con pitidos, LED o un visor de códigos.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="400" fill="#ffffff"/>
+<rect x="1" y="30" width="240" height="110" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="121.0" y="79.0" text-anchor="middle" fill="#16201b" font-weight="700">1 · Botón</text>
+<text x="121.0" y="107.0" text-anchor="middle" fill="#16201b">de encendido</text>
+<rect x="287" y="30" width="240" height="110" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="407.0" y="79.0" text-anchor="middle" fill="#16201b" font-weight="700">2 · La fuente</text>
+<text x="407.0" y="107.0" text-anchor="middle" fill="#16201b">envía power good</text>
+<rect x="573" y="30" width="240" height="110" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="693.0" y="79.0" text-anchor="middle" fill="#16201b" font-weight="700">3 · UEFI o BIOS</text>
+<text x="693.0" y="107.0" text-anchor="middle" fill="#16201b">la CPU la ejecuta</text>
+<rect x="859" y="30" width="240" height="110" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="979.0" y="79.0" text-anchor="middle" fill="#16201b" font-weight="700">4 · POST: prueba</text>
+<text x="979.0" y="107.0" text-anchor="middle" fill="#16201b">CPU, RAM, gráfica</text>
+<rect x="1" y="200" width="240" height="110" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="121.0" y="249.0" text-anchor="middle" fill="#16201b" font-weight="700">5 · Orden</text>
+<text x="121.0" y="277.0" text-anchor="middle" fill="#16201b">de arranque</text>
+<rect x="287" y="200" width="240" height="110" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="407.0" y="249.0" text-anchor="middle" fill="#16201b" font-weight="700">6 · Cargador</text>
+<text x="407.0" y="277.0" text-anchor="middle" fill="#16201b">(bootloader)</text>
+<rect x="573" y="200" width="240" height="110" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="693.0" y="249.0" text-anchor="middle" fill="#16201b" font-weight="700">7 · Núcleo</text>
+<text x="693.0" y="277.0" text-anchor="middle" fill="#16201b">del SO</text>
+<line x1="243" y1="85" x2="283" y2="85" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<line x1="529" y1="85" x2="569" y2="85" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<line x1="815" y1="85" x2="855" y2="85" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<polyline points="979.0,142 979.0,170 121.0,170 121.0,198" fill="none" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<line x1="243" y1="255" x2="283" y2="255" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<line x1="529" y1="255" x2="569" y2="255" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="150" y="330" width="800" height="50" rx="25.0" fill="#ffffff" stroke="#b86e00" stroke-width="2"/>
+<text x="550.0" y="363.0" text-anchor="middle" fill="#5c3700" font-weight="700">Si el POST falla: pitidos, LED o visor de códigos</text>
+</svg>

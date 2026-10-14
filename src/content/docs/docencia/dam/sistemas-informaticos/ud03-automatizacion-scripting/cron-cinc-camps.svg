@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Els cinc camps d'una línia de crontab</title>
+<desc id="d">Cinc camps de temps: minut de 0 a 59, hora de 0 a 23, dia del mes de 1 a 31, mes de 1 a 12 i dia de la setmana de 0 a 7. L'exemple 30 2 * * * s'executa cada dia a les 02:30. L'asterisc vol dir qualsevol valor, la coma separa valors, el guionet indica un interval i la barra un pas.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="360" fill="#ffffff"/>
+<rect x="5" y="20" width="190" height="90" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="100.0" y="59.0" text-anchor="middle" fill="#16201b" font-weight="700">minut</text>
+<text x="100.0" y="87.0" text-anchor="middle" fill="#16201b">0-59</text>
+<line x1="100.0" y1="112" x2="100.0" y2="148" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="5" y="150" width="190" height="60" rx="8" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="100.0" y="188.0" text-anchor="middle" fill="#16201b" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">30</text>
+<rect x="230" y="20" width="190" height="90" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="325.0" y="59.0" text-anchor="middle" fill="#16201b" font-weight="700">hora</text>
+<text x="325.0" y="87.0" text-anchor="middle" fill="#16201b">0-23</text>
+<line x1="325.0" y1="112" x2="325.0" y2="148" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="230" y="150" width="190" height="60" rx="8" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="325.0" y="188.0" text-anchor="middle" fill="#16201b" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">2</text>
+<rect x="455" y="20" width="190" height="90" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="550.0" y="59.0" text-anchor="middle" fill="#16201b" font-weight="700">dia del mes</text>
+<text x="550.0" y="87.0" text-anchor="middle" fill="#16201b">1-31</text>
+<line x1="550.0" y1="112" x2="550.0" y2="148" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="455" y="150" width="190" height="60" rx="8" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="550.0" y="188.0" text-anchor="middle" fill="#16201b" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">*</text>
+<rect x="680" y="20" width="190" height="90" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="775.0" y="59.0" text-anchor="middle" fill="#16201b" font-weight="700">mes</text>
+<text x="775.0" y="87.0" text-anchor="middle" fill="#16201b">1-12</text>
+<line x1="775.0" y1="112" x2="775.0" y2="148" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="680" y="150" width="190" height="60" rx="8" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="775.0" y="188.0" text-anchor="middle" fill="#16201b" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">*</text>
+<rect x="905" y="20" width="190" height="90" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="1000.0" y="59.0" text-anchor="middle" fill="#16201b" font-weight="700">dia setmana</text>
+<text x="1000.0" y="87.0" text-anchor="middle" fill="#16201b">0-7</text>
+<line x1="1000.0" y1="112" x2="1000.0" y2="148" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="905" y="150" width="190" height="60" rx="8" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="1000.0" y="188.0" text-anchor="middle" fill="#16201b" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">*</text>
+<rect x="200" y="235" width="700" height="50" rx="25.0" fill="#ffffff" stroke="#b86e00" stroke-width="2"/>
+<text x="550.0" y="268.0" text-anchor="middle" fill="#5c3700" font-weight="700">Cada dia a les 02:30</text>
+<text x="550" y="330" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">* qualsevol  , valors  - interval  / pas</text>
+</svg>

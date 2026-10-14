@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 330" width="1100" height="330" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Una tubería que cuenta los niveles de un log</title>
+<desc id="d">Cinco etapas encadenadas: el archivo sistema.log; cut -d' ' -f3 deja la tercera columna; sort la ordena; uniq -c cuenta las repetidas; sort -nr las ordena de más a menos. La salida de cada etapa es la entrada de la siguiente.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="330" fill="#ffffff"/>
+<rect x="1" y="30" width="190" height="110" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="96.0" y="93.0" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">sistema.log</text>
+<text x="96.0" y="180" text-anchor="middle" fill="#16201b">el log</text>
+<line x1="193" y1="85" x2="224" y2="85" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="228" y="30" width="190" height="110" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="323.0" y="79.0" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">cut</text>
+<text x="323.0" y="107.0" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">-d' ' -f3</text>
+<text x="323.0" y="180" text-anchor="middle" fill="#16201b">tercera</text>
+<text x="323.0" y="208" text-anchor="middle" fill="#16201b">columna</text>
+<line x1="420" y1="85" x2="451" y2="85" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="455" y="30" width="190" height="110" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="550.0" y="93.0" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">sort</text>
+<text x="550.0" y="180" text-anchor="middle" fill="#16201b">ordena</text>
+<line x1="647" y1="85" x2="678" y2="85" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="682" y="30" width="190" height="110" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="777.0" y="93.0" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">uniq -c</text>
+<text x="777.0" y="180" text-anchor="middle" fill="#16201b">cuenta las</text>
+<text x="777.0" y="208" text-anchor="middle" fill="#16201b">repetidas</text>
+<line x1="874" y1="85" x2="905" y2="85" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="909" y="30" width="190" height="110" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="1004.0" y="93.0" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">sort -nr</text>
+<text x="1004.0" y="180" text-anchor="middle" fill="#16201b">de más a</text>
+<text x="1004.0" y="208" text-anchor="middle" fill="#16201b">menos</text>
+<rect x="150" y="255" width="800" height="50" rx="25.0" fill="#ffffff" stroke="#b86e00" stroke-width="2"/>
+<text x="550.0" y="288.0" text-anchor="middle" fill="#5c3700" font-weight="700">La salida de cada etapa es la entrada de la siguiente</text>
+</svg>
