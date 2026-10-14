@@ -25,8 +25,6 @@ All of them are **handed in on Aules**, in the task of each activity, as a PDF w
 
 **What you hand in:** a PDF with the table of the five situations, your two situations, and your lab score, in the Aules task "Activity 1".
 
-**Criteria it works on:** RA5.a, RA5.b
-
 **Difficulty:** ★☆☆ · **Estimated time:** 40 minutes
 
 ## Activity 2 · Install virtualization software and compare hypervisors
@@ -48,8 +46,6 @@ All of them are **handed in on Aules**, in the task of each activity, as a PDF w
 6. Answer: in which cases would you choose the proprietary product you selected, and in which cases would you choose VirtualBox?
 
 **What you hand in:** a PDF with the screenshots, the table, the summary and the answer, in the Aules task "Activity 2".
-
-**Criteria it works on:** RA5.c
 
 **Difficulty:** ★★☆ · **Estimated time:** 60 minutes
 
@@ -83,8 +79,6 @@ All of them are **handed in on Aules**, in the task of each activity, as a PDF w
 
 **What you hand in:** a PDF with the screenshots and the answers, in the Aules task "Activity 3".
 
-**Criteria it works on:** RA5.d, RA5.e, RA5.f
-
 **Difficulty:** ★★☆ · **Estimated time:** 60 minutes
 
 ## Activity 4 · Snapshots as a safety net
@@ -112,8 +106,6 @@ All of them are **handed in on Aules**, in the task of each activity, as a PDF w
 
 **What you hand in:** a PDF with the screenshots, the file sizes and the answers, in the Aules task "Activity 4".
 
-**Criteria it works on:** RA5.e
-
 **Difficulty:** ★★☆ · **Estimated time:** 60 minutes
 
 ## Activity 5 · Guest Additions and a shared folder
@@ -131,8 +123,6 @@ All of them are **handed in on Aules**, in the task of each activity, as a PDF w
 
 **What you hand in:** a PDF with the screenshots and the reflection, in the Aules task "Activity 5".
 
-**Criteria it works on:** RA5.e, RA5.f
-
 **Difficulty:** ★★☆ · **Estimated time:** 60 minutes
 
 ## Activity 6 · A VM from a proprietary operating system
@@ -149,8 +139,6 @@ All of them are **handed in on Aules**, in the task of each activity, as a PDF w
 6. Answer: what differences did you find compared with the Linux appliance (installation time, requirements, licence)? Why is a proprietary guest more "expensive" in terms of resources and licensing?
 
 **What you hand in:** a PDF with the screenshots (requirements, settings, finished installation) and the answers, in the Aules task "Activity 6".
-
-**Criteria it works on:** RA5.d, RA5.e
 
 **Difficulty:** ★★★ · **Estimated time:** 120 minutes
 
@@ -172,8 +160,6 @@ All of them are **handed in on Aules**, in the task of each activity, as a PDF w
 7. Write a conclusion of 100 to 150 words: where is the largest difference, why, and what would you do to improve it?
 
 **What you hand in:** a PDF with the data of both systems, the commands, the table and the conclusion, in the Aules task "Activity 7".
-
-**Criteria it works on:** RA5.f, RA5.g
 
 **Difficulty:** ★★★ · **Estimated time:** 90 minutes
 
