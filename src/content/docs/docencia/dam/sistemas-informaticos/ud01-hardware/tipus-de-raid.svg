@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 420" width="1100" height="420" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Els nivells de RAID més habituals</title>
+<desc id="d">Quatre columnes amb discs dibuixats. RAID 0 reparteix les dades en dos discs: capacitat n per S i cap fallada tolerada. RAID 1 duplica les dades en dos discs: capacitat S i tolera un disc. RAID 5 reparteix dades i paritat en tres discs: capacitat n menys 1 per S i tolera un disc. RAID 10 combina dos miralls repartits en quatre discs: capacitat n entre 2 per S i tolera un disc amb seguretat.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="420" fill="#ffffff"/>
+<rect x="7" y="10" width="258" height="330" rx="10" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="136.0" y="50" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">RAID 0</text>
+<text x="136.0" y="82" text-anchor="middle" fill="#16201b">Reparteix</text>
+<rect x="79.0" y="102" width="52" height="150" rx="6" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="105.0" y="137" text-anchor="middle" fill="#16201b">A</text>
+<text x="105.0" y="185" text-anchor="middle" fill="#16201b">C</text>
+<text x="105.0" y="233" text-anchor="middle" fill="#16201b">E</text>
+<rect x="141.0" y="102" width="52" height="150" rx="6" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="167.0" y="137" text-anchor="middle" fill="#16201b">B</text>
+<text x="167.0" y="185" text-anchor="middle" fill="#16201b">D</text>
+<text x="167.0" y="233" text-anchor="middle" fill="#16201b">F</text>
+<text x="136.0" y="290" text-anchor="middle" fill="#16201b" font-weight="700">Útil: n × S</text>
+<text x="136.0" y="322" text-anchor="middle" fill="#16201b">Tolera: cap</text>
+<rect x="283" y="10" width="258" height="330" rx="10" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="412.0" y="50" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">RAID 1</text>
+<text x="412.0" y="82" text-anchor="middle" fill="#16201b">Mirall</text>
+<rect x="355.0" y="102" width="52" height="150" rx="6" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="381.0" y="137" text-anchor="middle" fill="#16201b">A</text>
+<text x="381.0" y="185" text-anchor="middle" fill="#16201b">B</text>
+<text x="381.0" y="233" text-anchor="middle" fill="#16201b">C</text>
+<rect x="417.0" y="102" width="52" height="150" rx="6" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="443.0" y="137" text-anchor="middle" fill="#16201b">A</text>
+<text x="443.0" y="185" text-anchor="middle" fill="#16201b">B</text>
+<text x="443.0" y="233" text-anchor="middle" fill="#16201b">C</text>
+<text x="412.0" y="290" text-anchor="middle" fill="#16201b" font-weight="700">Útil: S</text>
+<text x="412.0" y="322" text-anchor="middle" fill="#16201b">Tolera: 1 disc</text>
+<rect x="559" y="10" width="258" height="330" rx="10" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="688.0" y="50" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">RAID 5</text>
+<text x="688.0" y="82" text-anchor="middle" fill="#16201b">Paritat repartida</text>
+<rect x="600.0" y="102" width="52" height="150" rx="6" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="626.0" y="137" text-anchor="middle" fill="#16201b">A1</text>
+<text x="626.0" y="185" text-anchor="middle" fill="#16201b">B1</text>
+<rect x="604.0" y="204" width="44" height="42" rx="4" fill="#ffffff" stroke="#b86e00" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="626.0" y="233" text-anchor="middle" fill="#16201b" font-weight="700">P</text>
+<rect x="662.0" y="102" width="52" height="150" rx="6" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="688.0" y="137" text-anchor="middle" fill="#16201b">A2</text>
+<rect x="666.0" y="156" width="44" height="42" rx="4" fill="#ffffff" stroke="#b86e00" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="688.0" y="185" text-anchor="middle" fill="#16201b" font-weight="700">P</text>
+<text x="688.0" y="233" text-anchor="middle" fill="#16201b">C1</text>
+<rect x="724.0" y="102" width="52" height="150" rx="6" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<rect x="728.0" y="108" width="44" height="42" rx="4" fill="#ffffff" stroke="#b86e00" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="750.0" y="137" text-anchor="middle" fill="#16201b" font-weight="700">P</text>
+<text x="750.0" y="185" text-anchor="middle" fill="#16201b">B2</text>
+<text x="750.0" y="233" text-anchor="middle" fill="#16201b">C2</text>
+<text x="688.0" y="290" text-anchor="middle" fill="#16201b" font-weight="700">Útil: (n − 1) × S</text>
+<text x="688.0" y="322" text-anchor="middle" fill="#16201b">Tolera: 1 disc</text>
+<rect x="835" y="10" width="258" height="330" rx="10" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="964.0" y="50" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">RAID 10</text>
+<text x="964.0" y="82" text-anchor="middle" fill="#16201b">Miralls repartits</text>
+<rect x="845.0" y="102" width="52" height="150" rx="6" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="871.0" y="137" text-anchor="middle" fill="#16201b">A</text>
+<text x="871.0" y="185" text-anchor="middle" fill="#16201b">C</text>
+<text x="871.0" y="233" text-anchor="middle" fill="#16201b">E</text>
+<rect x="907.0" y="102" width="52" height="150" rx="6" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="933.0" y="137" text-anchor="middle" fill="#16201b">A</text>
+<text x="933.0" y="185" text-anchor="middle" fill="#16201b">C</text>
+<text x="933.0" y="233" text-anchor="middle" fill="#16201b">E</text>
+<rect x="969.0" y="102" width="52" height="150" rx="6" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="995.0" y="137" text-anchor="middle" fill="#16201b">B</text>
+<text x="995.0" y="185" text-anchor="middle" fill="#16201b">D</text>
+<text x="995.0" y="233" text-anchor="middle" fill="#16201b">F</text>
+<rect x="1031.0" y="102" width="52" height="150" rx="6" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="1057.0" y="137" text-anchor="middle" fill="#16201b">B</text>
+<text x="1057.0" y="185" text-anchor="middle" fill="#16201b">D</text>
+<text x="1057.0" y="233" text-anchor="middle" fill="#16201b">F</text>
+<text x="964.0" y="290" text-anchor="middle" fill="#16201b" font-weight="700">Útil: (n ÷ 2) × S</text>
+<text x="964.0" y="322" text-anchor="middle" fill="#16201b">Tolera: 1 de segur</text>
+<rect x="250" y="358" width="600" height="50" rx="25.0" fill="#ffffff" stroke="#b86e00" stroke-width="2"/>
+<text x="550.0" y="391.0" text-anchor="middle" fill="#5c3700" font-weight="700">El RAID no és una còpia de seguretat</text>
+</svg>
