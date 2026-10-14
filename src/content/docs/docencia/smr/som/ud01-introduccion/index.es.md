@@ -17,12 +17,6 @@ Esta unidad te da el mapa de todo el módulo. Verás de qué está hecho un sist
 - Medir la información con unidades SI e IEC y entender por qué tu disco de 1 TB no muestra 1 TB.
 - Comprobar que un ordenador es adecuado para un sistema operativo, elegir un sistema operativo para un trabajo y respetar las licencias de software.
 
-## La unidad de un vistazo
-
-| Trimestre | Horas | Peso en la evaluación | RA que trabaja |
-|---|---|---|---|
-| 1.er trimestre | 18 h | 8 % | RA1 (a, b) y RA2 (a, b, c, d, i) |
-
 ## Mapa de la unidad
 
 1. [El sistema informático](/docencia/smr/som/ud01-introduccion/01-computer-systems/es/): hardware, software, datos y usuarios, los tipos de software y los tipos de ordenadores.

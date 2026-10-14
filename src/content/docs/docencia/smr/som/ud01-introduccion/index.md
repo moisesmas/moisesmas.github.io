@@ -17,12 +17,6 @@ This unit gives you the map of the whole module. You will see what a computer sy
 - Measure information with SI and IEC units and understand why your 1 TB disk does not show 1 TB.
 - Check that a computer is suitable for an operating system, choose an operating system for a job and respect software licences.
 
-## The unit at a glance
-
-| Term | Hours | Weight in the assessment | Learning outcomes covered |
-|---|---|---|---|
-| 1st term | 18 h | 8 % | RA1 (a, b) and RA2 (a, b, c, d, i) |
-
 ## Map of the unit
 
 1. [The computer system](/docencia/smr/som/ud01-introduccion/01-computer-systems/): hardware, software, data and users, the types of software and the types of computers.
