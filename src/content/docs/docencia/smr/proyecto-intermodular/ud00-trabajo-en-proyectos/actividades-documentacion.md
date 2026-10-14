@@ -7,7 +7,7 @@ Cada actividad es un **reto** que produce un documento real del proyecto de clas
 
 :::tip[Antes de empezar]
 - Trabaja con tu **equipo** (2 a 4 personas) y con el **proyecto de clase** que fije tu profesor. Si todavía no lo hay, usa el portal de incidencias de *Reparaciones Byte Alacant, S. L.* (empresa ficticia) que aparece en los apuntes.
-- Esta unidad es una **preparación propuesta por tu profesor**: los criterios y las rúbricas concretas se las dará él en Aules. No llevan códigos de la programación.
+- Esta unidad es una **preparación propuesta por tu profesor**: las rúbricas concretas te las dará él en Aules.
 - Pulsa «Exportar» al acabar cada sesión: el laboratorio guarda los datos solo en este navegador.
 - Datos de ejemplo siempre ficticios: nunca nombres, correos ni teléfonos de personas reales.
 :::
@@ -28,7 +28,7 @@ Cada actividad es un **reto** que produce un documento real del proyecto de clas
 
 **Qué entregas:** el backlog exportado a Markdown, con la Definición de Hecho al final, en la tarea «Actividad 1» de Aules.
 
-**Criterios que trabaja:** propuesta del profesor (unidad previa, sin criterios de la programación). Tu profesor indicará la rúbrica en Aules.
+**Rúbrica:** la indica tu profesor en Aules.
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** 2 horas
 
@@ -47,7 +47,7 @@ Cada actividad es un **reto** que produce un documento real del proyecto de clas
 
 **Qué entregas:** el acta en Markdown, en la tarea «Actividad 2» de Aules. Cuando pase el plazo de los acuerdos, añade una línea indicando si se cumplieron.
 
-**Criterios que trabaja:** propuesta del profesor. Rúbrica en Aules.
+**Rúbrica:** la indica tu profesor en Aules.
 
 **Dificultad:** ★☆☆ · **Tiempo estimado:** 1 hora
 
@@ -66,7 +66,7 @@ Cada actividad es un **reto** que produce un documento real del proyecto de clas
 
 **Qué entregas:** un documento (Markdown o PDF) con el plan de pruebas exportado, el resumen de ejecución, la lista de errores de la guía con tus tres correcciones y tu tabla de problemas, en la tarea «Actividad 3» de Aules.
 
-**Criterios que trabaja:** propuesta del profesor. Rúbrica en Aules.
+**Rúbrica:** la indica tu profesor en Aules.
 
 **Dificultad:** ★★★ · **Tiempo estimado:** 3 horas
 
@@ -85,7 +85,7 @@ Cada actividad es un **reto** que produce un documento real del proyecto de clas
 
 **Qué entregas:** el manual de la tarea (una o dos páginas, en PDF o Markdown) con la descripción de quién es el usuario y un párrafo con lo aprendido de la prueba con la persona ajena, en la tarea «Actividad 4» de Aules.
 
-**Criterios que trabaja:** propuesta del profesor. Rúbrica en Aules.
+**Rúbrica:** la indica tu profesor en Aules.
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** 2 horas
 
@@ -103,7 +103,7 @@ Cada actividad es un **reto** que produce un documento real del proyecto de clas
 
 **Qué entregas:** el esqueleto exportado, con la portada y el borrador de resumen, en la tarea «Actividad 5» de Aules.
 
-**Criterios que trabaja:** propuesta del profesor. Rúbrica en Aules.
+**Rúbrica:** la indica tu profesor en Aules.
 
 **Dificultad:** ★☆☆ · **Tiempo estimado:** 1 hora y media
 
@@ -121,7 +121,7 @@ Cada actividad es un **reto** que produce un documento real del proyecto de clas
 
 **Qué entregas:** el informe corregido y las notas del otro equipo, en la tarea «Actividad 6» de Aules.
 
-**Criterios que trabaja:** propuesta del profesor. Rúbrica en Aules.
+**Rúbrica:** la indica tu profesor en Aules.
 
 **Dificultad:** ★☆☆ · **Tiempo estimado:** 1 hora
 

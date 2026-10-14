@@ -6,7 +6,7 @@ description: "Siete retos sobre planificación de proyectos: clasificar y acotar
 Cada actividad es un **reto** que produce un entregable. Se encadenan: lo que haces en los retos 1 y 2 (tu proyecto) alimenta el Gantt del reto 4 y el plan del reto 6. Usa el [laboratorio «Gantt y ciclos de vida»](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/laboratorios/gantt-y-ciclos/), que guarda tus datos en este navegador y exporta a Markdown y JSON.
 
 :::note[Unidad previa]
-Esta unidad es **formación previa propuesta por el profesor** y no figura en la programación del módulo, así que los retos no llevan códigos de criterios de evaluación. Preparan la planificación del proyecto que harás en las unidades siguientes.
+Esta unidad es **formación previa propuesta por el profesor**. Los retos preparan la planificación del proyecto que harás en las unidades siguientes.
 :::
 
 :::tip[Antes de empezar]
@@ -29,7 +29,7 @@ Esta unidad es **formación previa propuesta por el profesor** y no figura en la
 
 **Qué entregas:** un documento breve (una página) con las respuestas, en la tarea «Reto 1» de Aules.
 
-**Criterios que trabaja:** propuesta de la unidad previa (qué es un proyecto, alcance).
+**Qué trabaja:** qué es un proyecto, alcance.
 
 **Dificultad:** ★☆☆ · **Tiempo estimado:** 45 minutos
 
@@ -46,7 +46,7 @@ Esta unidad es **formación previa propuesta por el profesor** y no figura en la
 
 **Qué entregas:** la EDT y la lista de tareas exportadas desde el laboratorio (Markdown) y la matriz RACI, en la tarea «Reto 2» de Aules.
 
-**Criterios que trabaja:** propuesta de la unidad previa (EDT, tareas, reparto de roles).
+**Qué trabaja:** EDT, tareas, reparto de roles.
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** 1 hora y 30 minutos
 
@@ -78,7 +78,7 @@ Esta unidad es **formación previa propuesta por el profesor** y no figura en la
 
 **Qué entregas:** una foto o un PDF de tus cálculos a mano y las respuestas del punto 5, en la tarea «Reto 3» de Aules.
 
-**Criterios que trabaja:** propuesta de la unidad previa (dependencias, ruta crítica, holguras).
+**Qué trabaja:** dependencias, ruta crítica, holguras.
 
 **Dificultad:** ★★★ · **Tiempo estimado:** 1 hora y 30 minutos
 
@@ -96,7 +96,7 @@ Esta unidad es **formación previa propuesta por el profesor** y no figura en la
 
 **Qué entregas:** el Gantt exportado (Markdown, con ES/EF/holgura de cada tarea) y las cinco líneas, en la tarea «Reto 4» de Aules.
 
-**Criterios que trabaja:** propuesta de la unidad previa (diagrama de Gantt, seguimiento).
+**Qué trabaja:** diagrama de Gantt, seguimiento.
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** 1 hora
 
@@ -114,7 +114,7 @@ Esta unidad es **formación previa propuesta por el profesor** y no figura en la
 
 **Qué entregas:** un documento de una o dos páginas con la justificación, en la tarea «Reto 5» de Aules.
 
-**Criterios que trabaja:** propuesta de la unidad previa (ciclos de vida de software).
+**Qué trabaja:** ciclos de vida de software.
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** 1 hora
 
@@ -136,7 +136,7 @@ Cuida que sea breve: una página impresa a una cara. Pide a otro equipo que la l
 
 **Qué entregas:** el plan en PDF, en la tarea «Reto 6» de Aules, con una nota de qué cambiaste tras la revisión de tus compañeros.
 
-**Criterios que trabaja:** propuesta de la unidad previa (planificación completa).
+**Qué trabaja:** planificación completa.
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** 1 hora y 30 minutos
 
@@ -153,7 +153,7 @@ Cuida que sea breve: una página impresa a una cara. Pide a otro equipo que la l
 
 **Qué entregas:** las dos propuestas con la duración resultante (capturas o Markdown) y la respuesta al cliente, en la tarea «Reto 7» de Aules.
 
-**Criterios que trabaja:** propuesta de la unidad previa (triple restricción, ruta crítica).
+**Qué trabaja:** triple restricción, ruta crítica.
 
 **Dificultad:** ★★★ · **Tiempo estimado:** 1 hora
 

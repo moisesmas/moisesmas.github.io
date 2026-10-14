@@ -6,7 +6,7 @@ description: "Antes de diseñar tu proyecto, aprende a trabajar en equipo: teor�
 Un proyecto no se hace solo con buenas ideas: hace falta organizarlo, repartir el trabajo, dejar rastro de lo que se decide y comunicarse bien dentro del equipo. Esta unidad es la **preparación** para el proyecto del módulo: aquí practicas los métodos y las herramientas que usarás después, con ejemplos de la empresa ficticia *Reparaciones Byte Alacant, S. L.*
 
 :::note[Una unidad de formación previa]
-La Unidad 0 no figura en la programación didáctica del módulo: es una propuesta del profesorado para llegar al proyecto con las herramientas ya dominadas. Por eso no lleva horas, pesos de evaluación ni criterios propios. Las unidades 1 a 5 son las que cuentan para la evaluación.
+La Unidad 0 es una propuesta del profesorado para llegar al proyecto con las herramientas ya dominadas. Los detalles de evaluación y de plazos los encontrarás en Aules.
 :::
 
 ## Qué vas a aprender
