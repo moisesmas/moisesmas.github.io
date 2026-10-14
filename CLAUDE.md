@@ -16,6 +16,7 @@ Diseño: `docs/superpowers/specs/2026-09-30-web-docencia-design.md`. Guía del t
 - Bloques: `src/lib/directivas/` (plugin Sätteri). Laboratorios: `<tema>/laboratorios/<nombre>/index.html`, contrato en la cabecera de `public/comun/lab.js`.
 - Diapositivas: toda página de teoría lleva su presentación en `<unidad>/diapositivas/<pagina>.md` (y `.es.md` si la página tiene traducción), según `docs/guia-diapositivas.md`. Lo comprueba `tests/unit/diapositivas.test.ts`; `src/config/diapositivas.ts` es una lista temporal que solo se vacía.
 - Nada de soluciones ni exámenes en el repo: `privado/`.
+- Portadas de módulo: solo una presentación general (ciclo, curso, código, modalidad, idioma y de qué trata), la lista de laboratorios y el aviso de Aules. La web es pública y la programación didáctica es una particularización: nada de evaluación, pesos, horas, temporalización, calendario ni resultados de aprendizaje sacados de ella.
 
 ## Trampas conocidas
 
