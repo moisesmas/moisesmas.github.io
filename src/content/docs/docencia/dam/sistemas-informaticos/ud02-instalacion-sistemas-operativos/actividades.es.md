@@ -25,7 +25,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un documento (PD
 
 **Qué entregas:** un documento con las respuestas **a** a **f** (caso, sistema elegido, justificación) y la respuesta a la pregunta 3, en la tarea «Actividad 1» de Aules.
 
-**Criterios que trabaja:** RA2.b, RA2.c
 
 **Dificultad:** ★☆☆ · **Tiempo estimado:** 40 minutos
 
@@ -43,7 +42,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un documento (PD
 
 **Qué entregas:** la tabla y las respuestas 3 a 5, en la tarea «Actividad 2» de Aules.
 
-**Criterios que trabaja:** RA2.a, RA2.b, RA2.c
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** 45 minutos
 
@@ -64,7 +62,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un documento (PD
 
 **Qué entregas:** los apartados 2, 3 y 4, con las tablas, en la tarea «Actividad 3» de Aules.
 
-**Criterios que trabaja:** RA2.d, RA2.e
 
 **Dificultad:** ★★★ · **Tiempo estimado:** 60 minutos
 
@@ -83,7 +80,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un documento (PD
 
 **Qué entregas:** un documento con: el plan de particionado, **capturas** de la configuración de la VM, del particionado y de las órdenes de los pasos 4 y 5 (con su resultado), y un párrafo final sobre las decisiones que has tomado y los problemas que te han surgido. En la tarea «Actividad 4» de Aules. Conserva la VM: la usarás en la presencial.
 
-**Criterios que trabaja:** RA2.d, RA2.e, RA2.g, RA2.h, RA2.i
 
 **Dificultad:** ★★★ · **Tiempo estimado:** 2 horas
 
@@ -110,7 +106,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un documento (PD
 
 **Qué entregas:** las respuestas a los cinco casos, en la tarea «Actividad 5» de Aules.
 
-**Criterios que trabaja:** RA2.e, RA2.f
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** 45 minutos
 
@@ -118,7 +113,7 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un documento (PD
 
 **Objetivo:** documentar el proceso de creación de una VM, instalación de un SO, uso de Guest Additions e instantáneas, y comparar las modalidades de instalación de Windows Server.
 
-**Qué tienes que hacer** (durante la sesión presencial del 3 de noviembre, de manera individual, siguiendo el guion de la [página 4](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/04-so-servidor-i-maquines-virtuals/es/)):
+**Qué tienes que hacer** (durante la sesión presencial, de manera individual, siguiendo el guion de la [página 4](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/04-so-servidor-i-maquines-virtuals/es/)):
 
 1. Crea una **VM** con 2 CPU, 4 GB de RAM y un disco virtual de 25 GB.
 2. **Instala el Linux** que indique el profesor (ISO en Aules).
@@ -134,7 +129,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un documento (PD
 
 **Qué entregas:** la memoria completa, en la tarea de Aules **antes de terminar la clase**.
 
-**Criterios que trabaja:** RA2.e, RA2.g, RA2.i (y RA2.c y RA2.f en los apartados 5 y 4)
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** durante la sesión presencial
 

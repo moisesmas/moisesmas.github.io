@@ -17,12 +17,6 @@ Esta unidad te enseña a instalar un sistema operativo de manera planificada, de
 - Aplicar técnicas de recuperación del sistema.
 - Usar la virtualización para instalar y probar sistemas, y documentar todos los procesos.
 
-## La unidad de un vistazo
-
-| Trimestre | Horas | Peso en la evaluación | RA que trabaja |
-|---|---|---|---|
-| 1.º | 30 h | 18 % | RA2: instala sistemas operativos planificando el proceso e interpretando documentación técnica (criterios a-i) |
-
 ## Mapa de la unidad
 
 1. [Tipos de SO y sistemas de archivos](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/01-tipus-de-so-i-sistemes-de-fitxers/es/): qué es un SO, tipos, licencias y cómo elegir entre FAT32, exFAT, NTFS y ext4.
@@ -30,7 +24,7 @@ Esta unidad te enseña a instalar un sistema operativo de manera planificada, de
 3. [SO cliente, actualizaciones y controladores](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/03-so-client-actualitzacions-i-controladors/es/): instalar Windows y Ubuntu, configuración inicial, actualizaciones, aplicaciones y controladores.
 4. [SO servidor y máquinas virtuales](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/04-so-servidor-i-maquines-virtuals/es/): Windows Server, virtualización, red de la VM, instantáneas, recuperación del sistema y la práctica presencial.
 5. [Actividades](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/actividades/es/): seis actividades, cinco de estudio autónomo y la memoria de la sesión presencial.
-6. [Planificación](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/planificacion/es/): el calendario de las cuatro sesiones, qué hacer en cada una y cómo estudiar la unidad.
+6. [Planificación](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/planificacion/es/): en qué orden estudiar la unidad, con tiempos orientativos y consejos.
 
 ## Laboratorios
 

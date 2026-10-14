@@ -27,7 +27,7 @@ Una instalación «a ciegas» es la manera más fácil de perder datos o de acab
 | **Licencia** | Clave o licencia en regla para SO propietarios (véase la [página 1](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/01-tipus-de-so-i-sistemes-de-fitxers/es/)). |
 | **Red y actualizaciones** | Conexión disponible para bajar actualizaciones y controladores al terminar. |
 | **Medio de instalación** | Un USB arrancable (o una ISO si es una máquina virtual). Se crea con el apartado siguiente. |
-| **Documentar** | Anota lo que haces: decisiones, particiones, capturas. Es un criterio de evaluación (RA2.i) y te salvará cuando olvides dónde has elegido qué. |
+| **Documentar** | Anota lo que haces: decisiones, particiones, capturas. Te salvará cuando olvides dónde has elegido qué. |
 
 ### 1.1 El medio de instalación
 

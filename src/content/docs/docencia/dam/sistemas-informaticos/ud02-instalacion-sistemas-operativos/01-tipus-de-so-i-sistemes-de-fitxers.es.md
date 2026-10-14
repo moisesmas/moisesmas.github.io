@@ -55,7 +55,7 @@ Hay otras clasificaciones que también encontrarás: por **uso** (escritorio, se
 
 ## 3. Licencias y cómo comparar sistemas operativos
 
-El criterio RA2.c de la unidad te pide **comparar sistemas operativos** por requisitos, características, campo de aplicación y licencia. La licencia es la parte que más se descuida y más problemas da.
+Hay que saber **comparar sistemas operativos** por requisitos, características, campo de aplicación y licencia. La licencia es la parte que más se descuida y más problemas da.
 
 ### 3.1 Tipos de software según la licencia
 

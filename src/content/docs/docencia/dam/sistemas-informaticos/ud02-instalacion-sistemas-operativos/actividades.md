@@ -25,7 +25,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 
 **Què entregues:** un document amb les respostes **a** a **f** (cas, sistema triat, justificació) i la resposta a la pregunta 3, en la tasca «Activitat 1» d'Aules.
 
-**Criteris que treballa:** RA2.b, RA2.c
 
 **Dificultat:** ★☆☆ · **Temps estimat:** 40 minuts
 
@@ -43,7 +42,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 
 **Què entregues:** la taula i les respostes 3 a 5, en la tasca «Activitat 2» d'Aules.
 
-**Criteris que treballa:** RA2.a, RA2.b, RA2.c
 
 **Dificultat:** ★★☆ · **Temps estimat:** 45 minuts
 
@@ -64,7 +62,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 
 **Què entregues:** els apartats 2, 3 i 4, amb les taules, en la tasca «Activitat 3» d'Aules.
 
-**Criteris que treballa:** RA2.d, RA2.e
 
 **Dificultat:** ★★★ · **Temps estimat:** 60 minuts
 
@@ -83,7 +80,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 
 **Què entregues:** un document amb: el pla de particionat, **captures** de la configuració de la VM, del particionat i de les ordres del pas 4 i 5 (amb el seu resultat), i un paràgraf final sobre les decisions que has pres i els problemes que t'han eixit. En la tasca «Activitat 4» d'Aules. Conserva la VM: la faràs servir en la presencial.
 
-**Criteris que treballa:** RA2.d, RA2.e, RA2.g, RA2.h, RA2.i
 
 **Dificultat:** ★★★ · **Temps estimat:** 2 hores
 
@@ -110,7 +106,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 
 **Què entregues:** les respostes als cinc casos, en la tasca «Activitat 5» d'Aules.
 
-**Criteris que treballa:** RA2.e, RA2.f
 
 **Dificultat:** ★★☆ · **Temps estimat:** 45 minuts
 
@@ -118,7 +113,7 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 
 **Objectiu:** documentar el procés de creació d'una VM, instal·lació d'un SO, ús de Guest Additions i instantànies, i comparar les modalitats d'instal·lació de Windows Server.
 
-**Què has de fer** (durant la sessió presencial del 3 de novembre, de manera individual, seguint el guió de la [pàgina 4](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/04-so-servidor-i-maquines-virtuals/)):
+**Què has de fer** (durant la sessió presencial, de manera individual, seguint el guió de la [pàgina 4](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/04-so-servidor-i-maquines-virtuals/)):
 
 1. Crea una **VM** amb 2 CPU, 4 GB de RAM i un disc virtual de 25 GB.
 2. **Instal·la el Linux** que indique el professor (ISO en Aules).
@@ -134,7 +129,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 
 **Què entregues:** la memòria completa, en la tasca d'Aules **abans d'acabar la classe**.
 
-**Criteris que treballa:** RA2.e, RA2.g, RA2.i (i RA2.c i RA2.f en els apartats 5 i 4)
 
 **Dificultat:** ★★☆ · **Temps estimat:** durant la sessió presencial
 

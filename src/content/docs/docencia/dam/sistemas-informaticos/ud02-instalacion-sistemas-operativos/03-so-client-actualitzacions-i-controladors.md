@@ -11,7 +11,7 @@ Un SO acabat d'instal·lar no està acabat: té mesos de retard en actualitzacio
 1. Llig la secció 1 mentre vas repassant les fases de la instal·lació; no cal memoritzar les pantalles, sinó l'ordre i el motiu de cada pas.
 2. Les ordres de les seccions 2, 3 i 4 **es dominen executant-les**. Si pots, tingues una màquina virtual Ubuntu oberta mentre llegixes.
 3. Fes l'activitat 4 (instal·lació documentada en una VM) i l'activitat 5 (diagnòstic de controladors i recuperació).
-4. Recorda que la sessió següent és **presencial** (3 de novembre): tria la teua ISO i comprova que VirtualBox funciona en el teu ordinador.
+4. Recorda que després ve la **pràctica presencial**: tria la teua ISO i comprova que VirtualBox funciona en el teu ordinador.
 :::
 
 ## 1. Instal·lació d'un SO client
@@ -98,7 +98,7 @@ Abans d'una actualització gran en un equip important, fes una **còpia de segur
 
 ## 3. Instal·lar, desinstal·lar i actualitzar aplicacions
 
-El criteri RA2.h demana saber gestionar les aplicacions. La idea és la mateixa en tots els sistemes (**instal·lar, desinstal·lar, actualitzar**), però canvia l'eina.
+Cal saber gestionar les aplicacions. La idea és la mateixa en tots els sistemes (**instal·lar, desinstal·lar, actualitzar**), però canvia l'eina.
 
 ### 3.1 En Windows
 

@@ -3,14 +3,14 @@ title: "4. SO servidor i màquines virtuals"
 description: "Windows Server amb Server Core o Escriptori, virtualització amb hipervisors, creació i gestió de màquines virtuals (xarxa, instantànies, Guest Additions) i mecanismes de recuperació del sistema."
 ---
 
-Esta pàgina és la base de la **sessió presencial del 3 de novembre**. Allí instal·laràs un Linux dins d'una màquina virtual i arrancaràs l'instal·lador de Windows Server. Les màquines virtuals són, a més, l'eina de treball de la resta del mòdul: et permeten equivocar-te sense risc, tornar enrere i provar sistemes sense comprar equips.
+Esta pàgina és la base de la **sessió presencial** de la unitat. Allí instal·laràs un Linux dins d'una màquina virtual i arrancaràs l'instal·lador de Windows Server. Les màquines virtuals són, a més, l'eina de treball de la resta del mòdul: et permeten equivocar-te sense risc, tornar enrere i provar sistemes sense comprar equips.
 
 :::tip[Com treballar esta pàgina]
 **Temps orientatiu:** uns 75 minuts de lectura i 45 de preparació de la presencial.
 
 1. Llig les seccions 1 i 2 (servidor i conceptes de virtualització).
 2. En les seccions 3, 4 i 5 **fixa't en la terminologia**: sobretot els modes de xarxa i la diferència entre instantània i còpia de seguretat; són tema d'examen.
-3. La secció 6 tanca els criteris de recuperació del sistema (RA2.f).
+3. La secció 6 tracta la recuperació del sistema.
 4. Abans de venir, instal·la VirtualBox al teu ordinador si el tens, descarrega la ISO que s'indique en Aules i llig la secció 7.
 :::
 
@@ -145,7 +145,7 @@ Viu **en el mateix disc** que la VM: si l'amfitrió es trenca o el disc falla, p
 
 ## 6. Recuperació del sistema
 
-El criteri RA2.f demana aplicar tècniques de **recuperació** (a més de les d'actualització de la pàgina 3). Segons el que ha passat, serveix una eina o una altra:
+Cal saber aplicar tècniques de **recuperació** (a més de les d'actualització de la pàgina 3). Segons el que ha passat, serveix una eina o una altra:
 
 | Problema | Mecanisme | Com funciona |
 |---|---|---|
@@ -162,7 +162,7 @@ La regla d'or: **cap mecanisme de recuperació substituïx una còpia de seguret
 
 ## 7. Què faràs en la sessió presencial
 
-El 3 de novembre treballaràs de manera **individual** al centre, amb el teu equip. El guió és este:
+En la sessió presencial treballaràs de manera **individual** al centre, amb el teu equip. El guió és este:
 
 1. **Crear una VM** nova en VirtualBox: 2 CPU, 4 GB de RAM i un disc virtual de 25 GB.
 2. **Instal·lar el Linux indicat** (la ISO estarà en Aules), seguint el procés de la pàgina 3.

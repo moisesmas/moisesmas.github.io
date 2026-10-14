@@ -17,12 +17,6 @@ Esta unitat t'ensenya a instal·lar un sistema operatiu de manera planificada, d
 - Aplicar tècniques de recuperació del sistema.
 - Usar la virtualització per a instal·lar i provar sistemes, i documentar tots els processos.
 
-## La unitat d'un colp d'ull
-
-| Trimestre | Hores | Pes en l'avaluació | RA que treballa |
-|---|---|---|---|
-| 1r | 30 h | 18 % | RA2: instal·la sistemes operatius planificant el procés i interpretant documentació tècnica (criteris a-i) |
-
 ## Mapa de la unitat
 
 1. [Tipus de SO i sistemes d'arxius](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/01-tipus-de-so-i-sistemes-de-fitxers/): què és un SO, tipus, llicències i com triar entre FAT32, exFAT, NTFS i ext4.
@@ -30,7 +24,7 @@ Esta unitat t'ensenya a instal·lar un sistema operatiu de manera planificada, d
 3. [SO client, actualitzacions i controladors](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/03-so-client-actualitzacions-i-controladors/): instal·lar Windows i Ubuntu, configuració inicial, actualitzacions, aplicacions i controladors.
 4. [SO servidor i màquines virtuals](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/04-so-servidor-i-maquines-virtuals/): Windows Server, virtualització, xarxa de la VM, instantànies, recuperació del sistema i la pràctica presencial.
 5. [Activitats](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/actividades/): sis activitats, cinc d'estudi autònom i la memòria de la sessió presencial.
-6. [Planificació](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/planificacion/): el calendari de les quatre sessions, què fer en cada una i com estudiar la unitat.
+6. [Planificació](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/planificacion/): en quin ordre estudiar la unitat, amb temps orientatius i consells.
 
 ## Laboratoris
 

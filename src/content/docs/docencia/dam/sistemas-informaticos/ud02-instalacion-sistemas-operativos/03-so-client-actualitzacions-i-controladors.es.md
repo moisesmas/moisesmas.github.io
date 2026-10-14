@@ -11,7 +11,7 @@ Un SO recién instalado no está terminado: tiene meses de retraso en actualizac
 1. Lee la sección 1 mientras repasas las fases de la instalación; no hace falta memorizar las pantallas, sino el orden y el motivo de cada paso.
 2. Las órdenes de las secciones 2, 3 y 4 **se dominan ejecutándolas**. Si puedes, ten una máquina virtual Ubuntu abierta mientras lees.
 3. Haz la actividad 4 (instalación documentada en una VM) y la actividad 5 (diagnóstico de controladores y recuperación).
-4. Recuerda que la sesión siguiente es **presencial** (3 de noviembre): elige tu ISO y comprueba que VirtualBox funciona en tu ordenador.
+4. Recuerda que después viene la **práctica presencial**: elige tu ISO y comprueba que VirtualBox funciona en tu ordenador.
 :::
 
 ## 1. Instalación de un SO cliente
@@ -98,7 +98,7 @@ Antes de una actualización grande en un equipo importante, haz una **copia de s
 
 ## 3. Instalar, desinstalar y actualizar aplicaciones
 
-El criterio RA2.h pide saber gestionar las aplicaciones. La idea es la misma en todos los sistemas (**instalar, desinstalar, actualizar**), pero cambia la herramienta.
+Hay que saber gestionar las aplicaciones. La idea es la misma en todos los sistemas (**instalar, desinstalar, actualizar**), pero cambia la herramienta.
 
 ### 3.1 En Windows
 

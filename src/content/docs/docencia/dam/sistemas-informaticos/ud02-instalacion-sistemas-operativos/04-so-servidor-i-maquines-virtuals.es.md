@@ -3,14 +3,14 @@ title: "4. SO servidor y máquinas virtuales"
 description: "Windows Server con Server Core o Escritorio, virtualización con hipervisores, creación y gestión de máquinas virtuales (red, instantáneas, Guest Additions) y mecanismos de recuperación del sistema."
 ---
 
-Esta página es la base de la **sesión presencial del 3 de noviembre**. Allí instalarás un Linux dentro de una máquina virtual y arrancarás el instalador de Windows Server. Las máquinas virtuales son, además, la herramienta de trabajo del resto del módulo: te permiten equivocarte sin riesgo, volver atrás y probar sistemas sin comprar equipos.
+Esta página es la base de la **sesión presencial** de la unidad. Allí instalarás un Linux dentro de una máquina virtual y arrancarás el instalador de Windows Server. Las máquinas virtuales son, además, la herramienta de trabajo del resto del módulo: te permiten equivocarte sin riesgo, volver atrás y probar sistemas sin comprar equipos.
 
 :::tip[Cómo trabajar esta página]
 **Tiempo orientativo:** unos 75 minutos de lectura y 45 de preparación de la presencial.
 
 1. Lee las secciones 1 y 2 (servidor y conceptos de virtualización).
 2. En las secciones 3, 4 y 5 **fíjate en la terminología**: sobre todo los modos de red y la diferencia entre instantánea y copia de seguridad; son tema de examen.
-3. La sección 6 cierra los criterios de recuperación del sistema (RA2.f).
+3. La sección 6 trata la recuperación del sistema.
 4. Antes de venir, instala VirtualBox en tu ordenador si lo tienes, descarga la ISO que se indique en Aules y lee la sección 7.
 :::
 
@@ -145,7 +145,7 @@ Vive **en el mismo disco** que la VM: si el anfitrión se rompe o el disco falla
 
 ## 6. Recuperación del sistema
 
-El criterio RA2.f pide aplicar técnicas de **recuperación** (además de las de actualización de la página 3). Según lo que haya pasado, sirve una herramienta u otra:
+Hay que saber aplicar técnicas de **recuperación** (además de las de actualización de la página 3). Según lo que haya pasado, sirve una herramienta u otra:
 
 | Problema | Mecanismo | Cómo funciona |
 |---|---|---|
@@ -162,7 +162,7 @@ La regla de oro: **ningún mecanismo de recuperación sustituye a una copia de s
 
 ## 7. Qué harás en la sesión presencial
 
-El 3 de noviembre trabajarás de manera **individual** en el centro, con tu equipo. El guion es este:
+En la sesión presencial trabajarás de manera **individual** en el centro, con tu equipo. El guion es este:
 
 1. **Crear una VM** nueva en VirtualBox: 2 CPU, 4 GB de RAM y un disco virtual de 25 GB.
 2. **Instalar el Linux indicado** (la ISO estará en Aules), siguiendo el proceso de la página 3.

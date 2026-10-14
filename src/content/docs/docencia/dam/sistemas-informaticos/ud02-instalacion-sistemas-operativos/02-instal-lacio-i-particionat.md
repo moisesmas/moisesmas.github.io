@@ -27,7 +27,7 @@ Una instal·lació «a cegues» és la manera més fàcil de perdre dades o d'ac
 | **Llicència** | Clau o llicència en regla per a SO propietaris (vegeu la [pàgina 1](/docencia/dam/sistemas-informaticos/ud02-instalacion-sistemas-operativos/01-tipus-de-so-i-sistemes-de-fitxers/)). |
 | **Xarxa i actualitzacions** | Connexió disponible per a baixar actualitzacions i controladors en acabar. |
 | **Medi d'instal·lació** | Un USB arrancable (o una ISO si és una màquina virtual). Es crea amb l'apartat següent. |
-| **Documentar** | Anota el que fas: decisions, particions, captures. És un criteri d'avaluació (RA2.i) i et salvarà quan t'oblides d'on has triat què. |
+| **Documentar** | Anota el que fas: decisions, particions, captures. Et salvarà quan t'oblides d'on has triat què. |
 
 ### 1.1 El medi d'instal·lació
 
