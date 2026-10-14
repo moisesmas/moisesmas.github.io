@@ -1,6 +1,6 @@
 ---
 title: Sistemas Operativos Monopuesto
-description: Módulo 0222 de primer curso del ciclo de grado medio Sistemas Microinformáticos y Redes: de qué trata, apuntes, actividades y laboratorios.
+description: "Módulo 0222 de primer curso del ciclo de grado medio Sistemas Microinformáticos y Redes: de qué trata, apuntes, actividades y laboratorios."
 ---
 
 ## Presentación

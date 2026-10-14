@@ -1,6 +1,6 @@
 ---
 title: Single-User Operating Systems
-description: Module 0222 of the first year of the Intermediate Vocational Cycle in Microcomputer Systems and Networks: what it is about, notes, activities and labs.
+description: "Module 0222 of the first year of the Intermediate Vocational Cycle in Microcomputer Systems and Networks: what it is about, notes, activities and labs."
 ---
 
 ## Overview
