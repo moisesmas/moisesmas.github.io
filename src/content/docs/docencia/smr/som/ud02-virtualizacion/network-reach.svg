@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 500" width="1100" height="500" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Who can talk to whom in each network mode</title>
+<desc id="d">Table of the five network modes of VirtualBox. NAT: the VM reaches the Internet and the host; the host and the LAN reach it only through port forwarding; VMs do not see each other. Bridged: everything is connected. Host-only: no Internet, no LAN. Internal: only VMs talk to each other. NAT Network: like NAT, but VMs see each other.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="500" fill="#ffffff"/>
+<text x="333.0" y="36" text-anchor="middle" fill="#16201b" font-weight="700">VM →</text>
+<text x="333.0" y="64" text-anchor="middle" fill="#16201b" font-weight="700">Internet</text>
+<text x="499.0" y="36" text-anchor="middle" fill="#16201b" font-weight="700">VM →</text>
+<text x="499.0" y="64" text-anchor="middle" fill="#16201b" font-weight="700">host</text>
+<text x="665.0" y="36" text-anchor="middle" fill="#16201b" font-weight="700">Host →</text>
+<text x="665.0" y="64" text-anchor="middle" fill="#16201b" font-weight="700">VM</text>
+<text x="831.0" y="36" text-anchor="middle" fill="#16201b" font-weight="700">VM ↔</text>
+<text x="831.0" y="64" text-anchor="middle" fill="#16201b" font-weight="700">VM</text>
+<text x="997.0" y="36" text-anchor="middle" fill="#16201b" font-weight="700">LAN →</text>
+<text x="997.0" y="64" text-anchor="middle" fill="#16201b" font-weight="700">VM</text>
+<text x="28" y="130" text-anchor="start" fill="#16201b" font-weight="700">NAT</text>
+<rect x="254" y="88" width="158" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="333.0" y="128.0" text-anchor="middle" fill="#16201b">Yes</text>
+<rect x="420" y="88" width="158" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="499.0" y="128.0" text-anchor="middle" fill="#16201b">Yes</text>
+<rect x="586" y="88" width="158" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="665.0" y="114.0" text-anchor="middle" fill="#16201b">Port</text>
+<text x="665.0" y="142.0" text-anchor="middle" fill="#16201b">forwarding</text>
+<rect x="752" y="88" width="158" height="64" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="831.0" y="128.0" text-anchor="middle" fill="#16201b">No</text>
+<rect x="918" y="88" width="158" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="997.0" y="114.0" text-anchor="middle" fill="#16201b">Port</text>
+<text x="997.0" y="142.0" text-anchor="middle" fill="#16201b">forwarding</text>
+<text x="28" y="210" text-anchor="start" fill="#16201b" font-weight="700">Bridged</text>
+<rect x="254" y="168" width="158" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="333.0" y="208.0" text-anchor="middle" fill="#16201b">Yes</text>
+<rect x="420" y="168" width="158" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="499.0" y="208.0" text-anchor="middle" fill="#16201b">Yes</text>
+<rect x="586" y="168" width="158" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="665.0" y="208.0" text-anchor="middle" fill="#16201b">Yes</text>
+<rect x="752" y="168" width="158" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="831.0" y="208.0" text-anchor="middle" fill="#16201b">Yes</text>
+<rect x="918" y="168" width="158" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="997.0" y="208.0" text-anchor="middle" fill="#16201b">Yes</text>
+<text x="28" y="290" text-anchor="start" fill="#16201b" font-weight="700">Host-only</text>
+<rect x="254" y="248" width="158" height="64" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="333.0" y="288.0" text-anchor="middle" fill="#16201b">No</text>
+<rect x="420" y="248" width="158" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="499.0" y="288.0" text-anchor="middle" fill="#16201b">Yes</text>
+<rect x="586" y="248" width="158" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="665.0" y="288.0" text-anchor="middle" fill="#16201b">Yes</text>
+<rect x="752" y="248" width="158" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="831.0" y="288.0" text-anchor="middle" fill="#16201b">Yes</text>
+<rect x="918" y="248" width="158" height="64" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="997.0" y="288.0" text-anchor="middle" fill="#16201b">No</text>
+<text x="28" y="370" text-anchor="start" fill="#16201b" font-weight="700">Internal</text>
+<rect x="254" y="328" width="158" height="64" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="333.0" y="368.0" text-anchor="middle" fill="#16201b">No</text>
+<rect x="420" y="328" width="158" height="64" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="499.0" y="368.0" text-anchor="middle" fill="#16201b">No</text>
+<rect x="586" y="328" width="158" height="64" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="665.0" y="368.0" text-anchor="middle" fill="#16201b">No</text>
+<rect x="752" y="328" width="158" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="831.0" y="368.0" text-anchor="middle" fill="#16201b">Yes</text>
+<rect x="918" y="328" width="158" height="64" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="997.0" y="368.0" text-anchor="middle" fill="#16201b">No</text>
+<text x="28" y="450" text-anchor="start" fill="#16201b" font-weight="700">NAT Network</text>
+<rect x="254" y="408" width="158" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="333.0" y="448.0" text-anchor="middle" fill="#16201b">Yes</text>
+<rect x="420" y="408" width="158" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="499.0" y="448.0" text-anchor="middle" fill="#16201b">Yes</text>
+<rect x="586" y="408" width="158" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="665.0" y="434.0" text-anchor="middle" fill="#16201b">Port</text>
+<text x="665.0" y="462.0" text-anchor="middle" fill="#16201b">forwarding</text>
+<rect x="752" y="408" width="158" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="831.0" y="448.0" text-anchor="middle" fill="#16201b">Yes</text>
+<rect x="918" y="408" width="158" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="997.0" y="434.0" text-anchor="middle" fill="#16201b">Port</text>
+<text x="997.0" y="462.0" text-anchor="middle" fill="#16201b">forwarding</text>
+</svg>

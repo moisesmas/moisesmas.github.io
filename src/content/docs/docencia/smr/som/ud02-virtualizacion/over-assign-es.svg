@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">No asignes de más: deja recursos al anfitrión</title>
+<desc id="d">Barra de memoria del anfitrión dividida en tres: el anfitrión conserva 2 a 3 GB o más, las VM en marcha se quedan en la zona verde y la zona roja es demasiado. Debajo, dos reglas: no des a una VM más vCPU que núcleos tiene el anfitrión y comprueba el espacio libre en su disco.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="360" fill="#ffffff"/>
+<text x="20" y="44" text-anchor="start" fill="#16201b" font-size="28" font-weight="700">Memoria del anfitrión</text>
+<rect x="20" y="64" width="300" height="90" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="170.0" y="103.0" text-anchor="middle" fill="#16201b" font-weight="700">Anfitrión</text>
+<text x="170.0" y="131.0" text-anchor="middle" fill="#16201b">2-3 GB o más</text>
+<rect x="320" y="64" width="520" height="90" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="580.0" y="103.0" text-anchor="middle" fill="#16201b" font-weight="700">VM en marcha</text>
+<text x="580.0" y="131.0" text-anchor="middle" fill="#16201b">quédate en la zona verde</text>
+<rect x="840" y="64" width="240" height="90" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="960.0" y="103.0" text-anchor="middle" fill="#16201b" font-weight="700">Zona roja</text>
+<text x="960.0" y="131.0" text-anchor="middle" fill="#16201b">demasiado</text>
+<rect x="20" y="190" width="520" height="130" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="280.0" y="235.0" text-anchor="middle" fill="#16201b" font-weight="700">vCPU</text>
+<text x="280.0" y="263.0" text-anchor="middle" fill="#16201b">nunca más que los núcleos</text>
+<text x="280.0" y="291.0" text-anchor="middle" fill="#16201b">del anfitrión (1-2 bastan)</text>
+<rect x="560" y="190" width="520" height="130" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="820.0" y="235.0" text-anchor="middle" fill="#16201b" font-weight="700">Disco</text>
+<text x="820.0" y="263.0" text-anchor="middle" fill="#16201b">el disco virtual vive en el disco</text>
+<text x="820.0" y="291.0" text-anchor="middle" fill="#16201b">del anfitrión: mira el espacio libre</text>
+</svg>
