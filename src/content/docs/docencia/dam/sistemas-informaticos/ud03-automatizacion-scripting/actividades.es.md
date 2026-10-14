@@ -3,7 +3,7 @@ title: "Actividades"
 description: "Siete actividades de la unidad 3: seis de estudio autónomo en Bash y PowerShell (con el laboratorio) y la práctica presencial de scripts de automatización y tarea programada."
 ---
 
-Estas son las actividades de la unidad. Las seis primeras las haces por tu cuenta, con dificultad creciente, y la séptima es la de la **sesión presencial del 24 de noviembre**. Puedes ver cuándo hacer cada una en la [planificación](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/planificacion/es/).
+Estas son las actividades de la unidad. Las seis primeras las haces por tu cuenta, con dificultad creciente, y la séptima es la de la **sesión presencial**. Puedes ver cuándo hacer cada una en la [planificación](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/planificacion/es/).
 
 En cuanto a los sistemas: necesitas una máquina **Linux** (la de la unidad 2 vale) y un **Windows con PowerShell**. Si en un momento dado solo tienes uno de los dos, haz la actividad en ese y completa el otro cuando puedas; la sesión presencial se hace en el sistema que tengas asignado. Trabaja **siempre en máquinas de pruebas**.
 
@@ -22,8 +22,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un único docume
 5. Responde: (a) ¿Por qué la frase entre comillas simples no muestra el valor de las variables? (b) ¿Por qué hay que escribir `./presentacio.sh` y no solo `presentacio.sh`? (c) ¿Qué habría pasado en Bash si hubieras escrito `anys = 17`?
 
 **Qué entregas:** los dos scripts, las capturas del error de permiso (Linux) y del bloqueo de la política (Windows, si ha pasado) y las respuestas a (a), (b) y (c), en la tarea «Actividad 1» de Aules.
-
-**Criterios que trabaja:** RA3.f
 
 **Dificultad:** ★☆☆ · **Tiempo estimado:** 40 minutos
 
@@ -86,8 +84,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un único docume
 
 **Qué entregas:** las tres tablas y las respuestas del apartado 4, en la tarea «Actividad 2» de Aules. Puedes escribirlas a mano y fotografiarlas.
 
-**Criterios que trabaja:** RA3.f
-
 **Dificultad:** ★☆☆ · **Tiempo estimado:** 45 minutos
 
 ## Actividad 3 · Encuentra los errores
@@ -135,8 +131,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un único docume
 
 **Qué entregas:** un documento con los errores encontrados (línea, motivo y corrección) y los scripts corregidos, en la tarea «Actividad 3» de Aules.
 
-**Criterios que trabaja:** RA3.f
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 50 minutos
 
 ## Actividad 4 · Un script con parámetros y validaciones
@@ -157,8 +151,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un único docume
 5. Añade una **opción**: si hay un segundo parámetro `-v`, muestra además la fecha de la última modificación.
 
 **Qué entregas:** los dos scripts y una captura por cada uno de los cuatro casos con el código de salida visible, en la tarea «Actividad 4» de Aules.
-
-**Criterios que trabaja:** RA3.c, RA3.f
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** 60 minutos
 
@@ -202,8 +194,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un único docume
 
 **Qué entregas:** un documento con las órdenes del apartado 2 (una por apartado y por shell), la salida de cada una y los dos scripts del apartado 3, más la respuesta a la pregunta 4, en la tarea «Actividad 5» de Aules.
 
-**Criterios que trabaja:** RA3.c, RA3.f
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 60 minutos
 
 ## Actividad 6 · Copia, restauración y compresores
@@ -221,15 +211,13 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un único docume
 
 **Qué entregas:** un documento con la tabla del apartado 1, las órdenes y las salidas de los apartados 3 a 6, la tabla comparativa de compresores con tu conclusión y una reflexión de 4-5 líneas sobre por qué hay que probar las restauraciones, en la tarea «Actividad 6» de Aules.
 
-**Criterios que trabaja:** RA3.b, RA3.c, RA3.e, RA3.g
-
 **Dificultad:** ★★★ · **Tiempo estimado:** 90 minutos
 
 ## Actividad 7 · Scripts de automatización y tarea programada (presencial)
 
 **Objetivo:** escribir, probar y programar los tres scripts de administración de la unidad, y comprobar que la tarea se ejecuta sola.
 
-Se hace **individualmente, durante la sesión presencial del 24 de noviembre**, en el sistema operativo de tu equipo (Linux con Bash o Windows con PowerShell). Los scripts son los de la [página 3](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/03-scripts-practics-i-tasques-programades/es/); tienes que entenderlos y probarlos, no solo copiarlos.
+Se hace **individualmente, durante la sesión presencial**, en el sistema operativo de tu equipo (Linux con Bash o Windows con PowerShell). Los scripts son los de la [página 3](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/03-scripts-practics-i-tasques-programades/es/); tienes que entenderlos y probarlos, no solo copiarlos.
 
 **Qué tienes que hacer:**
 
@@ -248,9 +236,7 @@ Se hace **individualmente, durante la sesión presencial del 24 de noviembre**, 
 
 Adjunta también los archivos `.sh` o `.ps1`.
 
-**Criterios que trabaja:** RA3.c, RA3.e, RA3.f
-
-**Dificultad:** ★★☆ · **Tiempo estimado:** durante la sesión presencial (2-4 h)
+**Dificultad:** ★★☆ · **Tiempo estimado:** durante la sesión presencial
 
 :::aules
 Las entregas de estas actividades se hacen en Aules, en la tarea de cada una. Allí también encontrarás la rúbrica, las calificaciones y las soluciones comentadas.

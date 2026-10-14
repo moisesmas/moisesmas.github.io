@@ -3,7 +3,7 @@ title: "3. Scripts pràctics i tasques programades"
 description: "Tres scripts d'administració (còpia amb data, alta massiva d'usuaris i monitoratge del disc) en Bash i PowerShell, i com programar-los amb cron i el Programador de tasques."
 ---
 
-Ja saps escriure un script. Ara toca fer-lo servir per al que fan els administradors de veritat: **copiar dades, crear comptes i vigilar el disc**, i després deixar que l'ordinador ho repetisca sol. Esta pàgina és la preparació de la sessió presencial del 24 de novembre: aquell dia escriuràs, provaràs i programaràs estos scripts.
+Ja saps escriure un script. Ara toca fer-lo servir per al que fan els administradors de veritat: **copiar dades, crear comptes i vigilar el disc**, i després deixar que l'ordinador ho repetisca sol. Esta pàgina és la preparació de la sessió presencial: en ella escriuràs, provaràs i programaràs estos scripts.
 
 :::tip[Com treballar esta pàgina]
 **Temps orientatiu:** uns 75 minuts de lectura abans de la presencial. La pràctica es fa **durant** la presencial.
