@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 410" width="1100" height="410" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Memoria de un proceso y su bloque de control</title>
+<desc id="d">Izquierda: la memoria de un proceso tiene cuatro zonas: pila, montón, datos y código. Derecha: el PCB, el carné del proceso, con su PID, el PID del padre, el estado, la prioridad, los registros de CPU, la información de memoria y los archivos abiertos con el propietario.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="410" fill="#ffffff"/>
+<text x="260" y="34" text-anchor="middle" fill="#16201b" font-weight="700">Memoria del proceso</text>
+<text x="820" y="34" text-anchor="middle" fill="#16201b" font-weight="700">PCB: el «carné» del proceso</text>
+<rect x="20" y="54" width="480" height="78" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="260.0" y="86.0" text-anchor="middle" fill="#16201b" font-weight="700">Pila</text>
+<text x="260.0" y="116.0" text-anchor="middle" fill="#16201b">llamadas a funciones</text>
+<rect x="20" y="142" width="480" height="78" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="260.0" y="174.0" text-anchor="middle" fill="#16201b" font-weight="700">Montón (heap)</text>
+<text x="260.0" y="204.0" text-anchor="middle" fill="#16201b">memoria pedida al ejecutar</text>
+<rect x="20" y="230" width="480" height="78" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="260.0" y="277.0" text-anchor="middle" fill="#16201b" font-weight="700">Datos</text>
+<rect x="20" y="318" width="480" height="78" rx="8" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="260.0" y="350.0" text-anchor="middle" fill="#16201b" font-weight="700">Código</text>
+<text x="260.0" y="380.0" text-anchor="middle" fill="#16201b">las instrucciones</text>
+<rect x="560" y="54" width="520" height="42" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="820.0" y="83.0" text-anchor="middle" fill="#16201b">PID: número único</text>
+<rect x="560" y="102" width="520" height="42" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="820.0" y="131.0" text-anchor="middle" fill="#16201b">PPID: el proceso padre</text>
+<rect x="560" y="150" width="520" height="42" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="820.0" y="179.0" text-anchor="middle" fill="#16201b">Estado: listo, ejecución, bloqueado</text>
+<rect x="560" y="198" width="520" height="42" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="820.0" y="227.0" text-anchor="middle" fill="#16201b">Prioridad</text>
+<rect x="560" y="246" width="520" height="42" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="820.0" y="275.0" text-anchor="middle" fill="#16201b">Registros de CPU y contador</text>
+<rect x="560" y="294" width="520" height="42" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="820.0" y="323.0" text-anchor="middle" fill="#16201b">Información de memoria</text>
+<rect x="560" y="342" width="520" height="42" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="820.0" y="371.0" text-anchor="middle" fill="#16201b">Archivos abiertos, propietario</text>
+</svg>

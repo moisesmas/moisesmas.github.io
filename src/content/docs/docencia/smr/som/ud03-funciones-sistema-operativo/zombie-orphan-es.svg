@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 400" width="1100" height="400" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Procesos zombi y huérfano</title>
+<desc id="d">Izquierda, zombi: el hijo ha terminado, muestra Z y defunct, pero el padre sigue en ejecución y no ha leído su estado. Derecha, huérfano: el padre terminó antes y el PID 1 adopta al hijo, que sigue en ejecución.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="400" fill="#ffffff"/>
+<text x="280" y="36" text-anchor="middle" fill="#16201b" font-weight="700">Zombi</text>
+<text x="820" y="36" text-anchor="middle" fill="#16201b" font-weight="700">Huérfano</text>
+<rect x="80" y="62" width="400" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="280.0" y="95.0" text-anchor="middle" fill="#16201b" font-weight="700">Padre</text>
+<text x="280.0" y="125.0" text-anchor="middle" fill="#16201b">sigue en ejecución</text>
+<line x1="280" y1="144" x2="280" y2="196" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="80" y="198" width="400" height="90" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="280.0" y="236.0" text-anchor="middle" fill="#16201b" font-weight="700">Hijo terminado</text>
+<text x="280.0" y="266.0" text-anchor="middle" fill="#16201b">estado Z, &lt;defunct&gt;</text>
+<text x="280" y="328" text-anchor="middle" fill="#16201b">el padre no ha leído su estado</text>
+<text x="280" y="364" text-anchor="middle" fill="#16201b" font-weight="700">solución: terminar al padre</text>
+<rect x="620" y="62" width="400" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="820.0" y="95.0" text-anchor="middle" fill="#16201b" font-weight="700">PID 1 (systemd)</text>
+<text x="820.0" y="125.0" text-anchor="middle" fill="#16201b">adopta al huérfano</text>
+<line x1="820" y1="144" x2="820" y2="196" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="620" y="198" width="400" height="90" rx="8" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="820.0" y="236.0" text-anchor="middle" fill="#16201b" font-weight="700">Hijo</text>
+<text x="820.0" y="266.0" text-anchor="middle" fill="#16201b">sigue en ejecución</text>
+<text x="820" y="328" text-anchor="middle" fill="#16201b">el padre terminó antes</text>
+<text x="820" y="364" text-anchor="middle" fill="#16201b" font-weight="700">el PID 1 lo recoge después</text>
+</svg>
