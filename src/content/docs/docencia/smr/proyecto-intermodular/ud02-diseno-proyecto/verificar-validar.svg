@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 410" width="1100" height="410" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Verificar y validar</title>
+<desc id="d">Tres cajas: la necesidad del cliente, los requisitos escritos y lo entregado. La necesidad se concreta en requisitos y los requisitos se convierten en lo entregado. Verificar es comprobar lo entregado contra los requisitos: cumple lo escrito. Validar es comprobar lo entregado contra la necesidad: cubre la necesidad real.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="410" fill="#ffffff"/>
+<text x="510" y="40" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Validar: ¿cubre la necesidad real?</text>
+<path d="M170 150 V80 H850 V148" fill="none" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)" marker-start="url(#flecha)"/>
+<rect x="20" y="150" width="300" height="100" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="170.0" y="193.0" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Necesidad</text>
+<text x="170.0" y="225.0" text-anchor="middle" fill="#16201b">del cliente</text>
+<rect x="400" y="150" width="300" height="100" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="550.0" y="193.0" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Requisitos</text>
+<text x="550.0" y="225.0" text-anchor="middle" fill="#16201b">escritos</text>
+<rect x="780" y="150" width="300" height="100" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="930.0" y="193.0" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Entregable</text>
+<text x="930.0" y="225.0" text-anchor="middle" fill="#16201b">construido</text>
+<line x1="322" y1="200" x2="398" y2="200" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<line x1="702" y1="200" x2="778" y2="200" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<path d="M550 252 V310 H980 V254" fill="none" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)" marker-start="url(#flecha)"/>
+<text x="765" y="356" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Verificar: ¿cumple lo escrito?</text>
+</svg>
