@@ -1,8 +1,8 @@
 ---
-import { quitarAnclas, trocear } from '../lib/diapositivas';
+import { maquetar, quitarAnclas, trocear } from '../lib/diapositivas';
 
 // El HTML ya compilado (con imágenes resueltas) se parte por cada «---» del Markdown.
 const diapositivas = trocear(quitarAnclas(await Astro.slots.render('default')));
 ---
 
-{diapositivas.map((d) => <section set:html={d} />)}
+{diapositivas.map((d) => <section set:html={maquetar(d)} />)}

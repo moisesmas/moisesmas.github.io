@@ -47,6 +47,19 @@ export function quitarAnclas(html: string): string {
   return html.replace(/<a class="sl-anchor-link"[^>]*>[\s\S]*?<\/a>/g, '');
 }
 
+const TITULO = /^\s*(<div class="sl-heading-wrapper[^"]*">\s*<h[12][\s\S]*?<\/h[12]>\s*<\/div>|<h[12][\s\S]*?<\/h[12]>)/;
+
+/** Estructura de una diapositiva: el título arriba y el cuerpo, que el CSS centra en el espacio que queda. */
+export function maquetar(html: string): string {
+  const titulo = html.match(TITULO)?.[1];
+  const cuerpo = (titulo ? html.slice(html.indexOf(titulo) + titulo.length) : html).trim();
+  return (
+    '<div class="diapositiva">' +
+    (titulo ? `<div class="diapositiva__titulo">${titulo}</div>` : '') +
+    `<div class="diapositiva__cuerpo">${cuerpo}</div></div>`
+  );
+}
+
 const VALLA = /^\s*(`{3,}|~{3,})/;
 
 /** Recorre las líneas indicando si cada una está dentro de un bloque de código. */

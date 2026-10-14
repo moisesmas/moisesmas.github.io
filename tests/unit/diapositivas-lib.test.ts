@@ -7,6 +7,7 @@ import {
   idPagina,
   idUnidad,
   listaMasLarga,
+  maquetar,
   paginasDeTeoria,
   quitarAnclas,
   TEXTOS_PRESENTACION,
@@ -53,6 +54,25 @@ describe('quitarAnclas', () => {
     const html =
       '<div class="sl-heading-wrapper level-h2"><h2 id="a">A</h2><a class="sl-anchor-link" href="#a"><span aria-hidden="true" class="sl-anchor-icon"><svg><path d="m1"/></svg></span><span class="sr-only">Sección titulada «A»</span></a></div><p><a href="/x/">enlace</a></p>';
     expect(quitarAnclas(html)).toBe('<div class="sl-heading-wrapper level-h2"><h2 id="a">A</h2></div><p><a href="/x/">enlace</a></p>');
+  });
+});
+
+describe('maquetar', () => {
+  it('separa el título (arriba) del cuerpo (que se centra en el espacio que queda)', () => {
+    expect(maquetar('<div class="sl-heading-wrapper level-h2"><h2 id="a">A</h2></div>\n<ul><li>x</li></ul>')).toBe(
+      '<div class="diapositiva"><div class="diapositiva__titulo"><div class="sl-heading-wrapper level-h2"><h2 id="a">A</h2></div></div><div class="diapositiva__cuerpo"><ul><li>x</li></ul></div></div>',
+    );
+  });
+  it('también con un h2 sin envoltorio', () => {
+    expect(maquetar('<h2>A</h2><p>x</p>')).toBe(
+      '<div class="diapositiva"><div class="diapositiva__titulo"><h2>A</h2></div><div class="diapositiva__cuerpo"><p>x</p></div></div>',
+    );
+  });
+  it('sin título, todo es cuerpo', () => {
+    expect(maquetar('<p>x</p>')).toBe('<div class="diapositiva"><div class="diapositiva__cuerpo"><p>x</p></div></div>');
+  });
+  it('un h2 que no va al principio es parte del cuerpo', () => {
+    expect(maquetar('<p>x</p><h2>B</h2>')).toBe('<div class="diapositiva"><div class="diapositiva__cuerpo"><p>x</p><h2>B</h2></div></div>');
   });
 });
 

@@ -43,7 +43,7 @@ subtitle: Opcional, debajo del título de la portada
 - **Separador:** una línea `---` entre diapositivas, **siempre con una línea en blanco antes**. Si va pegada a una línea de texto, Markdown la convierte en un título; `npm test` avisa.
 - **Título:** cada diapositiva empieza con `##`.
 - **Imágenes:** rutas relativas a la carpeta `diapositivas/`. Las de la unidad se enlazan con `../nombre.svg`; en la traducción, `../nombre-es.svg` si existe.
-- **Otros elementos:** avisos (`:::note`, `:::tip`, `:::caution`), tablas y bloques de código, igual que en los apuntes.
+- **Otros elementos:** avisos (`:::note`, `:::tip`, `:::caution`), tablas y bloques de código, igual que en los apuntes. A los avisos ponles **siempre título** (`:::caution[Licences change]`): sin él, Starlight escribe «Precaución» o «Nota» en castellano aunque la diapositiva esté en inglés o en valenciano.
 
 ## 3. Bloques de las diapositivas
 

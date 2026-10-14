@@ -96,8 +96,8 @@ Hardware
 | **Oracle VirtualBox** | 2 | Free and open source |
 | **VMware Workstation** | 2 | Proprietary |
 
-:::caution
-Licences change: check the official website before you choose.
+:::caution[Licences change]
+Check the official website before you choose.
 :::
 
 ---

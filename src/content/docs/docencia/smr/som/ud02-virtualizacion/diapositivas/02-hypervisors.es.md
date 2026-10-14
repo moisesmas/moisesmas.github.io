@@ -96,8 +96,8 @@ Hardware
 | **Oracle VirtualBox** | 2 | Libre y de código abierto |
 | **VMware Workstation** | 2 | Propietaria |
 
-:::caution
-Las licencias cambian: consulta la web oficial antes de elegir.
+:::caution[Las licencias cambian]
+Consulta la web oficial antes de elegir.
 :::
 
 ---

@@ -83,10 +83,12 @@ const t = TEXTOS_PRESENTACION[idioma];
     <div class="reveal">
       <div class="slides">
         <section class="portada">
-          <p class="portada__modulo">{modulo}</p>
-          <h1>{titulo}</h1>
-          {subtitulo && <p class="portada__subtitulo">{subtitulo}</p>}
-          <p class="portada__unidad">{unidad}</p>
+          <div class="diapositiva diapositiva--portada">
+            <p class="portada__modulo">{modulo}</p>
+            <h1>{titulo}</h1>
+            {subtitulo && <p class="portada__subtitulo">{subtitulo}</p>}
+            <p class="portada__unidad">{unidad}</p>
+          </div>
         </section>
         <slot />
       </div>
