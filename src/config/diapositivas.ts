@@ -9,6 +9,4 @@ export const UNIDADES_SIN_DIAPOSITIVAS: string[] = [
   'docencia/dam/sistemas-informaticos/ud01-hardware',
   'docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting',
   'docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos',
-  'docencia/smr/proyecto-intermodular/ud01-sector-productivo',
-  'docencia/smr/proyecto-intermodular/ud02-diseno-proyecto',
 ];
