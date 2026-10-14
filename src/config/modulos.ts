@@ -10,7 +10,7 @@ export interface Modulo {
   curso: string;
   /** Idioma original del contenido. Si no es «es», cada página lleva versión en castellano. */
   idioma: CodigoIdioma;
-  /** Curso de Aules del módulo (material reservado). */
+  /** Enlace a Aules del módulo (material reservado). Es la portada genérica de Aules, no la del curso. */
   aules: string;
 }
 
@@ -20,7 +20,8 @@ export const ETIQUETA_IDIOMA: Record<CodigoIdioma, string> = {
   'ca-valencia': 'Valencià',
 };
 
-// Los enlaces de Aules son provisionales: sustituirlos por la dirección de cada curso.
+// Enlace genérico a Aules a propósito: la web es pública y no debe revelar la dirección de cada curso
+// (decisión del titular, 2026-10-14). El alumnado entra en su curso desde Aules.
 export const MODULOS: Modulo[] = [
   {
     id: 'som',
