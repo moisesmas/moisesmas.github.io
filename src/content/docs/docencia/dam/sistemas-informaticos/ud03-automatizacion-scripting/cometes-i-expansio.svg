@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 520" width="1100" height="520" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Què fa el shell amb les cometes</title>
+<desc id="d">Amb nom="Ana" i fitxer="Mi document.txt", cinc files mostren què escrius, què fa el shell i el resultat. Les cometes simples no fan res i mostren $nom. Les dobles substituïxen la variable i mostren Ana. Una barra davant del dòlar l'escapa i mostra 5$. Una variable sense cometes es parteix en paraules: dos arguments. Entre cometes dobles és un sol argument.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="520" fill="#ffffff"/>
+<rect x="250" y="14" width="600" height="46" rx="23.0" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="550.0" y="45.0" text-anchor="middle" fill="#16201b" font-weight="700">nom="Ana"   fitxer="Mi document.txt"</text>
+<text x="185.0" y="100" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Escrius</text>
+<text x="590.0" y="100" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">El shell fa</text>
+<text x="955.0" y="100" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Resultat</text>
+<rect x="20" y="120" width="330" height="60" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="185.0" y="158.0" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">echo '$nom'</text>
+<line x1="352" y1="150" x2="418" y2="150" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="420" y="120" width="340" height="60" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="590.0" y="158.0" text-anchor="middle" fill="#16201b">cometes simples: res</text>
+<line x1="762" y1="150" x2="828" y2="150" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="830" y="120" width="250" height="60" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="955.0" y="158.0" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">$nom</text>
+<rect x="20" y="198" width="330" height="60" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="185.0" y="236.0" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">echo "$nom"</text>
+<line x1="352" y1="228" x2="418" y2="228" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="420" y="198" width="340" height="60" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="590.0" y="236.0" text-anchor="middle" fill="#16201b">substituïx la variable</text>
+<line x1="762" y1="228" x2="828" y2="228" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="830" y="198" width="250" height="60" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="955.0" y="236.0" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">Ana</text>
+<rect x="20" y="276" width="330" height="60" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="185.0" y="314.0" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">echo "5\$"</text>
+<line x1="352" y1="306" x2="418" y2="306" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="420" y="276" width="340" height="60" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="590.0" y="314.0" text-anchor="middle" fill="#16201b">escapa el $</text>
+<line x1="762" y1="306" x2="828" y2="306" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="830" y="276" width="250" height="60" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="955.0" y="314.0" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">5$</text>
+<rect x="20" y="354" width="330" height="60" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="185.0" y="392.0" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">ls $fitxer</text>
+<line x1="352" y1="384" x2="418" y2="384" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="420" y="354" width="340" height="60" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="590.0" y="392.0" text-anchor="middle" fill="#16201b">parteix en paraules</text>
+<line x1="762" y1="384" x2="828" y2="384" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="830" y="354" width="250" height="60" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="955.0" y="392.0" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">2 arguments</text>
+<rect x="20" y="432" width="330" height="60" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="185.0" y="470.0" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">ls "$fitxer"</text>
+<line x1="352" y1="462" x2="418" y2="462" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="420" y="432" width="340" height="60" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="590.0" y="470.0" text-anchor="middle" fill="#16201b">un sol valor</text>
+<line x1="762" y1="462" x2="828" y2="462" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="830" y="432" width="250" height="60" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="955.0" y="470.0" text-anchor="middle" fill="#16201b" font-family="ui-monospace,Menlo,Consolas,monospace">1 argument</text>
+</svg>
