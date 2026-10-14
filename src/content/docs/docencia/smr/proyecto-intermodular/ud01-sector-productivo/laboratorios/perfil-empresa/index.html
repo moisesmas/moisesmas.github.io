@@ -1192,9 +1192,9 @@ function aMarkdown() {
   e.mapa.filas.forEach((f) => L.push('| ' + celdaMd(f.nombre) + ' | ' + celdaMd(f.localidad) + ' | ' + nombreTipo(f.tipo) + ' | ' + celdaMd(f.empleados) + ' | ' + tamano(f.empleados) + ' | ' + celdaMd(f.fuente) + ' |'));
   L.push('', '### Conclusión sobre las empresas tipo', '', e.mapa.conclusion, '');
   L.push('## 12. Valoración personal', '', emp.valoracion, '');
-  L.push('## Autoevaluación por criterio (RA1)', '', '| Criterio | Comprobación automática | Mi valoración |', '|---|---|---|');
+  L.push('## Autoevaluación por criterio', '', '| Criterio | Comprobación automática | Mi valoración |', '|---|---|---|');
   const ev = evaluar();
-  CRITERIOS.forEach((cr) => L.push('| RA1.' + cr[0] + ' | ' + (ev[cr[0]].length ? 'Falta' : 'Cubierto') + ' | ' + NIVELES.find((n) => n[0] === String(e.autoeval[cr[0]] || 0))[1] + ' |'));
+  CRITERIOS.forEach((cr) => L.push('| ' + cr[0] + ')' + ' | ' + (ev[cr[0]].length ? 'Falta' : 'Cubierto') + ' | ' + NIVELES.find((n) => n[0] === String(e.autoeval[cr[0]] || 0))[1] + ' |'));
   return L.join('\n') + '\n';
 }
 function nombreArchivo(ext) {
@@ -1233,14 +1233,14 @@ function renderPractica() {
   c.append(campo('Fuentes consultadas (una por línea, con la fecha de consulta)', areaTexto(emp.fuentes, (x) => { emp.fuentes = x; cambio(); }, 3)));
   c.append(campo('Valoración personal: qué tipo de empresa o puesto me interesa y por qué', areaTexto(emp.valoracion, (x) => { emp.valoracion = x; cambio(); }, 3)));
 
-  c.append(el('h3', null, 'Comprobación por criterio (RA1)'));
+  c.append(el('h3', null, 'Comprobación por criterio'));
   if (estado.ejemplo) c.append(el('p', { class: 'aviso' }, 'Estás viendo los datos de ejemplo: la comprobación vale para ver cómo funciona. Pulsa «Empezar con mi empresa» (en «Tus datos») para comprobar tu trabajo.'));
   const ev = evaluar();
   const cubiertos = CRITERIOS.filter((cr) => !ev[cr[0]].length).length;
   c.append(el('p', { class: 'correccion', role: 'status' }, 'Criterios con evidencia: ' + cubiertos + ' de ' + CRITERIOS.length + '. La comprobación es automática y orientativa: la corrección la hace tu profesor.'));
   c.append(tabla(['Criterio', 'Estado', 'Qué falta', 'Mi valoración'], CRITERIOS.map((cr) => {
     const falta = ev[cr[0]];
-    return [el('span', null, el('b', null, 'RA1.' + cr[0]), ' ' + cr[1]),
+    return [el('span', null, el('b', null, '' + cr[0] + ')'), ' ' + cr[1]),
       el('span', { class: falta.length ? 'ko' : 'ok' }, falta.length ? '✘ Falta' : '✔ Cubierto'),
       falta.length ? el('div', null, el('ul', null, falta.map((x) => el('li', null, x))), el('button', { type: 'button', class: 'pq', onclick: () => irA(cr[2]) }, 'Ir a la pestaña')) : 'Nada',
       selector(NIVELES, String(estado.autoeval[cr[0]] || 0), (x) => { estado.autoeval[cr[0]] = Number(x); cambio(); })];
@@ -1260,7 +1260,7 @@ function renderPractica() {
   serie.forEach((s, n) => {
     const cr = CRITERIOS[n];
     const fb = el('p', { class: 'correccion', role: 'status' });
-    const ops = el('div', { class: 'opciones', role: 'group', 'aria-label': 'Opciones de la pregunta RA1.' + cr[0] });
+    const ops = el('div', { class: 'opciones', role: 'group', 'aria-label': 'Opciones de la pregunta ' + cr[0] + ')' });
     const botones = s.orden.map((i) => el('button', { type: 'button', onclick: () => {
       if (s.resp !== null) return;
       s.resp = i;
@@ -1278,7 +1278,7 @@ function renderPractica() {
       fb.textContent = '';
       fb.append(el('b', { class: s.resp === s.q.ok ? 'ok' : 'ko' }, s.resp === s.q.ok ? '✔ Correcto. ' : '✘ No es esa. '), s.q.explica);
     }
-    c.append(el('div', { class: 'tarjeta' }, el('h4', null, 'RA1.' + cr[0] + ' · ' + s.q.pregunta), ops, fb));
+    c.append(el('div', { class: 'tarjeta' }, el('h4', null, '' + cr[0] + ')' + ' · ' + s.q.pregunta), ops, fb));
     pintar();
   });
   c.append(el('div', { class: 'fila' }, el('button', { type: 'button', onclick: () => { nuevaSerie(); renderPractica(); } }, 'Otra serie de preguntas')));

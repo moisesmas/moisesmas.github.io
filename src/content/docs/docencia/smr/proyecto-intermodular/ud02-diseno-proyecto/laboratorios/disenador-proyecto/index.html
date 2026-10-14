@@ -178,7 +178,7 @@ details.datos summary{cursor:pointer;font-weight:700}
 
   <section role="tabpanel" id="panel-practica" aria-labelledby="tab-practica" tabindex="0" hidden>
     <h2>Memoria de diseño y autoevaluación</h2>
-    <p class="intro">Completa los apartados que faltan, prepara el guion de la presentación, revisa qué criterios (RA2.a a RA2.k) tienes cubiertos, exporta la memoria y repasa con las preguntas.</p>
+    <p class="intro">Completa los apartados que faltan, prepara el guion de la presentación, revisa qué criterios tienes cubiertos, exporta la memoria y repasa con las preguntas.</p>
     <div id="c-practica"></div>
   </section>
 </main>
@@ -1089,7 +1089,7 @@ function renderCalidad() {
   pintar();
 }
 
-/* ====== Evaluación por criterio (RA2.a a RA2.k) ====== */
+/* ====== Evaluación por criterio ====== */
 const palabrasPitch = () => PITCH.reduce((s, p) => s + palabras((estado.memoria.pitch || {})[p[0]]), 0);
 const minutosPitch = () => palabrasPitch() / PPM;
 function estadoMemoria() {
@@ -1224,9 +1224,9 @@ function aMarkdown() {
   L.push('Duración estimada: ' + fmt(minutosPitch(), 1) + ' min (' + palabrasPitch() + ' palabras a ' + PPM + ' por minuto).', '', '| Diapositiva | Minutos | Palabras |', '|---|---:|---:|');
   e.memoria.diapositivas.forEach((d, i) => L.push('| ' + (i + 1) + '. ' + celdaMd(d.titulo) + ' | ' + celdaMd(d.minutos) + ' | ' + celdaMd(d.palabras) + ' |'));
   L.push('', '## Anexo B. Declaración de uso de inteligencia artificial y fuentes', '', e.memoria.declaracionIA, '');
-  L.push('## Autoevaluación por criterio (RA2)', '', '| Criterio | Comprobación automática | Mi valoración |', '|---|---|---|');
+  L.push('## Autoevaluación por criterio', '', '| Criterio | Comprobación automática | Mi valoración |', '|---|---|---|');
   const ev = evaluar();
-  CRITERIOS.forEach((cr) => L.push('| RA2.' + cr[0] + ' | ' + (ev[cr[0]].length ? 'Falta' : 'Cubierto') + ' | ' + NIVELES.find((n) => n[0] === String(e.autoeval[cr[0]] || 0))[1] + ' |'));
+  CRITERIOS.forEach((cr) => L.push('| ' + cr[0] + ')' + ' | ' + (ev[cr[0]].length ? 'Falta' : 'Cubierto') + ' | ' + NIVELES.find((n) => n[0] === String(e.autoeval[cr[0]] || 0))[1] + ' |'));
   return L.join('\n') + '\n';
 }
 function nombreArchivo(ext, pre) {
@@ -1281,7 +1281,7 @@ function renderPractica() {
   c.append(tablaEditable(M.diapositivas, [{ k: 'titulo', t: 'Diapositiva (idea única)', tipo: 'text' }, { k: 'minutos', t: 'Minutos', tipo: 'num' }, { k: 'palabras', t: 'Palabras en la diapositiva', tipo: 'num' }],
     { nombre: 'diapositivas', anadir: 'Añadir una diapositiva', nuevo: () => ({ id: nuevoId(), titulo: '', minutos: '', palabras: '' }), alCambiar: al, alQuitar: () => { cambio(); renderPractica(); } }));
   c.append(cPitch);
-  c.append(el('h3', null, '5. Autoevaluación por criterio (RA2)'));
+  c.append(el('h3', null, '5. Autoevaluación por criterio'));
   c.append(cAuto);
   function pintarEstado() {
     cEstado.textContent = '';
@@ -1307,8 +1307,8 @@ function renderPractica() {
     cAuto.append(tabla(['Criterio', 'Estado', 'Qué falta', 'Mi valoración'], CRITERIOS.map((cr) => {
       const falta = ev[cr[0]];
       const niv = selector(NIVELES, String(estado.autoeval[cr[0]] || 0), (x) => { estado.autoeval[cr[0]] = Number(x); cambio(); });
-      niv.setAttribute('aria-label', 'Mi valoración de RA2.' + cr[0]);
-      return [el('span', null, el('b', null, 'RA2.' + cr[0]), ' ' + cr[1]),
+      niv.setAttribute('aria-label', 'Mi valoración del aspecto ' + cr[0] + ')');
+      return [el('span', null, el('b', null, '' + cr[0] + ')'), ' ' + cr[1]),
         el('span', { class: falta.length ? 'ko' : 'ok' }, falta.length ? '✘ Falta' : '✔ Cubierto'),
         falta.length ? el('div', null, el('ul', null, falta.map((x) => el('li', null, x))), el('button', { type: 'button', class: 'pq', onclick: () => irA(cr[2]) }, 'Ir a la pestaña')) : 'Nada',
         niv];
@@ -1330,7 +1330,7 @@ function renderPractica() {
   serie.forEach((s, n) => {
     const cr = CRITERIOS[n];
     const fb = el('p', { class: 'correccion', role: 'status' });
-    const ops = el('div', { class: 'opciones', role: 'group', 'aria-label': 'Opciones de la pregunta RA2.' + cr[0] });
+    const ops = el('div', { class: 'opciones', role: 'group', 'aria-label': 'Opciones de la pregunta ' + cr[0] + ')' });
     const botones = s.orden.map((i) => el('button', { type: 'button', onclick: () => {
       if (s.resp !== null) return;
       s.resp = i;
@@ -1348,7 +1348,7 @@ function renderPractica() {
       fb.textContent = '';
       fb.append(el('b', { class: s.resp === s.q.ok ? 'ok' : 'ko' }, s.resp === s.q.ok ? '✔ Correcto. ' : '✘ No es esa. '), s.q.explica);
     }
-    c.append(el('div', { class: 'tarjeta' }, el('h4', null, 'RA2.' + cr[0] + ' · ' + s.q.pregunta), ops, fb));
+    c.append(el('div', { class: 'tarjeta' }, el('h4', null, '' + cr[0] + ')' + ' · ' + s.q.pregunta), ops, fb));
     pintar();
   });
   c.append(el('div', { class: 'fila' }, el('button', { type: 'button', onclick: () => { nuevaSerie(); renderPractica(); } }, 'Volver a intentarlo con las opciones en otro orden')));
