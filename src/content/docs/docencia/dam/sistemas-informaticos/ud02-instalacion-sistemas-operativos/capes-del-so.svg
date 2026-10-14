@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 460" width="1100" height="460" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Els cinc nivells d'un ordinador i les peces del SO</title>
+<desc id="d">Una pila de cinc nivells, de dalt a baix: usuari, aplicacions, sistema operatiu, firmware (BIOS o UEFI) i maquinari. El sistema operatiu, destacat, es compon de tres peces: el nucli, els controladors i l'intèrpret d'ordres amb la interfície.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="460" fill="#ffffff"/>
+<rect x="20" y="30" width="440" height="64" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="240.0" y="70.0" text-anchor="middle" fill="#16201b">Usuari</text>
+<line x1="240" y1="96" x2="240" y2="112" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="114" width="440" height="64" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="240.0" y="154.0" text-anchor="middle" fill="#16201b">Aplicacions</text>
+<line x1="240" y1="180" x2="240" y2="196" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="198" width="440" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="240.0" y="238.0" text-anchor="middle" fill="#16201b" font-weight="700">Sistema operatiu</text>
+<line x1="240" y1="264" x2="240" y2="280" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="282" width="440" height="64" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="240.0" y="322.0" text-anchor="middle" fill="#16201b">Firmware (BIOS/UEFI)</text>
+<line x1="240" y1="348" x2="240" y2="364" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="366" width="440" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="240.0" y="406.0" text-anchor="middle" fill="#16201b">Maquinari</text>
+<line x1="462" y1="230" x2="548" y2="230" stroke="#b86e00" stroke-width="3" marker-end="url(#flecha)"/>
+<text x="820" y="50" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Dins del SO</text>
+<rect x="560" y="80" width="520" height="100" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="820" y="122" text-anchor="middle" fill="#16201b" font-weight="700">Nucli</text>
+<text x="820" y="154" text-anchor="middle" fill="#16201b">processos, memòria, arxius</text>
+<rect x="560" y="200" width="520" height="100" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="820" y="242" text-anchor="middle" fill="#16201b" font-weight="700">Controladors</text>
+<text x="820" y="274" text-anchor="middle" fill="#16201b">parlen amb el maquinari</text>
+<rect x="560" y="320" width="520" height="100" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="820" y="362" text-anchor="middle" fill="#16201b" font-weight="700">Intèrpret i interfície</text>
+<text x="820" y="394" text-anchor="middle" fill="#16201b">escriptori i shell</text>
+</svg>
