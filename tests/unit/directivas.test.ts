@@ -70,6 +70,11 @@ describe(':::aules', () => {
     expect(html).toContain('<strong>solución</strong>');
     expect(html).toContain('href="https://aules.edu.gva.es/"');
   });
+  it('el enlace lleva a la entrada general de Aules, no a un curso concreto, y lo dice', () => {
+    const html = convertir(docs, `${U}/index.md`, ':::aules\nx\n:::');
+    expect(html).toContain('>Entrar en Aules</a>');
+    expect(html).not.toContain('Abrir el curso');
+  });
   it('fuera de un módulo: error', () => {
     expect(() => convertir(docs, 'docencia/index.md', ':::aules\nx\n:::')).toThrow(/\[::aules\]/);
   });
