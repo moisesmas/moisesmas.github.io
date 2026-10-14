@@ -3,7 +3,7 @@ title: "3. Scripts prácticos y tareas programadas"
 description: "Tres scripts de administración (copia con fecha, alta masiva de usuarios y monitorización del disco) en Bash y PowerShell, y cómo programarlos con cron y el Programador de tareas."
 ---
 
-Ya sabes escribir un script. Ahora toca usarlo para lo que hacen los administradores de verdad: **copiar datos, crear cuentas y vigilar el disco**, y después dejar que el ordenador lo repita solo. Esta página es la preparación de la sesión presencial del 24 de noviembre: ese día escribirás, probarás y programarás estos scripts.
+Ya sabes escribir un script. Ahora toca usarlo para lo que hacen los administradores de verdad: **copiar datos, crear cuentas y vigilar el disco**, y después dejar que el ordenador lo repita solo. Esta página es la preparación de la sesión presencial: en ella escribirás, probarás y programarás estos scripts.
 
 :::tip[Cómo trabajar esta página]
 **Tiempo orientativo:** unos 75 minutos de lectura antes de la presencial. La práctica se hace **durante** la presencial.

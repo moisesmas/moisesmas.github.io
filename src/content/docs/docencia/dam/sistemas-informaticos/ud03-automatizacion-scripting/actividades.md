@@ -3,7 +3,7 @@ title: "Activitats"
 description: "Set activitats de la unitat 3: sis d'estudi autònom en Bash i PowerShell (amb el laboratori) i la pràctica presencial d'scripts d'automatització i tasca programada."
 ---
 
-Estes són les activitats de la unitat. Les sis primeres les fas pel teu compte, amb dificultat creixent, i la setena és la de la **sessió presencial del 24 de novembre**. Pots veure quan fer cada una en la [planificació](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/planificacion/).
+Estes són les activitats de la unitat. Les sis primeres les fas pel teu compte, amb dificultat creixent, i la setena és la de la **sessió presencial**. Pots veure quan fer cada una en la [planificació](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/planificacion/).
 
 Pel que fa als sistemes: necessites una màquina **Linux** (la de la unitat 2 val) i un **Windows amb PowerShell**. Si en un moment determinat només tens un dels dos, fes l'activitat en eixe i completa l'altre quan puges; la sessió presencial es fa en el sistema que tingues assignat. Treballa **sempre en màquines de proves**.
 
@@ -22,8 +22,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un únic document (P
 5. Respon: (a) Per què la frase entre cometes simples no mostra el valor de les variables? (b) Per què cal escriure `./presentacio.sh` i no només `presentacio.sh`? (c) Què hauria passat en Bash si haguessis escrit `anys = 17`?
 
 **Què entregues:** els dos scripts, les captures de l'error de permís (Linux) i del bloqueig de la política (Windows, si ha passat) i les respostes a (a), (b) i (c), en la tasca «Activitat 1» d'Aules.
-
-**Criteris que treballa:** RA3.f
 
 **Dificultat:** ★☆☆ · **Temps estimat:** 40 minuts
 
@@ -86,8 +84,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un únic document (P
 
 **Què entregues:** les tres taules i les respostes de l'apartat 4, en la tasca «Activitat 2» d'Aules. Pots escriure-les a mà i fotografiar-les.
 
-**Criteris que treballa:** RA3.f
-
 **Dificultat:** ★☆☆ · **Temps estimat:** 45 minuts
 
 ## Activitat 3 · Troba els errors
@@ -135,8 +131,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un únic document (P
 
 **Què entregues:** un document amb les errades trobades (línia, motiu i correcció) i els scripts corregits, en la tasca «Activitat 3» d'Aules.
 
-**Criteris que treballa:** RA3.f
-
 **Dificultat:** ★★☆ · **Temps estimat:** 50 minuts
 
 ## Activitat 4 · Un script amb paràmetres i validacions
@@ -157,8 +151,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un únic document (P
 5. Afig una **opció**: si hi ha un segon paràmetre `-v`, mostra a més la data de l'última modificació.
 
 **Què entregues:** els dos scripts i una captura per cada un dels quatre casos amb el codi d'eixida visible, en la tasca «Activitat 4» d'Aules.
-
-**Criteris que treballa:** RA3.c, RA3.f
 
 **Dificultat:** ★★☆ · **Temps estimat:** 60 minuts
 
@@ -202,8 +194,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un únic document (P
 
 **Què entregues:** un document amb les ordres de l'apartat 2 (una per apartat i per shell), l'eixida de cada una i els dos scripts de l'apartat 3, més la resposta a la pregunta 4, en la tasca «Activitat 5» d'Aules.
 
-**Criteris que treballa:** RA3.c, RA3.f
-
 **Dificultat:** ★★☆ · **Temps estimat:** 60 minuts
 
 ## Activitat 6 · Còpia, restauració i compressors
@@ -221,15 +211,13 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un únic document (P
 
 **Què entregues:** un document amb la taula de l'apartat 1, les ordres i les eixides dels apartats 3 a 6, la taula comparativa de compressors amb la teua conclusió i una reflexió de 4-5 línies sobre per què cal provar les restauracions, en la tasca «Activitat 6» d'Aules.
 
-**Criteris que treballa:** RA3.b, RA3.c, RA3.e, RA3.g
-
 **Dificultat:** ★★★ · **Temps estimat:** 90 minuts
 
 ## Activitat 7 · Scripts d'automatització i tasca programada (presencial)
 
 **Objectiu:** escriure, provar i programar els tres scripts d'administració de la unitat, i comprovar que la tasca s'executa sola.
 
-Es fa **individualment, durant la sessió presencial del 24 de novembre**, en el sistema operatiu del teu equip (Linux amb Bash o Windows amb PowerShell). Els scripts són els de la [pàgina 3](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/03-scripts-practics-i-tasques-programades/); has d'entendre'ls i provar-los, no només copiar-los.
+Es fa **individualment, durant la sessió presencial**, en el sistema operatiu del teu equip (Linux amb Bash o Windows amb PowerShell). Els scripts són els de la [pàgina 3](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/03-scripts-practics-i-tasques-programades/); has d'entendre'ls i provar-los, no només copiar-los.
 
 **Què has de fer:**
 
@@ -248,9 +236,7 @@ Es fa **individualment, durant la sessió presencial del 24 de novembre**, en el
 
 Adjunta també els arxius `.sh` o `.ps1`.
 
-**Criteris que treballa:** RA3.c, RA3.e, RA3.f
-
-**Dificultat:** ★★☆ · **Temps estimat:** durant la sessió presencial (2-4 h)
+**Dificultat:** ★★☆ · **Temps estimat:** durant la sessió presencial
 
 :::aules
 Les entregues d'estes activitats es fan en Aules, en la tasca de cada una. Allí també trobaràs la rúbrica, les qualificacions i les solucions comentades.

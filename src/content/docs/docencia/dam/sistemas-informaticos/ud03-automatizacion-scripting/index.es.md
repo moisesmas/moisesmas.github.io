@@ -16,14 +16,6 @@ Esta unidad te enseña a hacer que el ordenador haga el trabajo repetitivo por t
 - Reconocer la estructura de directorios de Linux y de Windows y localizar información con herramientas gráficas y con órdenes.
 - Restaurar copias de seguridad y usar utilidades de gestión de la información: compresores, `du`/`df`, `rsync` y `robocopy`.
 
-## La unidad de un vistazo
-
-| Trimestre | Horas | Peso en la evaluación | RA que trabaja |
-|---|---|---|---|
-| 1.º | 20 h | 12 % | RA3: gestiona la información del sistema identificando las estructuras de almacenamiento y aplicando medidas para asegurar la integridad de los datos (criterios a-g) |
-
-Los criterios RA3.a (comparar sistemas de archivos) y RA3.d (particiones y unidades lógicas) se trabajan sobre todo en la unidad 2; aquí se trabajan los criterios b, c, e, f y g.
-
 ## Mapa de la unidad
 
 1. [Introducción al scripting](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/01-introduccio-al-scripting/es/): qué es un script, shebang, permisos, política de ejecución, variables, comillas, operadores y códigos de salida.
@@ -31,7 +23,7 @@ Los criterios RA3.a (comparar sistemas de archivos) y RA3.d (particiones y unida
 3. [Scripts prácticos y tareas programadas](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/03-scripts-practics-i-tasques-programades/es/): copia con fecha, alta masiva, monitorización del disco, cron y Programador de tareas (la preparación de la presencial).
 4. [Información del sistema, copias y utilidades](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/04-informacio-del-sistema-i-copies/es/): estructura de directorios, búsquedas, restaurar copias, compresores, `df`/`du`, `rsync` y `robocopy`.
 5. [Actividades](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/actividades/es/): siete actividades, seis de estudio autónomo y la práctica de la sesión presencial.
-6. [Planificación](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/planificacion/es/): el calendario de las tres sesiones, qué hacer en cada una y cómo estudiar la unidad.
+6. [Planificación](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/planificacion/es/): en qué orden estudiar la unidad, con tiempos orientativos y consejos.
 
 ## Laboratorios
 

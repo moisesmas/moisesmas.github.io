@@ -16,14 +16,6 @@ Esta unitat t'ensenya a fer que l'ordinador faça la feina repetitiva per tu: es
 - Reconéixer l'estructura de directoris de Linux i de Windows i localitzar informació amb eines gràfiques i amb ordres.
 - Restaurar còpies de seguretat i usar utilitats de gestió de la informació: compressors, `du`/`df`, `rsync` i `robocopy`.
 
-## La unitat d'un colp d'ull
-
-| Trimestre | Hores | Pes en l'avaluació | RA que treballa |
-|---|---|---|---|
-| 1r | 20 h | 12 % | RA3: gestiona la informació del sistema identificant les estructures d'emmagatzematge i aplicant mesures per a assegurar la integritat de les dades (criteris a-g) |
-
-Els criteris RA3.a (comparar sistemes d'arxius) i RA3.d (particions i unitats lògiques) es treballen sobretot en la unitat 2; ací es treballen els criteris b, c, e, f i g.
-
 ## Mapa de la unitat
 
 1. [Introducció al scripting](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/01-introduccio-al-scripting/): què és un script, shebang, permisos, política d'execució, variables, cometes, operadors i codis d'eixida.
@@ -31,7 +23,7 @@ Els criteris RA3.a (comparar sistemes d'arxius) i RA3.d (particions i unitats l�
 3. [Scripts pràctics i tasques programades](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/03-scripts-practics-i-tasques-programades/): còpia amb data, alta massiva, monitoratge del disc, cron i Programador de tasques (la preparació de la presencial).
 4. [Informació del sistema, còpies i utilitats](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/04-informacio-del-sistema-i-copies/): estructura de directoris, cerques, restaurar còpies, compressors, `df`/`du`, `rsync` i `robocopy`.
 5. [Activitats](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/actividades/): set activitats, sis d'estudi autònom i la pràctica de la sessió presencial.
-6. [Planificació](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/planificacion/): el calendari de les tres sessions, què fer en cada una i com estudiar la unitat.
+6. [Planificació](/docencia/dam/sistemas-informaticos/ud03-automatizacion-scripting/planificacion/): en quin ordre estudiar la unitat, amb temps orientatius i consells.
 
 ## Laboratoris
 
