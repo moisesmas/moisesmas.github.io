@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">OVF is a folder, OVA is a single file</title>
+<desc id="d">An OVF is a folder with an .ovf file that describes the hardware in XML, one or more disk images, usually .vmdk, and often a manifest .mf with checksums. An OVA is a single TAR archive that contains all the files of an OVF, which makes it easier to download and copy.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="360" fill="#ffffff"/>
+<text x="280" y="40" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">OVF: a folder</text>
+<text x="820" y="40" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">OVA: a single file</text>
+<rect x="40" y="64" width="480" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="280.0" y="90.0" text-anchor="middle" fill="#16201b" font-weight="700">appliance.ovf</text>
+<text x="280.0" y="118.0" text-anchor="middle" fill="#16201b">hardware description (XML)</text>
+<rect x="40" y="138" width="480" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="280.0" y="164.0" text-anchor="middle" fill="#16201b" font-weight="700">disk.vmdk</text>
+<text x="280.0" y="192.0" text-anchor="middle" fill="#16201b">virtual disk image</text>
+<rect x="40" y="212" width="480" height="64" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="280.0" y="238.0" text-anchor="middle" fill="#16201b" font-weight="700">appliance.mf</text>
+<text x="280.0" y="266.0" text-anchor="middle" fill="#16201b">manifest with checksums</text>
+<rect x="560" y="64" width="520" height="212" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="820.0" y="150.0" text-anchor="middle" fill="#16201b" font-weight="700">appliance.ova</text>
+<text x="820.0" y="178.0" text-anchor="middle" fill="#16201b">one TAR archive with</text>
+<text x="820.0" y="206.0" text-anchor="middle" fill="#16201b">all the files of the OVF</text>
+<rect x="40" y="298" width="480" height="48" rx="24" fill="#ffffff" stroke="#b86e00" stroke-width="2"/>
+<text x="280.0" y="330" text-anchor="middle" fill="#5c3700" font-weight="700">To look inside or replace a file</text>
+<rect x="560" y="298" width="520" height="48" rx="24" fill="#ffffff" stroke="#b86e00" stroke-width="2"/>
+<text x="820.0" y="330" text-anchor="middle" fill="#5c3700" font-weight="700">One piece: easy to copy</text>
+</svg>

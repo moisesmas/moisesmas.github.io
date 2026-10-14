@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 372" width="1100" height="372" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Guest Additions and Extension Pack are different</title>
+<desc id="d">Guest Additions are installed inside the guest and give mouse integration, dynamic resolution, shared clipboard and shared folders; keep the same version as VirtualBox. The Extension Pack is installed on the host and adds extra features such as USB 2.0 and 3.0; it has a different licence.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="372" fill="#ffffff"/>
+<text x="280" y="40" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">In the guest (the VM)</text>
+<text x="820" y="40" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">On the host</text>
+<rect x="20" y="64" width="520" height="210" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="280.0" y="135.0" text-anchor="middle" fill="#16201b" font-weight="700">Guest Additions</text>
+<text x="280.0" y="163.0" text-anchor="middle" fill="#16201b">mouse, screen,</text>
+<text x="280.0" y="191.0" text-anchor="middle" fill="#16201b">clipboard, shared</text>
+<text x="280.0" y="219.0" text-anchor="middle" fill="#16201b">folders, clock…</text>
+<rect x="560" y="64" width="520" height="210" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="820.0" y="135.0" text-anchor="middle" fill="#16201b" font-weight="700">Extension Pack</text>
+<text x="820.0" y="163.0" text-anchor="middle" fill="#16201b">extra features,</text>
+<text x="820.0" y="191.0" text-anchor="middle" fill="#16201b">for example</text>
+<text x="820.0" y="219.0" text-anchor="middle" fill="#16201b">USB 2.0 and 3.0</text>
+<rect x="20" y="304" width="520" height="48" rx="24" fill="#ffffff" stroke="#b86e00" stroke-width="2"/>
+<text x="280.0" y="336" text-anchor="middle" fill="#5c3700" font-weight="700">Same version as VirtualBox</text>
+<rect x="560" y="304" width="520" height="48" rx="24" fill="#ffffff" stroke="#b86e00" stroke-width="2"/>
+<text x="820.0" y="336" text-anchor="middle" fill="#5c3700" font-weight="700">A different licence</text>
+</svg>
