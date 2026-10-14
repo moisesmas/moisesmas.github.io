@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 450" width="1100" height="450" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Del disco a tus archivos</title>
+<desc id="d">Cinco niveles de abajo arriba: el disco, una lista de sectores numerados; una partición, anotada en la tabla de particiones; un sistema de archivos con sus reglas; clústeres o bloques, grupos de sectores; y un archivo, que usa un número entero de clústeres.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="450" fill="#ffffff"/>
+<rect x="20" y="16" width="1060" height="66" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="40" y="58.0" text-anchor="start" fill="#16201b" font-weight="700">Disco</text>
+<text x="330" y="58.0" text-anchor="start" fill="#16201b">lista de sectores numerados (512 B o 4096 B)</text>
+<line x1="550" y1="84" x2="550" y2="100" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="102" width="1060" height="66" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="40" y="144.0" text-anchor="start" fill="#16201b" font-weight="700">Partición</text>
+<text x="330" y="144.0" text-anchor="start" fill="#16201b">una parte del disco, en la tabla de particiones</text>
+<line x1="550" y1="170" x2="550" y2="186" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="188" width="1060" height="66" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="40" y="230.0" text-anchor="start" fill="#16201b" font-weight="700">Sistema de archivos</text>
+<text x="330" y="230.0" text-anchor="start" fill="#16201b">reglas y estructuras: FAT32, NTFS, ext4</text>
+<line x1="550" y1="256" x2="550" y2="272" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="274" width="1060" height="66" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="40" y="316.0" text-anchor="start" fill="#16201b" font-weight="700">Clúster / bloque</text>
+<text x="330" y="316.0" text-anchor="start" fill="#16201b">grupo de sectores; unidad mínima asignada a un archivo</text>
+<line x1="550" y1="342" x2="550" y2="358" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="360" width="1060" height="66" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="40" y="402.0" text-anchor="start" fill="#16201b" font-weight="700">Archivo</text>
+<text x="330" y="402.0" text-anchor="start" fill="#16201b">un número entero de clústeres</text>
+</svg>
