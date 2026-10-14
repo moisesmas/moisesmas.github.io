@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 400" width="1100" height="400" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Example: relative performance of a guest</title>
+<desc id="d">Bar chart with example numbers, where 100 percent is the speed of the host: CPU with one thread 91 percent, memory 87 percent and disk write 65 percent, the weakest result.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="400" fill="#ffffff"/>
+<text x="20" y="44" text-anchor="start" fill="#16201b" font-size="28" font-weight="700">Guest speed compared with the host</text>
+<text x="20" y="118" text-anchor="start" fill="#16201b">CPU, 1 thread</text>
+<rect x="340" y="76" width="640" height="56" rx="8" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<rect x="340" y="76" width="582" height="56" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="1000" y="118" text-anchor="start" fill="#16201b" font-weight="700">91 %</text>
+<text x="20" y="200" text-anchor="start" fill="#16201b">Memory</text>
+<rect x="340" y="158" width="640" height="56" rx="8" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<rect x="340" y="158" width="557" height="56" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="1000" y="200" text-anchor="start" fill="#16201b" font-weight="700">87 %</text>
+<text x="20" y="282" text-anchor="start" fill="#16201b">Disk write</text>
+<rect x="340" y="240" width="640" height="56" rx="8" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<rect x="340" y="240" width="416" height="56" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="1000" y="282" text-anchor="start" fill="#16201b" font-weight="700">65 %</text>
+<text x="20" y="360" text-anchor="start" fill="#56655d">Example numbers, not a rule · 100 % = host speed</text>
+</svg>
