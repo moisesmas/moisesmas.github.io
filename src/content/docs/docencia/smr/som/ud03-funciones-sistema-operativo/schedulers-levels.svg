@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 380" width="1100" height="380" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">The three schedulers and the dispatcher</title>
+<desc id="d">A row of five boxes: new processes, the long-term scheduler that admits them, the ready queue, the short-term scheduler that chooses the next one and the dispatcher that gives it the CPU. Below, the medium-term scheduler swaps processes between RAM and disk.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="380" fill="#ffffff"/>
+<rect x="20" y="30" width="180" height="100" rx="8" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="110.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">New</text>
+<text x="110.0" y="103.0" text-anchor="middle" fill="#16201b">processes</text>
+<line x1="202" y1="80.0" x2="238" y2="80.0" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="240" y="30" width="180" height="100" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="330.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">Long-term</text>
+<text x="330.0" y="103.0" text-anchor="middle" fill="#16201b">scheduler</text>
+<line x1="422" y1="80.0" x2="458" y2="80.0" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="460" y="30" width="180" height="100" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="550.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">Ready</text>
+<text x="550.0" y="103.0" text-anchor="middle" fill="#16201b">queue</text>
+<line x1="642" y1="80.0" x2="678" y2="80.0" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="680" y="30" width="180" height="100" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="770.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">Short-term</text>
+<text x="770.0" y="103.0" text-anchor="middle" fill="#16201b">scheduler</text>
+<line x1="862" y1="80.0" x2="898" y2="80.0" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="900" y="30" width="180" height="100" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="990.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">Dispatcher</text>
+<text x="990.0" y="103.0" text-anchor="middle" fill="#16201b">→ CPU</text>
+<text x="330" y="172" text-anchor="middle" fill="#16201b">admits new</text>
+<text x="330" y="202" text-anchor="middle" fill="#16201b">programs</text>
+<text x="770" y="172" text-anchor="middle" fill="#16201b">chooses</text>
+<text x="770" y="202" text-anchor="middle" fill="#16201b">who runs next</text>
+<text x="990" y="172" text-anchor="middle" fill="#16201b">makes the</text>
+<text x="990" y="202" text-anchor="middle" fill="#16201b">context switch</text>
+<rect x="200" y="260" width="700" height="90" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="550.0" y="298.0" text-anchor="middle" fill="#16201b" font-weight="700">Medium-term scheduler</text>
+<text x="550.0" y="328.0" text-anchor="middle" fill="#16201b">swaps processes between RAM and disk</text>
+<line x1="550" y1="258" x2="550" y2="134" stroke="#56655d" stroke-width="3" stroke-dasharray="10 7" marker-end="url(#flecha)" marker-start="url(#flecha)"/>
+</svg>
