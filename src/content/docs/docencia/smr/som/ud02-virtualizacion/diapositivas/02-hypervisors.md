@@ -174,3 +174,9 @@ grep -Ec '(vmx|svm)' /proc/cpuinfo
 - Learning → **VirtualBox** · many servers → a **Type 1**
 
 [Activities of the unit →](/docencia/smr/som/ud02-virtualizacion/actividades/)
+
+---
+
+## Credits
+
+These slides summarise the SOM course notes by Moisés Mas Rocamora, Daniel Álvarez Santamaría and Jana Taboada León, licensed under **CC BY-NC-SA 4.0**. They are shared under the same licence.

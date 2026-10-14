@@ -174,3 +174,9 @@ grep -Ec '(vmx|svm)' /proc/cpuinfo
 - Para aprender → **VirtualBox** · muchos servidores → un **tipo 1**
 
 [Actividades de la unidad →](/docencia/smr/som/ud02-virtualizacion/actividades/es/)
+
+---
+
+## Créditos
+
+Estas diapositivas resumen los apuntes del curso de SOM de Moisés Mas Rocamora, Daniel Álvarez Santamaría y Jana Taboada León, con licencia **CC BY-NC-SA 4.0**. Se comparten con la misma licencia.

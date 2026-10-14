@@ -22,8 +22,8 @@ describe('presentación de una página', () => {
     expect(portada).toMatch(/Virtuali[sz]ation/);
   });
   it('una sección por diapositiva, más la portada', () => {
-    expect(en().match(/<section[\s>]/g)).toHaveLength(15);
-    expect(es().match(/<section[\s>]/g)).toHaveLength(15);
+    expect(en().match(/<section[\s>]/g)).toHaveLength(16);
+    expect(es().match(/<section[\s>]/g)).toHaveLength(16);
   });
   it('los bloques propios se convierten', () => {
     expect(en()).toContain('class="fragment"');

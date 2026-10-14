@@ -68,6 +68,10 @@ for (const archivo of archivos) {
     it('tiene su página de apuntes', () => {
       expect(existsSync(path.join(dirUnidad, nombre))).toBe(true);
     });
+    it('si los apuntes llevan nota de créditos (CC BY-NC-SA), la presentación también', () => {
+      const apuntes = existsSync(path.join(dirUnidad, nombre)) ? readFileSync(path.join(dirUnidad, nombre), 'utf8') : '';
+      if (/:::note\[(?:Credits|Créditos|Crèdits)\]/.test(apuntes)) expect(md).toContain('CC BY-NC-SA');
+    });
     it('separadores bien puestos', () => {
       expect(avisos).toEqual([]);
     });
