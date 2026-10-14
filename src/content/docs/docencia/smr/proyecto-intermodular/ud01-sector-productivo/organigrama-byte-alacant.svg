@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 490" width="1100" height="490" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Organigrama de Reparaciones Byte Alacant, empresa ficticia de cinco personas</title>
+<desc id="d">Organigrama de la empresa ficticia Reparaciones Byte Alacant. Arriba, la gerencia (dirección, comercial y administración). De ella dependen el responsable técnico (soporte y sistemas) y el auxiliar administrativo (atención al cliente y facturas). Del responsable técnico dependen un técnico de taller (reparaciones en el local) y un técnico de campo (soporte en casa del cliente).</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="490" fill="#ffffff"/>
+<rect x="290" y="20" width="520" height="90" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="550.0" y="58.0" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Gerencia</text>
+<text x="550.0" y="90.0" text-anchor="middle" fill="#16201b">dirección, comercial, administración</text>
+<line x1="550" y1="110" x2="550" y2="140" stroke="#56655d" stroke-width="3"/>
+<line x1="360" y1="140" x2="850" y2="140" stroke="#56655d" stroke-width="3"/>
+<line x1="360" y1="140" x2="360" y2="168" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<line x1="850" y1="140" x2="850" y2="168" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="160" y="170" width="400" height="100" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="360.0" y="213.0" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Responsable técnico</text>
+<text x="360.0" y="245.0" text-anchor="middle" fill="#16201b">soporte y sistemas</text>
+<rect x="620" y="170" width="460" height="100" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="850.0" y="213.0" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Auxiliar administrativo/a</text>
+<text x="850.0" y="245.0" text-anchor="middle" fill="#16201b">atención al cliente y facturas</text>
+<line x1="360" y1="270" x2="360" y2="300" stroke="#56655d" stroke-width="3"/>
+<line x1="185" y1="300" x2="535" y2="300" stroke="#56655d" stroke-width="3"/>
+<line x1="185" y1="300" x2="185" y2="328" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<line x1="535" y1="300" x2="535" y2="328" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="330" width="330" height="100" rx="8" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="185.0" y="373.0" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Técnico/a de taller</text>
+<text x="185.0" y="405.0" text-anchor="middle" fill="#16201b">reparaciones en el local</text>
+<rect x="370" y="330" width="330" height="100" rx="8" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="535.0" y="357.0" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Técnico/a de campo</text>
+<text x="535.0" y="389.0" text-anchor="middle" fill="#16201b">soporte en casa</text>
+<text x="535.0" y="421.0" text-anchor="middle" fill="#16201b">del cliente</text>
+<text x="550" y="472" text-anchor="middle" fill="#16201b">Empresa ficticia · plantilla de cinco personas</text>
+</svg>

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">De las cinco dimensiones de viabilidad a la decisión</title>
+<desc id="d">Cinco dimensiones de viabilidad: técnica, económica, legal, temporal y organizativa. De ellas sale una decisión. No-go: la dimensión técnica o la económica están en rojo. Go con condiciones: hay dimensiones en ámbar. Go: todas están resueltas.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="360" fill="#ffffff"/>
+<rect x="20" y="20" width="200" height="70" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="120.0" y="64.0" text-anchor="middle" fill="#16201b" font-weight="700">Técnica</text>
+<line x1="120" y1="90" x2="120" y2="112" stroke="#56655d" stroke-width="3"/>
+<rect x="235" y="20" width="200" height="70" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="335.0" y="64.0" text-anchor="middle" fill="#16201b" font-weight="700">Económica</text>
+<line x1="335" y1="90" x2="335" y2="112" stroke="#56655d" stroke-width="3"/>
+<rect x="450" y="20" width="200" height="70" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="550.0" y="64.0" text-anchor="middle" fill="#16201b" font-weight="700">Legal</text>
+<line x1="550" y1="90" x2="550" y2="112" stroke="#56655d" stroke-width="3"/>
+<rect x="665" y="20" width="200" height="70" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="765.0" y="64.0" text-anchor="middle" fill="#16201b" font-weight="700">Temporal</text>
+<line x1="765" y1="90" x2="765" y2="112" stroke="#56655d" stroke-width="3"/>
+<rect x="880" y="20" width="200" height="70" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="980.0" y="64.0" text-anchor="middle" fill="#16201b" font-weight="700">Organizativa</text>
+<line x1="980" y1="90" x2="980" y2="112" stroke="#56655d" stroke-width="3"/>
+<line x1="120" y1="112" x2="980" y2="112" stroke="#56655d" stroke-width="3"/>
+<line x1="550" y1="112" x2="550" y2="148" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="160" width="340" height="150" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="190.0" y="212.0" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">No-go</text>
+<text x="190.0" y="244.0" text-anchor="middle" fill="#16201b">técnica o económica</text>
+<text x="190.0" y="276.0" text-anchor="middle" fill="#16201b">en rojo</text>
+<rect x="380" y="160" width="340" height="150" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="550.0" y="212.0" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Go con condiciones</text>
+<text x="550.0" y="244.0" text-anchor="middle" fill="#16201b">hay dimensiones</text>
+<text x="550.0" y="276.0" text-anchor="middle" fill="#16201b">en ámbar</text>
+<rect x="740" y="160" width="340" height="150" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="910.0" y="228.0" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Go</text>
+<text x="910.0" y="260.0" text-anchor="middle" fill="#16201b">todas resueltas</text>
+</svg>
