@@ -5,7 +5,7 @@ description: "Siete retos prácticos sobre tableros Kanban, gestión de tareas, 
 
 Cada actividad es un **reto** que produce un entregable que sirve para el proyecto. Se hacen con el equipo (de 2 a 4 personas) y, cuando se indica, con el [Simulador de Git](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/laboratorios/simulador-git/), que no necesita instalar nada ni conectarse a ningún servidor.
 
-Esta unidad es una **formación previa**: no figura en la programación didáctica, así que las actividades no se asocian a resultados de aprendizaje ni criterios de evaluación concretos. Los apartados «Competencia que trabaja» son una **propuesta** del profesor.
+Esta unidad es una **formación previa**. Los apartados «Competencia que trabaja» son una **propuesta** del profesor.
 
 :::tip[Antes de empezar]
 - Ten a mano los apuntes: [Jira](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/11-jira/), [Trello](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/12-trello/), [Git: fundamentos](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/13-git-fundamentos/), [Git: gestión de ramas](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/14-git-ramas/), [integración de Git con Jira](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/16-git-con-jira/) y [correo electrónico](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/17-email/).

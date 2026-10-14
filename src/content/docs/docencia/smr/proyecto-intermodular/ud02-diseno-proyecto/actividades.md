@@ -27,8 +27,6 @@ Cada actividad es un **reto** que produce un entregable del proyecto. Se encaden
 
 **Qué entregas:** el registro de necesidades (Markdown o JSON exportado) en la tarea «Actividad 1» de Aules.
 
-**Criterios que trabaja:** RA2.a, RA2.c
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 2 horas
 
 ## Actividad 2 · Ideas en grupo y elección con criterios ponderados
@@ -45,8 +43,6 @@ Cada actividad es un **reto** que produce un entregable del proyecto. Se encaden
 
 **Qué entregas:** el acta y la matriz exportadas, en la tarea «Actividad 2» de Aules.
 
-**Criterios que trabaja:** RA2.b, RA2.d
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 2 horas
 
 ## Actividad 3 · Estado del arte e innovación
@@ -61,8 +57,6 @@ Cada actividad es un **reto** que produce un entregable del proyecto. Se encaden
 4. Escribe un párrafo de 4 o 5 líneas: **qué aspecto innovador** aplica vuestra propuesta, qué aporta y cómo se aplica.
 
 **Qué entregas:** la ficha comparativa y el párrafo de innovación, en la tarea «Actividad 3» de Aules.
-
-**Criterios que trabaja:** RA2.c, RA2.d
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** 1 hora
 
@@ -80,8 +74,6 @@ Cada actividad es un **reto** que produce un entregable del proyecto. Se encaden
 
 **Qué entregas:** el informe de viabilidad de **dos páginas** como máximo (exportado o redactado), en la tarea «Actividad 4» de Aules.
 
-**Criterios que trabaja:** RA2.e
-
 **Dificultad:** ★★★ · **Tiempo estimado:** 2 horas
 
 ## Actividad 5 · Definición del proyecto y propuesta de una página
@@ -97,8 +89,6 @@ Cada actividad es un **reto** que produce un entregable del proyecto. Se encaden
 5. Entrégala a tu profesor para que la revise. Si te devuelve comentarios, recógelos en una lista de cambios.
 
 **Qué entregas:** la propuesta de una página (más la EDT exportada en CSV), en la tarea «Actividad 5» de Aules.
-
-**Criterios que trabaja:** RA2.f (y RA2.a)
 
 **Dificultad:** ★★★ · **Tiempo estimado:** 2 horas
 
@@ -116,8 +106,6 @@ Cada actividad es un **reto** que produce un entregable del proyecto. Se encaden
 
 **Qué entregas:** el presupuesto exportado con las fuentes de los precios, en la tarea «Actividad 6» de Aules.
 
-**Criterios que trabaja:** RA2.g, RA2.h
-
 **Dificultad:** ★★★ · **Tiempo estimado:** 2 horas
 
 ## Actividad 7 · Plan de calidad y memoria de diseño v1
@@ -133,8 +121,6 @@ Cada actividad es un **reto** que produce un entregable del proyecto. Se encaden
 5. Revisa la ortografía, las fuentes y el formato con la lista de la sección 5 de [Calidad y documentación del diseño](/docencia/smr/proyecto-intermodular/ud02-diseno-proyecto/04-calidad-y-documentacion/). Incluye, si procede, la declaración de uso de IA.
 
 **Qué entregas:** la memoria de diseño v1 (Markdown exportado, o PDF a partir de él) y el plan de calidad, en la tarea «Actividad 7» de Aules.
-
-**Criterios que trabaja:** RA2.i, RA2.j
 
 **Dificultad:** ★★★ · **Tiempo estimado:** 1 hora y media en clase y trabajo autónomo
 
@@ -153,15 +139,13 @@ Cada actividad es un **reto** que produce un entregable del proyecto. Se encaden
 
 **Qué entregas:** las diapositivas, el guion y tus hojas de coevaluación, en la tarea «Actividad 8» de Aules.
 
-**Criterios que trabaja:** RA2.k (y avance de RA5.b)
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 2 horas y media (incluye las exposiciones de todos los equipos)
 
 ## Refuerzo y ampliación
 
 - **Refuerzo (propuesta):** si te atascas con la matriz de ideas o con el presupuesto, empieza con los datos de ejemplo del laboratorio, cámbialos uno a uno y observa qué ocurre. Tu profesor puede darte una plantilla guiada con un ejemplo resuelto.
-- **Ampliación (propuesta):** desarrolla una segunda alternativa de solución con su comparación; analiza los ODS del propio proyecto (enlaza con el criterio RA1.i); o revisa con detalle la protección de datos.
-- **Cuaderno de evidencias:** al terminar cada sesión, escribe en tu cuaderno qué has hecho, qué has aprendido y qué criterios sientes más flojos. La pestaña «Memoria» del laboratorio tiene una autoevaluación por criterio para ayudarte.
+- **Ampliación (propuesta):** desarrolla una segunda alternativa de solución con su comparación; analiza los ODS del propio proyecto (enlaza con la actividad 5 de la Unidad 1); o revisa con detalle la protección de datos.
+- **Cuaderno de evidencias:** al terminar cada sesión, escribe en tu cuaderno qué has hecho, qué has aprendido y qué partes sientes más flojas. La pestaña «Memoria» del laboratorio tiene una autoevaluación para ayudarte.
 
 :::aules
 Las entregas, el diagnóstico previo, el calendario, la fecha de las exposiciones y las rúbricas de cada reto están en el curso de Aules. Las soluciones y las rúbricas de corrección no se publican en esta web.

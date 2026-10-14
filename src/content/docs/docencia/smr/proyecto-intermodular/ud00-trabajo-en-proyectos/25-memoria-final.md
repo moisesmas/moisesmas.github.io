@@ -14,7 +14,7 @@ La **memoria final** es el documento que cuenta tu proyecto de principio a fin: 
 :::
 
 :::note[Es una propuesta de estructura]
-Esta unidad es una preparación propuesta por tu profesor. El índice exacto, la extensión y el formato de entrega de la memoria de tu proyecto los fijan tu profesor y la programación del módulo: pregunta antes de empezar y adapta esta estructura a lo que te indiquen.
+Esta unidad es una preparación propuesta por tu profesor. El índice exacto, la extensión y el formato de entrega de la memoria de tu proyecto los fija tu profesor: pregunta antes de empezar y adapta esta estructura a lo que te indiquen.
 :::
 
 Seguimos con el ejemplo de **Reparaciones Byte Alacant, S. L.** (empresa ficticia) y su portal de incidencias.

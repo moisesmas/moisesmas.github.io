@@ -147,7 +147,7 @@ Algunas reglas útiles:
 | **6. Mejoras del portal de incidencias interno ya en uso** | Los técnicos piden cambios cada semana. | **Ágil (Kanban o Scrum)** | Flujo continuo de peticiones y prioridades que cambian |
 
 :::tip[Para tu proyecto del módulo (propuesta)]
-Un proyecto de clase de pocas semanas con un equipo de 2-3 personas funciona bien con un ciclo **iterativo e incremental**: un plan global con hitos y **dos o tres iteraciones** que entreguen algo funcionando, con revisión del tutor al final de cada una. Es una propuesta de esta web, no una exigencia de la programación.
+Un proyecto de clase de pocas semanas con un equipo de 2-3 personas funciona bien con un ciclo **iterativo e incremental**: un plan global con hitos y **dos o tres iteraciones** que entreguen algo funcionando, con revisión del tutor al final de cada una. Es una propuesta de esta web, no una exigencia.
 :::
 
 ## Comprueba lo aprendido

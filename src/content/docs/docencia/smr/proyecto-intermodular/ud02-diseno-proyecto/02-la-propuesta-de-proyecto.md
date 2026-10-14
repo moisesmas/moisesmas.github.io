@@ -3,7 +3,7 @@ title: "2. La propuesta de proyecto"
 description: "Cómo convertir la idea elegida en una propuesta defendible: objetivos SMART, alcance, requisitos con prioridad, partes interesadas, descomposición en partes (EDT) y propuesta de una página para que el profesor la apruebe."
 ---
 
-Una idea todavía no es un proyecto. Para que lo sea hay que decir qué se va a conseguir, qué entra y qué no, qué tiene que cumplir lo que entregues y de qué partes se compone el trabajo. Esta página te enseña a hacerlo y a resumirlo en una propuesta de una página que tu profesor pueda valorar. Trabaja los criterios de identificar las partes del proyecto y de prever sus recursos.
+Una idea todavía no es un proyecto. Para que lo sea hay que decir qué se va a conseguir, qué entra y qué no, qué tiene que cumplir lo que entregues y de qué partes se compone el trabajo. Esta página te enseña a hacerlo y a resumirlo en una propuesta de una página que tu profesor pueda valorar. Trabaja cómo identificar las partes del proyecto y cómo prever sus recursos.
 
 :::tip[Cómo trabajar esta página]
 **Tiempo orientativo:** unos 50 minutos de lectura y 2 horas de práctica.
@@ -15,7 +15,7 @@ Una idea todavía no es un proyecto. Para que lo sea hay que decir qué se va a 
 
 ## 1. Qué es un «pequeño proyecto» aquí
 
-La programación del módulo habla de elaborar «un pequeño proyecto», pero no fija su tamaño. Esta web propone el siguiente criterio, que tu profesor puede ajustar:
+Se trata de elaborar «un pequeño proyecto», pero ¿de qué tamaño? Esta web propone el siguiente criterio, que tu profesor puede ajustar:
 
 :::note[Tamaño del proyecto (propuesta)]
 Un proyecto de esta unidad es un trabajo que **un equipo de dos o tres personas puede diseñar, planificar y simular en el aula**, pensado para una pyme concreta y resuelto con lo que sabe hacer un técnico SMR: instalar, configurar, mantener, proteger o documentar equipos y redes. Debe tener **un solo problema central**, entre **tres y siete partes** y un presupuesto de unos pocos miles de euros. Si tu idea necesita meses de trabajo, hay que recortarla.

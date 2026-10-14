@@ -3,7 +3,7 @@ title: "5. Comunicar la idea"
 description: "Cómo preparar una presentación pública breve de tu proyecto: estructura del guion, diapositivas con una sola idea, control del tiempo, respuestas a las preguntas del público y valoración de las exposiciones de los demás."
 ---
 
-Un proyecto que nadie entiende en cinco minutos tiene un problema. Presentar la idea en público te obliga a quedarte con lo esencial, a defender tus decisiones y a escuchar objeciones antes de gastar más tiempo. Esta página prepara el último criterio de la unidad, la presentación pública de las ideas más relevantes, y cierra el trimestre con tus compañeros como público.
+Un proyecto que nadie entiende en cinco minutos tiene un problema. Presentar la idea en público te obliga a quedarte con lo esencial, a defender tus decisiones y a escuchar objeciones antes de gastar más tiempo. Esta página prepara el último paso de la unidad, la presentación pública de las ideas más relevantes, con tus compañeros como público.
 
 :::tip[Cómo trabajar esta página]
 **Tiempo orientativo:** unos 30 minutos de lectura y 3 horas de práctica, incluida la sesión de exposiciones.
@@ -61,7 +61,7 @@ Reglas:
 ## 3. Ensayar y repartir
 
 - **Reparte el discurso** para que hablen todos los miembros del equipo y se note quién explica qué. Quien presenta una parte debe conocer también las demás: le preguntarán.
-- **Ensaya con cronómetro**, en voz alta, al menos dos veces. Anota el tiempo real y recorta o amplía. Si te pasas, se corta la presentación: respetar el tiempo es parte de la nota.
+- **Ensaya con cronómetro**, en voz alta, al menos dos veces. Anota el tiempo real y recorta o amplía. Si te pasas, se corta la presentación: respetar el tiempo es parte de una buena presentación.
 - Empieza con una frase que enganche (una cifra, una pregunta) y termina con la petición, no con «ya está, gracias».
 - Prepara una versión de reserva por si falla el proyector: unas hojas impresas o la presentación en dos sitios distintos.
 

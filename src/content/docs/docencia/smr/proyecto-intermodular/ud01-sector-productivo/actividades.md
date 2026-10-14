@@ -26,8 +26,6 @@ Cada actividad es un **reto** que produce un entregable del proyecto. Los cinco 
 
 **Qué entregas:** la tabla del mapa (CSV exportado desde la pestaña o tabla en un documento) más la conclusión, en la tarea «Actividad 1» de Aules.
 
-**Criterios que trabaja:** RA1.a
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 2 horas
 
 ## Actividad 2 · Ficha de empresa: organigrama, departamentos, funciones y recursos
@@ -43,8 +41,6 @@ Cada actividad es un **reto** que produce un entregable del proyecto. Los cinco 
 5. En «Clientes» (parte inferior) completa la tabla de recursos humanos y materiales con una estimación de coste razonada.
 
 **Qué entregas:** la ficha exportada en Markdown, con organigrama, departamentos, funciones y recursos, en la tarea «Actividad 2» de Aules.
-
-**Criterios que trabaja:** RA1.b, RA1.c, RA1.d, RA1.g
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** 2 horas
 
@@ -62,8 +58,6 @@ Cada actividad es un **reto** que produce un entregable del proyecto. Los cinco 
 
 **Qué entregas:** el apartado «Clientes y volumen de negocio» de la ficha con su interpretación, en la tarea «Actividad 3» de Aules.
 
-**Criterios que trabaja:** RA1.e, RA1.g
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 40 minutos
 
 ## Actividad 4 · Modelo de negocio, estrategia e indicadores
@@ -78,8 +72,6 @@ Cada actividad es un **reto** que produce un entregable del proyecto. Los cinco 
 4. Interpreta el semáforo y la tendencia: ¿funciona la estrategia? Argumenta en 4 o 5 líneas.
 
 **Qué entregas:** el Canvas y la tabla de indicadores con la interpretación, en la tarea «Actividad 4» de Aules.
-
-**Criterios que trabaja:** RA1.f, RA1.h
 
 **Dificultad:** ★★★ · **Tiempo estimado:** 1 hora y media
 
@@ -97,8 +89,6 @@ Cada actividad es un **reto** que produce un entregable del proyecto. Los cinco 
 
 **Qué entregas:** la matriz servicio-ODS exportada con la ficha, en la tarea «Actividad 5» de Aules.
 
-**Criterios que trabaja:** RA1.i
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 1 hora y media
 
 ## Actividad 6 · Entrevista a un profesional (ampliación)
@@ -115,8 +105,6 @@ Cada actividad es un **reto** que produce un entregable del proyecto. Los cinco 
 
 **Qué entregas:** guion y acta en la tarea «Actividad 6» de Aules.
 
-**Criterios que trabaja:** RA1.e, RA1.f (y comunicación oral, RA5.b)
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 1-2 horas
 
 ## Actividad 7 · Exposición de 3 minutos y coevaluación
@@ -132,24 +120,20 @@ Cada actividad es un **reto** que produce un entregable del proyecto. Los cinco 
 
 **Qué entregas:** la diapositiva y tu hoja de coevaluación, en la tarea «Actividad 7» de Aules.
 
-**Criterios que trabaja:** RA1.a-i (visión de conjunto) y avance de RA5.b
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 1 hora
 
 ## Actividad 8 · Cuaderno de evidencias y autoevaluación
 
-**Objetivo:** reflexionar sobre lo aprendido y comprobar qué criterios tienes cubiertos.
+**Objetivo:** reflexionar sobre lo aprendido y comprobar qué apartados de la ficha tienes cubiertos.
 
 **Qué tienes que hacer:**
 
-1. Abre la pestaña «Ficha» del laboratorio y revisa la comprobación por criterio: ¿qué ✘ te quedan?
-2. Valora con honestidad tu nivel en cada criterio de RA1.a a RA1.i.
+1. Abre la pestaña «Ficha» del laboratorio y revisa la comprobación final: ¿qué ✘ te quedan?
+2. Valora con honestidad tu nivel en cada apartado de la ficha.
 3. Haz la serie de preguntas de repaso y apunta tus aciertos.
 4. Escribe en tu cuaderno de evidencias la primera entrada: qué tipo de empresa o puesto te interesa y por qué, y qué te falta aprender para llegar a él.
 
-**Qué entregas:** la entrada del cuaderno de evidencias (media página) y la autoevaluación por criterio, en la tarea «Actividad 8» de Aules.
-
-**Criterios que trabaja:** RA1.a-i (autoevaluación); gestión de la propia carrera profesional
+**Qué entregas:** la entrada del cuaderno de evidencias (media página) y la autoevaluación, en la tarea «Actividad 8» de Aules.
 
 **Dificultad:** ★☆☆ · **Tiempo estimado:** 15-30 minutos
 

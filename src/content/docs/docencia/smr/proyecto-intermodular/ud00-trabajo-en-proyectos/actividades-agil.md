@@ -5,7 +5,7 @@ description: "Ocho retos de la parte de metodologías ágiles: elegir enfoque, e
 
 Cada actividad es un **reto** que produce un entregable que podrás reutilizar en tu proyecto. Casi todos se hacen con el [laboratorio «Ágil en la práctica»](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/laboratorios/agil-en-practica/), que guarda tus datos en este navegador y permite exportarlos.
 
-Esta unidad de formación previa (unidad 0) **no figura en la programación didáctica**, por eso las actividades no llevan códigos de RA ni de CE: el apartado «Qué trabaja» indica las páginas de apuntes que practica cada una. La dificultad y los tiempos son una propuesta.
+Esta es una unidad de formación previa (unidad 0): el apartado «Qué trabaja» indica las páginas de apuntes que practica cada actividad. La dificultad y los tiempos son una propuesta.
 
 :::tip[Antes de empezar]
 - Lee antes las páginas de [metodologías ágiles](/docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos/04-metodologias-agiles/) y la que corresponda a cada reto.

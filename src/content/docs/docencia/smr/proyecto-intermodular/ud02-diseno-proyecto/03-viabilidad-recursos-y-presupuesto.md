@@ -3,7 +3,7 @@ title: "3. Viabilidad, recursos y presupuesto"
 description: "Cómo decidir si un proyecto puede y debe hacerse (viabilidad técnica, económica, legal, temporal y organizativa), prever los recursos humanos y materiales, anotar los riesgos iniciales y construir un presupuesto sencillo con costes indirectos, contingencia, margen e IVA."
 ---
 
-Antes de comprometer tiempo y dinero conviene preguntarse dos cosas: ¿**puede** hacerse con lo que tenemos? y ¿**merece la pena**? Esta página enseña a contestar con argumentos, a calcular qué recursos hacen falta y a ponerles precio con un presupuesto que se entienda y cuadre. Trabaja los criterios de viabilidad técnica, recursos materiales y humanos, y presupuesto económico.
+Antes de comprometer tiempo y dinero conviene preguntarse dos cosas: ¿**puede** hacerse con lo que tenemos? y ¿**merece la pena**? Esta página enseña a contestar con argumentos, a calcular qué recursos hacen falta y a ponerles precio con un presupuesto que se entienda y cuadre. Trabaja la viabilidad técnica, los recursos materiales y humanos, y el presupuesto económico.
 
 :::tip[Cómo trabajar esta página]
 **Tiempo orientativo:** unos 60 minutos de lectura y 4 horas de práctica. Ten calculadora a mano.
@@ -15,7 +15,7 @@ Antes de comprometer tiempo y dinero conviene preguntarse dos cosas: ¿**puede**
 
 ## 1. Estudio de viabilidad
 
-La programación del módulo pide expresamente el estudio de **viabilidad técnica**. Para que el estudio sirva de verdad, esta web propone mirar también otras cuatro dimensiones (propuesta). El resultado final es una decisión: **seguir (go), seguir con condiciones o no seguir (no-go)**.
+El estudio de **viabilidad técnica** es imprescindible. Para que el estudio sirva de verdad, esta web propone mirar también otras cuatro dimensiones (propuesta). El resultado final es una decisión: **seguir (go), seguir con condiciones o no seguir (no-go)**.
 
 | Dimensión | Pregunta clave | Ejemplo para el proyecto de copias |
 |---|---|---|
