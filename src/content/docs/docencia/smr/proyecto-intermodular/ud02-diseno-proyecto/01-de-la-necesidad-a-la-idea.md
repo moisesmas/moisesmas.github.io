@@ -3,7 +3,7 @@ title: "1. De la necesidad a la idea"
 description: "Cómo detectar y priorizar necesidades reales de una pyme, generar ideas en grupo sin censurarlas, elegir con una matriz de criterios ponderados, informarte de lo que ya existe y decidir qué aspecto innovador aplicar."
 ---
 
-Un buen proyecto no empieza por una solución que te gusta, sino por un problema que alguien tiene de verdad. Esta página te da el método para pasar de «he visto que a esta pyme le pasa algo» a «esta es la idea que vamos a diseñar y por qué». Es el trabajo de los cuatro primeros criterios de la unidad: necesidades, ideas en grupo, información y aspectos innovadores.
+Un buen proyecto no empieza por una solución que te gusta, sino por un problema que alguien tiene de verdad. Esta página te da el método para pasar de «he visto que a esta pyme le pasa algo» a «esta es la idea que vamos a diseñar y por qué». Es el trabajo de la primera parte de la unidad: necesidades, ideas en grupo, información y aspectos innovadores.
 
 :::tip[Cómo trabajar esta página]
 **Tiempo orientativo:** unos 50 minutos de lectura y 5 horas de práctica repartidas en tres sesiones.
@@ -154,7 +154,7 @@ Fuentes habituales de innovación aplicable para un técnico SMR:
 | Inteligencia artificial | Clasificación de incidencias o ayuda en la redacción, siempre con revisión humana |
 | IoT | Sensores sencillos, por ejemplo de temperatura en la sala de servidores |
 
-Para cumplir el criterio, la propuesta debe decir **qué aspecto innovador aplica, qué aporta y cómo se aplica**. «Usamos tecnología moderna» no vale: «programamos una restauración de prueba cada mes y enviamos el resultado por correo» sí.
+Para que cuente como innovación, la propuesta debe decir **qué aspecto innovador aplica, qué aporta y cómo se aplica**. «Usamos tecnología moderna» no vale: «programamos una restauración de prueba cada mes y enviamos el resultado por correo» sí.
 
 ## Comprueba lo aprendido
 

@@ -3,7 +3,7 @@ title: "4. Calidad y documentación del diseño"
 description: "Qué significa calidad en un proyecto, cómo definir criterios de aceptación y de verificación por entregable, qué normas y buenas prácticas existen como referencia y cómo reunir todo en una memoria de diseño clara."
 ---
 
-Un proyecto puede estar bien pensado y aun así fracasar si nadie sabe cuándo está terminado, o si quien lo recibe no entiende qué se ha decidido y por qué. La **calidad** responde a la primera duda y la **documentación** a la segunda. Esta página trabaja los dos últimos criterios de diseño de la unidad: la documentación del diseño y los aspectos de calidad del proyecto.
+Un proyecto puede estar bien pensado y aun así fracasar si nadie sabe cuándo está terminado, o si quien lo recibe no entiende qué se ha decidido y por qué. La **calidad** responde a la primera duda y la **documentación** a la segunda. Esta página trabaja los dos últimos aspectos del diseño: la documentación del diseño y la calidad del proyecto.
 
 :::tip[Cómo trabajar esta página]
 **Tiempo orientativo:** unos 45 minutos de lectura y 3 horas de práctica.
@@ -75,7 +75,7 @@ La **memoria de diseño** es el documento que permite a **otra persona** entende
 
 ### 3.1 Índice recomendado
 
-Un índice fijo ayuda a no olvidar nada y a que el profesor encuentre cada criterio rápido (propuesta):
+Un índice fijo ayuda a no olvidar nada y a que el profesor encuentre cada apartado rápido (propuesta):
 
 | Apartado | Qué incluye |
 |---|---|
@@ -104,24 +104,24 @@ Reglas: un título, una leyenda si hay símbolos, texto legible al imprimir en b
 ### 3.3 Escribir para que se entienda
 
 - Frases cortas y precisas. Una idea por párrafo. Cifras con su unidad y su fuente.
-- **Revisa la ortografía.** La programación del módulo contempla penalizar los errores ortográficos; pregunta a tu profesor a qué documentos se aplica.
+- **Revisa la ortografía.** Los errores ortográficos restan credibilidad al documento y tu profesor puede tenerlos en cuenta; pregunta a qué documentos se aplica.
 - **Cita las fuentes** (autor o entidad, título, fecha de consulta) y no copies textos ajenos.
 - Si has usado una herramienta de inteligencia artificial, incluye una **declaración**: cuál, para qué y qué comprobaste a mano. Lo que no comprobaste, no lo afirmes.
 - **Numera las versiones** (v1, v2…) y el nombre del archivo: `memoria-diseno-v1.pdf`, no `definitivo-final2.docx`.
 
 ## 4. Qué documentos produce esta unidad
 
-| Documento | Criterio | Pestaña del laboratorio |
-|---|---|---|
-| Registro de necesidades | RA2.a | Necesidades |
-| Acta de ideas y matriz de decisión | RA2.b | Ideas |
-| Ficha comparativa de soluciones | RA2.c, RA2.d | Ideas |
-| Informe de viabilidad | RA2.e | Viabilidad |
-| Propuesta, objetivos, alcance y EDT | RA2.f | Requisitos, Alcance y EDT |
-| Recursos y presupuesto | RA2.g, RA2.h | Presupuesto |
-| Memoria de diseño v1 | RA2.i | Memoria |
-| Plan de calidad | RA2.j | Calidad |
-| Guion y diapositivas del pitch | RA2.k | Memoria |
+| Documento | Pestaña del laboratorio |
+|---|---|
+| Registro de necesidades | Necesidades |
+| Acta de ideas y matriz de decisión | Ideas |
+| Ficha comparativa de soluciones | Ideas |
+| Informe de viabilidad | Viabilidad |
+| Propuesta, objetivos, alcance y EDT | Requisitos, Alcance y EDT |
+| Recursos y presupuesto | Presupuesto |
+| Memoria de diseño v1 | Memoria |
+| Plan de calidad | Calidad |
+| Guion y diapositivas del pitch | Memoria |
 
 ## 5. Lista de revisión antes de entregar
 
