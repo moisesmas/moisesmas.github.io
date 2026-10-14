@@ -16,12 +16,6 @@ In this unit you open the hood of the operating system. You will see how it shar
 - Compare FAT32, NTFS and ext4, explain why journaling matters when you choose a file system and optimise the use of storage devices.
 - Distinguish the attributes of a file and a directory, read and set permissions in Linux and in Windows, and configure shared resources.
 
-## The unit at a glance
-
-| Term | Hours | Weight in the assessment | Learning outcomes covered |
-|---|---|---|---|
-| 1st term | 16 h | 10 % | RA1 (c, d, e, f, g), RA2 (a, e) and RA4 (c, e, g, h) |
-
 ## Map of the unit
 
 1. [Processes and services](/docencia/smr/som/ud03-funciones-sistema-operativo/01-processes/): functions of the OS, program and process, services, states, foreground and background, signals and zombies.

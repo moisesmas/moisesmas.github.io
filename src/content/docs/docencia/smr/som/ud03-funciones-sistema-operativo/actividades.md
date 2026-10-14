@@ -25,8 +25,6 @@ For activities 1, 6 and 7 you need an Ubuntu virtual machine (the one from Unit 
 
 **What you hand in:** a document with the commands, the relevant output (text or screenshots) and your explanations. Task "Activity 1" in Aules.
 
-**Criteria that it works on:** RA1.c, RA2.a, RA4.c
-
 **Difficulty:** ★★☆ · **Estimated time:** 75 minutes
 
 ## Activity 2 · Processes and services in Windows
@@ -44,8 +42,6 @@ For activities 1, 6 and 7 you need an Ubuntu virtual machine (the one from Unit 
 7. Make a comparison table with five rows: how to list processes, how to end one, how to change its priority, how to list services and how to start or stop a service. One column for Linux and one for Windows.
 
 **What you hand in:** the document with screenshots and the comparison table. Task "Activity 2" in Aules.
-
-**Criteria that it works on:** RA1.c, RA2.a, RA4.c
 
 **Difficulty:** ★☆☆ · **Estimated time:** 60 minutes
 
@@ -79,8 +75,6 @@ For activities 1, 6 and 7 you need an Ubuntu virtual machine (the one from Unit 
 
 **What you hand in:** the six Gantt charts (a photo of your handwriting is accepted) with the tables and your answers to 4 and 5. Task "Activity 3" in Aules.
 
-**Criteria that it works on:** RA1.c, RA2.a
-
 **Difficulty:** ★★★ · **Estimated time:** 90 minutes
 
 ## Activity 4 · Quantum and starvation
@@ -96,8 +90,6 @@ For activities 1, 6 and 7 you need an Ubuntu virtual machine (the one from Unit 
 5. A desktop computer has a window manager, a video player and a backup program. Which algorithm would you use and why? Mention at least one problem of your choice and how to reduce it.
 
 **What you hand in:** the tables, the conclusions and your answers. Task "Activity 4" in Aules.
-
-**Criteria that it works on:** RA2.a, RA4.c
 
 **Difficulty:** ★★☆ · **Estimated time:** 60 minutes
 
@@ -115,8 +107,6 @@ For activities 1, 6 and 7 you need an Ubuntu virtual machine (the one from Unit 
 6. **Optimise.** Propose three realistic actions to reduce the memory use of that computer. For each one say what you would measure before and after. If you can, try one and report the difference.
 
 **What you hand in:** the calculations (show the steps), the table of data and the three proposals. Task "Activity 5" in Aules.
-
-**Criteria that it works on:** RA2.a, RA4.e
 
 **Difficulty:** ★★★ · **Estimated time:** 100 minutes
 
@@ -138,8 +128,6 @@ For activities 1, 6 and 7 you need an Ubuntu virtual machine (the one from Unit 
 
 **What you hand in:** screenshots of GParted before and after, the outputs, the tables and the plan. Task "Activity 6" in Aules.
 
-**Criteria that it works on:** RA1.d, RA1.e, RA1.g, RA2.e, RA4.g
-
 **Difficulty:** ★★★ · **Estimated time:** 120 minutes
 
 ## Activity 7 · Permissions and shared resources
@@ -159,10 +147,8 @@ For activities 1, 6 and 7 you need an Ubuntu virtual machine (the one from Unit 
 
 **What you hand in:** a document with the commands, outputs and screenshots and your answers. Task "Activity 7" in Aules.
 
-**Criteria that it works on:** RA1.e, RA1.f, RA4.h
-
 **Difficulty:** ★★☆ · **Estimated time:** 90 minutes
 
 :::aules
-You hand in all the activities in Aules, in the task of each one. There you will also find the assessment criteria, your marks and the solutions.
+You hand in all the activities in Aules, in the task of each one. There you will also find the rubric, your marks and the solutions.
 :::
