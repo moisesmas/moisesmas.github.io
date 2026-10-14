@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 426" width="1100" height="426" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">The New wizard in four steps</title>
+<desc id="d">Four steps of the New virtual machine wizard in VirtualBox: name and operating system, hardware, virtual hard disk and summary. Afterwards, add the ISO in Settings, Storage if you did not choose one, and press Start.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="426" fill="#ffffff"/>
+<rect x="20" y="16" width="1060" height="66" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<circle cx="68" cy="49" r="22" fill="#ffffff" stroke="#b86e00" stroke-width="2"/>
+<text x="68" y="58" text-anchor="middle" fill="#16201b" font-weight="700">1</text>
+<text x="112" y="58" text-anchor="start" fill="#16201b" font-weight="700">Name and OS</text>
+<text x="420" y="58" text-anchor="start" fill="#16201b">ISO file, or choose Type and Version</text>
+<line x1="550" y1="84" x2="550" y2="100" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="102" width="1060" height="66" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<circle cx="68" cy="135" r="22" fill="#ffffff" stroke="#b86e00" stroke-width="2"/>
+<text x="68" y="144" text-anchor="middle" fill="#16201b" font-weight="700">2</text>
+<text x="112" y="144" text-anchor="start" fill="#16201b" font-weight="700">Hardware</text>
+<text x="420" y="144" text-anchor="start" fill="#16201b">memory (RAM) and processors (vCPU)</text>
+<line x1="550" y1="170" x2="550" y2="186" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="188" width="1060" height="66" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<circle cx="68" cy="221" r="22" fill="#ffffff" stroke="#b86e00" stroke-width="2"/>
+<text x="68" y="230" text-anchor="middle" fill="#16201b" font-weight="700">3</text>
+<text x="112" y="230" text-anchor="start" fill="#16201b" font-weight="700">Virtual disk</text>
+<text x="420" y="230" text-anchor="start" fill="#16201b">size, and reserve the space now or later</text>
+<line x1="550" y1="256" x2="550" y2="272" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="274" width="1060" height="66" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<circle cx="68" cy="307" r="22" fill="#ffffff" stroke="#1f5244" stroke-width="2"/>
+<text x="68" y="316" text-anchor="middle" fill="#16201b" font-weight="700">4</text>
+<text x="112" y="316" text-anchor="start" fill="#16201b" font-weight="700">Summary</text>
+<text x="420" y="316" text-anchor="start" fill="#16201b">check everything and finish</text>
+<rect x="20" y="362" width="1060" height="48" rx="24" fill="#ffffff" stroke="#b86e00" stroke-width="2"/>
+<text x="550.0" y="394" text-anchor="middle" fill="#5c3700" font-weight="700">No ISO yet? Settings → Storage → empty drive → ISO, then Start</text>
+</svg>
