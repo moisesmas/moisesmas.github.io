@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 510" width="1100" height="510" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">La cadena de arranque del sistema operativo</title>
+<desc id="d">Tres columnas con cuatro pasos cada una. UEFI con Linux: firmware UEFI, partición EFI con shim y GRUB, núcleo e initramfs, systemd e inicio de sesión. UEFI con Windows: firmware UEFI, partición EFI con el Windows Boot Manager, BCD y winload, servicios e inicio de sesión de Windows. BIOS con MBR y Linux: firmware BIOS, sector 0 que carga GRUB, núcleo Linux, systemd e inicio de sesión.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="510" fill="#ffffff"/>
+<text x="190.0" y="44" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">UEFI + Linux</text>
+<rect x="20" y="70" width="340" height="80" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="190.0" y="118.0" text-anchor="middle" fill="#16201b">Firmware UEFI</text>
+<line x1="190.0" y1="152" x2="190.0" y2="174" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="178" width="340" height="80" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="190.0" y="212.0" text-anchor="middle" fill="#16201b">Partición EFI:</text>
+<text x="190.0" y="240.0" text-anchor="middle" fill="#16201b">shim + GRUB</text>
+<line x1="190.0" y1="260" x2="190.0" y2="282" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="286" width="340" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="190.0" y="320.0" text-anchor="middle" fill="#16201b">GRUB carga el núcleo</text>
+<text x="190.0" y="348.0" text-anchor="middle" fill="#16201b">e initramfs</text>
+<line x1="190.0" y1="368" x2="190.0" y2="390" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="394" width="340" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="190.0" y="428.0" text-anchor="middle" fill="#16201b">systemd (PID 1)</text>
+<text x="190.0" y="456.0" text-anchor="middle" fill="#16201b">e inicio de sesión</text>
+<text x="550.0" y="44" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">UEFI + Windows</text>
+<rect x="380" y="70" width="340" height="80" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="550.0" y="118.0" text-anchor="middle" fill="#16201b">Firmware UEFI</text>
+<line x1="550.0" y1="152" x2="550.0" y2="174" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="380" y="178" width="340" height="80" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="550.0" y="212.0" text-anchor="middle" fill="#16201b">Partición EFI:</text>
+<text x="550.0" y="240.0" text-anchor="middle" fill="#16201b">Windows Boot Manager</text>
+<line x1="550.0" y1="260" x2="550.0" y2="282" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="380" y="286" width="340" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="550.0" y="320.0" text-anchor="middle" fill="#16201b">BCD y winload,</text>
+<text x="550.0" y="348.0" text-anchor="middle" fill="#16201b">núcleo de Windows</text>
+<line x1="550.0" y1="368" x2="550.0" y2="390" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="380" y="394" width="340" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="550.0" y="428.0" text-anchor="middle" fill="#16201b">Servicios e</text>
+<text x="550.0" y="456.0" text-anchor="middle" fill="#16201b">inicio de sesión</text>
+<text x="910.0" y="44" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">BIOS + MBR (Linux)</text>
+<rect x="740" y="70" width="340" height="80" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="910.0" y="118.0" text-anchor="middle" fill="#16201b">Firmware BIOS</text>
+<line x1="910.0" y1="152" x2="910.0" y2="174" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="740" y="178" width="340" height="80" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="910.0" y="212.0" text-anchor="middle" fill="#16201b">Sector 0 (MBR):</text>
+<text x="910.0" y="240.0" text-anchor="middle" fill="#16201b">ejecuta su código</text>
+<line x1="910.0" y1="260" x2="910.0" y2="282" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="740" y="286" width="340" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="910.0" y="320.0" text-anchor="middle" fill="#16201b">GRUB carga</text>
+<text x="910.0" y="348.0" text-anchor="middle" fill="#16201b">el núcleo</text>
+<line x1="910.0" y1="368" x2="910.0" y2="390" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="740" y="394" width="340" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="910.0" y="428.0" text-anchor="middle" fill="#16201b">systemd (PID 1)</text>
+<text x="910.0" y="456.0" text-anchor="middle" fill="#16201b">e inicio de sesión</text>
+</svg>
