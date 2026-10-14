@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 400" width="1100" height="400" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Tiempo de CPU mientras trabaja un dispositivo: sondeo, interrupciones y DMA</title>
+<desc id="d">Ejemplo con 4 palabras. Sondeo: 24 unidades, la CPU está ocupada todo el tiempo, 0 libres. Interrupciones: 24 unidades, la CPU trabaja 4 unidades, 20 libres, 83 por ciento. DMA: 22 unidades, la CPU trabaja 2 unidades, 20 libres, 91 por ciento.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="400" fill="#ffffff"/>
+<text x="20" y="36" text-anchor="start" fill="#56655d">Unidades de tiempo</text>
+<text x="230" y="324" text-anchor="middle" fill="#56655d">0</text>
+<text x="400" y="324" text-anchor="middle" fill="#56655d">5</text>
+<text x="570" y="324" text-anchor="middle" fill="#56655d">10</text>
+<text x="740" y="324" text-anchor="middle" fill="#56655d">15</text>
+<text x="910" y="324" text-anchor="middle" fill="#56655d">20</text>
+<text x="1046" y="324" text-anchor="middle" fill="#56655d">24</text>
+<text x="20" y="82" text-anchor="start" fill="#16201b" font-weight="700">Sondeo</text>
+<text x="20" y="110" text-anchor="start" fill="#56655d">0 libres</text>
+<rect x="230" y="56" width="816" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="638.0" y="96.0" text-anchor="middle" fill="#16201b">CPU ocupada esperando</text>
+<text x="20" y="172" text-anchor="start" fill="#16201b" font-weight="700">Interrupciones</text>
+<text x="20" y="200" text-anchor="start" fill="#56655d">20 libres (83 %)</text>
+<rect x="230" y="146" width="170" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="315.0" y="186.0" text-anchor="middle" fill="#16201b">libre</text>
+<rect x="400" y="146" width="34" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="417.0" y="186.0" text-anchor="middle" fill="#16201b" font-weight="700"></text>
+<rect x="434" y="146" width="170" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="519.0" y="186.0" text-anchor="middle" fill="#16201b">libre</text>
+<rect x="604" y="146" width="34" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="621.0" y="186.0" text-anchor="middle" fill="#16201b" font-weight="700"></text>
+<rect x="638" y="146" width="170" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="723.0" y="186.0" text-anchor="middle" fill="#16201b">libre</text>
+<rect x="808" y="146" width="34" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="825.0" y="186.0" text-anchor="middle" fill="#16201b" font-weight="700"></text>
+<rect x="842" y="146" width="170" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="927.0" y="186.0" text-anchor="middle" fill="#16201b">libre</text>
+<rect x="1012" y="146" width="34" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="1029.0" y="186.0" text-anchor="middle" fill="#16201b" font-weight="700"></text>
+<text x="20" y="262" text-anchor="start" fill="#16201b" font-weight="700">DMA</text>
+<text x="20" y="290" text-anchor="start" fill="#56655d">20 libres (91 %)</text>
+<rect x="230" y="236" width="34" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="247.0" y="276.0" text-anchor="middle" fill="#16201b" font-weight="700"></text>
+<rect x="264" y="236" width="680" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="604.0" y="276.0" text-anchor="middle" fill="#16201b">CPU libre para otros procesos</text>
+<rect x="944" y="236" width="34" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="961.0" y="276.0" text-anchor="middle" fill="#16201b" font-weight="700"></text>
+<rect x="230" y="352" width="26" height="26" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="268" y="373" text-anchor="start" fill="#16201b">CPU trabajando</text>
+<rect x="560" y="352" width="26" height="26" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="598" y="373" text-anchor="start" fill="#16201b">CPU libre</text>
+</svg>
