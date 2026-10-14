@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 340" width="1100" height="340" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Instalar un periférico en seis pasos</title>
+<desc id="d">Seis pasos en dos filas: conectar el periférico, el sistema lo detecta y carga un controlador, comprobar que se reconoce, instalar el controlador del fabricante si hace falta, configurarlo (resolución, impresora predeterminada) y probar que funciona.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="340" fill="#ffffff"/>
+<rect x="0" y="20" width="330" height="110" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="165.0" y="69.0" text-anchor="middle" fill="#16201b" font-weight="700">1 · Conecta</text>
+<text x="165.0" y="97.0" text-anchor="middle" fill="#16201b">el periférico</text>
+<rect x="385" y="20" width="330" height="110" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="550.0" y="69.0" text-anchor="middle" fill="#16201b" font-weight="700">2 · El sistema</text>
+<text x="550.0" y="97.0" text-anchor="middle" fill="#16201b">carga el driver</text>
+<rect x="770" y="20" width="330" height="110" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="935.0" y="69.0" text-anchor="middle" fill="#16201b" font-weight="700">3 · Comprueba</text>
+<text x="935.0" y="97.0" text-anchor="middle" fill="#16201b">que se reconoce</text>
+<rect x="0" y="190" width="330" height="110" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="165.0" y="239.0" text-anchor="middle" fill="#16201b" font-weight="700">4 · Driver</text>
+<text x="165.0" y="267.0" text-anchor="middle" fill="#16201b">del fabricante</text>
+<rect x="385" y="190" width="330" height="110" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="550.0" y="239.0" text-anchor="middle" fill="#16201b" font-weight="700">5 · Configura</text>
+<text x="550.0" y="267.0" text-anchor="middle" fill="#16201b">resolución, impresora…</text>
+<rect x="770" y="190" width="330" height="110" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="935.0" y="239.0" text-anchor="middle" fill="#16201b" font-weight="700">6 · Prueba</text>
+<text x="935.0" y="267.0" text-anchor="middle" fill="#16201b">que funciona</text>
+<line x1="332" y1="75" x2="381" y2="75" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<line x1="717" y1="75" x2="766" y2="75" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<polyline points="935.0,132 935.0,160 165.0,160 165.0,188" fill="none" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<line x1="332" y1="245" x2="381" y2="245" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<line x1="717" y1="245" x2="766" y2="245" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+</svg>
