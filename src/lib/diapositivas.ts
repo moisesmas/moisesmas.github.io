@@ -137,7 +137,8 @@ export function paginasDeTeoria(dirUnidad: string): { nombre: string; traduccion
   return [...archivos]
     .filter((a) => a.endsWith('.md') && !a.endsWith('.es.md'))
     .map((a) => a.slice(0, -3))
-    .filter((nombre) => !NO_TEORIA.includes(nombre))
+    // `actividades-agil` y similares también son páginas de actividades.
+    .filter((nombre) => !NO_TEORIA.some((n) => nombre === n || nombre.startsWith(`${n}-`)))
     .sort()
     .map((nombre) => ({ nombre, traduccion: archivos.has(`${nombre}.es.md`) }));
 }

@@ -111,6 +111,8 @@ describe('páginas de teoría', () => {
     [`${U}/index.es.md`]: '',
     [`${U}/actividades.md`]: '',
     [`${U}/planificacion.md`]: '',
+    [`${U}/actividades-agil.md`]: '',
+    [`${U}/actividades-agil.es.md`]: '',
     [`${U}/01-what-is-virtualization.md`]: '',
     [`${U}/01-what-is-virtualization.es.md`]: '',
     [`${U}/02-hypervisors.md`]: '',
