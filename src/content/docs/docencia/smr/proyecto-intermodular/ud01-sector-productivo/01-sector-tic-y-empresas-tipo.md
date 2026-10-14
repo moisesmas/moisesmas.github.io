@@ -26,8 +26,8 @@ En este módulo trabajamos con un recorte concreto, pensado para que puedas inve
 
 Esa segunda mitad importa mucho: en la unidad siguiente partirás de **necesidades reales** de ese tipo de clientes para proponer tu proyecto. Por eso, mientras investigas empresas, apunta también los problemas que ves («no tienen copias de seguridad», «la wifi se cae», «nadie sabe quién administra el correo»).
 
-:::note[Qué es oficial y qué es propuesta]
-La programación del módulo no define qué es «el sector». La definición anterior es el criterio que usamos en esta web; si tu profesor la ajusta, mandará la suya.
+:::note[Una definición de trabajo]
+La definición anterior es el criterio que usamos en esta web; si tu profesor la ajusta, mandará la suya.
 :::
 
 ## 2. Clasificar la actividad: el CNAE
@@ -128,7 +128,7 @@ La conclusión es lo que vale: cinco líneas que respondan a «¿qué empresas t
 
 ## Comprueba lo aprendido
 
-1. ¿Por qué el módulo define «el sector» como las empresas TIC de la zona y las necesidades TIC de las pymes?
+1. ¿Por qué en esta unidad se define «el sector» como las empresas TIC de la zona y las necesidades TIC de las pymes?
 
    <details>
    <summary>Respuesta</summary>
