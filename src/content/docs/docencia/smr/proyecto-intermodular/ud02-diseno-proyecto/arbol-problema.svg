@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 470" width="1100" height="470" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Árbol de causas y efectos de un problema</title>
+<desc id="d">Tres columnas. A la izquierda, las causas: copias manuales, sin comprobación, copia en el mismo equipo y nadie responsable. En el centro, el problema: pérdida de archivos tras una avería. A la derecha, los efectos: días sin trabajar, clientes que reclaman y coste de recuperar los datos. Las flechas van de las causas al problema y del problema a los efectos.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="470" fill="#ffffff"/>
+<text x="185" y="40" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Causas</text>
+<text x="550" y="40" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Problema</text>
+<text x="915" y="40" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">Efectos</text>
+<rect x="20" y="70" width="330" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="185.0" y="119.0" text-anchor="middle" fill="#16201b">Copias manuales</text>
+<line x1="352" y1="110" x2="438" y2="255" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="160" width="330" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="185.0" y="209.0" text-anchor="middle" fill="#16201b">Sin comprobación</text>
+<line x1="352" y1="200" x2="438" y2="255" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="250" width="330" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="185.0" y="283.0" text-anchor="middle" fill="#16201b">Copia en el</text>
+<text x="185.0" y="315.0" text-anchor="middle" fill="#16201b">mismo equipo</text>
+<line x1="352" y1="290" x2="438" y2="255" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="340" width="330" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="185.0" y="389.0" text-anchor="middle" fill="#16201b">Nadie responsable</text>
+<line x1="352" y1="380" x2="438" y2="255" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="440" y="170" width="220" height="170" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="550.0" y="232.0" text-anchor="middle" fill="#16201b">Pérdida de</text>
+<text x="550.0" y="264.0" text-anchor="middle" fill="#16201b">archivos tras</text>
+<text x="550.0" y="296.0" text-anchor="middle" fill="#16201b">una avería</text>
+<rect x="750" y="95" width="330" height="90" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="915.0" y="149.0" text-anchor="middle" fill="#16201b">Días sin trabajar</text>
+<line x1="662" y1="255" x2="748" y2="140" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="750" y="215" width="330" height="90" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="915.0" y="253.0" text-anchor="middle" fill="#16201b">Clientes que</text>
+<text x="915.0" y="285.0" text-anchor="middle" fill="#16201b">reclaman</text>
+<line x1="662" y1="255" x2="748" y2="260" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="750" y="335" width="330" height="90" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="915.0" y="373.0" text-anchor="middle" fill="#16201b">Coste de recuperar</text>
+<text x="915.0" y="405.0" text-anchor="middle" fill="#16201b">los datos</text>
+<line x1="662" y1="255" x2="748" y2="380" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+</svg>

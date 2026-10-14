@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 440" width="1100" height="440" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Matriz de decisión ponderada con tres ideas</title>
+<desc id="d">Tabla con cuatro criterios y sus pesos: necesidad cubierta 40, viabilidad técnica 30, coste y recursos 20, innovación 10. Puntuaciones de 1 a 5 para tres ideas. Idea A, copias: 5, 4, 3 y 3, con puntuación ponderada 4,1. Idea B, monitorización: 3, 4, 3 y 3, con 3,3. Idea C, teletrabajo: 4, 3, 3 y 4, con 3,5. Gana la idea A.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="440" fill="#ffffff"/>
+<rect x="20" y="20" width="300" height="56" rx="6" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="34" y="56" text-anchor="start" fill="#16201b" font-weight="700">Criterio</text>
+<rect x="330" y="20" width="90" height="56" rx="6" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="375.0" y="56" text-anchor="middle" fill="#16201b" font-weight="700">Peso</text>
+<rect x="430" y="20" width="170" height="56" rx="6" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="515.0" y="56" text-anchor="middle" fill="#16201b" font-weight="700">A · Copias</text>
+<rect x="610" y="20" width="250" height="56" rx="6" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="735.0" y="56" text-anchor="middle" fill="#16201b" font-weight="700">B · Monitorización</text>
+<rect x="870" y="20" width="210" height="56" rx="6" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="975.0" y="56" text-anchor="middle" fill="#16201b" font-weight="700">C · Teletrabajo</text>
+<rect x="20" y="86" width="300" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="34" y="120" text-anchor="start" fill="#16201b">Necesidad cubierta</text>
+<rect x="330" y="86" width="90" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="375.0" y="120" text-anchor="middle" fill="#16201b">40</text>
+<rect x="430" y="86" width="170" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="515.0" y="120" text-anchor="middle" fill="#16201b">5</text>
+<rect x="610" y="86" width="250" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="735.0" y="120" text-anchor="middle" fill="#16201b">3</text>
+<rect x="870" y="86" width="210" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="975.0" y="120" text-anchor="middle" fill="#16201b">4</text>
+<rect x="20" y="146" width="300" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="34" y="180" text-anchor="start" fill="#16201b">Viabilidad técnica</text>
+<rect x="330" y="146" width="90" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="375.0" y="180" text-anchor="middle" fill="#16201b">30</text>
+<rect x="430" y="146" width="170" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="515.0" y="180" text-anchor="middle" fill="#16201b">4</text>
+<rect x="610" y="146" width="250" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="735.0" y="180" text-anchor="middle" fill="#16201b">4</text>
+<rect x="870" y="146" width="210" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="975.0" y="180" text-anchor="middle" fill="#16201b">3</text>
+<rect x="20" y="206" width="300" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="34" y="240" text-anchor="start" fill="#16201b">Coste y recursos</text>
+<rect x="330" y="206" width="90" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="375.0" y="240" text-anchor="middle" fill="#16201b">20</text>
+<rect x="430" y="206" width="170" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="515.0" y="240" text-anchor="middle" fill="#16201b">3</text>
+<rect x="610" y="206" width="250" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="735.0" y="240" text-anchor="middle" fill="#16201b">3</text>
+<rect x="870" y="206" width="210" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="975.0" y="240" text-anchor="middle" fill="#16201b">3</text>
+<rect x="20" y="266" width="300" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="34" y="300" text-anchor="start" fill="#16201b">Innovación</text>
+<rect x="330" y="266" width="90" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="375.0" y="300" text-anchor="middle" fill="#16201b">10</text>
+<rect x="430" y="266" width="170" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="515.0" y="300" text-anchor="middle" fill="#16201b">3</text>
+<rect x="610" y="266" width="250" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="735.0" y="300" text-anchor="middle" fill="#16201b">3</text>
+<rect x="870" y="266" width="210" height="52" rx="6" fill="#ffffff" stroke="#d3dbd4" stroke-width="2"/>
+<text x="975.0" y="300" text-anchor="middle" fill="#16201b">4</text>
+<rect x="20" y="326" width="300" height="62" rx="6" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="34" y="367" text-anchor="start" fill="#16201b" font-weight="700">Puntuación ponderada</text>
+<rect x="330" y="326" width="90" height="62" rx="6" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="375.0" y="367" text-anchor="middle" fill="#16201b">100</text>
+<rect x="430" y="326" width="170" height="62" rx="6" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="515.0" y="367" text-anchor="middle" fill="#16201b" font-size="28" font-weight="700">4,1</text>
+<rect x="610" y="326" width="250" height="62" rx="6" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="735.0" y="367" text-anchor="middle" fill="#16201b" font-size="28">3,3</text>
+<rect x="870" y="326" width="210" height="62" rx="6" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="975.0" y="367" text-anchor="middle" fill="#16201b" font-size="28">3,5</text>
+<text x="550" y="420" text-anchor="middle" fill="#16201b">Puntuación ponderada = suma de (puntuación × peso ÷ 100)</text>
+</svg>
