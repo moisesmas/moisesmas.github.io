@@ -34,8 +34,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 
 **Què entregues:** un document amb les respostes **a** a **e** (taula de compatibilitat més la justificació), en la tasca «Activitat 1» d'Aules.
 
-**Criteris que treballa:** RA1.a
-
 **Dificultat:** ★☆☆ · **Temps estimat:** 40 minuts
 
 ## Activitat 2 · Executa un programa a mà
@@ -71,8 +69,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 6. Quantes vegades accedix la CPU a la memòria en executar tot el programa original (comptant les instruccions i les dades)? Raona-ho.
 
 **Què entregues:** la taula del punt 3 corregida, les respostes als punts 5 i 6 i una captura del simulador amb el programa que has modificat, en la tasca «Activitat 2» d'Aules.
-
-**Criteris que treballa:** RA1.a, RA1.b
 
 **Dificultat:** ★★☆ · **Temps estimat:** 45 minuts
 
@@ -117,8 +113,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 
 **Què entregues:** les taules i les respostes de les dues parts, en la tasca «Activitat 3» d'Aules.
 
-**Criteris que treballa:** RA1.b
-
 **Dificultat:** ★★☆ · **Temps estimat:** 60 minuts
 
 ## Activitat 4 · El RAID del servidor del departament
@@ -142,8 +136,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 4. Quan un disc de 4 TB falla, la reconstrucció pot durar moltes hores. Per què això preocupa més en RAID 5 que en RAID 6?
 
 **Què entregues:** la taula i les respostes, en la tasca «Activitat 4» d'Aules.
-
-**Criteris que treballa:** RA1.a, RA1.b
 
 **Dificultat:** ★★☆ · **Temps estimat:** 45 minuts
 
@@ -171,8 +163,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 
 **Què entregues:** els càlculs i les respostes, amb les operacions escrites, en la tasca «Activitat 5» d'Aules.
 
-**Criteris que treballa:** RA1.a
-
 **Dificultat:** ★★☆ · **Temps estimat:** 40 minuts
 
 ## Activitat 6 · Un equip per a cada ús
@@ -190,8 +180,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 3. Escriu 5 línies sobre què canviaries si el pressupost fora la meitat.
 
 **Què entregues:** les tres taules, les comprovacions i el comentari final, en la tasca «Activitat 6» d'Aules.
-
-**Criteris que treballa:** RA1.a, RA1.b, RA1.d
 
 **Dificultat:** ★★★ · **Temps estimat:** 90 minuts
 
@@ -214,8 +202,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 
 **Què entregues:** les respostes numerades, en la tasca «Activitat 7» d'Aules.
 
-**Criteris que treballa:** RA1.e, RA1.f, RA1.g
-
 **Dificultat:** ★★☆ · **Temps estimat:** 35 minuts
 
 ## Activitat 8 · Fitxa de reconeixement de components (presencial)
@@ -230,8 +216,6 @@ Totes es **lliuren en Aules**, en la tasca corresponent, en un document (PDF, OD
 4. **Posada en marxa i perifèric** *(proposta d'ampliació, si hi ha temps)*. Després de muntar la RAM i el disc, comprova que l'equip arranca i que a la UEFI apareixen els dos; connecta un perifèric USB i anota què en diu el sistema (`lsusb` o l'Administrador de dispositius).
 
 **Què entregues:** la fitxa completada, en la tasca d'Aules **abans de finalitzar la classe**.
-
-**Criteris que treballa:** RA1.a, RA1.e, RA1.f, RA1.h (i RA1.c i RA1.d en les ampliacions)
 
 **Dificultat:** ★★☆ · **Temps estimat:** durant la sessió presencial
 

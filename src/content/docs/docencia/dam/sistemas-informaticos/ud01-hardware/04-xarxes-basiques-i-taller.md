@@ -3,7 +3,7 @@ title: "4. Xarxes bàsiques i taller"
 description: "Tipus de xarxes, topologies, mitjans, switch i router, mapes físics i lògics, seguretat i prevenció de riscos al taller, perifèrics i guió de la pràctica presencial."
 ---
 
-Esta pàgina prepara la sessió presencial: tocaràs maquinari real, així que convé arribar amb les nocions de xarxa clares i, sobretot, sabent com treballar amb seguretat. Les xarxes es tracten a fons en la unitat 5 (2n trimestre); ací en tens la base per a entendre la pràctica i els mapes d'una instal·lació.
+Esta pàgina prepara la sessió presencial: tocaràs maquinari real, així que convé arribar amb les nocions de xarxa clares i, sobretot, sabent com treballar amb seguretat. Les xarxes es tracten a fons en la unitat 5; ací en tens la base per a entendre la pràctica i els mapes d'una instal·lació.
 
 :::tip[Com treballar esta pàgina]
 **Temps orientatiu:** uns 75 minuts de lectura abans de la presencial.

@@ -16,12 +16,6 @@ Esta unitat et mostra què hi ha dins d'un ordinador i per què importa cada pe�
 - Treballar al taller amb seguretat: prevenció de riscos laborals i descàrregues electrostàtiques.
 - Triar components compatibles i raonats segons l'ús que se'ls vaja a donar.
 
-## La unitat d'un colp d'ull
-
-| Trimestre | Hores | Pes en l'avaluació | RA que treballa |
-|---|---|---|---|
-| 1r | 24 h | 14 % | RA1: avalua sistemes informàtics, identificant els seus components i característiques (criteris a-h) |
-
 ## Mapa de la unitat
 
 1. [L'ordinador i la placa base](/docencia/dam/sistemas-informaticos/ud01-hardware/01-ordinador-i-placa-base/): què és un ordinador, el xassís, els components de la placa base i l'arrancada de l'equip.
@@ -29,7 +23,7 @@ Esta unitat et mostra què hi ha dins d'un ordinador i per què importa cada pe�
 3. [Emmagatzematge i font d'alimentació](/docencia/dam/sistemas-informaticos/ud01-hardware/03-emmagatzematge-i-font/): HDD, SSD i NVMe, RAID, potència i eficiència d'una font.
 4. [Xarxes bàsiques i taller](/docencia/dam/sistemas-informaticos/ud01-hardware/04-xarxes-basiques-i-taller/): tipus de xarxes, topologies, mapes, seguretat al taller, perifèrics i la pràctica presencial.
 5. [Activitats](/docencia/dam/sistemas-informaticos/ud01-hardware/actividades/): huit activitats, set d'estudi autònom i la fitxa de la sessió presencial.
-6. [Planificació](/docencia/dam/sistemas-informaticos/ud01-hardware/planificacion/): el calendari de les quatre sessions, què fer en cada una i com estudiar la unitat.
+6. [Planificació](/docencia/dam/sistemas-informaticos/ud01-hardware/planificacion/): en quin ordre estudiar la unitat, amb temps orientatius i consells.
 
 ## Laboratoris
 

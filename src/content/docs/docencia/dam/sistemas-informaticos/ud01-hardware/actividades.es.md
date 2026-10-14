@@ -34,8 +34,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un documento (PD
 
 **Qué entregas:** un documento con las respuestas **a** a **e** (tabla de compatibilidad más la justificación), en la tarea «Actividad 1» de Aules.
 
-**Criterios que trabaja:** RA1.a
-
 **Dificultad:** ★☆☆ · **Tiempo estimado:** 40 minutos
 
 ## Actividad 2 · Ejecuta un programa a mano
@@ -71,8 +69,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un documento (PD
 6. ¿Cuántas veces accede la CPU a la memoria al ejecutar todo el programa original (contando las instrucciones y los datos)? Razónalo.
 
 **Qué entregas:** la tabla del punto 3 corregida, las respuestas a los puntos 5 y 6 y una captura del simulador con el programa que has modificado, en la tarea «Actividad 2» de Aules.
-
-**Criterios que trabaja:** RA1.a, RA1.b
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** 45 minutos
 
@@ -117,8 +113,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un documento (PD
 
 **Qué entregas:** las tablas y las respuestas de las dos partes, en la tarea «Actividad 3» de Aules.
 
-**Criterios que trabaja:** RA1.b
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 60 minutos
 
 ## Actividad 4 · El RAID del servidor del departamento
@@ -142,8 +136,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un documento (PD
 4. Cuando un disco de 4 TB falla, la reconstrucción puede durar muchas horas. ¿Por qué esto preocupa más en RAID 5 que en RAID 6?
 
 **Qué entregas:** la tabla y las respuestas, en la tarea «Actividad 4» de Aules.
-
-**Criterios que trabaja:** RA1.a, RA1.b
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** 45 minutos
 
@@ -171,8 +163,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un documento (PD
 
 **Qué entregas:** los cálculos y las respuestas, con las operaciones escritas, en la tarea «Actividad 5» de Aules.
 
-**Criterios que trabaja:** RA1.a
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 40 minutos
 
 ## Actividad 6 · Un equipo para cada uso
@@ -190,8 +180,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un documento (PD
 3. Escribe 5 líneas sobre qué cambiarías si el presupuesto fuera la mitad.
 
 **Qué entregas:** las tres tablas, las comprobaciones y el comentario final, en la tarea «Actividad 6» de Aules.
-
-**Criterios que trabaja:** RA1.a, RA1.b, RA1.d
 
 **Dificultad:** ★★★ · **Tiempo estimado:** 90 minutos
 
@@ -214,8 +202,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un documento (PD
 
 **Qué entregas:** las respuestas numeradas, en la tarea «Actividad 7» de Aules.
 
-**Criterios que trabaja:** RA1.e, RA1.f, RA1.g
-
 **Dificultad:** ★★☆ · **Tiempo estimado:** 35 minutos
 
 ## Actividad 8 · Ficha de reconocimiento de componentes (presencial)
@@ -230,8 +216,6 @@ Todas se **entregan en Aules**, en la tarea correspondiente, en un documento (PD
 4. **Puesta en marcha y periférico** *(propuesta de ampliación, si hay tiempo)*. Después de montar la RAM y el disco, comprueba que el equipo arranca y que en la UEFI aparecen los dos; conecta un periférico USB y anota qué dice el sistema (`lsusb` o el Administrador de dispositivos).
 
 **Qué entregas:** la ficha completada, en la tarea de Aules **antes de finalizar la clase**.
-
-**Criterios que trabaja:** RA1.a, RA1.e, RA1.f, RA1.h (y RA1.c y RA1.d en las ampliaciones)
 
 **Dificultad:** ★★☆ · **Tiempo estimado:** durante la sesión presencial
 

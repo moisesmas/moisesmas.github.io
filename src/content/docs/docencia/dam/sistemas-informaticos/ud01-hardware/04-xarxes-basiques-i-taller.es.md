@@ -3,7 +3,7 @@ title: "4. Redes básicas y taller"
 description: "Tipos de redes, topologías, medios, switch y router, mapas físicos y lógicos, seguridad y prevención de riesgos en el taller, periféricos y guion de la práctica presencial."
 ---
 
-Esta página prepara la sesión presencial: tocarás hardware real, así que conviene llegar con las nociones de red claras y, sobre todo, sabiendo cómo trabajar con seguridad. Las redes se tratan a fondo en la unidad 5 (2.º trimestre); aquí tienes la base para entender la práctica y los mapas de una instalación.
+Esta página prepara la sesión presencial: tocarás hardware real, así que conviene llegar con las nociones de red claras y, sobre todo, sabiendo cómo trabajar con seguridad. Las redes se tratan a fondo en la unidad 5; aquí tienes la base para entender la práctica y los mapas de una instalación.
 
 :::tip[Cómo trabajar esta página]
 **Tiempo orientativo:** unos 75 minutos de lectura antes de la presencial.
