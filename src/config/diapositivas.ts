@@ -4,7 +4,5 @@
  * - cuando una unidad tiene las presentaciones de todas sus páginas de teoría, se quita de aquí.
  */
 export const UNIDADES_SIN_DIAPOSITIVAS: string[] = [
-  'docencia/smr/som/ud01-introduccion',
-  'docencia/smr/som/ud03-funciones-sistema-operativo',
   'docencia/smr/proyecto-intermodular/ud00-trabajo-en-proyectos',
 ];
