@@ -64,6 +64,17 @@ describe('::::columnas', () => {
     expect(html).toContain('class="columnas__derecha"><div class="pasos">');
     expect(html.match(/<li class="fragment">/g)).toHaveLength(2);
   });
+  it('dos :::pasos, uno por columna, sin romper lo que viene detrás', () => {
+    const html = convertir(docs, D, '::::columnas\n:::pasos\n- a\n:::\n\n:::pasos\n- b\n:::\n::::\n\nDespués');
+    expect(html).toMatch(/<div class="columnas__izquierda"><div class="pasos">[\s\S]*<\/div><\/div><div class="columnas__derecha"><div class="pasos">/);
+    expect(html.match(/<li class="fragment">/g)).toHaveLength(2);
+    expect(html).toMatch(/<\/div><\/div><\/div>\s*<p>Después<\/p>\s*$/);
+  });
+  it(':::pasos a la izquierda y código a la derecha, sin romper lo que viene detrás', () => {
+    const html = convertir(docs, D, '::::columnas\n:::pasos\n- a\n:::\n\n```bash\nls\n```\n::::\n\nDespués');
+    expect(html).toContain('class="columnas__derecha"><pre');
+    expect(html).toMatch(/<\/div><\/div>\s*<p>Después<\/p>\s*$/);
+  });
   it('con un solo bloque: error', () => {
     expect(() => convertir(docs, D, '::::columnas\nSolo\n::::')).toThrow(/\[::columnas\] Necesita al menos dos bloques/);
   });
