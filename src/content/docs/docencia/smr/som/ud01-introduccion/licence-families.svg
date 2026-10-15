@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 440" width="1100" height="440" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Families of software licences</title>
+<desc id="d">A tree. Software licences split into proprietary software with an EULA, software that is free of charge but closed (freeware, shareware, freemium) and open source (copyleft such as the GPL, and permissive such as MIT, BSD and Apache). A bar says that free of charge is not free software.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="440" fill="#ffffff"/>
+<rect x="370" y="20" width="360" height="60" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="550.0" y="58.0" text-anchor="middle" fill="#16201b" font-weight="700">Software licences</text>
+<line x1="550" y1="80" x2="550" y2="110" stroke="#56655d" stroke-width="3"/>
+<line x1="190" y1="110" x2="910" y2="110" stroke="#56655d" stroke-width="3"/>
+<line x1="190" y1="110" x2="190" y2="128" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<line x1="550" y1="110" x2="550" y2="128" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<line x1="910" y1="110" x2="910" y2="128" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="130" width="340" height="190" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="190.0" y="173.0" text-anchor="middle" fill="#16201b" font-weight="700">Proprietary</text>
+<text x="190.0" y="203.0" text-anchor="middle" fill="#16201b">EULA: right to use</text>
+<text x="190.0" y="233.0" text-anchor="middle" fill="#16201b">no source code</text>
+<text x="190.0" y="263.0" text-anchor="middle" fill="#16201b">OEM · retail · volume</text>
+<text x="190.0" y="293.0" text-anchor="middle" fill="#16201b">subscription</text>
+<rect x="380" y="130" width="340" height="190" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="550.0" y="173.0" text-anchor="middle" fill="#16201b" font-weight="700">Free of charge</text>
+<text x="550.0" y="203.0" text-anchor="middle" fill="#16201b">freeware</text>
+<text x="550.0" y="233.0" text-anchor="middle" fill="#16201b">shareware / trial</text>
+<text x="550.0" y="263.0" text-anchor="middle" fill="#16201b">freemium</text>
+<text x="550.0" y="293.0" text-anchor="middle" fill="#16201b">closed source</text>
+<rect x="740" y="130" width="340" height="190" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="910.0" y="173.0" text-anchor="middle" fill="#16201b" font-weight="700">Open source</text>
+<text x="910.0" y="203.0" text-anchor="middle" fill="#16201b">copyleft: GPL</text>
+<text x="910.0" y="233.0" text-anchor="middle" fill="#16201b">permissive: MIT, BSD</text>
+<text x="910.0" y="263.0" text-anchor="middle" fill="#16201b">permissive: Apache 2.0</text>
+<text x="910.0" y="293.0" text-anchor="middle" fill="#16201b">you can read and change</text>
+<rect x="20" y="350" width="1060" height="66" rx="8" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="550.0" y="391.0" text-anchor="middle" fill="#16201b" font-weight="700">Free of charge is not free software</text>
+</svg>

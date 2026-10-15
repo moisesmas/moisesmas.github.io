@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 340" width="1100" height="340" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Fragmentación interna y externa</title>
+<desc id="d">Interna: un proceso de 50 KiB en una partición de 64 KiB desperdicia 14 KiB dentro del bloque. Externa: los bloques libres de 30, 20 y 40 KiB no son contiguos, así que un proceso de 60 KiB no cabe aunque haya 90 KiB libres.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="340" fill="#ffffff"/>
+<text x="20" y="34" text-anchor="start" fill="#16201b" font-weight="700">Interna: el desperdicio está dentro de un bloque</text>
+<rect x="20" y="52" width="828" height="64" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="434.0" y="92.0" text-anchor="middle" fill="#16201b">proceso 50 KiB</text>
+<rect x="848" y="52" width="232" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="964.0" y="92.0" text-anchor="middle" fill="#16201b" font-weight="700">14 KiB perdidos</text>
+<text x="20" y="176" text-anchor="start" fill="#16201b" font-weight="700">Externa: el desperdicio está entre bloques</text>
+<rect x="20" y="194" width="141" height="64" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="90.5" y="234.0" text-anchor="middle" fill="#16201b">en uso</text>
+<rect x="161" y="194" width="212" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="267.0" y="234.0" text-anchor="middle" fill="#16201b">30 KiB</text>
+<rect x="373" y="194" width="141" height="64" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="443.5" y="234.0" text-anchor="middle" fill="#16201b">en uso</text>
+<rect x="514" y="194" width="141" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="584.5" y="234.0" text-anchor="middle" fill="#16201b">20 KiB</text>
+<rect x="655" y="194" width="141" height="64" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="725.5" y="234.0" text-anchor="middle" fill="#16201b">en uso</text>
+<rect x="796" y="194" width="283" height="64" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="937.5" y="234.0" text-anchor="middle" fill="#16201b">40 KiB</text>
+<text x="550" y="302" text-anchor="middle" fill="#16201b">Un proceso de 60 KiB no cabe: hay 90 KiB libres, pero no contiguos</text>
+</svg>

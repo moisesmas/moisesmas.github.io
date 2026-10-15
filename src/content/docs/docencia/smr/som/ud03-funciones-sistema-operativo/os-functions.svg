@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 370" width="1100" height="370" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Functions of the operating system and the resources they manage</title>
+<desc id="d">Four functions, each one managing a resource: process management manages CPU time, memory management manages RAM, file management manages storage and I/O management manages devices. Security management covers all of them.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="370" fill="#ffffff"/>
+<rect x="20" y="30" width="250" height="100" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="145.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">Process</text>
+<text x="145.0" y="103.0" text-anchor="middle" fill="#16201b" font-weight="700">management</text>
+<line x1="145" y1="132" x2="145" y2="178" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="180" width="250" height="70" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="145.0" y="223.0" text-anchor="middle" fill="#16201b">CPU time</text>
+<rect x="290" y="30" width="250" height="100" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="415.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">Memory</text>
+<text x="415.0" y="103.0" text-anchor="middle" fill="#16201b" font-weight="700">management</text>
+<line x1="415" y1="132" x2="415" y2="178" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="290" y="180" width="250" height="70" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="415.0" y="223.0" text-anchor="middle" fill="#16201b">RAM</text>
+<rect x="560" y="30" width="250" height="100" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="685.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">File</text>
+<text x="685.0" y="103.0" text-anchor="middle" fill="#16201b" font-weight="700">management</text>
+<line x1="685" y1="132" x2="685" y2="178" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="560" y="180" width="250" height="70" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="685.0" y="223.0" text-anchor="middle" fill="#16201b">Storage</text>
+<rect x="830" y="30" width="250" height="100" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="955.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">I/O</text>
+<text x="955.0" y="103.0" text-anchor="middle" fill="#16201b" font-weight="700">management</text>
+<line x1="955" y1="132" x2="955" y2="178" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="830" y="180" width="250" height="70" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="955.0" y="223.0" text-anchor="middle" fill="#16201b">Devices</text>
+<rect x="20" y="280" width="1060" height="80" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="550.0" y="313.0" text-anchor="middle" fill="#16201b" font-weight="700">Security management</text>
+<text x="550.0" y="343.0" text-anchor="middle" fill="#16201b">who can read, write or run this?</text>
+</svg>

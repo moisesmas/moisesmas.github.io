@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 260" width="1100" height="260" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Paging: from logical to physical address</title>
+<desc id="d">Logical address 9000, with 4 KiB pages, splits into page 2 and offset 808. The page table says page 2 is in frame 0. The physical address is 0 times 4096 plus 808, which is 808.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="260" fill="#ffffff"/>
+<rect x="20" y="30" width="250" height="130" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="145.0" y="88.0" text-anchor="middle" fill="#16201b" font-weight="700">Logical address</text>
+<text x="145.0" y="118.0" text-anchor="middle" fill="#16201b">9000</text>
+<line x1="272" y1="95" x2="288" y2="95" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="290" y="30" width="250" height="130" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="415.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">Split (4 KiB)</text>
+<text x="415.0" y="103.0" text-anchor="middle" fill="#16201b">page = 2</text>
+<text x="415.0" y="133.0" text-anchor="middle" fill="#16201b">offset = 808</text>
+<line x1="542" y1="95" x2="558" y2="95" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="560" y="30" width="250" height="130" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="685.0" y="88.0" text-anchor="middle" fill="#16201b" font-weight="700">Page table</text>
+<text x="685.0" y="118.0" text-anchor="middle" fill="#16201b">page 2 → frame 0</text>
+<line x1="812" y1="95" x2="828" y2="95" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="830" y="30" width="250" height="130" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="955.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">Physical address</text>
+<text x="955.0" y="103.0" text-anchor="middle" fill="#16201b">0 × 4096 + 808</text>
+<text x="955.0" y="133.0" text-anchor="middle" fill="#16201b">= 808</text>
+<text x="550" y="220" text-anchor="middle" fill="#56655d">Page size: 4 KiB = 4096 bytes</text>
+</svg>

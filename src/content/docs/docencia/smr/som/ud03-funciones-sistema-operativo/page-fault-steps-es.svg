@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="1100" height="360" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Qué ocurre en un fallo de página</title>
+<desc id="d">Cuatro pasos. La CPU lanza un fallo de página y el proceso espera. El SO busca un marco libre o elige una página víctima. El SO lee la página del disco y actualiza la tabla de páginas. El proceso pasa a Listo y repite la instrucción que falló.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="360" fill="#ffffff"/>
+<rect x="20" y="16" width="1060" height="66" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<circle cx="68" cy="49.0" r="22" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="68" y="58.0" text-anchor="middle" fill="#16201b" font-weight="700">1</text>
+<text x="112" y="58.0" text-anchor="start" fill="#16201b" font-weight="700">CPU</text>
+<text x="290" y="58.0" text-anchor="start" fill="#16201b">lanza un fallo de página; el proceso pasa a Bloqueado</text>
+<line x1="550" y1="84" x2="550" y2="100" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="102" width="1060" height="66" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<circle cx="68" cy="135.0" r="22" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="68" y="144.0" text-anchor="middle" fill="#16201b" font-weight="700">2</text>
+<text x="112" y="144.0" text-anchor="start" fill="#16201b" font-weight="700">SO</text>
+<text x="290" y="144.0" text-anchor="start" fill="#16201b">busca un marco libre o elige una página víctima</text>
+<line x1="550" y1="170" x2="550" y2="186" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="188" width="1060" height="66" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<circle cx="68" cy="221.0" r="22" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="68" y="230.0" text-anchor="middle" fill="#16201b" font-weight="700">3</text>
+<text x="112" y="230.0" text-anchor="start" fill="#16201b" font-weight="700">SO</text>
+<text x="290" y="230.0" text-anchor="start" fill="#16201b">lee la página del disco y actualiza la tabla</text>
+<line x1="550" y1="256" x2="550" y2="272" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="20" y="274" width="1060" height="66" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<circle cx="68" cy="307.0" r="22" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="68" y="316.0" text-anchor="middle" fill="#16201b" font-weight="700">4</text>
+<text x="112" y="316.0" text-anchor="start" fill="#16201b" font-weight="700">Proceso</text>
+<text x="290" y="316.0" text-anchor="start" fill="#16201b">pasa a Listo y repite la instrucción que falló</text>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 280" width="1100" height="280" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Why a 1 TB disk shows 931 GB</title>
+<desc id="d">The box says 1 TB, which is 10 to the 12 bytes. Windows divides by 2 to the 30 and writes GB. It shows about 931 GB, which really are 931 GiB. No space is lost.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="280" fill="#ffffff"/>
+<rect x="20" y="30" width="300" height="140" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="170.0" y="78.0" text-anchor="middle" fill="#16201b" font-weight="700">The box says</text>
+<text x="170.0" y="108.0" text-anchor="middle" fill="#16201b">1 TB</text>
+<text x="170.0" y="138.0" text-anchor="middle" fill="#16201b">10¹² bytes</text>
+<rect x="400" y="30" width="300" height="140" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="550.0" y="78.0" text-anchor="middle" fill="#16201b" font-weight="700">Windows divides</text>
+<text x="550.0" y="108.0" text-anchor="middle" fill="#16201b">by 2³⁰</text>
+<text x="550.0" y="138.0" text-anchor="middle" fill="#16201b">and writes "GB"</text>
+<rect x="780" y="30" width="300" height="140" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="930.0" y="78.0" text-anchor="middle" fill="#16201b" font-weight="700">Windows shows</text>
+<text x="930.0" y="108.0" text-anchor="middle" fill="#16201b">931 GB</text>
+<text x="930.0" y="138.0" text-anchor="middle" fill="#16201b">(really 931 GiB)</text>
+<line x1="322" y1="100" x2="398" y2="100" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<line x1="702" y1="100" x2="778" y2="100" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<text x="550" y="240" text-anchor="middle" fill="#16201b">The disk keeps all its space: the units are different.</text>
+</svg>

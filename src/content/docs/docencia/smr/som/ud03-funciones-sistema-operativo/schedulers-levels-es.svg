@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 380" width="1100" height="380" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Los tres planificadores y el despachador</title>
+<desc id="d">Una fila de cinco cajas: procesos nuevos, el planificador a largo plazo que los admite, la cola de listos, el planificador a corto plazo que elige el siguiente y el despachador que le da la CPU. Debajo, el planificador a medio plazo intercambia procesos entre la RAM y el disco.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="380" fill="#ffffff"/>
+<rect x="20" y="30" width="180" height="100" rx="8" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="110.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">Procesos</text>
+<text x="110.0" y="103.0" text-anchor="middle" fill="#16201b">nuevos</text>
+<line x1="202" y1="80.0" x2="238" y2="80.0" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="240" y="30" width="180" height="100" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="330.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">Planificador</text>
+<text x="330.0" y="103.0" text-anchor="middle" fill="#16201b">a largo plazo</text>
+<line x1="422" y1="80.0" x2="458" y2="80.0" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="460" y="30" width="180" height="100" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="550.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">Cola de</text>
+<text x="550.0" y="103.0" text-anchor="middle" fill="#16201b">listos</text>
+<line x1="642" y1="80.0" x2="678" y2="80.0" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="680" y="30" width="180" height="100" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="770.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">Planificador</text>
+<text x="770.0" y="103.0" text-anchor="middle" fill="#16201b">a corto plazo</text>
+<line x1="862" y1="80.0" x2="898" y2="80.0" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="900" y="30" width="180" height="100" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="990.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">Despachador</text>
+<text x="990.0" y="103.0" text-anchor="middle" fill="#16201b">→ CPU</text>
+<text x="330" y="172" text-anchor="middle" fill="#16201b">admite los</text>
+<text x="330" y="202" text-anchor="middle" fill="#16201b">programas nuevos</text>
+<text x="770" y="172" text-anchor="middle" fill="#16201b">elige quién</text>
+<text x="770" y="202" text-anchor="middle" fill="#16201b">se ejecuta</text>
+<text x="990" y="172" text-anchor="middle" fill="#16201b">hace el cambio</text>
+<text x="990" y="202" text-anchor="middle" fill="#16201b">de contexto</text>
+<rect x="200" y="260" width="700" height="90" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="550.0" y="298.0" text-anchor="middle" fill="#16201b" font-weight="700">Planificador a medio plazo</text>
+<text x="550.0" y="328.0" text-anchor="middle" fill="#16201b">intercambia procesos entre RAM y disco</text>
+<line x1="550" y1="258" x2="550" y2="134" stroke="#56655d" stroke-width="3" stroke-dasharray="10 7" marker-end="url(#flecha)" marker-start="url(#flecha)"/>
+</svg>

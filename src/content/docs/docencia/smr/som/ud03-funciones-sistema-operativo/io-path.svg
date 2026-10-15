@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 340" width="1100" height="340" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">How an application uses a device</title>
+<desc id="d">Five boxes in a row: the application, the I/O manager of the kernel, the driver, the controller and the device. The answer returns along the same path.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="340" fill="#ffffff"/>
+<rect x="20" y="30" width="180" height="100" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="110.0" y="88.0" text-anchor="middle" fill="#16201b" font-weight="700">Application</text>
+<line x1="202" y1="80.0" x2="238" y2="80.0" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="240" y="30" width="180" height="100" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="330.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">I/O manager</text>
+<text x="330.0" y="103.0" text-anchor="middle" fill="#16201b">(kernel)</text>
+<line x1="422" y1="80.0" x2="458" y2="80.0" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="460" y="30" width="180" height="100" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="550.0" y="88.0" text-anchor="middle" fill="#16201b" font-weight="700">Driver</text>
+<line x1="642" y1="80.0" x2="678" y2="80.0" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="680" y="30" width="180" height="100" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="770.0" y="88.0" text-anchor="middle" fill="#16201b" font-weight="700">Controller</text>
+<line x1="862" y1="80.0" x2="898" y2="80.0" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="900" y="30" width="180" height="100" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="990.0" y="88.0" text-anchor="middle" fill="#16201b" font-weight="700">Device</text>
+<text x="110" y="172" text-anchor="middle" fill="#16201b">print this,</text>
+<text x="110" y="202" text-anchor="middle" fill="#16201b">read this file</text>
+<text x="330" y="172" text-anchor="middle" fill="#16201b">checks, queues,</text>
+<text x="330" y="202" text-anchor="middle" fill="#16201b">finds the device</text>
+<text x="550" y="172" text-anchor="middle" fill="#16201b">translates to</text>
+<text x="550" y="202" text-anchor="middle" fill="#16201b">device commands</text>
+<text x="770" y="172" text-anchor="middle" fill="#16201b">registers,</text>
+<text x="770" y="202" text-anchor="middle" fill="#16201b">runs the mechanics</text>
+<text x="990" y="172" text-anchor="middle" fill="#16201b">does the work</text>
+<line x1="1010" y1="262" x2="90" y2="262" stroke="#1f5244" stroke-width="3" marker-end="url(#flecha)"/>
+<text x="550" y="306" text-anchor="middle" fill="#16201b" font-weight="700">The answer comes back the same way</text>
+</svg>

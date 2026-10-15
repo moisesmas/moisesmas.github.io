@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 430" width="1100" height="430" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Five functions of a computer system</title>
+<desc id="d">Input, processing and output in a row. Storage below processing, exchanging data with it. A bar at the bottom: control, done by the operating system.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="430" fill="#ffffff"/>
+<rect x="20" y="30" width="300" height="110" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="170.0" y="78.0" text-anchor="middle" fill="#16201b" font-weight="700">Input</text>
+<text x="170.0" y="108.0" text-anchor="middle" fill="#16201b">keyboard, sensors</text>
+<rect x="400" y="30" width="300" height="110" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="550.0" y="78.0" text-anchor="middle" fill="#16201b" font-weight="700">Processing</text>
+<text x="550.0" y="108.0" text-anchor="middle" fill="#16201b">the CPU</text>
+<rect x="780" y="30" width="300" height="110" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="930.0" y="78.0" text-anchor="middle" fill="#16201b" font-weight="700">Output</text>
+<text x="930.0" y="108.0" text-anchor="middle" fill="#16201b">screen, printer</text>
+<line x1="322" y1="85" x2="398" y2="85" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<line x1="702" y1="85" x2="778" y2="85" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="400" y="200" width="300" height="110" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="550.0" y="248.0" text-anchor="middle" fill="#16201b" font-weight="700">Storage</text>
+<text x="550.0" y="278.0" text-anchor="middle" fill="#16201b">RAM and disk</text>
+<line x1="550" y1="142" x2="550" y2="198" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)" marker-start="url(#flecha)"/>
+<rect x="20" y="340" width="1060" height="70" rx="8" fill="#ffffff" stroke="#56655d" stroke-width="2"/>
+<text x="550.0" y="383.0" text-anchor="middle" fill="#16201b" font-weight="700">Control: the operating system coordinates every step</text>
+</svg>

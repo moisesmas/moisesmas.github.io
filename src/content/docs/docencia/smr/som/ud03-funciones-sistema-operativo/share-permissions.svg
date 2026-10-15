@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 340" width="1100" height="340" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Shared folder in Windows: the most restrictive permission wins</title>
+<desc id="d">Share permissions say Full control and NTFS permissions say Read. Through the network the most restrictive wins, so the result is Read only.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="340" fill="#ffffff"/>
+<rect x="20" y="40" width="340" height="110" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="190.0" y="88.0" text-anchor="middle" fill="#16201b" font-weight="700">Share permissions</text>
+<text x="190.0" y="118.0" text-anchor="middle" fill="#16201b">Full control</text>
+<rect x="20" y="190" width="340" height="110" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="190.0" y="238.0" text-anchor="middle" fill="#16201b" font-weight="700">NTFS permissions</text>
+<text x="190.0" y="268.0" text-anchor="middle" fill="#16201b">Read</text>
+<line x1="362" y1="95" x2="658" y2="150" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<line x1="362" y1="245" x2="658" y2="200" stroke="#56655d" stroke-width="3" marker-end="url(#flecha)"/>
+<rect x="660" y="75" width="420" height="150" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="870.0" y="128.0" text-anchor="middle" fill="#16201b" font-weight="700">Through the network</text>
+<text x="870.0" y="158.0" text-anchor="middle" fill="#16201b">the most restrictive</text>
+<text x="870.0" y="188.0" text-anchor="middle" fill="#16201b">wins: Read only</text>
+</svg>

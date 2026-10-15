@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 220" width="1100" height="220" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Cómo encuentran un archivo tres sistemas de archivos</title>
+<desc id="d">FAT32 usa una tabla de asignación con una entrada por clúster y una cadena como 5, 6, 9, fin. NTFS usa una tabla maestra de archivos con un registro por archivo; los muy pequeños caben dentro. ext4 usa inodos con los atributos y la ubicación de los datos; el nombre está en el directorio.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="220" fill="#ffffff"/>
+<rect x="20" y="30" width="340" height="160" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="190.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">FAT32</text>
+<text x="190.0" y="103.0" text-anchor="middle" fill="#16201b">tabla de asignación</text>
+<text x="190.0" y="133.0" text-anchor="middle" fill="#16201b">una entrada por clúster</text>
+<text x="190.0" y="163.0" text-anchor="middle" fill="#16201b">cadena: 5 → 6 → 9 → fin</text>
+<rect x="380" y="30" width="340" height="160" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="550.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">NTFS</text>
+<text x="550.0" y="103.0" text-anchor="middle" fill="#16201b">Tabla maestra (MFT)</text>
+<text x="550.0" y="133.0" text-anchor="middle" fill="#16201b">un registro por archivo</text>
+<text x="550.0" y="163.0" text-anchor="middle" fill="#16201b">los pequeños caben dentro</text>
+<rect x="740" y="30" width="340" height="160" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="910.0" y="73.0" text-anchor="middle" fill="#16201b" font-weight="700">ext4</text>
+<text x="910.0" y="103.0" text-anchor="middle" fill="#16201b">inodos</text>
+<text x="910.0" y="133.0" text-anchor="middle" fill="#16201b">atributos y extents</text>
+<text x="910.0" y="163.0" text-anchor="middle" fill="#16201b">nombre en la carpeta</text>
+</svg>

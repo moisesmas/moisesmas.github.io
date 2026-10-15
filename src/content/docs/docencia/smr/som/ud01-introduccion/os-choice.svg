@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 320" width="1100" height="320" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" role="img" aria-labelledby="t d">
+<title id="t">Six questions to choose an operating system</title>
+<desc id="d">Six numbered boxes: what for, which software, which hardware, what cost, who manages it, and how secure and supported.</desc>
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#56655d"/></marker></defs>
+<rect width="1100" height="320" fill="#ffffff"/>
+<rect x="20" y="20" width="346" height="130" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="193.0" y="78.0" text-anchor="middle" fill="#16201b" font-weight="700">1. What for?</text>
+<text x="193.0" y="108.0" text-anchor="middle" fill="#16201b">office, server, kiosk</text>
+<rect x="387" y="20" width="346" height="130" rx="8" fill="#fbeed8" stroke="#b86e00" stroke-width="2"/>
+<text x="560.0" y="78.0" text-anchor="middle" fill="#16201b" font-weight="700">2. Which software?</text>
+<text x="560.0" y="108.0" text-anchor="middle" fill="#16201b">apps tied to one OS</text>
+<rect x="754" y="20" width="346" height="130" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="927.0" y="78.0" text-anchor="middle" fill="#16201b" font-weight="700">3. Which hardware?</text>
+<text x="927.0" y="108.0" text-anchor="middle" fill="#16201b">old PC, little RAM</text>
+<rect x="20" y="170" width="346" height="130" rx="8" fill="#e3ece7" stroke="#1f5244" stroke-width="2"/>
+<text x="193.0" y="228.0" text-anchor="middle" fill="#16201b" font-weight="700">4. What cost?</text>
+<text x="193.0" y="258.0" text-anchor="middle" fill="#16201b">licence and support</text>
+<rect x="387" y="170" width="346" height="130" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="560.0" y="228.0" text-anchor="middle" fill="#16201b" font-weight="700">5. Who manages it?</text>
+<text x="560.0" y="258.0" text-anchor="middle" fill="#16201b">skills, remote tools</text>
+<rect x="754" y="170" width="346" height="130" rx="8" fill="#f2f4ef" stroke="#56655d" stroke-width="2"/>
+<text x="927.0" y="228.0" text-anchor="middle" fill="#16201b" font-weight="700">6. Secure, supported?</text>
+<text x="927.0" y="258.0" text-anchor="middle" fill="#16201b">update policy</text>
+</svg>
